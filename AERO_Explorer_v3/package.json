@@ -1,0 +1,16 @@
+{
+  "name": "aero-drone-flight",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node tools/build-locales.mjs",
+    "test": "node tests/physics.mjs && node tests/device.mjs && node tests/geo-weather.mjs && node tests/content.mjs && node --test backend/weather-worker/weather-worker.test.mjs",
+    "start": "python3 -m http.server 8080 --directory dist",
+    "test:browser": "node tests/browser.mjs",
+    "test:delivery": "node tests/delivery.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.11"
+  }
+}
