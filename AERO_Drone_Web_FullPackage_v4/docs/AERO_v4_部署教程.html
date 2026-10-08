@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AERO v4｜操作與 SmartAction 部署教學</title>
+<style>
+:root{--ink:#16323d;--muted:#58727a;--paper:#f4f7f7;--line:#d7e2e5;--accent:#326856}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;font-size:16px;line-height:1.8}.masthead{background:#142d35;color:white;padding:28px max(24px,calc((100vw - 1180px)/2));display:flex;justify-content:space-between;gap:20px;align-items:center}.masthead p{margin:0;letter-spacing:.14em;font-size:12px}.masthead strong{font-size:21px;letter-spacing:0;display:block}.masthead button{background:#d7ed9b;color:#18313b;border:0;padding:10px 20px;border-radius:8px;font:inherit;cursor:pointer}.layout{max-width:1180px;margin:auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:35px;padding:30px 24px 80px}.contents{position:sticky;top:20px;max-height:calc(100vh - 40px);overflow:auto;font-size:13px;line-height:1.65;padding-right:10px}.contents summary{font-size:15px;font-weight:700;margin-bottom:12px}.contents ul{padding-left:16px;margin:6px 0}.contents li{margin:7px 0}.contents a{color:#355c62;text-decoration:none}.contents a:hover{text-decoration:underline}main{min-width:0;background:white;border:1px solid var(--line);border-radius:16px;padding:36px}h1{font-size:29px;line-height:1.4;margin-top:0}h2{font-size:23px;line-height:1.5;margin-top:46px;padding-top:18px;border-top:2px solid #dce9dc;scroll-margin-top:24px}p{margin:16px 0}a{color:#236756;text-underline-offset:3px;overflow-wrap:anywhere}table{width:100%;border-collapse:collapse;font-size:14px;table-layout:auto;margin:22px 0}th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#edf4ee}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.88em;overflow-wrap:anywhere;background:#f0f4f5;padding:2px 5px;border-radius:4px}pre{padding:18px;background:#142d35;color:#eef5f3;border-radius:10px;overflow:auto;line-height:1.6;max-width:100%;font-size:14px}pre code{background:none;color:inherit;padding:0;white-space:pre;overflow-wrap:normal}blockquote{border-left:4px solid #a3c686;margin:20px 0;padding:1px 18px;background:#f3f7ed}li{margin:7px 0}strong{font-weight:720}footer{max-width:1180px;margin:0 auto;padding:0 24px 32px;color:var(--muted);font-size:13px} @media(max-width:850px){.layout{grid-template-columns:1fr;gap:16px;padding:18px 12px 36px}.contents{position:static;max-height:230px;background:#e9f0ed;padding:15px;border-radius:10px}main{padding:24px 18px}h1{font-size:25px}h2{font-size:21px}table{font-size:12px}th,td{padding:8px 6px}.masthead{padding:20px 18px}.masthead strong{font-size:17px}.masthead button{padding:8px 12px;font-size:13px}}@media print{body{background:white;color:black;font-size:10pt}.masthead{background:white;color:black;padding:0;border-bottom:1px solid #999}.masthead button,.contents{display:none}.layout{display:block;max-width:none;padding:0}main{border:0;padding:0}h1{font-size:22pt}h2{font-size:15pt;break-after:avoid;margin-top:22px}pre{white-space:pre-wrap;background:#f4f4f4;color:black;break-inside:avoid;font-size:9pt}pre code{white-space:pre-wrap}table{font-size:9pt}tr{break-inside:avoid}a{color:black}footer{padding:14px 0}}
+</style></head><body><header class="masthead"><p>AERO EXPLORER / VERSION 04<strong>海陸空探索・完整部署指南</strong></p><button type="button" onclick="window.print()">列印／另存 PDF</button></header><div class="layout"><aside><details class="contents" open><summary>章節導覽</summary><ul>
+<li><a href="#aero-v4-海陸空探索模擬器操作與-smartaction-部署教學"
+id="toc-aero-v4-海陸空探索模擬器操作與-smartaction-部署教學">AERO v4
+海陸空探索模擬器：操作與 SmartAction 部署教學</a>
+<ul>
+<li><a href="#1-先選擇正確的檔案" id="toc-1-先選擇正確的檔案">1.
+先選擇正確的檔案</a></li>
+<li><a href="#2-操作視野雙手控制與四個新增按鈕"
+id="toc-2-操作視野雙手控制與四個新增按鈕">2.
+操作：視野、雙手控制與四個新增按鈕</a></li>
+<li><a href="#3-第一視角3d-與海陸空變形"
+id="toc-3-第一視角3d-與海陸空變形">3. 第一視角、3D 與海陸空變形</a></li>
+<li><a href="#4-地圖目前位置與目的地搜尋"
+id="toc-4-地圖目前位置與目的地搜尋">4.
+地圖、目前位置與目的地搜尋</a></li>
+<li><a href="#5-為什麼玩家現在不必輸入-google-api-key"
+id="toc-5-為什麼玩家現在不必輸入-google-api-key">5.
+為什麼玩家現在不必輸入 Google API Key？</a></li>
+<li><a href="#6-真實照片360-與博物館藏品"
+id="toc-6-真實照片360-與博物館藏品">6. 真實照片、360°
+與博物館藏品</a></li>
+<li><a href="#7-多國語言與位置資料傳送"
+id="toc-7-多國語言與位置資料傳送">7. 多國語言與位置資料傳送</a></li>
+<li><a href="#8-maclinux直接部署到現有-smartaction"
+id="toc-8-maclinux直接部署到現有-smartaction">8.
+Mac／Linux：直接部署到現有 SmartAction</a></li>
+<li><a href="#9-windowspowershell-複製與發布"
+id="toc-9-windowspowershell-複製與發布">9. Windows：PowerShell
+複製與發布</a></li>
+<li><a href="#10-github-pages-設定與發布後檢查"
+id="toc-10-github-pages-設定與發布後檢查">10. GitHub Pages
+設定與發布後檢查</a></li>
+<li><a href="#11-修改原始碼後重新建置"
+id="toc-11-修改原始碼後重新建置">11. 修改原始碼後重新建置</a></li>
+<li><a href="#12-大檔git-lfs-與-10-萬人的容量規劃"
+id="toc-12-大檔git-lfs-與-10-萬人的容量規劃">12. 大檔、Git LFS 與 10
+萬人的容量規劃</a></li>
+<li><a href="#13-可選天氣後端" id="toc-13-可選天氣後端">13.
+可選天氣後端</a></li>
+<li><a href="#14-常見問題與驗證界線" id="toc-14-常見問題與驗證界線">14.
+常見問題與驗證界線</a></li>
+<li><a href="#官方來源與授權入口"
+id="toc-官方來源與授權入口">官方來源與授權入口</a></li>
+</ul></li>
+</ul></details></aside><main><h1
+id="aero-v4-海陸空探索模擬器操作與-smartaction-部署教學">AERO v4
+海陸空探索模擬器：操作與 SmartAction 部署教學</h1>
+<p>版本：4.0；文件查核：2026 年 10 月 9 日（臺灣）。目標網址：<a
+href="https://kuonanhong.github.io/SmartAction/games/aero/"><span>https://kuonanhong.github.io/SmartAction/games/aero/</span></a>。</p>
+<p>本套件將飛行視窗、雙手操作區、地圖及景點介紹分開，適合放入
+SmartAction 的「動手動腦」區。您可以直接複製已建好的網站，不必先安裝
+Node.js。<strong>這份交付不表示已登入或修改您的 GitHub
+repository</strong>；依下列步驟推送後才會更新您的 github.io 網頁。</p>
+<h2 id="1-先選擇正確的檔案">1. 先選擇正確的檔案</h2>
+<table>
+<thead>
+<tr class="header">
+<th>套件內容</th>
+<th>使用方式</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>SmartAction/games/aero/</code></td>
+<td>已建好的完整靜態網站；把內容複製到 SmartAction repository 的
+<code>games/aero/</code></td>
+</tr>
+<tr class="even">
+<td><code>AERO_Explorer_v4.html</code></td>
+<td>單檔版：HTML、程式、樣式及內附素材整合；適合直接開啟示範</td>
+</tr>
+<tr class="odd">
+<td>專案根目錄的 <code>dist/</code></td>
+<td>可重新建置的網站輸出；開發修改後由建置工具更新</td>
+</tr>
+<tr class="even">
+<td><code>dist/game.js</code>、<code>scene.js</code>、<code>physics.js</code>
+等</td>
+<td>可維護的模組化原始碼；不要只修改壓縮過的 bundle</td>
+</tr>
+<tr class="odd">
+<td><code>dist/assets/photos/</code></td>
+<td>14 張已下載的照片、作者授權頁及素材 manifest</td>
+</tr>
+<tr class="even">
+<td><code>tools/</code>、<code>tests/</code></td>
+<td>建置工具、單元及瀏覽器測試、容量測試範例</td>
+</tr>
+<tr class="odd">
+<td><code>backend/weather-worker/</code></td>
+<td>可選的共用天氣快取後端；GitHub Pages 本身不執行後端</td>
+</tr>
+</tbody>
+</table>
+<p>直接開啟單檔版即可試玩本機模擬。GPS、Google 地圖、Wikipedia
+搜尋及可選天氣仍需要網路及相應瀏覽器許可；離線時不會變成即時實景。正式發布建議使用
+<code>SmartAction/games/aero/</code> 的多檔版本，讓 3D
+引擎及照片按需載入。</p>
+<h2 id="2-操作視野雙手控制與四個新增按鈕">2.
+操作：視野、雙手控制與四個新增按鈕</h2>
+<p>手機的地點名稱、狀態、說明及故事放在飛行視窗外；地圖與導覽在頁面下方。可以捲動查看，按「開始／繼續」回到操作。桌面可展開設定，手機先保留精簡設定。教學視窗只在查看教學時出現。</p>
+<table>
+<thead>
+<tr class="header">
+<th>控制</th>
+<th>鍵盤</th>
+<th>手機／平板</th>
+<th>動作</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>左手上下</td>
+<td><code>W</code>／<code>S</code></td>
+<td>左搖桿上下</td>
+<td>空中升降；水中上浮／下潛；陸地維持地面高度</td>
+</tr>
+<tr class="even">
+<td>左手左右</td>
+<td><code>A</code>／<code>D</code></td>
+<td>左搖桿左右</td>
+<td>左轉／右轉</td>
+</tr>
+<tr class="odd">
+<td>右手上下</td>
+<td><code>↑</code>／<code>↓</code></td>
+<td>右搖桿上下</td>
+<td>前進／後退</td>
+</tr>
+<tr class="even">
+<td>右手左右</td>
+<td><code>←</code>／<code>→</code></td>
+<td>右搖桿左右</td>
+<td>左右橫移</td>
+</tr>
+<tr class="odd">
+<td>左手附加 1</td>
+<td><code>F</code></td>
+<td>拍照</td>
+<td>下載目前模擬畫面的 PNG，並為已選目的地加入旅行紀錄</td>
+</tr>
+<tr class="even">
+<td>左手附加 2</td>
+<td><code>G</code></td>
+<td>投放浮標</td>
+<td>投放可觀察落下／漂浮的標記；最多同時 8 個，約 20 秒消失</td>
+</tr>
+<tr class="odd">
+<td>右手附加 1</td>
+<td><code>C</code></td>
+<td>我在哪裡？</td>
+<td>暫停，顯示下方地圖與目前模擬座標</td>
+</tr>
+<tr class="even">
+<td>右手附加 2</td>
+<td><code>B</code></td>
+<td>景點故事</td>
+<td>暫停，開啟下方地點介紹與來源</td>
+</tr>
+<tr class="odd">
+<td>視角／暫停／重置</td>
+<td><code>V</code>／空白鍵／<code>R</code></td>
+<td>對應畫面按鈕</td>
+<td>第一／第三視角、暫停、回起始位置</td>
+</tr>
+</tbody>
+</table>
+<p>輸入目的地或對話文字時，控制快捷鍵不會搶走文字輸入。背景分頁或視窗失去焦點時會暫停，避免載具持續移動。</p>
+<p>新增互動包含投放浮標與旅行紀錄；紀錄只存於這個瀏覽器的本機儲存，不是雲端照片備份。PNG
+是您下載的模擬畫面。Google
+實景使用不同的跨來源畫面，拍照功能不會將它偽裝成可下載的本機畫布。</p>
+<h2 id="3-第一視角3d-與海陸空變形">3. 第一視角、3D 與海陸空變形</h2>
+<p>標準／完整 WebGL
+版提供真正的透視相機、模型移動及近處物件視差。第一視角加入 <strong>0.05
+強度的輕微魚眼效果</strong>；這是畫面畸變參數，不是「人眼視野增加 5
+度」或光學校正值。第三視角保留共享的載具核心，空中呈現旋翼、地面呈現車輪、水中呈現潛航外形。</p>
+<p>輕量版使用 Canvas 2D 與寬視角透視表現，省下 WebGL
+與後處理負擔。它的立體感與完整 3D 不相同。若裝置無
+WebGL、效能不足、持續低幀率或 WebGL context
+中斷，遊戲會降級；硬體資源提示不能精確量出尚可用的 RAM／VRAM。</p>
+<p>適用範圍為具備所需
+JavaScript、Canvas、觸控或鍵盤功能的現代瀏覽器，可在
+Windows、macOS、Linux、Android、iPhone／iPad 上使用。舊 iPod
+touch、過舊系統、記憶體不足及受到企業限制的瀏覽器不能保證正常執行。遇到問題先改輕量版、關閉其他大量佔用資源的分頁並重新載入。</p>
+<h2 id="4-地圖目前位置與目的地搜尋">4. 地圖、目前位置與目的地搜尋</h2>
+<p>開啟網頁後，預設會向瀏覽器請求位置許可。若允許，使用
+<code>navigator.geolocation</code> 取得座標與誤差估計；<strong>不是透過
+IP
+推測精確地址</strong>。桌機位置精度可能較低。拒絕、逾時或無定位能力時，使用明確標示的高雄示例，仍能輸入目的地或手動座標。</p>
+<p>畫面顯示兩種不同意義的數值：起點可来自裝置定位；之後的「模擬位置」隨載具操作改變。坐在椅子上飛到黃石公園，不代表您的實體裝置已移動。位置不寫入本機儲存，遊戲不建立位置追蹤帳戶。</p>
+<p>可輸入「飛去美國黃石公園」「台灣宜蘭太平山」「翠峰湖」「飛去台北故宮看展覽」，也可輸入
+<code>25.1024,121.5485</code>。程式先比對內附的多語名稱及別名，沒有符合項目才查詢
+Wikipedia；多項結果由您選擇。沒有座標或找不到的項目不會擅自生成一個位置。搜尋不是完整全球地理編碼服務，過長的自然語句可改為清楚的地名。</p>
+<p>附近功能保留 13 處高雄內附資料，並能請求附近百科條目。Wikipedia
+回傳最多 6 個、10
+公里內帶地理座標的條目，未必全都是觀光景點或餐廳；查詢失敗時回到內附資料。網路結果會顯示資料來源，故事不代表即時開館、票務、現場展品或飛行許可。</p>
+<p>導覽框支援「歷史／特色／附近景點／地方美食」及目的地輸入。這是依既有來源與規則提供的導覽，沒有暗中串接付費生成式
+AI。美食按鈕開啟該座標附近的 Google
+餐廳搜尋，不宣稱某家餐廳現在營業或一定值得推薦。</p>
+<p>地圖在下方顯示；模擬座標持續更新，嵌入地圖只在距上次更新 <strong>至少
+15 秒且位移至少 50 公尺</strong>
+時重新載入。切換目的地、切換語言或手動置中可立即更新。這樣能减少重繪、網路請求與移動時的閃動。</p>
+<h2 id="5-為什麼玩家現在不必輸入-google-api-key">5.
+為什麼玩家現在不必輸入 Google API Key？</h2>
+<table>
+<thead>
+<tr class="header">
+<th>路徑</th>
+<th>本版安排</th>
+<th>需要誰的 Key</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>預設位置地圖</td>
+<td>Google 消費者地圖相容
+iframe，<code>q=座標&amp;output=embed</code></td>
+<td>玩家不需要</td>
+</tr>
+<tr class="even">
+<td>「在 Google 地圖開啟」</td>
+<td>官方 Maps URLs：<code>api=1</code> 的跨平台連結</td>
+<td>不需要</td>
+</tr>
+<tr class="odd">
+<td>正式 Maps Embed API</td>
+<td>網站擁有者選擇啟用，可替換預設 iframe</td>
+<td>擁有者的一次性設定；玩家不需要</td>
+</tr>
+<tr class="even">
+<td>Google 3D／街景 SDK</td>
+<td>保留可選介面，需網站擁有者開通</td>
+<td>擁有者 Key、API、帳務及相應額度</td>
+</tr>
+</tbody>
+</table>
+<p>預設相容 iframe 已實際取得 Google 的地圖初始化回應，但它不是目前
+Google Maps Platform 文件承諾的正式 Embed API，沒有本套件可保證的
+SLA。若瀏覽器、地區、網路或 Google 變更使它無法顯示，使用旁邊正式的「在
+Google 地圖開啟」連結。iframe 載入事件也不能單獨證明圖磚完整呈現。本次測試環境的瀏覽器未能載入 Google 圖磚；HTTP 回應與座標連結已核對，實際外部地圖繪圖及 Wikipedia 瀏覽器連線仍須在發布環境確認。</p>
+<p>目前正式 Maps Embed API 是免費且不限請求量的產品，仍須啟用 API、有效
+Key 及完成 Google Cloud 設定。Google 3D、動態街景及 Places
+查詢另有條件與計費；不能因 Embed 免費就視為全部 SDK
+免費。這次沒有使用您的私人 Key 驗證付費服務。</p>
+<p>若要正式 Embed，在網站資料夾的 <code>config.js</code> 設定
+<code>googleEmbedKey</code>；修改原始專案則編輯
+<code>dist/config.js</code> 再重新建置：</p>
+<pre class="js"><code>globalThis.AERO_CONFIG = Object.freeze({
+  googleMapsKey: &#39;&#39;,       // 只在啟用 Google 3D／街景 SDK 時填寫
+  googleEmbedKey: &#39;&#39;,      // 可選：網站擁有者的正式 Maps Embed Key
+  autoLocate: true,
+  weatherEndpoint: &#39;&#39;,
+  autoNearby: true,
+  initialOrigin: {lat: 22.64954, lon: 120.35363, altitude: 20}
+});</code></pre>
+<p>瀏覽器地圖 Key 必然可被瀏覽器看到，請在 Google Cloud
+加上<strong>網站來源限制及 API
+限制</strong>；不要當成不可見的伺服器密鑰。設定您的
+<code>https://kuonanhong.github.io</code> 網站來源，依 Google
+控制台的格式加入允許的 referrer。不要貼入別人的 Key、OAuth
+secret、私鑰或付費服務的伺服器 token。不要將 Google
+圖磚下載、重包或加入遊戲的離線快取。</p>
+<h2 id="6-真實照片360-與博物館藏品">6. 真實照片、360° 與博物館藏品</h2>
+<p>本版內附 <strong>14 張照片，合計 3,076,900 bytes（約 3.08
+MB）</strong>，已轉成 WebP
+並隨套件提供。包括老忠實間歇泉、大稜鏡溫泉、見晴懷古步道、蹦蹦車、翠峰湖、臺北故宮、翠玉白菜、肉形石、澄清湖、鳳儀書院、衛武營，以及兩張
+360° 全景。澄清湖另附標明 1973 年的歷史照片，不能拿它當成現在景況。</p>
+<p>兩張真實 360° 全景的位置分別為：</p>
+<table>
+<thead>
+<tr class="header">
+<th>全景</th>
+<th>套件所用座標</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>奧地利蒂羅爾凱撒山脈森林</td>
+<td><code>47.534823, 12.282477</code></td>
+</tr>
+<tr class="even">
+<td>苗栗竹南博愛公園</td>
+<td><code>24.684586, 120.871273</code></td>
+</tr>
+</tbody>
+</table>
+<p>360°
+圖像可轉頭觀看周圍，但它是拍攝地點的球面影像，不會因為向前移動就提供新的實測三維幾何。普通照片採影像背景／展示方式，不能當作任意方向的實測
+3D 建築模型。程序產生的近處物件可以有 3D
+視差，但不代表已重建整個景點。</p>
+<p>照片採 public domain、CC0、CC BY 或 CC BY-SA
+等逐張核對的授權。請一併保留
+<code>assets/photos/PHOTO_CREDITS.html</code>、manifest
+與授權文字，沿用照片時保留作者、來源、授權連結與
+WebP／縮圖等修改說明。CC BY-SA
+的衍生照片須遵守相同授權條件；程式碼的授權和照片授權分開。</p>
+<p>沒有把 Google
+圖片搜尋的預覽圖直接當成可任意再利用的素材。故宮藏品照片只說明物件，不代表現在正於故宮某一展廳展出。水下魚群、礁石及湖底是模擬；淡水湖與海洋生態分開，未宣稱是水下測繪或
+Google 湖底實景。</p>
+<h2 id="7-多國語言與位置資料傳送">7. 多國語言與位置資料傳送</h2>
+<p>介面及內附目的地內容提供 22
+語系：繁體中文、簡體中文、英文、日文、韓文、阿拉伯文、馬來文、泰文、越南文、印尼文、菲律賓文、德文、波蘭文、捷克文、葡萄牙文、芬蘭文、瑞典文、俄文、法文、西班牙文、義大利文、印地文。</p>
+<p>第一次使用依瀏覽器語言偏好選擇；<code>zh-TW</code>／<code>zh-HK</code>
+對應繁體、<code>zh-CN</code> 對應簡體，<code>tl</code>
+對應菲律賓文。已手動選擇的語言優先。這比用所在地國家強制語言更適合旅客；訪客隨時可改語言。Wikipedia
+動態條目依可用語系查詢，不等於對每一段網路內容都有人工翻譯。</p>
+<p>當地圖載入時，地圖座標會傳給
+Google。允許定位並啟用附近搜尋時，起點座標會傳給 Wikipedia；設定且使用
+Google Places 才會依該服務流程請求 Google。停用自動行為可將
+<code>autoLocate</code> 或 <code>autoNearby</code> 改為
+<code>false</code>。GPS
+授權必須由瀏覽器詢問，網站不能繞過；拒絕後仍可選目的地。</p>
+<p>Wikipedia 請求設有 8 秒逾時、5 分鐘記憶體快取、最多 64
+筆快取；限流或斷線不生成假結果。Google 地圖和動態百科不列入自有素材的
+Service Worker 快取。主站沒有用本套件建立玩家帳號或上傳個人照片。</p>
+<h2 id="8-maclinux直接部署到現有-smartaction">8.
+Mac／Linux：直接部署到現有 SmartAction</h2>
+<p>先解壓完整套件，找到其中
+<code>SmartAction/games/aero/index.html</code>。以下假設您把套件解壓到
+Downloads；請把 <code>YOUR_NAME</code>
+及實際資料夾名稱改為自己的。不要把整個 ZIP
+丟進網頁根目錄當作遊戲網站。</p>
+<p>如果尚未下載 SmartAction repository：</p>
+<pre class="bash"><code>cd ~/Documents
+git clone https://github.com/kuonanhong/SmartAction.git
+cd SmartAction
+git status</code></pre>
+<p>如果已經有 SmartAction 的本機 clone，直接 <code>cd</code>
+到該資料夾；先用 <code>git status</code>
+確認目前自己的修改，不要覆蓋或丟棄尚未保存的工作。</p>
+<p>複製遊戲。這個步驟不需要 Node.js，也不會改動其他網站資料夾：</p>
+<pre class="bash"><code>AERO_PACKAGE=&quot;/Users/YOUR_NAME/Downloads/AERO_Drone_Web_FullPackage_v4&quot;
+mkdir -p games/aero
+rsync -av &quot;$AERO_PACKAGE/SmartAction/games/aero/&quot; games/aero/</code></pre>
+<p>編輯主站 <code>index.html</code>，在您規劃的「動手動腦」區加入：</p>
+<pre class="html"><code>&lt;a href=&quot;games/aero/&quot;&gt;海陸空探索模擬器 AERO&lt;/a&gt;</code></pre>
+<p>若連結放在 <code>en/index.html</code> 等語言子目錄，請改成
+<code>../games/aero/</code>；若放在其他更深的子目錄，依路徑調整相對位置。無需為了放遊戲而覆蓋
+SmartAction 原本的整份首頁或 GitHub Actions workflow。</p>
+<p>核對、提交、同步及上傳：</p>
+<pre class="bash"><code>git status
+git add games/aero index.html
+git diff --cached --stat
+git commit -m &quot;Add AERO v4 sea land air explorer&quot;
+git pull --rebase
+git push</code></pre>
+<p><code>git pull</code> 是把 GitHub 上的新版本取回並整合；真正上傳的是
+<code>git push</code>。從 <code>git clone</code> 建立的分支通常已有
+upstream，所以以上不必硬寫 <code>main</code>。若遠端使用
+<code>master</code>，不要為了套用教學自行改掉遠端分支。</p>
+<p>GitHub 若要求登入，使用 GitHub Desktop 或 Git Credential Manager
+的瀏覽器登入流程；不要把 GitHub 密碼或 personal access token 寫入
+<code>config.js</code>、HTML、remote URL 或公開 Git。GitHub
+網站不接受以帳戶密碼作 HTTPS Git 認證。</p>
+<h2 id="9-windowspowershell-複製與發布">9. Windows：PowerShell
+複製與發布</h2>
+<p>先安裝 Git for Windows，並把 ZIP 解壓。開啟 PowerShell：</p>
+<pre class="powershell"><code>Set-Location &quot;$env:USERPROFILE\Documents&quot;
+git clone https://github.com/kuonanhong/SmartAction.git
+Set-Location SmartAction
+git status
+
+$aeroPackage = &#39;C:\Users\YOUR_NAME\Downloads\AERO_Drone_Web_FullPackage_v4&#39;
+New-Item -ItemType Directory -Path &#39;games\aero&#39; -Force | Out-Null
+Copy-Item -Path &quot;$aeroPackage\SmartAction\games\aero\*&quot; -Destination &#39;games\aero&#39; -Recurse -Force</code></pre>
+<p>用文字編輯器修改主站
+<code>index.html</code>，加入上一節的遊戲連結。然後：</p>
+<pre class="powershell"><code>git add games/aero index.html
+git diff --cached --stat
+git commit -m &quot;Add AERO v4 sea land air explorer&quot;
+git pull --rebase
+git push</code></pre>
+<p>若已有本機 SmartAction，從該資料夾開始，不必重複
+clone。無論哪個系統，若 <code>git pull --rebase</code> 出現衝突，先執行
+<code>git status</code>，編輯有衝突的檔案，保留正確內容後
+<code>git add 該檔案</code>、<code>git rebase --continue</code>。不確定時可
+<code>git rebase --abort</code> 回到 rebase 前狀態，再人工整理；不要使用
+<code>git push --force</code> 當作一般解法。</p>
+<h2 id="10-github-pages-設定與發布後檢查">10. GitHub Pages
+設定與發布後檢查</h2>
+<p>您的 SmartAction 已有公開網站，先沿用其發布設定。到 repository 的
+<strong>Settings → Pages</strong> 檢查目前的來源：</p>
+<ol type="1">
+<li>若是從某分支的根目錄發布，<code>games/aero/</code>
+就放在該根目錄。</li>
+<li>若從 <code>/docs</code> 發布，遊戲須放在
+<code>docs/games/aero/</code>，首頁連結仍是發布後的
+<code>games/aero/</code>。</li>
+<li>若使用 GitHub Actions，確認原有 workflow
+打包的網站目錄包含新增遊戲；不要用這份獨立專案的 workflow
+覆蓋既有主站流程。</li>
+</ol>
+<p>推送後查看 <strong>Actions</strong> 或 <strong>Pages
+deployment</strong> 是否成功。成功後開啟：</p>
+<pre class="text"><code>https://kuonanhong.github.io/SmartAction/games/aero/
+https://kuonanhong.github.io/SmartAction/games/aero/en/
+https://kuonanhong.github.io/SmartAction/games/aero/zh-Hant/</code></pre>
+<p>用手機直式、手機橫式與電腦各測一次：載入遊戲、定位拒絕／允許、地圖、目的地搜尋、兩手同時操控、F/G/C/B、第一／第三視角及海陸空切換。若看到舊畫面，先硬重新整理，必要時在瀏覽器的網站資料設定清除這個站的快取；這也可能刪除本機語言、紀錄與成績。</p>
+<p>若頁面 404，確認 <code>index.html</code> 直接位於發布目錄的
+<code>games/aero/</code>，不是多包了一層套件資料夾。若只有圖片
+404，檢查檔名大小寫、<code>assets/photos/images/</code>
+是否完整，以及是否漏傳空白／中文資料夾內檔案。</p>
+<p>SEO 的 canonical、hreflang、sitemap
+已可由建置工具依目標網址產生。它有助於搜索引擎辨識頁面，但不保證 Google
+排名、AI 搜尋引用或收錄時間。<code>games/aero/robots.txt</code>
+不能取代主站根目錄的 robots.txt；可由主站根目錄額外列出遊戲的
+sitemap。</p>
+<h2 id="11-修改原始碼後重新建置">11. 修改原始碼後重新建置</h2>
+<p>這一節只在您要改程式、翻譯或素材時使用。請在套件的<strong>原始專案根目錄</strong>執行，也就是有
+<code>package.json</code> 的資料夾；不要在 SmartAction
+首頁資料夾盲目執行，以免使用錯的專案。</p>
+<p>需要 Node.js 20 或較新版本及 npm。Mac／Linux：</p>
+<pre class="bash"><code>npm ci
+npm test
+AERO_ORIGIN=&quot;https://kuonanhong.github.io/SmartAction/games/aero&quot; npm run build</code></pre>
+<p>Windows PowerShell：</p>
+<pre class="powershell"><code>npm ci
+npm test
+$env:AERO_ORIGIN = &#39;https://kuonanhong.github.io/SmartAction/games/aero&#39;
+npm run build
+Remove-Item Env:AERO_ORIGIN</code></pre>
+<p>建置會更新 <code>dist/game.bundle.js</code>、按需載入的 3D bundle、22
+語系頁面、SEO 檔案、Service Worker、大小報表及
+<code>dist/standalone.html</code>。將新 <code>dist/</code>
+的內容複製到您的 SmartAction <code>games/aero/</code>
+再提交。若只是直接編輯 ready-to-deploy 版本的
+<code>config.js</code>，網站可使用新設定；但已生成的單檔 HTML
+仍需要重新建置才會包含新設定。</p>
+<p>本機可使用 Python HTTP server：</p>
+<pre class="bash"><code>python3 -m http.server 8080 --directory dist</code></pre>
+<p>Windows 的 Python Launcher 通常使用：</p>
+<pre class="powershell"><code>py -m http.server 8080 --directory dist</code></pre>
+<p>瀏覽 <code>http://localhost:8080/</code>；停止伺服器用
+Ctrl+C。手機透過區域網路的普通 HTTP 位址開啟時，GPS 可能因非 secure
+context 無法使用；正式 HTTPS Pages 比較適合定位驗證。</p>
+<p><code>npm test</code>
+是自動化邏輯／資料檢查。<code>npm run test:browser</code>
+另需要測試程式所述的 Playwright／Chromium
+環境；瀏覽器自動化結果不等於已覆蓋所有實體 iPhone、Android 或
+GPU。最終交付的驗證紀錄請一併閱讀。</p>
+<h2 id="12-大檔git-lfs-與-10-萬人的容量規劃">12. 大檔、Git LFS 與 10
+萬人的容量規劃</h2>
+<p>GitHub 目前一般 Git 單檔超過 50 MiB 會警告，超過 100 MiB
+會阻擋；網頁上傳單檔上限是 25 MiB。Pages 原始庫建議保持在 1 GB
+以內，<strong>這是來源 repository 的建議值</strong>；已發布網站不得超過
+1 GB，月流量有 100 GB 軟上限，也可能限流。<a
+href="https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits">GitHub
+Pages 限制</a>、<a
+href="https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github">GitHub
+大檔說明</a>。</p>
+<p><strong>Git LFS 不能用作 GitHub Pages 的網站素材供應方式。</strong>
+LFS 在 Git 裡是指標檔；不要把正在遊戲內載入的圖片或模型移去 LFS 後期待
+Pages 自動取回。大型可下載 ZIP 可放
+Releases；大量執行時素材可用有授權、可設定 CORS 的物件儲存與 CDN。<a
+href="https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage">官方
+LFS 說明</a>。</p>
+<p>本版單張照片很小，沒有必要為這 14 張 WebP 引入 LFS。請不要將
+<code>node_modules/</code>、<code>.git/</code>、Windows Unity
+發行檔、Phoenix 安裝程式、整個開發環境或重複版本 ZIP 加進
+<code>games/aero/</code>。完整套件可留在您的下載備份位置，網站只放運行需要的檔案。</p>
+<p>本機檢查大檔範例（只列清單，不刪除）：</p>
+<pre class="bash"><code>find games/aero -type f -size +50M -print
+du -sh games/aero
+git status</code></pre>
+<p>Windows PowerShell：</p>
+<pre class="powershell"><code>Get-ChildItem games\aero -Recurse -File |
+  Where-Object Length -gt 50MB |
+  Select-Object FullName,Length</code></pre>
+<p>每個玩家在自己的裝置做物理與渲染，可以減少集中運算，但<strong>不等於已驗證
+10 萬人同時在線，也不等於共享世界多人連線</strong>。網站下載、Google
+地圖、百科搜尋及選用的天氣服務都有各自的限制。</p>
+<p>例如，若每次冷載入實際傳輸 1 MB，10 萬人一波就是約 100
+GB；若每人都載入全部約 3.08 MB 照片，僅照片就約 308
+GB。這是十進位概算，不是測速或容量承諾；實際會受壓縮、快取、照片是否進入視窗及重訪影響。</p>
+<p>公開推廣前，量測 Network 實際傳輸量、p95 載入時間、錯誤率、429、CDN
+命中率及行動裝置幀率。先做小量，再對自己有權管理的靜態資源逐步增加負載；使用套件的容量測試說明。不要對
+Google、Wikipedia 或免費天氣服務執行大量壓測。若確定要承載大活動，先向
+CDN／儲存供應商確認容量與預算，再測試相應規模；這份靜態程式本身不能提供
+hosting SLA。</p>
+<h2 id="13-可選天氣後端">13. 可選天氣後端</h2>
+<p><code>weatherEndpoint</code>
+預設空白，遊戲照常使用模擬風。若網站方部署套件內的 Worker 並填上自己的
+endpoint，玩家按「更新天氣」才查詢。詳見
+<code>backend/weather-worker/README.md</code>，包含部署指令、允許來源及上游授權。</p>
+<p>範例以約 0.01 度網格、15
+分鐘快取和失敗備用資料減少上游請求，但不同資料中心、不同網格或冷啟動仍可能產生多次請求。不要宣稱
+10
+萬玩家只要一次免費天氣請求。天氣回應是參考資料，未把真實街谷氣流、水流或各空高風場重建到模擬器中。</p>
+<p>如果不需要天氣，保留空白即可。勿將 Open-Meteo 的伺服器 secret
+放在前端；商業用途、流量額度及 Cloudflare
+方案須由網站擁有者依實際用途選擇。</p>
+<h2 id="14-常見問題與驗證界線">14. 常見問題與驗證界線</h2>
+<table>
+<thead>
+<tr class="header">
+<th>現象</th>
+<th>先檢查什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Google 地圖空白</td>
+<td>外部網路／瀏覽器阻擋；按「在 Google 地圖開啟」。正式 Embed
+另查擁有者 Key、API、referrer 及帳務</td>
+</tr>
+<tr class="even">
+<td>定位不准或拒絕</td>
+<td>顯示的 ±誤差、HTTPS、瀏覽器及系統位置權限；可改手動座標</td>
+</tr>
+<tr class="odd">
+<td>地圖沒有跟每一幀移動</td>
+<td>這是 15 秒且 50 m 節流；座標本身持續更新；可按手動置中</td>
+</tr>
+<tr class="even">
+<td>搜尋太長句沒有結果</td>
+<td>改清楚地名，或使用內附目的地／座標；百科不是完整地理編碼服務</td>
+</tr>
+<tr class="odd">
+<td>切到水下仍不是實際湖底</td>
+<td>水下為程序模擬；一般地表地圖沒有提供該處完整湖底測繪</td>
+</tr>
+<tr class="even">
+<td>全景移動沒有新幾何</td>
+<td>360° 相片固定於原拍攝地點，能看四周但不是體積影片</td>
+</tr>
+<tr class="odd">
+<td>手機較慢</td>
+<td>選輕量模式，減少背景分頁；不必強制最高畫質</td>
+</tr>
+<tr class="even">
+<td>Google 3D 選項不可用</td>
+<td>需網站擁有者配置 <code>googleMapsKey</code>
+及服務；預設位置地圖可獨立使用</td>
+</tr>
+<tr class="odd">
+<td>主站更新後沒有遊戲</td>
+<td>看 Pages 發布根目錄／Actions 輸出；確認有
+<code>games/aero/index.html</code></td>
+</tr>
+</tbody>
+</table>
+<p>已完成的測試以隨附驗證紀錄為準；此文件不宣稱完成 10
+萬人壓測、所有系統真機測試、付費 Google 3D 實景驗證或現場地形測量。原
+Unity／Phoenix
+安裝檔可作功能參考，不是這份網頁套件可合法直接移植的原始碼或素材來源。</p>
+<h2 id="官方來源與授權入口">官方來源與授權入口</h2>
+<ul>
+<li><a
+href="https://support.google.com/maps/answer/7101463?hl=zh-Hant">Google：分享及嵌入地圖</a></li>
+<li><a
+href="https://developers.google.com/maps/documentation/urls/get-started">Google：免
+Key 的跨平台 Maps URLs</a></li>
+<li><a
+href="https://developers.google.com/maps/documentation/embed/embedding-map">Google：正式
+Maps Embed API</a></li>
+<li><a
+href="https://developers.google.com/maps/documentation/embed/usage-and-billing">Google：Embed
+用量與費用</a></li>
+<li><a
+href="https://developers.google.com/maps/documentation/javascript/3d/overview">Google：3D
+Maps 概覽</a></li>
+<li><a
+href="https://www.w3.org/TR/geolocation/">W3C：Geolocation</a></li>
+<li><a
+href="https://www.mediawiki.org/wiki/API:Geosearch">MediaWiki：GeoSearch</a></li>
+<li><a
+href="https://www.mediawiki.org/wiki/Wikimedia_APIs/Rate_limits">Wikimedia：API
+限流</a></li>
+<li><a
+href="https://commons.wikimedia.org/wiki/Commons:Reusing_content_outside_Wikimedia">Wikimedia
+Commons：外部再使用</a></li>
+<li><a
+href="SmartAction/games/aero/assets/photos/PHOTO_CREDITS.html">照片作者與逐張授權</a></li>
+<li><a
+href="https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits">GitHub：Pages
+限制</a></li>
+<li><a
+href="https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github">GitHub：大檔與一般
+Git</a></li>
+<li><a
+href="https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage">GitHub：Git
+LFS 的 Pages 限制</a></li>
+</ul>
+<p>照片、地圖、百科及程式碼各有自己的來源與授權；保留套件內相關檔案，日後替換素材時也逐張核對。</p></main></div><footer>本文件可離線閱讀。Google、GitHub 與其他官方連結需連網；相應服務條件以供應者最新文件為準。</footer></body></html>
