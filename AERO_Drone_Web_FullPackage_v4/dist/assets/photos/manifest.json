@@ -1,0 +1,728 @@
+{
+  "version": 1,
+  "note": "Real photographs, not live imagery. 360° images offer rotational viewing at the recorded position and are not reconstructed volumetric geometry. Artifact photos identify collection objects, not a promise of current exhibition. Destination anchors are approximate.",
+  "assets": [
+    {
+      "id": "yellowstone-old-faithful",
+      "file": "images/yellowstone-old-faithful.webp",
+      "title": {
+        "zh-TW": "老忠實間歇泉",
+        "en": "Old Faithful"
+      },
+      "commonsTitle": "File:Old Faithful eruption from Observation Point (25358073437).jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Old_Faithful_eruption_from_Observation_Point_(25358073437).jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Old_Faithful_eruption_from_Observation_Point_%2825358073437%29.jpg/1280px-Old_Faithful_eruption_from_Observation_Point_%2825358073437%29.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/0/07/Old_Faithful_eruption_from_Observation_Point_%2825358073437%29.jpg",
+      "author": "NPS / Jacob W. Frank",
+      "credit": "Old Faithful eruption from Observation Point",
+      "license": "Public domain",
+      "licenseUrl": "https://www.nps.gov/aboutus/disclaimer.htm",
+      "changes": "Resized proportionally; encoded as WebP; no generative editing.",
+      "dateTaken": "2018-01-15 11:53",
+      "retrieved": "2026-10-08",
+      "coordinates": {
+        "lat": 44.4605,
+        "lon": -110.8281,
+        "kind": "approximate destination center; not a surveyed camera location"
+      },
+      "category": "landscape",
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        8688,
+        5792
+      ],
+      "dimensions": [
+        1200,
+        800
+      ],
+      "bytes": 193808,
+      "sourceDescription": "NPS / Jacob W. Frank",
+      "facts": {
+        "zh-TW": "老忠實是黃石上間歇泉盆地的著名間歇泉；可從觀景步道認識熱水、蒸汽與地下裂隙形成的噴發。",
+        "en": "Old Faithful is a well-known geyser in Yellowstone’s Upper Geyser Basin. Its eruptions demonstrate the interaction of heated groundwater, steam and underground channels."
+      },
+      "factSources": [
+        "https://www.nps.gov/yell/planyourvisit/exploreoldfaithful.htm"
+      ],
+      "attribution": "NPS / Jacob W. Frank / Public domain (U.S. government work)",
+      "derivativeLicense": "Public domain",
+      "sha256": "fdc477c5ed3fd37e687dc44cb2f535be7259617eeaa174e20c69258505c111d1"
+    },
+    {
+      "id": "yellowstone-grand-prismatic",
+      "file": "images/yellowstone-grand-prismatic.webp",
+      "title": {
+        "zh-TW": "大稜鏡溫泉",
+        "en": "Grand Prismatic Spring"
+      },
+      "commonsTitle": "File:Grand Prismatic from Grand Prismatic Overlook (53068468252).jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Grand_Prismatic_from_Grand_Prismatic_Overlook_(53068468252).jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/Grand_Prismatic_from_Grand_Prismatic_Overlook_%2853068468252%29.jpg/1280px-Grand_Prismatic_from_Grand_Prismatic_Overlook_%2853068468252%29.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Grand_Prismatic_from_Grand_Prismatic_Overlook_%2853068468252%29.jpg",
+      "author": "NPS / Jacob W. Frank",
+      "credit": "Grand Prismatic from Grand Prismatic Overlook",
+      "license": "Public domain",
+      "licenseUrl": "https://www.nps.gov/aboutus/disclaimer.htm",
+      "changes": "Resized proportionally; encoded as WebP; no generative editing.",
+      "dateTaken": "Taken on 19 July 2023, 14:42:23",
+      "retrieved": "2026-10-08",
+      "coordinates": {
+        "lat": 44.525,
+        "lon": -110.8382,
+        "kind": "approximate destination center; not a surveyed camera location"
+      },
+      "category": "landscape",
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        8192,
+        5464
+      ],
+      "dimensions": [
+        1199,
+        800
+      ],
+      "bytes": 210970,
+      "sourceDescription": "NPS / Jacob W. Frank",
+      "facts": {
+        "zh-TW": "大稜鏡溫泉位於黃石中途間歇泉盆地，是園內最大的溫泉；池心與周緣呈現不同色帶。",
+        "en": "Grand Prismatic Spring is in Yellowstone’s Midway Geyser Basin and is the park’s largest hot spring. The pool and its margins display contrasting bands of color."
+      },
+      "factSources": [
+        "https://www.nps.gov/features/yell/ofvec/exhibits/treasures/thermals/hotspring/grandprismatic.htm"
+      ],
+      "attribution": "NPS / Jacob W. Frank / Public domain (U.S. government work)",
+      "derivativeLicense": "Public domain",
+      "sha256": "72787c5d80bcbf321da85914ccf11cf84e541eaef2333deaaf82b22f85266c72"
+    },
+    {
+      "id": "taipingshan-jancing",
+      "file": "images/taipingshan-jancing.webp",
+      "title": {
+        "zh-TW": "太平山見晴懷古步道",
+        "en": "Jancing Historic Trail"
+      },
+      "commonsTitle": "File:Taipingshan - Taipingshan4676.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Taipingshan_-_Taipingshan4676.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Taipingshan_-_Taipingshan4676.jpg/1280px-Taipingshan_-_Taipingshan4676.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ea/Taipingshan_-_Taipingshan4676.jpg",
+      "author": "lumoplank",
+      "credit": "https://www.flickr.com/photos/199350666@N08/54711414491",
+      "license": "CC0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Resized proportionally; encoded as WebP; no generative editing.",
+      "dateTaken": "before 10 August 2025date QS:P,+2025-08-10T00:00:00Z/7,P1326,+2025-08-10T00:00:00Z/11",
+      "retrieved": "2026-10-08",
+      "coordinates": {
+        "lat": 24.5155,
+        "lon": 121.524,
+        "kind": "approximate destination center; not a surveyed camera location"
+      },
+      "category": "forest",
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        5322,
+        3816
+      ],
+      "dimensions": [
+        1115,
+        800
+      ],
+      "bytes": 250002,
+      "sourceDescription": "Abandoned moss-covered wooden flume structure with metal rails, overgrown with ferns and vegetation, at Jancing Historic Trail, Taipingshan.",
+      "facts": {
+        "zh-TW": "見晴懷古步道沿昔日太平山運材鐵道路線整建；苔蘚、蕨類與舊軌道共同留下林業歷史的痕跡。",
+        "en": "Jancing Historic Trail follows part of a former Taipingshan logging railway. Moss, ferns and surviving rails reveal the area’s forestry history."
+      },
+      "factSources": [
+        "https://recreation.forest.gov.tw/Trail/RT?tr_id=019&typ=2"
+      ],
+      "attribution": "lumoplank / CC0",
+      "derivativeLicense": "CC0",
+      "sha256": "95d8b447076e6497050ca903a930c420ae9e402224b11c032a042939a54aa810"
+    },
+    {
+      "id": "taipingshan-train",
+      "file": "images/taipingshan-train.webp",
+      "title": {
+        "zh-TW": "太平山蹦蹦車",
+        "en": "Taipingshan Bong Bong Train"
+      },
+      "commonsTitle": "File:Taiping Mountain Forest Railway 01.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Taiping_Mountain_Forest_Railway_01.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Taiping_Mountain_Forest_Railway_01.jpg/1280px-Taiping_Mountain_Forest_Railway_01.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/2/29/Taiping_Mountain_Forest_Railway_01.jpg",
+      "author": "*嘟*",
+      "credit": "https://www.flickr.com/photos/enixii/2086046491/",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "changes": "Resized proportionally; encoded as WebP; no generative editing.",
+      "dateTaken": "Uploaded to Flickr on 4 Dec 2007 by *嘟*, upload to commons by Quatro Valvole on 1 Jan 2008.",
+      "retrieved": "2026-10-08",
+      "coordinates": {
+        "lat": 24.4961,
+        "lon": 121.5353,
+        "kind": "approximate destination center; not a surveyed camera location"
+      },
+      "category": "railway",
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        2048,
+        1361
+      ],
+      "dimensions": [
+        1200,
+        798
+      ],
+      "bytes": 245962,
+      "sourceDescription": "Taiping Mountain Forest Railway Bong Bong Train 太平山森林鐵路 蹦蹦車",
+      "facts": {
+        "zh-TW": "太平山蹦蹦車與山地運材鐵道的歷史相連；今日的遊憩列車讓旅客從軌道視角欣賞森林。",
+        "en": "The Taipingshan Bong Bong Train is linked to the mountain logging railway. The recreation train offers a rail-level view of the surrounding forest."
+      },
+      "factSources": [
+        "https://recreation.forest.gov.tw/Forestry/FR?typ_id=0100041"
+      ],
+      "attribution": "*嘟* / CC BY 2.0",
+      "derivativeLicense": "CC BY 2.0",
+      "sha256": "af51607e6e888918ea857f39815aaf0da091a7f47d3b4b8c8e79e0881e2e030b"
+    },
+    {
+      "id": "taipingshan-cuifeng",
+      "file": "images/taipingshan-cuifeng.webp",
+      "title": {
+        "zh-TW": "翠峰湖",
+        "en": "Cueifong Lake"
+      },
+      "commonsTitle": "File:2019 Cueifong Lake.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:2019_Cueifong_Lake.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/2019_Cueifong_Lake.jpg/1280px-2019_Cueifong_Lake.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bf/2019_Cueifong_Lake.jpg",
+      "author": "Taiwankengo",
+      "credit": "Own work",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "changes": "Resized proportionally; encoded as WebP; no generative editing.",
+      "dateTaken": "2019-11-10 15:02:09",
+      "retrieved": "2026-10-08",
+      "coordinates": {
+        "lat": 24.5152,
+        "lon": 121.6066,
+        "kind": "approximate destination center; not a surveyed camera location"
+      },
+      "category": "lake",
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        6000,
+        4000
+      ],
+      "dimensions": [
+        1200,
+        800
+      ],
+      "bytes": 186900,
+      "sourceDescription": "​2019 Cueifong Lake (novembre) 翠峰湖",
+      "facts": {
+        "zh-TW": "翠峰湖位在太平山山區；環湖步道沿舊運材軌道路線整理，周圍可見常受雲霧影響的森林與泥炭蘚環境。",
+        "en": "Cueifong Lake lies in the Taipingshan mountains. Its circle trail follows an old timber-rail route through mist-influenced forest and peat-moss habitat."
+      },
+      "factSources": [
+        "https://recreation.forest.gov.tw/Trail/RT?tr_id=014&typ=3"
+      ],
+      "attribution": "Taiwankengo / CC BY-SA 4.0",
+      "derivativeLicense": "CC BY-SA 4.0",
+      "sha256": "c5ccdef61fe702218993c5ec57d0c91314af5746358207789ddeea51870a71ab"
+    },
+    {
+      "id": "taipei-npm",
+      "file": "images/taipei-npm.webp",
+      "title": {
+        "zh-TW": "臺北國立故宮博物院",
+        "en": "National Palace Museum"
+      },
+      "commonsTitle": "File:National Palace Museum, Taipei.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:National_Palace_Museum,_Taipei.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/National_Palace_Museum%2C_Taipei.jpg/1280px-National_Palace_Museum%2C_Taipei.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c5/National_Palace_Museum%2C_Taipei.jpg",
+      "author": "Jason Zhang",
+      "credit": "Own work",
+      "license": "CC0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Resized proportionally; encoded as WebP; no generative editing.",
+      "dateTaken": "2017-08-25 23:16:59",
+      "retrieved": "2026-10-08",
+      "coordinates": {
+        "lat": 25.1024,
+        "lon": 121.5485,
+        "kind": "approximate destination center; not a surveyed camera location"
+      },
+      "category": "museum",
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        5184,
+        3456
+      ],
+      "dimensions": [
+        1200,
+        800
+      ],
+      "bytes": 183148,
+      "sourceDescription": "The front exterior of the National Palace Museum in Taipei, Taiwan.",
+      "facts": {
+        "zh-TW": "國立故宮博物院臺北外雙溪新館於1965年揭幕，典藏書畫、器物與圖書文獻。虛擬展示使用館藏照片；現場展品會輪換。",
+        "en": "The National Palace Museum’s Taipei building opened in 1965 and houses painting, calligraphy, objects and historical books. These collection photographs do not imply that an object is currently on display."
+      },
+      "factSources": [
+        "https://www.npm.gov.tw/Articles.aspx?l=1&sno=03012532"
+      ],
+      "attribution": "Jason Zhang / CC0",
+      "derivativeLicense": "CC0",
+      "sha256": "253ff5795ebae157e48f52158c105898a9aec9d2963d15052a7fd507db8ae46c"
+    },
+    {
+      "id": "npm-jadeite-cabbage",
+      "file": "images/npm-jadeite-cabbage.webp",
+      "title": {
+        "zh-TW": "翠玉白菜",
+        "en": "Jadeite Cabbage",
+        "zh-Hant": "翠玉白菜",
+        "zh-Hans": "翠玉白菜",
+        "ja": "翠玉白菜",
+        "ko": "취옥백채",
+        "ar": "ملفوفة من الجاديت",
+        "ms": "Kubis Jadeit",
+        "th": "ผักกาดขาวหยก",
+        "vi": "Bắp cải ngọc phỉ thúy",
+        "id": "Kubis Jadeit",
+        "fil": "Repolyong jadeite",
+        "de": "Jadeit-Kohl",
+        "pl": "Kapusta z jadeitu",
+        "cs": "Zelí z jadeitu",
+        "pt": "Couve de jadeíte",
+        "fi": "Jadeiittikaali",
+        "sv": "Jadeitkål",
+        "ru": "Жадеитовая капуста",
+        "fr": "Chou en jadéite",
+        "es": "Col de jadeíta",
+        "it": "Cavolo di giadeite",
+        "hi": "जेडाइट की पत्तागोभी"
+      },
+      "commonsTitle": "File:Jadeite Cabbage, Palace Museum, Taipei, Taiwan.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Jadeite_Cabbage,_Palace_Museum,_Taipei,_Taiwan.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Jadeite_Cabbage%2C_Palace_Museum%2C_Taipei%2C_Taiwan.jpg/1280px-Jadeite_Cabbage%2C_Palace_Museum%2C_Taipei%2C_Taiwan.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/7/76/Jadeite_Cabbage%2C_Palace_Museum%2C_Taipei%2C_Taiwan.jpg",
+      "author": "Gary Todd",
+      "credit": "https://www.flickr.com/photos/101561334@N08/25135400158/",
+      "license": "CC0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Resized proportionally; encoded as WebP; no generative editing.",
+      "dateTaken": "2017-12-08 09:36:39",
+      "retrieved": "2026-10-08",
+      "coordinates": {
+        "lat": 25.1024,
+        "lon": 121.5485,
+        "kind": "approximate destination center; not a surveyed camera location"
+      },
+      "category": "artifact",
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        3456,
+        5184
+      ],
+      "dimensions": [
+        533,
+        800
+      ],
+      "bytes": 39226,
+      "sourceDescription": "Jade gallery, Palace Museum, Taipei, Taiwan",
+      "facts": {
+        "zh-TW": "清代翠玉白菜運用玉石原有的白色與綠色，將莖葉與昆蟲雕成細緻作品；圖片呈現典藏文物，不代表即時展出狀態。",
+        "en": "This Qing-dynasty Jadeite Cabbage uses the stone’s natural white and green areas to shape the stalk, leaves and insects. The image shows a collection object, not a live exhibition feed."
+      },
+      "factSources": [
+        "https://digitalarchive.npm.gov.tw/Collection/Detail/3?dep=U"
+      ],
+      "attribution": "Gary Todd / CC0",
+      "derivativeLicense": "CC0",
+      "sha256": "a2afe6d3c0c4e41545ec62218914099a4830c7378ad57371532cce44038d2e75"
+    },
+    {
+      "id": "npm-meat-shaped-stone",
+      "file": "images/npm-meat-shaped-stone.webp",
+      "title": {
+        "zh-TW": "肉形石",
+        "en": "Meat-shaped Stone",
+        "zh-Hant": "肉形石",
+        "zh-Hans": "肉形石",
+        "ja": "肉形石",
+        "ko": "육형석",
+        "ar": "حجر على هيئة قطعة لحم",
+        "ms": "Batu Berbentuk Daging",
+        "th": "หินรูปเนื้อ",
+        "vi": "Đá hình miếng thịt",
+        "id": "Batu Berbentuk Daging",
+        "fil": "Batong hugis-karne",
+        "de": "Fleischförmiger Stein",
+        "pl": "Kamień w kształcie mięsa",
+        "cs": "Kámen ve tvaru masa",
+        "pt": "Pedra em forma de carne",
+        "fi": "Lihanmuotoinen kivi",
+        "sv": "Köttformad sten",
+        "ru": "Камень в форме мяса",
+        "fr": "Pierre en forme de viande",
+        "es": "Piedra en forma de carne",
+        "it": "Pietra a forma di carne",
+        "hi": "मांस के आकार का पत्थर"
+      },
+      "commonsTitle": "File:Meat-shaped Stone (Jasper) (27228557209).jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Meat-shaped_Stone_(Jasper)_(27228557209).jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Meat-shaped_Stone_%28Jasper%29_%2827228557209%29.jpg/1280px-Meat-shaped_Stone_%28Jasper%29_%2827228557209%29.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c6/Meat-shaped_Stone_%28Jasper%29_%2827228557209%29.jpg",
+      "author": "Gary Todd from Xinzheng, China",
+      "credit": "Meat-shaped Stone (Jasper)",
+      "license": "CC0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Resized proportionally; encoded as WebP; no generative editing.",
+      "dateTaken": "2017-12-08 09:39",
+      "retrieved": "2026-10-08",
+      "coordinates": {
+        "lat": 25.1024,
+        "lon": 121.5485,
+        "kind": "approximate destination center; not a surveyed camera location"
+      },
+      "category": "artifact",
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        5184,
+        3456
+      ],
+      "dimensions": [
+        1200,
+        800
+      ],
+      "bytes": 84068,
+      "sourceDescription": "Jade gallery, Palace Museum, Taipei, Taiwan. Complete indexed photo collection at WorldHistoryPics.com.",
+      "facts": {
+        "zh-TW": "清代肉形石利用碧石天然層狀紋理並經加工，呈現近似肉塊的外觀；此為故宮典藏文物照片。",
+        "en": "The Qing-dynasty Meat-shaped Stone uses naturally layered jasper, refined by the artisan to resemble a piece of meat. This is a photograph of an NPM collection object."
+      },
+      "factSources": [
+        "https://digitalarchive.npm.gov.tw/Collection/Detail/49961?dep=U"
+      ],
+      "attribution": "Gary Todd from Xinzheng, China / CC0",
+      "derivativeLicense": "CC0",
+      "sha256": "f5524bc1f2251820a7e99a4f779dacff005b138b3604dd581a98b69c9ece81f9"
+    },
+    {
+      "id": "chengcing-lake-1973",
+      "file": "images/chengcing-lake-1973.webp",
+      "title": {
+        "zh-TW": "澄清湖九曲橋・1973年歷史照片",
+        "en": "Chengcing Lake — 1973",
+        "zh-Hant": "澄清湖九曲橋 — 1973",
+        "zh-Hans": "澄清湖九曲桥 — 1973",
+        "ja": "澄清湖 — 1973",
+        "ko": "청칭호 — 1973",
+        "ar": "بحيرة Chengcing — 1973",
+        "ms": "Tasik Chengcing — 1973",
+        "th": "ทะเลสาบ Chengcing — 1973",
+        "vi": "Hồ Chengcing — 1973",
+        "id": "Danau Chengcing — 1973",
+        "fil": "Lawa ng Chengcing — 1973",
+        "de": "Chengcing-See — 1973",
+        "pl": "Jezioro Chengcing — 1973",
+        "cs": "Jezero Chengcing — 1973",
+        "pt": "Lago Chengcing — 1973",
+        "fi": "Chengcing-järvi — 1973",
+        "sv": "Chengcingsjön — 1973",
+        "ru": "Озеро Chengcing — 1973",
+        "fr": "Lac Chengcing — 1973",
+        "es": "Lago Chengcing — 1973",
+        "it": "Lago Chengcing — 1973",
+        "hi": "Chengcing झील — 1973"
+      },
+      "commonsTitle": "File:Bridge of Nine Turns at Cheng Ching Lake near Kaohsiung, Taiwan.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Bridge_of_Nine_Turns_at_Cheng_Ching_Lake_near_Kaohsiung,_Taiwan.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Bridge_of_Nine_Turns_at_Cheng_Ching_Lake_near_Kaohsiung%2C_Taiwan.jpg/1280px-Bridge_of_Nine_Turns_at_Cheng_Ching_Lake_near_Kaohsiung%2C_Taiwan.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/9/99/Bridge_of_Nine_Turns_at_Cheng_Ching_Lake_near_Kaohsiung%2C_Taiwan.jpg",
+      "author": "Born2bdigital304",
+      "credit": "Taken while on shore leave in Kaohsiung, Taiwan\n\nPreviously published: Never published before",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "changes": "Resized proportionally; encoded as WebP; no generative editing.",
+      "dateTaken": "1973/12/??",
+      "retrieved": "2026-10-08",
+      "coordinates": {
+        "lat": 22.6602,
+        "lon": 120.3499,
+        "kind": "approximate destination center; not a surveyed camera location"
+      },
+      "category": "lake",
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        5184,
+        3360
+      ],
+      "dimensions": [
+        1200,
+        778
+      ],
+      "bytes": 222982,
+      "sourceDescription": "Phot of the Bridge of Nine Turns at Cheng Ching Lake near Kaohsiung, Taiwan",
+      "facts": {
+        "zh-TW": "1973年拍攝的澄清湖九曲橋歷史照片，可與較新的湖畔照片比較景觀和遊客活動的變化。",
+        "en": "This historical photograph records the Nine-Turn Bridge at Chengcing Lake in 1973. Compare it with the newer lakeside image to explore changes over time."
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:Bridge_of_Nine_Turns_at_Cheng_Ching_Lake_near_Kaohsiung,_Taiwan.jpg"
+      ],
+      "attribution": "Born2bdigital304 / CC BY-SA 3.0",
+      "derivativeLicense": "CC BY-SA 3.0",
+      "sha256": "641e2cc5baa62c5dfc0bd7d06f7144fa2907bb6508e34bca290a8a7d90e844b2"
+    },
+    {
+      "id": "weiwuying-park",
+      "file": "images/weiwuying-park.webp",
+      "title": {
+        "zh-TW": "衛武營都會公園",
+        "en": "Weiwuying Metropolitan Park"
+      },
+      "commonsTitle": "File:Weiwuying Municipal Park 衛武營都會公園 - panoramio.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Weiwuying_Municipal_Park_%E8%A1%9B%E6%AD%A6%E7%87%9F%E9%83%BD%E6%9C%83%E5%85%AC%E5%9C%92_-_panoramio.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/61/Weiwuying_Municipal_Park_%E8%A1%9B%E6%AD%A6%E7%87%9F%E9%83%BD%E6%9C%83%E5%85%AC%E5%9C%92_-_panoramio.jpg/1280px-Weiwuying_Municipal_Park_%E8%A1%9B%E6%AD%A6%E7%87%9F%E9%83%BD%E6%9C%83%E5%85%AC%E5%9C%92_-_panoramio.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/6/61/Weiwuying_Municipal_Park_%E8%A1%9B%E6%AD%A6%E7%87%9F%E9%83%BD%E6%9C%83%E5%85%AC%E5%9C%92_-_panoramio.jpg",
+      "author": "lienyuan lee",
+      "credit": "https://web.archive.org/web/20161026195619/http://www.panoramio.com/photo/82338158",
+      "license": "CC BY 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+      "changes": "Resized proportionally; encoded as WebP; no generative editing.",
+      "dateTaken": "Taken on 18 November 2012",
+      "retrieved": "2026-10-08",
+      "coordinates": {
+        "lat": 22.6244,
+        "lon": 120.342,
+        "kind": "approximate destination center; not a surveyed camera location"
+      },
+      "category": "park",
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        3479,
+        2609
+      ],
+      "dimensions": [
+        1067,
+        800
+      ],
+      "bytes": 238090,
+      "sourceDescription": "Weiwuying Municipal Park  衛武營都會公園",
+      "facts": {
+        "zh-TW": "衛武營由軍事用地轉變為城市綠地；都會公園保留老樹，與鄰近的表演藝術場館共同構成文化休憩空間。",
+        "en": "Weiwuying developed from military grounds into an urban green space. Mature trees and the nearby performing-arts venue form a combined cultural and recreation area."
+      },
+      "factSources": [
+        "https://khh.travel/zh-tw/attractions/detail/238/"
+      ],
+      "attribution": "lienyuan lee / CC BY 3.0",
+      "derivativeLicense": "CC BY 3.0",
+      "sha256": "b507aa9de9ad0dfee89c904be07c3c1ecedab2e1d9895df75417f61ec8edd10c"
+    },
+    {
+      "id": "austria-forest-360",
+      "file": "images/austria-forest-360.webp",
+      "title": {
+        "zh-TW": "奧地利蒂羅爾凱撒山脈森林360°",
+        "en": "Wilder Kaiser forest, Tyrol, Austria — 360°"
+      },
+      "commonsTitle": "File:Wald am Wilden Kaiser, Tirol, 360x180, 160620, ako.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Wald_am_Wilden_Kaiser,_Tirol,_360x180,_160620,_ako.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/Wald_am_Wilden_Kaiser%2C_Tirol%2C_360x180%2C_160620%2C_ako.jpg/3840px-Wald_am_Wilden_Kaiser%2C_Tirol%2C_360x180%2C_160620%2C_ako.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/1/14/Wald_am_Wilden_Kaiser%2C_Tirol%2C_360x180%2C_160620%2C_ako.jpg",
+      "author": "Ansgar Koreng",
+      "credit": "Own work",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "changes": "Resized proportionally; encoded as WebP; no generative editing.",
+      "dateTaken": "2016-06-20 18:17",
+      "retrieved": "2026-10-08",
+      "coordinates": {
+        "lat": 47.534823,
+        "lon": 12.282477,
+        "kind": "camera location reported on source file page"
+      },
+      "category": "panorama",
+      "is360": true,
+      "projection": "equirectangular 360x180",
+      "originalDimensions": [
+        10000,
+        5000
+      ],
+      "dimensions": [
+        1920,
+        960
+      ],
+      "bytes": 508566,
+      "sourceDescription": "Forest at the Kaiser mountains in Tyrol, Austria. To be viewed in the 360° panoramic viewer!",
+      "facts": {
+        "zh-TW": "此真實360°全景可環視拍攝位置周圍；固定照片不提供移動後的真實三維視差。",
+        "en": "This real 360° panorama allows looking around its recorded viewpoint. A fixed photograph does not provide authentic 3D parallax when moving."
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:Wald_am_Wilden_Kaiser,_Tirol,_360x180,_160620,_ako.jpg"
+      ],
+      "attribution": "Ansgar Koreng / CC BY-SA 4.0",
+      "derivativeLicense": "CC BY-SA 4.0",
+      "sha256": "e676b52071f66e99c6a9c8a0a07e61847c03ca8e12e668707f0e6847e4910353"
+    },
+    {
+      "id": "taiwan-boai-park-360",
+      "file": "images/taiwan-boai-park-360.webp",
+      "title": {
+        "zh-TW": "苗栗竹南博愛公園360°",
+        "en": "Boai Park, Zhunan, Miaoli — 360°"
+      },
+      "commonsTitle": "File:Panorama360BoaiParkZhunanMiaoliTaiwan20200829.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Panorama360BoaiParkZhunanMiaoliTaiwan20200829.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/Panorama360BoaiParkZhunanMiaoliTaiwan20200829.jpg/3840px-Panorama360BoaiParkZhunanMiaoliTaiwan20200829.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/9/90/Panorama360BoaiParkZhunanMiaoliTaiwan20200829.jpg",
+      "author": "OnionBulb",
+      "credit": "Own work",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "changes": "Resized proportionally; encoded as WebP; no generative editing.",
+      "dateTaken": "2020-08-29",
+      "retrieved": "2026-10-08",
+      "coordinates": {
+        "lat": 24.684586,
+        "lon": 120.871273,
+        "kind": "camera location reported on source file page"
+      },
+      "category": "panorama",
+      "is360": true,
+      "projection": "equirectangular 360x180",
+      "originalDimensions": [
+        6912,
+        3456
+      ],
+      "dimensions": [
+        2560,
+        1280
+      ],
+      "bytes": 414794,
+      "sourceDescription": "This is a 360 panorama, Bo'ai Park, Zhunan, Miaoli, Taiwan.",
+      "facts": {
+        "zh-TW": "此真實360°全景可環視拍攝位置周圍；固定照片不提供移動後的真實三維視差。",
+        "en": "This real 360° panorama allows looking around its recorded viewpoint. A fixed photograph does not provide authentic 3D parallax when moving."
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:Panorama360BoaiParkZhunanMiaoliTaiwan20200829.jpg"
+      ],
+      "attribution": "OnionBulb / CC BY-SA 4.0",
+      "derivativeLicense": "CC BY-SA 4.0",
+      "sha256": "4a8cc97a54cc403de154e3d8bc3a447453416c83e9d58567a343732b0ebda9cc"
+    },
+    {
+      "id": "fengyi-academy",
+      "file": "images/fengyi-academy.webp",
+      "title": {
+        "zh-TW": "鳳儀書院",
+        "en": "Fongyi Academy"
+      },
+      "commonsTitle": "File:Fongyi Tutorial Academy, Courtyard, Fongshan District, Kaohsiung City (Taiwan).jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Fongyi_Tutorial_Academy,_Courtyard,_Fongshan_District,_Kaohsiung_City_(Taiwan).jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/Fongyi_Tutorial_Academy%2C_Courtyard%2C_Fongshan_District%2C_Kaohsiung_City_%28Taiwan%29.jpg/1280px-Fongyi_Tutorial_Academy%2C_Courtyard%2C_Fongshan_District%2C_Kaohsiung_City_%28Taiwan%29.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Fongyi_Tutorial_Academy%2C_Courtyard%2C_Fongshan_District%2C_Kaohsiung_City_%28Taiwan%29.jpg",
+      "author": "Mk2010",
+      "credit": "Own work",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "changes": "Resized proportionally; encoded as WebP; no generative editing.",
+      "dateTaken": "2017-09-16 21:42:29",
+      "retrieved": "2026-10-08",
+      "coordinates": {
+        "lat": 22.6257,
+        "lon": 120.3603,
+        "kind": "approximate destination center; not a surveyed camera location"
+      },
+      "category": "heritage",
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        5334,
+        3001
+      ],
+      "dimensions": [
+        1200,
+        675
+      ],
+      "bytes": 166762,
+      "sourceDescription": "This is a photo of a monument in Taiwan identified by the ID",
+      "facts": {
+        "zh-TW": "鳳儀書院創建於1814年，位於鳳山城隍廟旁，是了解清代書院教育與鳳山歷史的場所。",
+        "en": "Founded in 1814 beside Fongshan’s City God Temple, Fongyi Academy introduces traditional academy education and the history of Fongshan."
+      },
+      "factSources": [
+        "https://khh.travel/zh-tw/attractions/detail/171/"
+      ],
+      "attribution": "Mk2010 / CC BY-SA 4.0",
+      "derivativeLicense": "CC BY-SA 4.0",
+      "sha256": "90dd0e91958424b4ef34b5b91f268177151407064c9eb8f1fb28af9d50f838f5"
+    },
+    {
+      "id": "chengcing-lake",
+      "file": "images/chengcing-lake.webp",
+      "title": {
+        "zh-TW": "澄清湖",
+        "en": "Chengcing Lake"
+      },
+      "commonsTitle": "File:Chengcing Lake-04.2023-10-31.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Chengcing_Lake-04.2023-10-31.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Chengcing_Lake-04.2023-10-31.jpg/1280px-Chengcing_Lake-04.2023-10-31.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/4/42/Chengcing_Lake-04.2023-10-31.jpg",
+      "author": "阿道",
+      "credit": "Own work",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "changes": "Resized proportionally; encoded as WebP; no generative editing.",
+      "dateTaken": "2023-10-31 13:45:32",
+      "retrieved": "2026-10-08",
+      "coordinates": {
+        "lat": 22.6602,
+        "lon": 120.3499,
+        "kind": "approximate destination center; not a surveyed camera location"
+      },
+      "category": "lake",
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        3264,
+        1463
+      ],
+      "dimensions": [
+        1200,
+        538
+      ],
+      "bytes": 131622,
+      "sourceDescription": "​澄清湖風景區。",
+      "facts": {
+        "zh-TW": "澄清湖的九曲橋與湖畔中式庭園建築形成代表性景觀，可觀察轉折橋身和水面倒影。",
+        "en": "Chengcing Lake’s Nine-Turn Bridge and Chinese-style lakeside gardens form a distinctive scene. Look for the bridge’s angular route and its reflection in the water."
+      },
+      "factSources": [
+        "https://khh.travel/zh-tw/attractions/detail/9/"
+      ],
+      "attribution": "阿道 / CC BY-SA 4.0",
+      "derivativeLicense": "CC BY-SA 4.0",
+      "sha256": "ab49f22f529d43c7400fead59804c30cd7ab641f73fe9494dd8a95806897f6d6"
+    }
+  ],
+  "totalBytes": 3076900
+}
