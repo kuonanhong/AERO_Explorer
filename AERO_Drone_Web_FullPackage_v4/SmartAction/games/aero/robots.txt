@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://kuonanhong.github.io/SmartAction/games/aero/sitemap.xml

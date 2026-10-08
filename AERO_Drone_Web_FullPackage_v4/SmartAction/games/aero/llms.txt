@@ -1,0 +1,23 @@
+# AERO Explorer v4
+
+Free browser-based air, land and underwater vehicle simulator in 22 languages. Each visitor runs a separate simulation locally. Keyboard Mode 2, multitouch sticks and on-screen directional keys. Beginner assisted, Sport and manual-throttle Expert modes. FPV and third-person cameras. Hardware hints and a small graphics probe select Canvas 2D, balanced WebGL or full WebGL; sustained low FPS and graphics context loss reduce quality.
+
+- [Play](https://kuonanhong.github.io/SmartAction/games/aero/)
+- [English](https://kuonanhong.github.io/SmartAction/games/aero/en/)
+- [繁體中文](https://kuonanhong.github.io/SmartAction/games/aero/zh-Hant/)
+- [CAA reference](https://drone.caa.gov.tw/zh-TW/Default/WebGuide)
+
+## Controls
+Left: W/S rise or dive, A/D yaw. Right: arrows forward/back and sideways. W/S do not change height in land mode. V camera, Space pause, R reset. Mobile: two simultaneous virtual sticks or directional keypads. No account, background click or telemetry service is required. Language, tutorial and best-score preferences remain in local browser storage. Coordinates remain in memory; owner browser API configuration is public. Location requests go to selected external map/encyclopedia services. Photo passport stamps remain in local browser storage.
+
+## Maps and places
+The default location map uses Google's consumer embed compatibility endpoint with no player API key; a documented Google Maps URL is always available as fallback. This compatibility endpoint has no promised API SLA. Owners may configure the supported Embed API via googleEmbedKey. Vehicle coordinates update at 5 Hz; map recentering requires both 15 seconds and 50 metres except explicit travel/recenter. Startup geolocation requests browser permission once; refusal keeps a clearly labeled example. GPS accuracy and simulated vehicle coordinates are distinct. Browser language preferences choose among 22 locales; explicit locale URLs and user choices override that default.
+
+Eleven curated destinations include Yellowstone, Taipingshan, the National Palace Museum and Kaohsiung. Fourteen downloaded, attributed photographs use public-domain, CC0 or CC BY/SA licenses; photo files and licenses are included. Two actual 360-degree photographs are at Boai Park in Zhunan, Taiwan, and Wilder Kaiser in Austria. Photos provide a fixed camera view or fixed-point panoramic rotation, not reconstructed 3D terrain. The game separately renders original 3D vehicles and ecology. Museum photos do not promise current exhibitions. Thirteen earlier Kaohsiung POIs remain included. Online Wikipedia nearby/search supplies real primary coordinates, credited CC BY-SA excerpts and article links. Missing results are never invented. The place guide uses sourced text and keyword topics, not an AI chatbot or current restaurant review service.
+
+Google Maps JavaScript 3D, Street View and Places are optional owner-configured services with API restrictions, billing, quotas and regional coverage. No key is bundled; billed 3D imagery has not been validated. Water ecology and its original AI reef training background remain simulated. No Google imagery is downloaded or cached by the game. Coordinates sent to Google and Wikipedia support requested mapping and search. Weather is an optional shared cached reference; game wind remains simplified.
+
+## Controls and limits
+All text, status, controls and guides are outside the flight viewport. F photographs the simulation, G drops a bounded temporary beacon, C opens the current coordinate map, B opens sourced stories. Both hands have two action buttons. The same chassis morphs between air, car and submarine modes. WebGL FPV uses 5% radial fisheye; the Canvas fallback has a widened perspective approximation. Photographed curated places create local passport stamps. No image uploads, hidden clicks or account registration occur.
+
+This is a training and exploration game, not flight permission or a certified flight model. Hardware hints do not measure free RAM/VRAM. No 100,000-user test or hosting SLA is claimed. External map/API capacity differs from static game asset capacity. Language drafts need native review for formal publication. Search ranking and AI search inclusion are not guaranteed.
