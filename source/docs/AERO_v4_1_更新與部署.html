@@ -1,0 +1,38 @@
+<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AERO Explorer 4.1 更新與 GitHub 部署</title><style>body{max-width:900px;margin:40px auto;padding:0 22px;font:17px/1.8 system-ui,sans-serif;color:#153332;background:#f4f6f0}h1,h2{line-height:1.35}h2{margin-top:40px}a{color:#175c56}pre{overflow:auto;background:#153332;color:#f0f6e4;padding:20px;border-radius:12px;font-size:14px}table{border-collapse:collapse;width:100%}td,th{padding:12px;text-align:left;border:1px solid #bccdc5}.note{background:#e3eccb;padding:18px;border-radius:12px}code{overflow-wrap:anywhere}li{margin:9px 0}</style>
+<h1>AERO Explorer 4.1<br>手機修正、附近照片與移動視差</h1>
+<p>本包可直接部署到 <a href="https://kuonanhong.github.io/AERO_Explorer/">kuonanhong.github.io/AERO_Explorer/</a>，保留 22 種介面語言、海陸空載具、鍵盤與觸控操控。</p>
+<h2>本次修正</h2><table><tr><th>問題</th><th>現在的行為</th></tr><tr><td>LINE 顯示 Google 地圖 ERR_BLOCKED_BY_RESPONSE</td><td>預設改用可見範圍的 OpenStreetMap 街道圖磚，不再載入被擋的 Google consumer iframe。附近景點與载具座標標記在網頁內呈現，另保留正式 Google Maps 連結。</td></tr><tr><td>LINE 不支援下載，遊戲卻說已下載</td><td>拍照先開啟 PNG 預覽，不自動觸發下載。長按可用時可儲存；支援檔案分享的瀏覽器會顯示分享按鈕。一般瀏覽器另有手動 PNG 下載。提示區分「照片已產生」「提出下載要求」「交給分享功能」，不假裝確認寫入相簿。</td></tr><tr><td>附近景點只有文字</td><td>附近卡片加入對應照片、來源與授權。高雄長庚使用明確標為 2013 年院內咖啡店的歷史照片，不當成醫院外觀，也不投影為飛行背景。其他地區的百科景點按需核對 Commons 照片授權，查無合格圖片會說明。</td></tr><tr><td>前進時照片固定</td><td>WebGL 和 Canvas 都加入照片估計深度：近景移動較大，前進擴張、後退收縮、橫移方向相反；360°照片保留轉頭觀看。水下的生成訓練背景也加入移動視差，魚群等物件維持三維投影。</td></tr></table>
+<p class="note">照片視差是 2.5D 估計，並非 Google 衛星影像、即時攝影或實測立體地形。照片沒有拍到的背面不能還原；接近估計的移動範圍時，下方會提示重置或換視點。水下魚群、礁石與背景屬模擬，不宣稱是所選湖泊或海域的真實水底。標記座標是從定位起點推算的遊戲位置。</p>
+<h2>手機使用方式</h2><ol><li>允許定位後選附近景點，或在搜尋框輸入目的地；拒絕定位仍能用明確標示的示例位置。</li><li>按「開始」，兩手搖桿分別控制升降／轉向與前後／橫移。畫面文字與功能鍵留在飛行視野下方。</li><li>按「拍照」會暫停並顯示照片。先嘗試長按圖片或「分享／儲存照片」。</li><li>LINE 若沒有儲存選項，使用右上角選單在 Safari 或 Chrome 開啟同一網址，再拍照。內建瀏覽器的作業系統限制不能由 HTML 強制解除；手機螢幕截圖仍可使用。</li></ol>
+<p>LINE 的下載按鈕會隱藏，避免反覆觸發截圖中的錯誤。分享支援以瀏覽器實際能力判斷，取消分享不報成功；分享失敗保留照片預覽。</p>
+<h2>檔案結構</h2><ul><li><code>AERO_Explorer/</code>：已建置的 GitHub 根目錄版本；裡面的 index.html 與所有資料夾一起複製到儲存庫根目錄。</li><li><code>AERO_Explorer_v4_1.html</code>：單檔版本，內含程式與本地照片；可改名 index.html 發布。切換語言不再跳至不存在的語言資料夾。</li><li><code>source/</code>：完整原始碼、建置工具、測試及授權資料。</li><li><code>SmartAction/games/aero/</code>：另備舊 SmartAction 網站的子資料夾版本。</li><li><code>SHA256SUMS.txt</code>：包內檔案雜湊。</li></ul>
+<p>離線開啟單檔 HTML 可玩本地模擬、看內含照片；街道圖、線上搜尋、定位與 Google 連結仍需要網路或瀏覽器支援。file:// 會顯示座標格線，避免向公共圖磚服務發出沒有正常網站 Referer 的請求。</p>
+<h2>已有 AERO_Explorer 儲存庫：更新指令</h2>
+<p>以下為 macOS／Linux／Git Bash。路徑請換成自己解壓縮的實際位置。先確定終端機在 AERO_Explorer 儲存庫；如果停在 git diff 的分頁畫面，按 <strong>q</strong> 回到命令列。Ctrl+C 可中斷一般命令。</p>
+<pre>cd ~/AERO_Explorer
+git status
+git remote -v</pre>
+<p>如果 status 有自己的未提交修改，先把要保留的內容 commit；不要直接 reset --hard 或清除檔案。確認乾淨後：</p>
+<pre>git switch main
+git pull --ff-only origin main
+cp -R ~/Downloads/AERO_Drone_Web_FullPackage_v4_1/AERO_Explorer/. .
+git --no-pager diff --stat
+git status --short
+git add .
+git --no-pager diff --cached --stat
+git commit -m "Fix mobile maps and photos; add nearby imagery and motion parallax"
+git push origin main</pre>
+<p><code>git diff</code> 只查看差異；<code>git add → git commit → git push</code> 才會送到 GitHub。<code>git pull</code> 是從 GitHub 取回更新。上方複製方式保留既有其他檔案，不會刪除歷史版本資料夾。</p>
+<h2>第一次下載儲存庫</h2><pre>git clone https://github.com/kuonanhong/AERO_Explorer.git
+cd AERO_Explorer</pre><p>接著執行上面的複製、diff、add、commit、push。登入驗證依 GitHub 提示使用 HTTPS credential manager、個人存取權杖或 SSH；不要把權杖写入 HTML 或提交到儲存庫。</p>
+<h2>啟用 GitHub Pages</h2><ol><li>開啟儲存庫 Settings → Pages。</li><li>若使用 Deploy from a branch，選 main 與 /(root)，按 Save。</li><li>等待 Pages 建置完成後開啟 <a href="https://kuonanhong.github.io/AERO_Explorer/">遊戲網址</a>。</li><li>手機若仍顯示舊版，重新整理；必要時關閉原分頁後重開。版本在頁尾標為 4.1。</li></ol>
+<p>若儲存庫已用 GitHub Actions 部署，保留原工作流程並讓其發布新的根目錄內容，或使用 source/dist 作為部署輸出。不要將整個完整 ZIP 上傳當作網頁；GitHub Pages 不會自動解壓縮。</p>
+<h2>從原始碼重建</h2><pre>cd source
+npm ci
+npm test
+npm run build
+npm run export:github
+npm run export:smartaction</pre><p>輸出分別為 <code>.aero-output/AERO_Explorer/</code> 與 <code>.aero-output/SmartAction/games/aero/</code>。直接發布資料夾時不需要 Node.js；Node 只供修改與建置。</p>
+<h2>地圖與大量使用者</h2><p>主模擬在每位玩家自己的裝置運行。沒有共享多人世界伺服器，也沒有完成十萬人同時上線的負載測試；GitHub Pages、地圖與百科 API 的容量必須分別評估。</p><p>公共 OpenStreetMap 圖磚不提供十萬人流量的容量保證。地圖只在可見時載入、最多保留 9 張可見圖磚、同時最多 3 個請求，不批次預抓或離線快取。大量公開流量前，請換成容量合適的圖磚業者或自架服務，在 <code>config.js</code> 設定 mapTileURL、mapAttribution、mapAttributionURL；保持正確授權標示。單檔版本須重新建置才能更改內含設定。</p><p>Google 地圖外開連結不需要玩家填 API key。如網站擁有者要使用正式嵌入服務，需自行設定 googleEmbedKey 與 mapMode:'google'；進階 Google 3D／Street View 仍需要適用 API、擁有者金鑰與服務條件。這次修正沒有繞過 Google 的嵌入限制或下載 Google 影像。</p>
+<h2>圖片授權與技術依據</h2><p>所有內含照片作者、來源、日期、授權與 WebP 轉換記錄，見 <code>AERO_Explorer/assets/photos/PHOTO_CREDITS.html</code>。照片授權各自適用；遊戲 MIT 授權不涵蓋照片。匯出含實景照片的模擬截圖會附來源與授權文字；分享衍生圖仍需遵守來源授權。</p><ul><li><a href="https://operations.osmfoundation.org/policies/tiles/">OpenStreetMap 圖磚使用政策</a></li><li><a href="https://developers.google.com/maps/documentation/urls/guide">Google Maps URLs</a></li><li><a href="https://developers.google.com/maps/documentation/embed/get-started">Google Maps Embed API</a></li><li><a href="https://www.w3.org/TR/web-share/">Web Share API</a></li><li><a href="https://html.spec.whatwg.org/multipage/links.html#downloading-resources">HTML 下載行為</a></li><li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site">GitHub Pages 發布來源</a></li></ul>
+<h2>驗證範圍</h2><p>附帶自動化檢查與測試報告。手機檢查使用 Chromium 的行動尺寸與 LINE User-Agent 模擬，分享成功、拒絕、取消、圖磚失敗亦有受控測試；不等於在實體 LINE、iPhone、每一款 Android 上完成測試。圖片本身不是現場即時影像。多國語言保留完整鍵值，正式對外使用可再請母語者審校。</p></html>

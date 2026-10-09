@@ -1,0 +1,948 @@
+{
+  "photo": {
+    "baseline": {
+      "full": {
+        "red": {
+          "x": 516.5,
+          "y": 345,
+          "n": 360
+        },
+        "green": {
+          "x": 516.8149100257069,
+          "y": 118.67609254498714,
+          "n": 389
+        },
+        "stats": {
+          "calls": 3,
+          "triangles": 2,
+          "renderer": "WebGL",
+          "profile": "balanced",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 0
+          },
+          "textures": 2,
+          "geometries": 3,
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo",
+          "beacons": 0
+        },
+        "bytes": 120288
+      },
+      "lite": {
+        "red": {
+          "x": 510.5,
+          "y": 341,
+          "n": 360
+        },
+        "green": {
+          "x": 510.5,
+          "y": 122,
+          "n": 360
+        },
+        "stats": {
+          "calls": 0,
+          "triangles": 0,
+          "renderer": "Canvas2D",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 0
+          },
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo"
+        },
+        "bytes": 14507
+      }
+    },
+    "forward": {
+      "full": {
+        "red": {
+          "x": 546.1074918566775,
+          "y": 365.5684039087948,
+          "n": 614
+        },
+        "green": {
+          "x": 520.4593301435407,
+          "y": 117.16507177033493,
+          "n": 418
+        },
+        "stats": {
+          "calls": 3,
+          "triangles": 2,
+          "renderer": "WebGL",
+          "profile": "balanced",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 6
+          },
+          "textures": 2,
+          "geometries": 3,
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo",
+          "beacons": 0
+        },
+        "bytes": 124972
+      },
+      "lite": {
+        "red": {
+          "x": 541.1182432432432,
+          "y": 362.1081081081081,
+          "n": 592
+        },
+        "green": {
+          "x": 513.9707446808511,
+          "y": 120.02127659574468,
+          "n": 376
+        },
+        "stats": {
+          "calls": 0,
+          "triangles": 0,
+          "renderer": "Canvas2D",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 6
+          },
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo"
+        },
+        "bytes": 17923
+      }
+    },
+    "backward": {
+      "full": {
+        "red": {
+          "x": 499.94890510948903,
+          "y": 335.2810218978102,
+          "n": 274
+        },
+        "green": {
+          "x": 513.1198979591836,
+          "y": 122.43877551020408,
+          "n": 392
+        },
+        "stats": {
+          "calls": 3,
+          "triangles": 2,
+          "renderer": "WebGL",
+          "profile": "balanced",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 6
+          },
+          "textures": 2,
+          "geometries": 3,
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo",
+          "beacons": 0
+        },
+        "bytes": 132672
+      },
+      "lite": {
+        "red": {
+          "x": 493.79467680608366,
+          "y": 331.4790874524715,
+          "n": 263
+        },
+        "green": {
+          "x": 506.53203342618383,
+          "y": 125.01949860724234,
+          "n": 359
+        },
+        "stats": {
+          "calls": 0,
+          "triangles": 0,
+          "renderer": "Canvas2D",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 6
+          },
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo"
+        },
+        "bytes": 18161
+      }
+    },
+    "right": {
+      "full": {
+        "red": {
+          "x": 483.88946015424165,
+          "y": 345.54498714652954,
+          "n": 389
+        },
+        "green": {
+          "x": 510.9469696969697,
+          "y": 118.57575757575758,
+          "n": 396
+        },
+        "stats": {
+          "calls": 3,
+          "triangles": 2,
+          "renderer": "WebGL",
+          "profile": "balanced",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 6
+          },
+          "textures": 2,
+          "geometries": 3,
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo",
+          "beacons": 0
+        },
+        "bytes": 136311
+      },
+      "lite": {
+        "red": {
+          "x": 478.1068493150685,
+          "y": 340.9616438356164,
+          "n": 365
+        },
+        "green": {
+          "x": 504.64207650273227,
+          "y": 121.95901639344262,
+          "n": 366
+        },
+        "stats": {
+          "calls": 0,
+          "triangles": 0,
+          "renderer": "Canvas2D",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 6
+          },
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo"
+        },
+        "bytes": 17103
+      }
+    },
+    "restored": {
+      "full": {
+        "red": {
+          "x": 516.5,
+          "y": 345,
+          "n": 360
+        },
+        "green": {
+          "x": 516.8149100257069,
+          "y": 118.67609254498714,
+          "n": 389
+        },
+        "stats": {
+          "calls": 3,
+          "triangles": 2,
+          "renderer": "WebGL",
+          "profile": "balanced",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 0
+          },
+          "textures": 2,
+          "geometries": 3,
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo",
+          "beacons": 0
+        },
+        "bytes": 120288
+      },
+      "lite": {
+        "red": {
+          "x": 510.5,
+          "y": 341,
+          "n": 360
+        },
+        "green": {
+          "x": 510.5,
+          "y": 122,
+          "n": 360
+        },
+        "stats": {
+          "calls": 0,
+          "triangles": 0,
+          "renderer": "Canvas2D",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 0
+          },
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo"
+        },
+        "bytes": 14507
+      }
+    }
+  },
+  "panorama": {
+    "baseline": {
+      "full": {
+        "red": {
+          "x": 404.19811764705884,
+          "y": 327.5557647058823,
+          "n": 2125
+        },
+        "green": {
+          "x": 402.24144144144145,
+          "y": 61.37432432432433,
+          "n": 2220
+        },
+        "stats": {
+          "calls": 3,
+          "triangles": 2,
+          "renderer": "WebGL",
+          "profile": "balanced",
+          "photoMotion": {
+            "method": "panorama-reprojection",
+            "limited": false,
+            "distance": 0
+          },
+          "textures": 2,
+          "geometries": 3,
+          "scenery": "ready",
+          "sceneryId": "360",
+          "sceneryType": "panorama",
+          "beacons": 0
+        },
+        "bytes": 101434
+      },
+      "lite": {
+        "red": {
+          "x": 420.5289788408464,
+          "y": 319.5,
+          "n": 2174
+        },
+        "green": {
+          "x": 419.4748142031379,
+          "y": 72.46985962014864,
+          "n": 2422
+        },
+        "stats": {
+          "calls": 0,
+          "triangles": 0,
+          "renderer": "Canvas2D",
+          "photoMotion": {
+            "method": "panorama-reprojection",
+            "limited": false,
+            "distance": 0
+          },
+          "scenery": "ready",
+          "sceneryId": "360",
+          "sceneryType": "panorama-strip"
+        },
+        "bytes": 15544
+      }
+    },
+    "forward": {
+      "full": {
+        "red": {
+          "x": 415.80938242280286,
+          "y": 343.5252375296912,
+          "n": 3368
+        },
+        "green": {
+          "x": 404.0372272143774,
+          "y": 58.13222079589217,
+          "n": 2337
+        },
+        "stats": {
+          "calls": 3,
+          "triangles": 2,
+          "renderer": "WebGL",
+          "profile": "balanced",
+          "photoMotion": {
+            "method": "panorama-reprojection",
+            "limited": false,
+            "distance": 6
+          },
+          "textures": 2,
+          "geometries": 3,
+          "scenery": "ready",
+          "sceneryId": "360",
+          "sceneryType": "panorama",
+          "beacons": 0
+        },
+        "bytes": 97863
+      },
+      "lite": {
+        "red": {
+          "x": 431.21590909090907,
+          "y": 332.7472358722359,
+          "n": 3256
+        },
+        "green": {
+          "x": 421.0649087221095,
+          "y": 68.53549695740365,
+          "n": 2465
+        },
+        "stats": {
+          "calls": 0,
+          "triangles": 0,
+          "renderer": "Canvas2D",
+          "photoMotion": {
+            "method": "panorama-reprojection",
+            "limited": false,
+            "distance": 6
+          },
+          "scenery": "ready",
+          "sceneryId": "360",
+          "sceneryType": "panorama-strip"
+        },
+        "bytes": 15013
+      }
+    },
+    "backward": {
+      "full": {
+        "red": {
+          "x": 397.5637376237624,
+          "y": 318.5321782178218,
+          "n": 1616
+        },
+        "green": {
+          "x": 400.7148253068933,
+          "y": 64.38007554296506,
+          "n": 2118
+        },
+        "stats": {
+          "calls": 3,
+          "triangles": 2,
+          "renderer": "WebGL",
+          "profile": "balanced",
+          "photoMotion": {
+            "method": "panorama-reprojection",
+            "limited": false,
+            "distance": 6
+          },
+          "textures": 2,
+          "geometries": 3,
+          "scenery": "ready",
+          "sceneryId": "360",
+          "sceneryType": "panorama",
+          "beacons": 0
+        },
+        "bytes": 113426
+      },
+      "lite": {
+        "red": {
+          "x": 414.17857142857144,
+          "y": 311.5,
+          "n": 1680
+        },
+        "green": {
+          "x": 417.9721731448763,
+          "y": 74.52871024734982,
+          "n": 2264
+        },
+        "stats": {
+          "calls": 0,
+          "triangles": 0,
+          "renderer": "Canvas2D",
+          "photoMotion": {
+            "method": "panorama-reprojection",
+            "limited": false,
+            "distance": 6
+          },
+          "scenery": "ready",
+          "sceneryId": "360",
+          "sceneryType": "panorama-strip"
+        },
+        "bytes": 16532
+      }
+    },
+    "right": {
+      "full": {
+        "red": {
+          "x": 375.0752169720347,
+          "y": 327.69045323047254,
+          "n": 2074
+        },
+        "green": {
+          "x": 396.0695573622403,
+          "y": 61.285456187895214,
+          "n": 2214
+        },
+        "stats": {
+          "calls": 3,
+          "triangles": 2,
+          "renderer": "WebGL",
+          "profile": "balanced",
+          "photoMotion": {
+            "method": "panorama-reprojection",
+            "limited": false,
+            "distance": 6
+          },
+          "textures": 2,
+          "geometries": 3,
+          "scenery": "ready",
+          "sceneryId": "360",
+          "sceneryType": "panorama",
+          "beacons": 0
+        },
+        "bytes": 116635
+      },
+      "lite": {
+        "red": {
+          "x": 397.7332439678284,
+          "y": 319.98480786416445,
+          "n": 2238
+        },
+        "green": {
+          "x": 414.48701030927833,
+          "y": 72.49278350515463,
+          "n": 2425
+        },
+        "stats": {
+          "calls": 0,
+          "triangles": 0,
+          "renderer": "Canvas2D",
+          "photoMotion": {
+            "method": "panorama-reprojection",
+            "limited": false,
+            "distance": 6
+          },
+          "scenery": "ready",
+          "sceneryId": "360",
+          "sceneryType": "panorama-strip"
+        },
+        "bytes": 16039
+      }
+    },
+    "restored": {
+      "full": {
+        "red": {
+          "x": 404.19811764705884,
+          "y": 327.5557647058823,
+          "n": 2125
+        },
+        "green": {
+          "x": 402.24144144144145,
+          "y": 61.37432432432433,
+          "n": 2220
+        },
+        "stats": {
+          "calls": 3,
+          "triangles": 2,
+          "renderer": "WebGL",
+          "profile": "balanced",
+          "photoMotion": {
+            "method": "panorama-reprojection",
+            "limited": false,
+            "distance": 0
+          },
+          "textures": 2,
+          "geometries": 3,
+          "scenery": "ready",
+          "sceneryId": "360",
+          "sceneryType": "panorama",
+          "beacons": 0
+        },
+        "bytes": 101434
+      },
+      "lite": {
+        "red": {
+          "x": 420.5289788408464,
+          "y": 319.5,
+          "n": 2174
+        },
+        "green": {
+          "x": 419.4748142031379,
+          "y": 72.46985962014864,
+          "n": 2422
+        },
+        "stats": {
+          "calls": 0,
+          "triangles": 0,
+          "renderer": "Canvas2D",
+          "photoMotion": {
+            "method": "panorama-reprojection",
+            "limited": false,
+            "distance": 0
+          },
+          "scenery": "ready",
+          "sceneryId": "360",
+          "sceneryType": "panorama-strip"
+        },
+        "bytes": 15544
+      }
+    }
+  },
+  "chase": {
+    "baseline": {
+      "full": {
+        "red": {
+          "x": 483.3903345724907,
+          "y": 332.9814126394052,
+          "n": 269
+        },
+        "green": {
+          "x": 504.53203342618383,
+          "y": 120.01949860724234,
+          "n": 359
+        },
+        "stats": {
+          "calls": 11,
+          "triangles": 2109,
+          "renderer": "WebGL",
+          "profile": "balanced",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 0
+          },
+          "textures": 2,
+          "geometries": 7,
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo",
+          "beacons": 0
+        },
+        "bytes": 40544
+      },
+      "lite": {
+        "red": {
+          "x": 483.2810218978102,
+          "y": 332.978102189781,
+          "n": 274
+        },
+        "green": {
+          "x": 504.5,
+          "y": 120,
+          "n": 360
+        },
+        "stats": {
+          "calls": 0,
+          "triangles": 0,
+          "renderer": "Canvas2D",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 0
+          },
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo"
+        },
+        "bytes": 21881
+      }
+    },
+    "forward": {
+      "full": {
+        "red": {
+          "x": 499.75274725274727,
+          "y": 313.4835164835165,
+          "n": 364
+        },
+        "green": {
+          "x": 507.5,
+          "y": 89.5,
+          "n": 380
+        },
+        "stats": {
+          "calls": 11,
+          "triangles": 2109,
+          "renderer": "WebGL",
+          "profile": "balanced",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 6
+          },
+          "textures": 2,
+          "geometries": 7,
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo",
+          "beacons": 0
+        },
+        "bytes": 37261
+      },
+      "lite": {
+        "red": {
+          "x": 499.3601108033241,
+          "y": 313.41274238227146,
+          "n": 361
+        },
+        "green": {
+          "x": 507.4378698224852,
+          "y": 89.5,
+          "n": 338
+        },
+        "stats": {
+          "calls": 0,
+          "triangles": 0,
+          "renderer": "Canvas2D",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 6
+          },
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo"
+        },
+        "bytes": 21364
+      }
+    },
+    "backward": {
+      "full": {
+        "red": {
+          "x": 474.9579439252336,
+          "y": 340.9906542056075,
+          "n": 214
+        },
+        "green": {
+          "x": 506.5322128851541,
+          "y": 135.01960784313727,
+          "n": 357
+        },
+        "stats": {
+          "calls": 11,
+          "triangles": 2109,
+          "renderer": "WebGL",
+          "profile": "balanced",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 6
+          },
+          "textures": 2,
+          "geometries": 7,
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo",
+          "beacons": 0
+        },
+        "bytes": 41892
+      },
+      "lite": {
+        "red": {
+          "x": 474.5700934579439,
+          "y": 340.9299065420561,
+          "n": 214
+        },
+        "green": {
+          "x": 506.53203342618383,
+          "y": 135.01949860724233,
+          "n": 359
+        },
+        "stats": {
+          "calls": 0,
+          "triangles": 0,
+          "renderer": "Canvas2D",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 6
+          },
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo"
+        },
+        "bytes": 22061
+      }
+    },
+    "right": {
+      "full": {
+        "red": {
+          "x": 458.67910447761193,
+          "y": 332.95522388059703,
+          "n": 268
+        },
+        "green": {
+          "x": 499.0691642651297,
+          "y": 119.96829971181556,
+          "n": 347
+        },
+        "stats": {
+          "calls": 11,
+          "triangles": 2109,
+          "renderer": "WebGL",
+          "profile": "balanced",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 6
+          },
+          "textures": 2,
+          "geometries": 7,
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo",
+          "beacons": 0
+        },
+        "bytes": 42781
+      },
+      "lite": {
+        "red": {
+          "x": 458.1787072243346,
+          "y": 332.94296577946767,
+          "n": 263
+        },
+        "green": {
+          "x": 498.6949152542373,
+          "y": 120.05084745762711,
+          "n": 354
+        },
+        "stats": {
+          "calls": 0,
+          "triangles": 0,
+          "renderer": "Canvas2D",
+          "photoMotion": {
+            "method": "photo-2.5d",
+            "limited": false,
+            "distance": 6
+          },
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo"
+        },
+        "bytes": 22099
+      }
+    }
+  },
+  "water": {
+    "baseline": {
+      "full": {
+        "red": {
+          "x": 516.5,
+          "y": 345,
+          "n": 360
+        },
+        "green": {
+          "x": 516.7953964194373,
+          "y": 118.63682864450128,
+          "n": 391
+        },
+        "stats": {
+          "calls": 7,
+          "triangles": 4822,
+          "renderer": "WebGL",
+          "profile": "balanced",
+          "photoMotion": {
+            "method": "underwater-2.5d",
+            "limited": false,
+            "distance": 0
+          },
+          "textures": 3,
+          "geometries": 11,
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo",
+          "beacons": 0
+        },
+        "bytes": 143994
+      },
+      "lite": {
+        "red": {
+          "x": 510.5,
+          "y": 341,
+          "n": 360
+        },
+        "green": {
+          "x": 510.5,
+          "y": 122,
+          "n": 360
+        },
+        "stats": {
+          "calls": 0,
+          "triangles": 0,
+          "renderer": "Canvas2D",
+          "photoMotion": {
+            "method": "underwater-2.5d",
+            "limited": false,
+            "distance": 0
+          },
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo"
+        },
+        "bytes": 14253
+      }
+    },
+    "forward": {
+      "full": {
+        "red": {
+          "x": 546.0775577557756,
+          "y": 365.6155115511551,
+          "n": 606
+        },
+        "green": {
+          "x": 520.41567695962,
+          "y": 117.18289786223278,
+          "n": 421
+        },
+        "stats": {
+          "calls": 7,
+          "triangles": 4822,
+          "renderer": "WebGL",
+          "profile": "balanced",
+          "photoMotion": {
+            "method": "underwater-2.5d",
+            "limited": false,
+            "distance": 6
+          },
+          "textures": 3,
+          "geometries": 11,
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo",
+          "beacons": 0
+        },
+        "bytes": 138599
+      },
+      "lite": {
+        "red": {
+          "x": 541.1182432432432,
+          "y": 362.1081081081081,
+          "n": 592
+        },
+        "green": {
+          "x": 513.9707446808511,
+          "y": 120.02127659574468,
+          "n": 376
+        },
+        "stats": {
+          "calls": 0,
+          "triangles": 0,
+          "renderer": "Canvas2D",
+          "photoMotion": {
+            "method": "underwater-2.5d",
+            "limited": false,
+            "distance": 6
+          },
+          "scenery": "ready",
+          "sceneryId": "photo",
+          "sceneryType": "photo"
+        },
+        "bytes": 16296
+      }
+    }
+  },
+  "limit": true,
+  "textureCycles": [
+    3,
+    2,
+    3,
+    2,
+    3,
+    2
+  ],
+  "errors": []
+}
