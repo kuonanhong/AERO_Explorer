@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://aero-drone-flight.kuonanhong.chatgpt.site/sitemap.xml
