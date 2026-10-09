@@ -1,0 +1,32 @@
+MIT License
+
+Copyright (c) 2026 AERO contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Three.js is separately licensed under MIT; see dist/vendor/THREE-LICENSE.txt.
+
+Third-party media and runtime reference content are excluded from the blanket
+MIT grant above. Every photograph in dist/assets/photos/images/ retains its
+individual public-domain, CC0, CC BY or CC BY-SA status. See the accompanying
+manifest.json and PHOTO_CREDITS.html for author, source, exact license and
+conversion notices. This distribution does not relicense those photographs.
+Wikipedia excerpts loaded at runtime retain their source attribution and
+CC BY-SA license. Google map content remains subject to Google's terms and
+is not included among the downloadable media assets.
