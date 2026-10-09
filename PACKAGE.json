@@ -1,0 +1,15 @@
+{
+  "version": "4.1.0",
+  "sourceCommit": "36c0146fd117a8280f50926120338c3522aa0192",
+  "primaryTarget": "https://kuonanhong.github.io/AERO_Explorer/",
+  "nativeSite": "https://aero-drone-flight.kuonanhong.chatgpt.site",
+  "locales": 22,
+  "localPhotos": 26,
+  "regionalPlaces": 14,
+  "limits": [
+    "Photo motion is bounded estimated-depth 2.5D, not surveyed or live terrain.",
+    "LINE User-Agent and share failures tested in Chromium; physical LINE/iOS not verified.",
+    "External map tiles mocked in automated tests. No 100000-user capacity certification."
+  ],
+  "entry": "START.html"
+}
