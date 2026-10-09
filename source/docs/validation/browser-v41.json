@@ -1,0 +1,304 @@
+{
+  "photos": [
+    {
+      "id": "yellowstone-old-faithful",
+      "width": 1200,
+      "height": 800,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "yellowstone-grand-prismatic",
+      "width": 1199,
+      "height": 800,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "taipingshan-jancing",
+      "width": 1115,
+      "height": 800,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "taipingshan-train",
+      "width": 1200,
+      "height": 798,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "taipingshan-cuifeng",
+      "width": 1200,
+      "height": 800,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "taipei-npm",
+      "width": 1200,
+      "height": 800,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "npm-jadeite-cabbage",
+      "width": 533,
+      "height": 800,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "npm-meat-shaped-stone",
+      "width": 1200,
+      "height": 800,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "chengcing-lake-1973",
+      "width": 1200,
+      "height": 778,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "weiwuying-park",
+      "width": 1067,
+      "height": 800,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "austria-forest-360",
+      "width": 1920,
+      "height": 960,
+      "is360": true,
+      "okay": true
+    },
+    {
+      "id": "taiwan-boai-park-360",
+      "width": 2560,
+      "height": 1280,
+      "is360": true,
+      "okay": true
+    },
+    {
+      "id": "fengyi-academy",
+      "width": 1200,
+      "height": 675,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "chengcing-lake",
+      "width": 1200,
+      "height": 538,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "cheng-shiu-university",
+      "width": 960,
+      "height": 520,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "golf-natural-park",
+      "width": 960,
+      "height": 720,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "niaosong-wetland",
+      "width": 960,
+      "height": 720,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "weiwuying",
+      "width": 960,
+      "height": 540,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "dadong",
+      "width": 960,
+      "height": 720,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "caogong-temple",
+      "width": 960,
+      "height": 546,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "huangpu-village",
+      "width": 960,
+      "height": 720,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "science-museum",
+      "width": 960,
+      "height": 643,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "fengshan-longshan",
+      "width": 960,
+      "height": 720,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "golden-lion-lake",
+      "width": 960,
+      "height": 720,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "sizihwan",
+      "width": 960,
+      "height": 720,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "kaohsiung-chang-gung-cafe-2013",
+      "width": 960,
+      "height": 638,
+      "is360": false,
+      "okay": true
+    }
+  ],
+  "desktop": {
+    "gps": {
+      "lat": 22.659012,
+      "lon": 120.347891,
+      "accuracy": 7,
+      "requests": 1
+    },
+    "shortcuts": {
+      "F": true,
+      "G": true,
+      "C": true,
+      "B": true,
+      "inputFocus": true
+    },
+    "photoMotion": {
+      "method": "photo-2.5d",
+      "limited": false,
+      "distance": 5.270046753360643,
+      "actualInput": true,
+      "pixelsChanged": true,
+      "nearbyLicensedPhoto": true
+    },
+    "localSearch": {
+      "Yellowstone": true,
+      "Taipingshan": true,
+      "PalaceMuseum": true,
+      "panorama360": true,
+      "photos": 26
+    },
+    "vehicles": {
+      "air": true,
+      "land": true,
+      "water": true
+    },
+    "errors": []
+  },
+  "mobile": {
+    "viewport": "375×812",
+    "dualTouch": true,
+    "FPV": true,
+    "noControlOverlay": true,
+    "fullscreenControls": true,
+    "fullscreenRects": {
+      "leftStick": {
+        "top": 615.390625,
+        "bottom": 733.390625,
+        "viewportHeight": 812
+      },
+      "rightStick": {
+        "top": 625.390625,
+        "bottom": 743.390625,
+        "viewportHeight": 812
+      },
+      "photoButton": {
+        "top": 740.390625,
+        "bottom": 779.390625,
+        "viewportHeight": 812
+      },
+      "dropButton": {
+        "top": 740.390625,
+        "bottom": 779.390625,
+        "viewportHeight": 812
+      },
+      "whereButton": {
+        "top": 750.390625,
+        "bottom": 789.390625,
+        "viewportHeight": 812
+      },
+      "storyButton": {
+        "top": 750.390625,
+        "bottom": 789.390625,
+        "viewportHeight": 812
+      }
+    },
+    "noOverflow": true,
+    "errors": []
+  },
+  "line": {
+    "userAgent": "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36 Line/15.0.0",
+    "previewPNG": {
+      "width": 351,
+      "height": 263
+    },
+    "noAutomaticDownload": true,
+    "downloadHidden": true,
+    "unsupportedShare": true,
+    "supportedShare": true,
+    "sharedFiles": [
+      [
+        {
+          "name": "AERO-air-1791484722616.png",
+          "type": "image/png",
+          "size": 27713
+        }
+      ]
+    ],
+    "shareRejectedPreviewKept": true,
+    "cancelNoFalseSuccess": true,
+    "canShareThrowsHandled": true,
+    "mapFallbackCoordinates": true,
+    "consumerIframe": false,
+    "errors": [],
+    "deviceLimitation": "Synthetic Chromium LINE UA and stubbed Web Share validate app behavior; real LINE/OS saving still requires device QA"
+  },
+  "language": {
+    "autoJapanese": true,
+    "explicitTraditionalChinese": true
+  },
+  "map": {
+    "state": "ready",
+    "tiles": 6,
+    "loaded": true,
+    "reading": "Simulated position · 22.659015, 120.347891",
+    "attribution": "https://www.openstreetmap.org/copyright",
+    "transport": "mocked deterministic tiles",
+    "realProviderRender": "not verified; external transport is separate",
+    "consumerIframe": false
+  }
+}

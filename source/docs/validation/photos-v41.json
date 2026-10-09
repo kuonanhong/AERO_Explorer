@@ -1,0 +1,18 @@
+{
+  "newImages": 12,
+  "mappedPlaces": 14,
+  "reusedImages": [
+    "chengcing-lake",
+    "fengyi-academy"
+  ],
+  "newTotalBytes": 1359782,
+  "largestNewImageBytes": 188300,
+  "newPlaceLocales": 22,
+  "checks": [
+    "Every photo hash, dimensions and file size verified",
+    "All fourteen mapping entries resolve against existing plus additional manifests",
+    "Every new image is at most 200,000 bytes",
+    "All twenty-two University name and description locales exist",
+    "Hospital-related interior has historical caption and photoScenery false"
+  ]
+}

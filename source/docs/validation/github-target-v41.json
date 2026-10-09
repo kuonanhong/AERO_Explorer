@@ -1,0 +1,21 @@
+{
+  "github": {
+    "path": "/AERO_Explorer/ja/ → /AERO_Explorer/en/ → reload",
+    "canonical": "https://kuonanhong.github.io/AERO_Explorer/en/",
+    "defaultDOMMap": true,
+    "missing": [],
+    "errors": []
+  },
+  "single": {
+    "path": "/single/index.html",
+    "languageChangePreservedURL": true,
+    "reloadNo404": true,
+    "locale": "en",
+    "inlinePhotos": 26,
+    "defaultDOMMap": true,
+    "photoPreviewPNG": true,
+    "missing": [],
+    "errors": []
+  },
+  "externalNetwork": "Blocked intentionally; no provider-render guarantee"
+}

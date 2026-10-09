@@ -1,0 +1,211 @@
+{
+  "photos": [
+    {
+      "id": "yellowstone-old-faithful",
+      "width": 1200,
+      "height": 800,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "yellowstone-grand-prismatic",
+      "width": 1199,
+      "height": 800,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "taipingshan-jancing",
+      "width": 1115,
+      "height": 800,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "taipingshan-train",
+      "width": 1200,
+      "height": 798,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "taipingshan-cuifeng",
+      "width": 1200,
+      "height": 800,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "taipei-npm",
+      "width": 1200,
+      "height": 800,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "npm-jadeite-cabbage",
+      "width": 533,
+      "height": 800,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "npm-meat-shaped-stone",
+      "width": 1200,
+      "height": 800,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "chengcing-lake-1973",
+      "width": 1200,
+      "height": 778,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "weiwuying-park",
+      "width": 1067,
+      "height": 800,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "austria-forest-360",
+      "width": 1920,
+      "height": 960,
+      "is360": true,
+      "okay": true
+    },
+    {
+      "id": "taiwan-boai-park-360",
+      "width": 2560,
+      "height": 1280,
+      "is360": true,
+      "okay": true
+    },
+    {
+      "id": "fengyi-academy",
+      "width": 1200,
+      "height": 675,
+      "is360": false,
+      "okay": true
+    },
+    {
+      "id": "chengcing-lake",
+      "width": 1200,
+      "height": 538,
+      "is360": false,
+      "okay": true
+    }
+  ],
+  "desktop": {
+    "gps": {
+      "lat": 22.659012,
+      "lon": 120.347891,
+      "accuracy": 7,
+      "requests": 1
+    },
+    "shortcuts": {
+      "F": true,
+      "G": true,
+      "C": true,
+      "B": true,
+      "inputFocus": true
+    },
+    "localSearch": {
+      "Yellowstone": true,
+      "Taipingshan": true,
+      "PalaceMuseum": true,
+      "panorama360": true,
+      "photos": 14
+    },
+    "vehicles": {
+      "air": true,
+      "land": true,
+      "water": true
+    },
+    "errors": []
+  },
+  "mobile": {
+    "viewport": "375×812",
+    "dualTouch": true,
+    "FPV": true,
+    "noControlOverlay": true,
+    "fullscreenControls": true,
+    "fullscreenRects": {
+      "leftStick": {
+        "top": 615.390625,
+        "bottom": 733.390625,
+        "viewportHeight": 812
+      },
+      "rightStick": {
+        "top": 625.390625,
+        "bottom": 743.390625,
+        "viewportHeight": 812
+      },
+      "photoButton": {
+        "top": 740.390625,
+        "bottom": 779.390625,
+        "viewportHeight": 812
+      },
+      "dropButton": {
+        "top": 740.390625,
+        "bottom": 779.390625,
+        "viewportHeight": 812
+      },
+      "whereButton": {
+        "top": 750.390625,
+        "bottom": 789.390625,
+        "viewportHeight": 812
+      },
+      "storyButton": {
+        "top": 750.390625,
+        "bottom": 789.390625,
+        "viewportHeight": 812
+      }
+    },
+    "noOverflow": true,
+    "errors": []
+  },
+  "language": {
+    "autoJapanese": true,
+    "explicitTraditionalChinese": true
+  },
+  "map": {
+    "url": "chrome-error://chromewebdata/",
+    "responseStatus": null,
+    "failures": [
+      {
+        "url": "https://www.google.com/maps?q=22.659016%2C120.347891&z=16&t=k&hl=en&output=embed",
+        "error": "net::ERR_EMPTY_RESPONSE"
+      },
+      {
+        "url": "https://www.google.com/maps?q=44.460500%2C-110.828100&z=16&t=k&hl=en&output=embed",
+        "error": "net::ERR_EMPTY_RESPONSE"
+      },
+      {
+        "url": "https://www.google.com/maps?q=24.505409%2C121.525758&z=16&t=k&hl=en&output=embed",
+        "error": "net::ERR_EMPTY_RESPONSE"
+      },
+      {
+        "url": "https://www.google.com/maps?q=25.102400%2C121.548500&z=16&t=k&hl=en&output=embed",
+        "error": "net::ERR_EMPTY_RESPONSE"
+      },
+      {
+        "url": "https://www.google.com/maps?q=25.102400%2C121.548500&z=16&t=k&hl=en&output=embed",
+        "error": "net::ERR_EMPTY_RESPONSE"
+      },
+      {
+        "url": "https://www.google.com/maps?q=24.684586%2C120.871273&z=16&t=k&hl=en&output=embed",
+        "error": "net::ERR_EMPTY_RESPONSE"
+      },
+      {
+        "url": "https://www.google.com/maps?q=24.684586%2C120.871273&z=16&t=k&hl=en&output=embed",
+        "error": "net::ERR_EMPTY_RESPONSE"
+      }
+    ],
+    "text": "",
+    "mapElements": 0
+  }
+}
