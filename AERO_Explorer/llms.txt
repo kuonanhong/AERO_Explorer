@@ -1,0 +1,24 @@
+# AERO Explorer v5.1
+
+A free browser-local air, land and underwater exploration game with keyboard and touch controls, adaptive WebGL or Canvas rendering, 22 UI languages, three cameras and zoom.
+
+- [Play](https://kuonanhong.github.io/AERO_Explorer/)
+- [Data and image licences](https://kuonanhong.github.io/AERO_Explorer/DATA_CREDITS.html)
+
+## Destinations and imagery
+2,754 indexed entries: 1,500 Taiwan Tourism Administration destinations, 1,234 UNESCO World Heritage entries with coordinates, 18 explicitly labeled underwater training variants and 2 additional real panorama camera locations. The original 11 curated destinations and 14 Kaohsiung references remain. Taiwan text uses OGDL-1.0; UNESCO text uses CC BY-SA 4.0. Histories retain original source languages (Taiwan Traditional Chinese; UNESCO six languages), with an explicit original-language fallback. This is not a claim that every history has 22 human translations.
+
+57 locally bundled, attributed real photographs include verified underwater photographs and 4 true equirectangular 360 panoramas. Each of the 30 missions has an identified real location and a locally bundled licensed photograph. Most other catalogue destinations do not have a bundled photograph. Online images are only used after Commons origin, author and a permitted image licence are verified. A normal photo remains a bounded estimated-depth projection, not reconstructed terrain. Mission landmarks use world-space perspective and occlusion. The Statue of Liberty uses a licensed textured artist-created three-dimensional model; it is not a survey or laser scan. Other mission structures are approximations accompanied by real reference photography, not verified reconstructions. Historical photographs are dated references and do not assert current conditions. AI reef and procedural ecology are labeled simulations.
+
+## Missions and controls
+All 30 application scenarios are listed together in three vehicle groups, with three tiers (90 combinations). Starting a mission chooses its vehicle and geographic location automatically. Scenarios include inspection, cleaning proxy, rescue reconnaissance, supply markers, reef monitoring, cave passage, museum surveying and nine fleet scenarios. Inspection stations surround the mission landmark at different positions and heights. Scoring uses successful objectives 70, observed stability/safety 20 and time efficiency 10. Fictional beacon scenarios provide abstract game scoring, not real military targeting instruction.
+
+Single vehicle: W/S height, A/D yaw; arrows forward/back/strafe. Fleet: W/S forward/back, A/D yaw, Q/E height; right arrows issue formation/hold/follow commands, keys 1–7 choose line/V/circle/grid/orbit/heart/column. Followers animate locally and are bounded, not networked multiplayer or real robot commands. All controls and text remain below or beside the flight canvas. V cycles first/close-second/third view. Destination selection locks the suitable vehicle; return to open training unlocks it. Air rings, underwater reef caves and land caves use vehicle-specific geometry. Weather, daylight, season and climate are visual training presets with simplified simulated wind.
+
+## Optional local AI
+An explicit download runs a pinned Apache-2.0 ONNX language model in a CPU WASM Worker: Qwen2.5 0.5B multilingual (~495 MiB) or SmolLM2 135M English (~133 MiB). No model loads at startup. Unknown or inadequate mobile memory keeps the source guide available. AI is for paused briefings and debriefs, never flight control; prose is labeled generated and may be inaccurate. Model weights are fetched from pinned Hugging Face revisions or owner-configured public storage; GitHub Pages serves static files and does not run a server-side model. Model sources and hashes are included in the delivery tools.
+
+## Maps and limits
+GPS needs browser permission and HTTPS. An official Google Maps link works without a developer key. Embedded Google Maps, Google 3D and Street View require the owner's restricted API key, enabled services, applicable billing/quota and regional imagery coverage. No key is bundled and live billed API rendering is unverified. Google provides no complete global underwater 3D terrain. Default visible OpenStreetMap tiles have attribution and bounded concurrency, but the public tile server has no mass-traffic SLA; provision a suitable provider before large campaigns.
+
+Each visitor simulates on their own device. No 100,000-user load test or zero-lag guarantee is claimed. Static hosting and external API limits still apply. Browser language preferences select UI language; GPS does not infer ethnicity or reliably determine preferred language. Search ranking and AI search inclusion are not guaranteed.

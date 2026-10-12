@@ -1,0 +1,102 @@
+{
+  "schema": "aero-model-manifest-v1",
+  "retrieved": "2026-10-11",
+  "models": [
+    {
+      "id": "statue-liberty",
+      "name": "Statue Of Liberty",
+      "author": "Gravity Jack",
+      "authorUrl": "https://sketchfab.com/gravityjack",
+      "source": "https://sketchfab.com/3d-models/statue-of-liberty-84094e8d5e724b5c882cf576ca12e44e",
+      "download": "https://huggingface.co/datasets/allenai/objaverse/resolve/main/glbs/000-115/84094e8d5e724b5c882cf576ca12e44e.glb",
+      "dataset": "Objaverse 1.0 / Allen Institute for AI",
+      "datasetUrl": "https://huggingface.co/datasets/allenai/objaverse",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "licenseEvidence": "License, author and source embedded in original GLB asset.extras; creator listing also CC Attribution.",
+      "originalSha256": "581d99fd34e0ec5c1423cccccf9b0fb9f564f2d134bbb99d16a9e7ba8f1ee792",
+      "originalBytes": 5854228,
+      "originalDescription": "This American symbol has been recreated in 3D using ZBrush and Maya. Highly detailed and textured for PBR using Substance Painter. Its 100% UV unwrapped and game ready.",
+      "captureType": "artist-reconstruction",
+      "notPhotogrammetry": true,
+      "notSurveyGrade": true,
+      "modifications": [
+        "Applied source glTF node transforms.",
+        "Centered x/z bounding box and placed statue base at y=0.",
+        "Uniformly scaled statue mesh height to 46.05 metres; this does not certify every model dimension.",
+        "Converted indexed geometry, normals and UVs to JSON, rounded positions and normals to 5 decimal places and UVs to 6.",
+        "Downsampled two original base color texture maps to at most 1024 pixels and JPEG quality 88.",
+        "Original normal and metallic-roughness maps omitted; roughness/metalness approximated for lightweight browser rendering.",
+        "Rotated -90 degrees about Y to normalize front to +Z; verified rendered front, back, left and right views.",
+        "Created 1,800-triangle Canvas LOD by welding coincident positions and quadric-error edge collapse; sampled source base-color textures for per-face colour. Simplification changes shape and is for navigation preview only."
+      ],
+      "units": "metres",
+      "heightMetres": 46.05,
+      "pedestalIncluded": false,
+      "orientation": {
+        "up": "+Y",
+        "front": "+Z",
+        "normalization": "Source front +X was rotated -90 degrees about Y to face +Z.",
+        "worldGeographicYawMustBeAssignedByScene": true
+      },
+      "dimensionReference": "https://www.nps.gov/stli/learn/historyculture/statue-statistics.htm",
+      "dimensionFacts": {
+        "statueHeightMetres": 46.05,
+        "groundToTorchMetres": 92.99,
+        "groundToPedestalMetres": 46.94,
+        "faces": "southeast"
+      },
+      "files": [
+        {
+          "path": "statue-liberty.mesh.json",
+          "bytes": 3976101,
+          "sha256": "65b48b336ce32edec3485fc459d0884a82ecf07b58eadc328c62d12a5cd4b69b",
+          "vertices": 34977,
+          "triangles": 56931
+        },
+        {
+          "path": "statue-liberty-body.jpg",
+          "sourceImageIndex": 0,
+          "originalPixels": [
+            1024,
+            1024
+          ],
+          "pixels": [
+            1024,
+            1024
+          ],
+          "sha256": "a4ac3ce5175dd96e4aad36e7d187597d574571607584454c9bfe37acd7c18dd5",
+          "bytes": 156232
+        },
+        {
+          "path": "statue-liberty-robes.jpg",
+          "sourceImageIndex": 3,
+          "originalPixels": [
+            1024,
+            1024
+          ],
+          "pixels": [
+            1024,
+            1024
+          ],
+          "sha256": "257ca34473d8d5411d728634b621abf3a9f98ff2702c86b1fe48990ad5eb7564",
+          "bytes": 168249
+        },
+        {
+          "path": "statue-liberty-lite.mesh.json",
+          "bytes": 105011,
+          "sha256": "17f9c879567e4525f08029e4a1c01b62fd77e1c5b4c4348517d7f84bcf37e797",
+          "vertices": 974,
+          "triangles": 1800
+        }
+      ],
+      "licenseVerification": {
+        "creatorListing": "https://sketchfab.com/3d-models/statue-of-liberty-84094e8d5e724b5c882cf576ca12e44e",
+        "listingLicense": "CC Attribution",
+        "sourceAssetLicense": "CC-BY-4.0",
+        "verifiedAt": "2026-10-11",
+        "verifiedVia": "Creator public listing retrieved in web search plus source GLB asset.extras and archived Objaverse metadata license=by."
+      }
+    }
+  ]
+}
