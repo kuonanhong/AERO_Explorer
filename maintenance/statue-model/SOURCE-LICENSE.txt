@@ -1,0 +1,8 @@
+Statue Of Liberty by Gravity Jack (https://sketchfab.com/gravityjack)
+Source: https://sketchfab.com/3d-models/statue-of-liberty-84094e8d5e724b5c882cf576ca12e44e
+License: Creative Commons Attribution 4.0 International (CC BY 4.0), https://creativecommons.org/licenses/by/4.0/
+Downloaded through Allen Institute for AI Objaverse 1.0, https://huggingface.co/datasets/allenai/objaverse
+Modified for AERO Explorer: converted to indexed JSON; recentered; uniformly scaled to 46.05 m; texture downsampling; simplified PBR parameters.
+This is an artist-created 3D reconstruction using ZBrush and Maya, NOT a surveyed photogrammetry/digital twin. The pedestal and surrounding scene are not included in the licensed mesh.
+Dimensions reference: US National Park Service, https://www.nps.gov/stli/learn/historyculture/statue-statistics.htm
+No creator, museum, or park endorsement implied.

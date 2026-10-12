@@ -1,0 +1,740 @@
+{
+  "version": 3,
+  "assets": [
+    {
+      "id": "v5-berlin-gallery-360",
+      "file": "images/v5-berlin-gallery-360.webp",
+      "title": {
+        "zh-TW": "柏林舊國家美術館外部・360°",
+        "zh-Hant": "柏林舊國家美術館外部・360°",
+        "en": "Alte Nationalgalerie exterior, Berlin — 360°"
+      },
+      "commonsTitle": "File:Alte Nationalgalerie, Berlin-Mitte, 360 Grad Panorama, 160101, ako.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Alte_Nationalgalerie,_Berlin-Mitte,_360_Grad_Panorama,_160101,_ako.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Alte_Nationalgalerie%2C_Berlin-Mitte%2C_360_Grad_Panorama%2C_160101%2C_ako.jpg/3840px-Alte_Nationalgalerie%2C_Berlin-Mitte%2C_360_Grad_Panorama%2C_160101%2C_ako.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Alte_Nationalgalerie%2C_Berlin-Mitte%2C_360_Grad_Panorama%2C_160101%2C_ako.jpg",
+      "author": "Ansgar Koreng",
+      "credit": "Own work",
+      "license": "CC BY-SA 3.0 de",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en",
+      "changes": "Resized proportionally and encoded as WebP. No generative editing.",
+      "dateTaken": "2016-01-01 11:40",
+      "retrieved": "2026-10-11",
+      "coordinates": {
+        "lat": 52.520433,
+        "lon": 13.399413,
+        "kind": "Source camera coordinate when provided; otherwise approximate destination anchor, not a surveyed camera position"
+      },
+      "category": "landscape",
+      "underwater": false,
+      "is360": true,
+      "projection": "equirectangular",
+      "originalDimensions": [
+        10000,
+        5000
+      ],
+      "dimensions": [
+        2400,
+        1200
+      ],
+      "bytes": 701954,
+      "sourceDescription": "Spherical panoramic of the Alte Nationalgalerie in Berlin-Mitte. To be viewed in the 360° panoramic viewer!",
+      "facts": {
+        "zh-TW": "柏林舊國家美術館外部・360°",
+        "en": "Alte Nationalgalerie exterior, Berlin — 360°"
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:Alte_Nationalgalerie,_Berlin-Mitte,_360_Grad_Panorama,_160101,_ako.jpg"
+      ],
+      "attribution": "Ansgar Koreng / CC BY-SA 3.0 (DE)",
+      "derivativeLicense": "CC BY-SA 3.0 de",
+      "sha256": "a141acd2689b888e53767f39e5bd35a07d7ece671645c9253fa7a4adab619392"
+    },
+    {
+      "id": "v5-san-diego-360",
+      "file": "images/v5-san-diego-360.webp",
+      "title": {
+        "zh-TW": "聖地牙哥 Los Peñasquitos 自然步道・360°",
+        "zh-Hant": "聖地牙哥 Los Peñasquitos 自然步道・360°",
+        "en": "Los Peñasquitos Canyon Preserve, San Diego — 360°"
+      },
+      "commonsTitle": "File:San Diego Panorama DSC 2349-DSC 2362.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:San_Diego_Panorama_DSC_2349-DSC_2362.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/San_Diego_Panorama_DSC_2349-DSC_2362.jpg/3840px-San_Diego_Panorama_DSC_2349-DSC_2362.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c1/San_Diego_Panorama_DSC_2349-DSC_2362.jpg",
+      "author": "Troy Sankey",
+      "credit": "Own work",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "changes": "Resized proportionally and encoded as WebP. No generative editing.",
+      "dateTaken": "2020-12-30 15:40:08",
+      "retrieved": "2026-10-11",
+      "coordinates": {
+        "lat": 32.938486,
+        "lon": -117.152701,
+        "kind": "Source camera coordinate when provided; otherwise approximate destination anchor, not a surveyed camera position"
+      },
+      "category": "landscape",
+      "underwater": false,
+      "is360": true,
+      "projection": "equirectangular",
+      "originalDimensions": [
+        10000,
+        5000
+      ],
+      "dimensions": [
+        2400,
+        1200
+      ],
+      "bytes": 735782,
+      "sourceDescription": "360 degree equirectangular panorama on a trail in Los Peñasquitos Canyon Preserve",
+      "facts": {
+        "zh-TW": "聖地牙哥 Los Peñasquitos 自然步道・360°",
+        "en": "Los Peñasquitos Canyon Preserve, San Diego — 360°"
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:San_Diego_Panorama_DSC_2349-DSC_2362.jpg"
+      ],
+      "attribution": "Troy Sankey / CC BY-SA 4.0",
+      "derivativeLicense": "CC BY-SA 4.0",
+      "sha256": "c0c896d16d159a9995e4e913931cf717dd5361e3fcf4101fa60641cdfad6b070"
+    },
+    {
+      "id": "v5-alishan-forest",
+      "file": "images/v5-alishan-forest.webp",
+      "title": {
+        "zh-TW": "臺灣阿里山森林",
+        "zh-Hant": "臺灣阿里山森林",
+        "en": "Alishan Forest Park, Taiwan"
+      },
+      "commonsTitle": "File:Alishan Forest Park 01.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Alishan_Forest_Park_01.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Alishan_Forest_Park_01.jpg/1280px-Alishan_Forest_Park_01.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Alishan_Forest_Park_01.jpg",
+      "author": "Bernard Gagnon",
+      "credit": "Own work",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "changes": "Resized proportionally and encoded as WebP. No generative editing.",
+      "dateTaken": "2011-03-04",
+      "retrieved": "2026-10-11",
+      "coordinates": {
+        "lat": 23.505639,
+        "lon": 120.799783,
+        "kind": "Source camera coordinate when provided; otherwise approximate destination anchor, not a surveyed camera position"
+      },
+      "category": "landscape",
+      "underwater": false,
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        3456,
+        2592
+      ],
+      "dimensions": [
+        1280,
+        960
+      ],
+      "bytes": 486004,
+      "sourceDescription": "Alishan Forest Park, Taiwan",
+      "facts": {
+        "zh-TW": "臺灣阿里山森林",
+        "en": "Alishan Forest Park, Taiwan"
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:Alishan_Forest_Park_01.jpg"
+      ],
+      "attribution": "Bernard Gagnon / CC BY-SA 3.0",
+      "derivativeLicense": "CC BY-SA 3.0",
+      "sha256": "daa169d0cabff58c8a9d35d1c8eefff0e11b036a4d49cf72d04cdb91b37f6b97"
+    },
+    {
+      "id": "v5-sun-moon-lake",
+      "file": "images/v5-sun-moon-lake.webp",
+      "title": {
+        "zh-TW": "臺灣日月潭",
+        "zh-Hant": "臺灣日月潭",
+        "en": "Sun Moon Lake, Taiwan"
+      },
+      "commonsTitle": "File:Sun Moon Lake, Taiwan.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Sun_Moon_Lake,_Taiwan.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Sun_Moon_Lake%2C_Taiwan.jpg/1280px-Sun_Moon_Lake%2C_Taiwan.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/2/20/Sun_Moon_Lake%2C_Taiwan.jpg",
+      "author": "Photnart",
+      "credit": "Own work",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "changes": "Resized proportionally and encoded as WebP. No generative editing.",
+      "dateTaken": "2016-04-14 11:44:38",
+      "retrieved": "2026-10-11",
+      "coordinates": {
+        "lat": 23.853,
+        "lon": 120.916,
+        "kind": "Source camera coordinate when provided; otherwise approximate destination anchor, not a surveyed camera position"
+      },
+      "category": "landscape",
+      "underwater": false,
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        5312,
+        2988
+      ],
+      "dimensions": [
+        1280,
+        720
+      ],
+      "bytes": 241194,
+      "sourceDescription": "Sun Moon Lake, Taiwan",
+      "facts": {
+        "zh-TW": "臺灣日月潭",
+        "en": "Sun Moon Lake, Taiwan"
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:Sun_Moon_Lake,_Taiwan.jpg"
+      ],
+      "attribution": "Photnart / CC BY-SA 4.0",
+      "derivativeLicense": "CC BY-SA 4.0",
+      "sha256": "90a9b218f9413c21263fb3adcc4ef5a3e2319c7348cb5942324f7d8be9e166c5"
+    },
+    {
+      "id": "v5-taroko-gate",
+      "file": "images/v5-taroko-gate.webp",
+      "title": {
+        "zh-TW": "臺灣太魯閣牌樓",
+        "zh-Hant": "臺灣太魯閣牌樓",
+        "en": "Taroko National Park archway, Taiwan"
+      },
+      "commonsTitle": "File:Taroko Archway, Taroko National Park, Hualien (Taiwan).jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Taroko_Archway,_Taroko_National_Park,_Hualien_(Taiwan).jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/Taroko_Archway%2C_Taroko_National_Park%2C_Hualien_%28Taiwan%29.jpg/1280px-Taroko_Archway%2C_Taroko_National_Park%2C_Hualien_%28Taiwan%29.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Taroko_Archway%2C_Taroko_National_Park%2C_Hualien_%28Taiwan%29.jpg",
+      "author": "Mk2010",
+      "credit": "Own work",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "changes": "Resized proportionally and encoded as WebP. No generative editing.",
+      "dateTaken": "2025-09-14 23:16:26",
+      "retrieved": "2026-10-11",
+      "coordinates": {
+        "lat": 24.15569,
+        "lon": 121.62146,
+        "kind": "Source camera coordinate when provided; otherwise approximate destination anchor, not a surveyed camera position"
+      },
+      "category": "landscape",
+      "underwater": false,
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        5090,
+        3392
+      ],
+      "dimensions": [
+        1280,
+        853
+      ],
+      "bytes": 352996,
+      "sourceDescription": "Taroko Archway, Xiulin Township, Hualien County, Taiwan.",
+      "facts": {
+        "zh-TW": "臺灣太魯閣牌樓",
+        "en": "Taroko National Park archway, Taiwan"
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:Taroko_Archway,_Taroko_National_Park,_Hualien_(Taiwan).jpg"
+      ],
+      "attribution": "Mk2010 / CC BY-SA 4.0",
+      "derivativeLicense": "CC BY-SA 4.0",
+      "sha256": "6455f153378615451df74e047f59f73eac1150115aad2466f1cf01354c752cd9"
+    },
+    {
+      "id": "v5-taroko-gorge",
+      "file": "images/v5-taroko-gorge.webp",
+      "title": {
+        "zh-TW": "臺灣太魯閣峽谷・2014 年照片",
+        "zh-Hant": "臺灣太魯閣峽谷・2014 年照片",
+        "en": "Taroko Gorge, Taiwan — photograph from 2014"
+      },
+      "commonsTitle": "File:Taroko Gorge, Taiwan.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Taroko_Gorge,_Taiwan.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/Taroko_Gorge%2C_Taiwan.jpg/1280px-Taroko_Gorge%2C_Taiwan.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/3/33/Taroko_Gorge%2C_Taiwan.jpg",
+      "author": "Andrewhaimerl",
+      "credit": "Own work",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "changes": "Resized proportionally and encoded as WebP. No generative editing.",
+      "dateTaken": "2014-09-07 01:08:05",
+      "retrieved": "2026-10-11",
+      "coordinates": {
+        "lat": 24.18,
+        "lon": 121.495,
+        "kind": "Source camera coordinate when provided; otherwise approximate destination anchor, not a surveyed camera position"
+      },
+      "category": "landscape",
+      "underwater": false,
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        2848,
+        4288
+      ],
+      "dimensions": [
+        638,
+        960
+      ],
+      "bytes": 140310,
+      "sourceDescription": "One of the views from Taroko Gorge, Taiwan",
+      "facts": {
+        "zh-TW": "臺灣太魯閣峽谷・2014 年照片",
+        "en": "Taroko Gorge, Taiwan — photograph from 2014"
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:Taroko_Gorge,_Taiwan.jpg"
+      ],
+      "attribution": "Andrewhaimerl / CC BY-SA 4.0",
+      "derivativeLicense": "CC BY-SA 4.0",
+      "sha256": "7169c218297ce957be23775cb983ff303d689e5baae19f8407d9f4841aa76ba0"
+    },
+    {
+      "id": "v5-gbr-mackay",
+      "file": "images/v5-gbr-mackay.webp",
+      "title": {
+        "zh-TW": "大堡礁 Mackay 礁珊瑚",
+        "zh-Hant": "大堡礁 Mackay 礁珊瑚",
+        "en": "Corals at Mackay Reef, Great Barrier Reef"
+      },
+      "commonsTitle": "File:Coral2.JPG",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Coral2.JPG",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e6/Coral2.JPG/1280px-Coral2.JPG",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e6/Coral2.JPG",
+      "author": "Peterdownunder",
+      "credit": "Own work",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "changes": "Resized proportionally and encoded as WebP. No generative editing.",
+      "dateTaken": "2009-09-28",
+      "retrieved": "2026-10-11",
+      "coordinates": {
+        "lat": -16.045937,
+        "lon": 145.644073,
+        "kind": "Source camera coordinate when provided; otherwise approximate destination anchor, not a surveyed camera position"
+      },
+      "category": "underwater",
+      "underwater": true,
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        1840,
+        1232
+      ],
+      "dimensions": [
+        1280,
+        857
+      ],
+      "bytes": 253562,
+      "sourceDescription": "Coral at Mackay Reef, off Cape Tribulation, Queensland, Australia, part of the Great Barrier Reef Marine Park.",
+      "facts": {
+        "zh-TW": "大堡礁 Mackay 礁珊瑚",
+        "en": "Corals at Mackay Reef, Great Barrier Reef"
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:Coral2.JPG"
+      ],
+      "attribution": "Peterdownunder / CC BY-SA 3.0",
+      "derivativeLicense": "CC BY-SA 3.0",
+      "sha256": "27efbd6be39e9cb86e7a7e12ab273d42ab9df63e1d4d813a005e89ba4b0d1bdf"
+    },
+    {
+      "id": "v5-gbr-norman",
+      "file": "images/v5-gbr-norman.webp",
+      "title": {
+        "zh-TW": "大堡礁 Norman 礁珊瑚群",
+        "zh-Hant": "大堡礁 Norman 礁珊瑚群",
+        "en": "Coral community at Norman Reef"
+      },
+      "commonsTitle": "File:Coral community at Norman Reef.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Coral_community_at_Norman_Reef.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c2/Coral_community_at_Norman_Reef.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c2/Coral_community_at_Norman_Reef.jpg",
+      "author": "Rebecca Jackson",
+      "credit": "[1] doi:10.7717/peerj.10023",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "changes": "Resized proportionally and encoded as WebP. No generative editing.",
+      "dateTaken": "2020-09-23",
+      "retrieved": "2026-10-11",
+      "coordinates": {
+        "lat": -16.4333,
+        "lon": 145.99,
+        "kind": "Source camera coordinate when provided; otherwise approximate destination anchor, not a surveyed camera position"
+      },
+      "category": "underwater",
+      "underwater": true,
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        1245,
+        1019
+      ],
+      "dimensions": [
+        1173,
+        960
+      ],
+      "bytes": 195374,
+      "sourceDescription": "Diverse coral community at Norman Reef in the northern Great Barrier Reef, Australia",
+      "facts": {
+        "zh-TW": "大堡礁 Norman 礁珊瑚群",
+        "en": "Coral community at Norman Reef"
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:Coral_community_at_Norman_Reef.jpg"
+      ],
+      "attribution": "Rebecca Jackson / CC BY-SA 4.0",
+      "derivativeLicense": "CC BY-SA 4.0",
+      "sha256": "c909d997801b63c19b761a8334a156cb90f835a88864c2e1156fbcaf754f531a"
+    },
+    {
+      "id": "v5-gbr-corals",
+      "file": "images/v5-gbr-corals.webp",
+      "title": {
+        "zh-TW": "大堡礁 Michaelmas 礁珊瑚",
+        "zh-Hant": "大堡礁 Michaelmas 礁珊瑚",
+        "en": "Great Barrier Reef corals near Michaelmas Reef"
+      },
+      "commonsTitle": "File:Great Barrier Reef Corals.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Great_Barrier_Reef_Corals.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7f/Great_Barrier_Reef_Corals.jpg/1280px-Great_Barrier_Reef_Corals.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7f/Great_Barrier_Reef_Corals.jpg",
+      "author": "Gökhan Tolun",
+      "credit": "Own work",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "changes": "Resized proportionally and encoded as WebP. No generative editing.",
+      "dateTaken": "2017-03-04",
+      "retrieved": "2026-10-11",
+      "coordinates": {
+        "lat": -16.587599,
+        "lon": 145.996449,
+        "kind": "Source camera coordinate when provided; otherwise approximate destination anchor, not a surveyed camera position"
+      },
+      "category": "underwater",
+      "underwater": true,
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        4608,
+        3456
+      ],
+      "dimensions": [
+        1280,
+        960
+      ],
+      "bytes": 388614,
+      "sourceDescription": "Great Barrier Reef Corals. Near Michaelmas Reef (GPS location approximate)",
+      "facts": {
+        "zh-TW": "大堡礁 Michaelmas 礁珊瑚",
+        "en": "Great Barrier Reef corals near Michaelmas Reef"
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:Great_Barrier_Reef_Corals.jpg"
+      ],
+      "attribution": "Gökhan Tolun / CC BY-SA 4.0",
+      "derivativeLicense": "CC BY-SA 4.0",
+      "sha256": "fd6d45b933e91f2ae1d72278e67fc6fbbcd116fa8f30725ceb1112a1e30b70f0"
+    },
+    {
+      "id": "v5-green-island-fish",
+      "file": "images/v5-green-island-fish.webp",
+      "title": {
+        "zh-TW": "臺灣綠島的點斑鼻魚",
+        "zh-Hant": "臺灣綠島的點斑鼻魚",
+        "en": "Spotted unicornfish near Green Island, Taiwan"
+      },
+      "commonsTitle": "File:Spotted unicornfish green island.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Spotted_unicornfish_green_island.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Spotted_unicornfish_green_island.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Spotted_unicornfish_green_island.jpg",
+      "author": "Divervincent",
+      "credit": "Own work",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "changes": "Resized proportionally and encoded as WebP. No generative editing.",
+      "dateTaken": "2008-08-07",
+      "retrieved": "2026-10-11",
+      "coordinates": {
+        "lat": 22.65577,
+        "lon": 121.47454,
+        "kind": "Source camera coordinate when provided; otherwise approximate destination anchor, not a surveyed camera position"
+      },
+      "category": "underwater",
+      "underwater": true,
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        1024,
+        768
+      ],
+      "dimensions": [
+        1024,
+        768
+      ],
+      "bytes": 54062,
+      "sourceDescription": "The Spotted unicornfish (Naso brevirostris) can be easily found in the coral reef area around Green Island, TAIWAN",
+      "facts": {
+        "zh-TW": "臺灣綠島的點斑鼻魚",
+        "en": "Spotted unicornfish near Green Island, Taiwan"
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:Spotted_unicornfish_green_island.jpg"
+      ],
+      "attribution": "Divervincent / CC BY-SA 3.0",
+      "derivativeLicense": "CC BY-SA 3.0",
+      "sha256": "65ce530ef2d6f1988ad518ff06e28bab98f7fb916fae00fb1711adeea8100cd2"
+    },
+    {
+      "id": "v5-green-island-clownfish",
+      "file": "images/v5-green-island-clownfish.webp",
+      "title": {
+        "zh-TW": "臺灣綠島石朗的白條海葵魚",
+        "zh-Hant": "臺灣綠島石朗的白條海葵魚",
+        "en": "Tomato clownfish at Shilang, Green Island, Taiwan"
+      },
+      "commonsTitle": "File:Tomato clownfish.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Tomato_clownfish.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/5/56/Tomato_clownfish.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/5/56/Tomato_clownfish.jpg",
+      "author": "Longdongdiver",
+      "credit": "Own work",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "changes": "Resized proportionally and encoded as WebP. No generative editing.",
+      "dateTaken": "2011-11-19",
+      "retrieved": "2026-10-11",
+      "coordinates": {
+        "lat": 22.65577,
+        "lon": 121.47454,
+        "kind": "Source camera coordinate when provided; otherwise approximate destination anchor, not a surveyed camera position"
+      },
+      "category": "underwater",
+      "underwater": true,
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        831,
+        554
+      ],
+      "dimensions": [
+        831,
+        554
+      ],
+      "bytes": 81854,
+      "sourceDescription": "The Tomato clownfish (Amphiprion frenatus) was found in the shallow water reef area of Green Island, a famous diving site located at 21 miles away from southeast coast of TAIWAN. This photo was taken by Vincent. c. Chen on Nov. 19th, 2011.",
+      "facts": {
+        "zh-TW": "臺灣綠島石朗的白條海葵魚",
+        "en": "Tomato clownfish at Shilang, Green Island, Taiwan"
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:Tomato_clownfish.jpg"
+      ],
+      "attribution": "Longdongdiver / CC BY-SA 3.0",
+      "derivativeLicense": "CC BY-SA 3.0",
+      "sha256": "6e765caca728c7b2404ceac0cb8325e733e1b9295211e26220790d6bf09d20ca"
+    },
+    {
+      "id": "v5-belize-coral",
+      "file": "images/v5-belize-coral.webp",
+      "title": {
+        "zh-TW": "貝里斯大藍洞珊瑚",
+        "zh-Hant": "貝里斯大藍洞珊瑚",
+        "en": "Corals of the Great Blue Hole, Belize"
+      },
+      "commonsTitle": "File:Brain Coral, Belize.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Brain_Coral,_Belize.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/Brain_Coral%2C_Belize.jpg/1280px-Brain_Coral%2C_Belize.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/1/13/Brain_Coral%2C_Belize.jpg",
+      "author": "jayhem from Antibes, France",
+      "credit": "Ocean Brain",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "changes": "Resized proportionally and encoded as WebP. No generative editing.",
+      "dateTaken": "2008-12-27",
+      "retrieved": "2026-10-11",
+      "coordinates": {
+        "lat": 17.316,
+        "lon": -87.534,
+        "kind": "Source camera coordinate when provided; otherwise approximate destination anchor, not a surveyed camera position"
+      },
+      "category": "underwater",
+      "underwater": true,
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        1600,
+        1082
+      ],
+      "dimensions": [
+        1280,
+        866
+      ],
+      "bytes": 101344,
+      "sourceDescription": "Brain coral (Diploria labyrinthiformis) and tube sponge of the Great Blue Hole in Belize, with trunkfish.\nGet a better view with Blackmagic or Fluidr.\n\nLicensing\n\n This file is licensed under the Creative Commons Attribution-Share Alike 2.0 Generic license.\nYou are free:\nto share – to copy, distribute and transmit the work\nto remix – to adapt the work\nUnder the following conditions:\nattribution – You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.\nshare alike – If you remix, transform, or build upon the material, you must distribute your contributions under the same or compatible license as the original.https://creativecommons.org/licenses/by-sa/2.0CC BY-SA 2.0 Creative Commons Attribution-Share Alike 2.0 truetrue\n\n\n\n\n\nThis image was originally posted to Flickr by jayhem at https://www.flickr.com/photos/54452028@N00/4332132437. It was reviewed on 12 March 2013 by FlickreviewR and was confirmed to be licensed under the terms of the cc-by-sa-2.0.\n\n\n12 March 2013",
+      "facts": {
+        "zh-TW": "貝里斯大藍洞珊瑚",
+        "en": "Corals of the Great Blue Hole, Belize"
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:Brain_Coral,_Belize.jpg"
+      ],
+      "attribution": "jayhem from Antibes, France / CC BY-SA 2.0",
+      "derivativeLicense": "CC BY-SA 2.0",
+      "sha256": "163d8c583e3418e4edd1b8a2b9f390056653ffe1f12cd9e2dcf9770b7863e15a"
+    },
+    {
+      "id": "v5-raja-ampat-arborek",
+      "file": "images/v5-raja-ampat-arborek.webp",
+      "title": {
+        "zh-TW": "印尼四王群島 Arborek 水下珊瑚",
+        "zh-Hant": "印尼四王群島 Arborek 水下珊瑚",
+        "en": "Underwater corals at Arborek, Raja Ampat"
+      },
+      "commonsTitle": "File:Coral in Raja Ampat.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Coral_in_Raja_Ampat.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d3/Coral_in_Raja_Ampat.jpg/1280px-Coral_in_Raja_Ampat.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d3/Coral_in_Raja_Ampat.jpg",
+      "author": "Akbar raf",
+      "credit": "Own work",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "changes": "Resized proportionally and encoded as WebP. No generative editing.",
+      "dateTaken": "2017-09-09 11:11:44",
+      "retrieved": "2026-10-11",
+      "coordinates": {
+        "lat": -0.562,
+        "lon": 130.518,
+        "kind": "Source camera coordinate when provided; otherwise approximate destination anchor, not a surveyed camera position"
+      },
+      "category": "underwater",
+      "underwater": true,
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        4608,
+        3456
+      ],
+      "dimensions": [
+        1280,
+        960
+      ],
+      "bytes": 466490,
+      "sourceDescription": "underwater view of the arborek island pier, Raja Ampat Regency",
+      "facts": {
+        "zh-TW": "印尼四王群島 Arborek 水下珊瑚",
+        "en": "Underwater corals at Arborek, Raja Ampat"
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:Coral_in_Raja_Ampat.jpg"
+      ],
+      "attribution": "Akbar raf / CC BY-SA 4.0",
+      "derivativeLicense": "CC BY-SA 4.0",
+      "sha256": "24c26a392f8ffcf38523b47dfeb5a162b2fb5e11732edf327cc10abd02d22468"
+    },
+    {
+      "id": "v5-raja-ampat-gam",
+      "file": "images/v5-raja-ampat-gam.webp",
+      "title": {
+        "zh-TW": "印尼四王群島 Gam 島珊瑚",
+        "zh-Hant": "印尼四王群島 Gam 島珊瑚",
+        "en": "Corals of Gam, Raja Ampat"
+      },
+      "commonsTitle": "File:Corals of Gam, Raja Ampat.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Corals_of_Gam,_Raja_Ampat.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/Corals_of_Gam%2C_Raja_Ampat.jpg/1280px-Corals_of_Gam%2C_Raja_Ampat.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Corals_of_Gam%2C_Raja_Ampat.jpg",
+      "author": "Fabian Lambeck",
+      "credit": "Own work",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "changes": "Resized proportionally and encoded as WebP. No generative editing.",
+      "dateTaken": "2015-12-01 12:39:10",
+      "retrieved": "2026-10-11",
+      "coordinates": {
+        "lat": -0.493,
+        "lon": 130.606,
+        "kind": "Source camera coordinate when provided; otherwise approximate destination anchor, not a surveyed camera position"
+      },
+      "category": "underwater",
+      "underwater": true,
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        4000,
+        3000
+      ],
+      "dimensions": [
+        1280,
+        960
+      ],
+      "bytes": 458830,
+      "sourceDescription": "Korallen vor Gam, Raja Ampat",
+      "facts": {
+        "zh-TW": "印尼四王群島 Gam 島珊瑚",
+        "en": "Corals of Gam, Raja Ampat"
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:Corals_of_Gam,_Raja_Ampat.jpg"
+      ],
+      "attribution": "Fabian Lambeck / CC BY-SA 4.0",
+      "derivativeLicense": "CC BY-SA 4.0",
+      "sha256": "737a28ee90b9e78aee16b282eff654bf3e84d9a238eec01e5495a72ceebe7bbc"
+    },
+    {
+      "id": "v5-silfra",
+      "file": "images/v5-silfra.webp",
+      "title": {
+        "zh-TW": "冰島 Silfra 裂隙",
+        "zh-Hant": "冰島 Silfra 裂隙",
+        "en": "Silfra fissure, Iceland"
+      },
+      "commonsTitle": "File:Silfra.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Silfra.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/Silfra.jpg/1280px-Silfra.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/1/14/Silfra.jpg",
+      "author": "Fancy-cats-are-happy-cats",
+      "credit": "Own work",
+      "license": "Public domain",
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Copyright_tags#Public_domain",
+      "changes": "Resized proportionally and encoded as WebP. No generative editing.",
+      "dateTaken": "2011-01",
+      "retrieved": "2026-10-11",
+      "coordinates": {
+        "lat": 64.255,
+        "lon": -21.116,
+        "kind": "Source camera coordinate when provided; otherwise approximate destination anchor, not a surveyed camera position"
+      },
+      "category": "landscape",
+      "underwater": false,
+      "is360": false,
+      "projection": "rectilinear photograph",
+      "originalDimensions": [
+        2048,
+        1536
+      ],
+      "dimensions": [
+        1280,
+        960
+      ],
+      "bytes": 51176,
+      "sourceDescription": "Silfra Fissure near Lake Þingvallavatn in Þingvellir National Park, a popular dive site near the historical location of the Althing",
+      "facts": {
+        "zh-TW": "冰島 Silfra 裂隙",
+        "en": "Silfra fissure, Iceland"
+      },
+      "factSources": [
+        "https://commons.wikimedia.org/wiki/File:Silfra.jpg"
+      ],
+      "attribution": "Fancy-cats-are-happy-cats / Public domain",
+      "derivativeLicense": "Public domain",
+      "sha256": "74bc557344b1b42d8503cb11e2427a9a87924c0d492d6472477089640ca4c992"
+    }
+  ]
+}

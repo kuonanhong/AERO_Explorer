@@ -1,0 +1,11 @@
+{
+  "CORSRules": [
+    {
+      "AllowedOrigins": ["https://kuonanhong.github.io"],
+      "AllowedMethods": ["GET", "HEAD"],
+      "AllowedHeaders": ["Range"],
+      "ExposeHeaders": ["Accept-Ranges", "Content-Length", "Content-Range", "ETag"],
+      "MaxAgeSeconds": 3600
+    }
+  ]
+}

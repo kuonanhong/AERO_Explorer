@@ -1,0 +1,88 @@
+{
+  "checkedAt": "2026-10-11",
+  "repository": {
+    "url": "https://github.com/kuonanhong/AERO_Explorer",
+    "branch": "main",
+    "sha": "097a217148a013b6d4bfae33c2760958cf93aa22",
+    "trackedFiles": 319,
+    "trackedBytes": 60580757,
+    "rootIndexBytes": 7943036,
+    "method": "Read-only git ls-remote, shallow clone, ls-tree, ls-files and SHA-256 hashing. No GitHub mutations.",
+    "legacyManifestEntries": 317
+  },
+  "sources": [
+    {
+      "topic": "GitHub Pages size/bandwidth",
+      "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits",
+      "ref": "turn100search0"
+    },
+    {
+      "topic": "GitHub ordinary Git 100 MiB file maximum",
+      "url": "https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github",
+      "ref": "turn102view5"
+    },
+    {
+      "topic": "Git LFS cannot be used with Pages",
+      "url": "https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage",
+      "ref": "turn112view3"
+    },
+    {
+      "topic": "Fine-grained PAT",
+      "url": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens",
+      "ref": "turn102view6"
+    },
+    {
+      "topic": "GitHub CLI browser login",
+      "url": "https://cli.github.com/manual/gh_auth_login",
+      "ref": "turn115view0"
+    },
+    {
+      "topic": "Cloudflare Pages limits",
+      "url": "https://developers.cloudflare.com/pages/platform/limits/",
+      "ref": "turn102view0"
+    },
+    {
+      "topic": "R2 object/upload sizes and production domain",
+      "url": "https://developers.cloudflare.com/r2/platform/limits/",
+      "ref": "turn102view1"
+    },
+    {
+      "topic": "R2 free tier and charges",
+      "url": "https://developers.cloudflare.com/r2/pricing/",
+      "ref": "turn112view2"
+    },
+    {
+      "topic": "Hugging Face model repository quotas",
+      "url": "https://huggingface.co/docs/hub/en/storage-limits",
+      "ref": "turn102view3"
+    },
+    {
+      "topic": "Spaces static free; compute requires paid plan; CPU Basic no hourly cost",
+      "url": "https://huggingface.co/docs/hub/en/spaces-overview",
+      "ref": "turn102view2"
+    },
+    {
+      "topic": "Hugging Face upload CLI",
+      "url": "https://huggingface.co/docs/huggingface_hub/en/guides/cli",
+      "ref": "turn112view0"
+    },
+    {
+      "topic": "Render free static/web limitations",
+      "url": "https://render.com/docs/free",
+      "ref": "turn100search1"
+    },
+    {
+      "topic": "Vercel CLI total upload size limits",
+      "url": "https://vercel.com/docs/limits",
+      "ref": "turn102view4"
+    }
+  ],
+  "validation": {
+    "publisher": "10/10 local-bare-repository integration tests pass",
+    "modelUpload": "5/5 mocked-CLI adapter tests pass",
+    "bashSyntax": "both scripts pass bash -n",
+    "actualRemotePush": false,
+    "actualModelUpload": false,
+    "testedOS": "Linux; Mac Bash 3.2 and Windows Git Bash compatibility designed, not physically tested"
+  }
+}

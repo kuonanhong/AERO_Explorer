@@ -1,0 +1,17 @@
+{
+  "version": "5.1.0",
+  "releaseDirectory": "AERO_Explorer",
+  "uploadCommand": "bash upload-aero.sh",
+  "sourceDirectory": "source",
+  "site": "https://aero-drone-flight.kuonanhong.chatgpt.site",
+  "githubRepository": "https://github.com/kuonanhong/AERO_Explorer",
+  "missions": 30,
+  "localPhotos": 57,
+  "uiLocales": 22,
+  "flatFiles": 131,
+  "notes": [
+    "Artist-reconstructed 3D Statue of Liberty; other place geometry approximate.",
+    "External AI weights are optional downloads; not fetched during gameplay startup.",
+    "No GitHub push was performed with the user local credentials."
+  ]
+}
