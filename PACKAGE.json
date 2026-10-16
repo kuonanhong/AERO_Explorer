@@ -1,8 +1,8 @@
 {
  "name": "AERO Explorer",
  "version": "6.0.0",
- "build": "1dfce44c0c",
- "built": "2026-10-16T21:45:50+0800",
+ "build": "6e1075d077",
+ "built": "2026-10-16T23:14:09+0800",
  "site": "https://kuonanhong.github.io/AERO_Explorer/",
  "githubRepository": "https://github.com/kuonanhong/AERO_Explorer",
  "uploadCommand": "bash upload-aero-v6.sh",
@@ -51,5 +51,5 @@
  ],
  "missions": 30,
  "files": 349,
- "bytes": 44462093
+ "bytes": 44535527
 }

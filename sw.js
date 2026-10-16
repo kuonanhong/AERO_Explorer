@@ -1,5 +1,5 @@
 /* AERO Explorer v6 service worker: the app shell works offline after the first visit; map tiles, weather and AI APIs stay live. */
-const VERSION = '6.0.0-1dfce44c0c';
+const VERSION = '6.0.0-6e1075d077';
 const SHELL = 'aero6-shell-' + VERSION, LIB = 'aero6-lib-v1';
 const PRECACHE = ["./", "index.html", "app/aero-v6.js", "config.js", "manifest.webmanifest", "data/places.json", "data/missions.json", "data/mission-scenes.json", "vendor/three/build/three.module.js", "icons/icon-192.png", "icons/icon-512.png", "icons/icon.svg", "vendor/three/examples/jsm/postprocessing/EffectComposer.js", "vendor/three/examples/jsm/postprocessing/RenderPass.js", "vendor/three/examples/jsm/postprocessing/UnrealBloomPass.js", "vendor/three/examples/jsm/postprocessing/ShaderPass.js", "vendor/three/examples/jsm/postprocessing/OutputPass.js", "vendor/three/examples/jsm/postprocessing/Pass.js", "vendor/three/examples/jsm/postprocessing/MaskPass.js", "vendor/three/examples/jsm/shaders/CopyShader.js", "vendor/three/examples/jsm/shaders/LuminosityHighPassShader.js", "vendor/three/examples/jsm/shaders/OutputShader.js", "vendor/three/examples/jsm/utils/BufferGeometryUtils.js"];
 self.addEventListener('install', e => { e.waitUntil(caches.open(SHELL).then(c => c.addAll(PRECACHE)).then(() => self.skipWaiting())); });

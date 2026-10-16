@@ -68,7 +68,7 @@ kbd{font:600 10px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding
   #dock{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(180deg,transparent,rgba(5,9,11,.55));border:0;--dock:118px;height:118px;pointer-events:none}
   #dock>*{pointer-events:auto} .pad b{background:rgba(10,16,19,.45)} #ctrls .btns{grid-template-columns:repeat(6,minmax(0,1fr))} #ctrls button{background:rgba(10,16,19,.55);min-height:30px}
   #hudInst{bottom:124px!important} #attrib{bottom:120px!important} #toast{bottom:132px!important} #mini{width:96px!important}
-  #startOverlay{bottom:126px;padding:8px 12px;gap:4px} #startHint{display:none} #startPlace{font-size:15px} .btn.big{font-size:15px;padding:8px 18px}
+  #startOverlay{bottom:126px!important;padding:8px 12px!important;gap:4px!important} #startHint{display:none!important} #startPlace{font-size:15px!important} .btn.big{font-size:15px!important;padding:8px 18px!important}
 }
 /* HUD on the glass */
 .glass{background:var(--glass);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:var(--r)}
@@ -135,6 +135,26 @@ dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:8px 0;font-si
 #attrib{position:absolute;inset-inline-end:6px;bottom:3px;font-size:9.5px;color:rgba(236,231,220,.62);max-width:75%;text-align:end;pointer-events:none;text-shadow:0 1px 2px #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:760px){#hudPlace{max-width:56vw;padding:5px 9px} #hpT{font-size:13.5px} #tape{top:auto;bottom:22px;left:auto;inset-inline-end:10px;transform:none} #hudEnv{top:calc(max(10px,env(safe-area-inset-top)));font-size:11px;padding:5px 8px;max-width:40vw} #hudEnv span:nth-of-type(1){display:none} #mini{top:calc(max(10px,env(safe-area-inset-top)) + 64px)} #mission{top:calc(max(10px,env(safe-area-inset-top)) + 64px);font-size:12px} #hudInst>div{min-width:50px;padding:2px 6px} #hudInst b{font-size:12px} #sheet{inset:6px;border-radius:12px} .list{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.spin{animation-duration:3s}}
+/* ---- Resilience Crew Lab crew mode ---- */
+body[data-crew] #mission{display:none}
+#crewMentor{position:absolute;inset-inline-start:max(10px,env(safe-area-inset-left));top:calc(max(10px,env(safe-area-inset-top)) + 66px);width:min(400px,64vw);padding:8px 10px;display:flex;flex-direction:column;gap:4px;font-size:13px;z-index:9;max-height:calc(100% - 140px);overflow:auto}
+#crewMentor .cmHead{display:flex;align-items:center;gap:7px}#crewMentor .cmHead b{color:var(--brass);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#crewMentor .ic{display:inline-flex;background:rgba(255,255,255,.9);border-radius:6px;padding:2px}
+#crewMentor .cmStep{margin:0;line-height:1.42}#crewMentor .cmRole{margin:0}#crewMentor .cmLabel{color:var(--sky)}
+#crewMentor .cmBtns{display:flex;gap:5px;flex-wrap:wrap}#crewMentor.min .cmStep,#crewMentor.min .cmRole,#crewMentor.min .cmBtns,#crewMentor.min .cmLabel{display:none}
+.x.sm{width:26px;height:26px;font-size:16px}
+#crewBrief,#crewDebrief{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(640px,calc(100% - 20px));max-height:calc(100% - 20px);overflow:auto;padding:12px 16px 16px;z-index:34;background:var(--glass2);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:var(--r)}
+#crewBrief header,#crewDebrief header{justify-content:flex-start}.cbTitle{flex:1;min-width:0}.cbTitle h3{margin:2px 0 0;font-size:19px}.cbTitle small{color:var(--mut);letter-spacing:.04em}
+.cbIcon{display:inline-flex;background:#f4f1ea;border-radius:10px;padding:5px;flex:0 0 auto}
+.cbTags{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.cbTags span{padding:3px 9px;border-radius:999px;border:1px solid var(--line2);font-size:12px;background:rgba(255,255,255,.06)}
+#crewBrief h4,#crewDebrief h4{margin:12px 0 4px;color:var(--brass);font-size:13.5px}.cbList{margin:0;padding-inline-start:22px}.cbList li{margin:3px 0}
+.cbChecks label{display:flex;gap:9px;align-items:flex-start;padding:6px 8px;border-radius:8px;cursor:pointer}.cbChecks label:hover{background:rgba(255,255,255,.05)}.cbChecks input{width:18px;height:18px;flex:0 0 auto;margin-top:1px;accent-color:var(--brass)}
+.cbRole select{min-width:160px}.cbTip{border-inline-start:3px solid var(--brass);padding:4px 10px;background:rgba(240,200,121,.08);border-radius:6px}.cbBtns{gap:8px;flex-wrap:wrap;margin-top:10px}
+.scoreBig{font-size:32px;font-weight:800;color:var(--brass);margin:6px 0}#cdReport{width:100%;box-sizing:border-box;border-radius:8px;border:1px solid var(--line2);background:rgba(0,0,0,.25);color:var(--paper);padding:8px;font:inherit;resize:vertical}
+.cdLog{padding-inline-start:20px;max-height:160px;overflow:auto}
+.crew-hl{outline:3px solid var(--brass)!important;outline-offset:2px;animation:crewpulse .8s ease-in-out 4}@keyframes crewpulse{50%{outline-color:transparent}}
+@media (max-width:760px){#crewMentor{top:calc(max(8px,env(safe-area-inset-top)) + 54px);width:min(360px,70vw);font-size:12.5px;padding:6px 8px}.cbTitle h3{font-size:17px}}
+@media (max-height:560px) and (orientation:landscape){#crewMentor{top:48px;width:min(360px,42vw);max-height:calc(100% - 175px);font-size:12px}#crewMentor .cmRole{display:none}body:has(#startOverlay:not([hidden])) #crewMentor{max-height:108px}}
 </style>
 </head>
 <body data-controls="keys">

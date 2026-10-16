@@ -124,8 +124,8 @@ const TZ_LANG = { 'Asia/Taipei': 'zh-Hant', 'Asia/Hong_Kong': 'zh-Hant', 'Asia/M
   'Europe/Lisbon': 'pt', 'America/Sao_Paulo': 'pt', 'America/Mexico_City': 'es', 'America/Bogota': 'es', 'America/Lima': 'es', 'America/Argentina/Buenos_Aires': 'es', 'Africa/Nairobi': 'sw',
   'Africa/Dar_es_Salaam': 'sw', 'Africa/Cairo': 'ar', 'Asia/Riyadh': 'ar', 'Asia/Dubai': 'ar' };
 function pickLang() {
+  const q = new URLSearchParams(location.search).get('lang'); if (q && LANGS.includes(q)) return q;   // an explicit ?lang= wins
   const saved = LS.get('aero:lang'); if (saved && LANGS.includes(saved)) return saved;
-  const q = new URLSearchParams(location.search).get('lang'); if (q && LANGS.includes(q)) return q;
   for (const raw of (navigator.languages?.length ? navigator.languages : [navigator.language || 'en'])) {
     const l = String(raw).toLowerCase(); if (ALIAS[l]) return ALIAS[l];
     const exact = LANGS.find(x => x.toLowerCase() === l); if (exact) return exact;
@@ -145,8 +145,14 @@ function t(key, vars) {
   if (vars) s = s.replace(/\{(\w+)\}/g, (m, k) => (vars[k] ?? m));
   return s;
 }
+async function loadCrewDict(lang) {   // Crew Lab mission texts (crew mode only)
+  let d = globalThis.AERO_CREW_I18N?.[lang];
+  if (!d) { try { const r = await fetch(`i18n/crew/${lang}.json`, { cache: 'no-cache' }); if (r.ok) d = await r.json(); } catch { } }
+  return d || {};
+}
 async function setLang(lang) {
   I18N.en = await loadDict('en'); I18N.dict = await loadDict(lang); I18N.lang = lang;
+  if (globalThis.AERO_CREW) { const ce = await loadCrewDict('en'), cl = lang === 'en' ? ce : await loadCrewDict(lang); for (const [k, v] of Object.entries(ce)) if (k[0] !== '_') I18N.en[k] = v; for (const [k, v] of Object.entries(cl)) if (k[0] !== '_') I18N.dict[k] = v; }
   const dir = I18N.dict._dir || 'ltr'; document.documentElement.lang = lang; document.documentElement.dir = dir; document.documentElement.dataset.dir = dir;
   applyI18n(document); document.title = t('app.title');
 }
@@ -1894,6 +1900,7 @@ function buildDock() {
 }
 function applyControlsMode() { document.body.dataset.controls = SET.controls; }
 function dockAction(a) {
+  if (globalThis.CREW_ACT?.[a]) return CREW_ACT[a]();
   ({ start: togglePause, photo: takePhoto, buoy: dropBuoy, where: showWhere, story: showStory, view: cycleCam, missions: () => openSheet('missions'), tutor: () => openSheet('tutor'),
     places: () => openSheet('places'), settings: toggleDrawer, reset: respawn, full: toggleFullscreen, help: toggleHelp })[a]?.();
 }
@@ -1910,6 +1917,7 @@ function toggleFullscreen() { const d = document; try { if (!d.fullscreenElement
 /* ---------- start / pause ---------- */
 function togglePause(force) {
   if (APP.state !== 'sim' || !APP.veh) return;
+  if (!APP.started && globalThis.CREW_GATE && !CREW_GATE()) return;
   if (!APP.started) { APP.started = true; APP.paused = false; if (APP.kind === 'drone' && APP.veh.landed) APP.autoTakeoff = true; toggleHelp(false); }
   else APP.paused = force ?? !APP.paused;
   $('#startOverlay').hidden = APP.started; AUDIO.start(); updateDock();
@@ -2020,7 +2028,7 @@ function syncSettings() {
   if (APP.place) $('#l4d').href = 'AERO_4D_Explorer.html#' + encodeURIComponent(APP.place.id);
   updateEnvChip();
 }
-function relabelAll() { applyI18n(document); syncSettings(); updateDock(); updatePlaceChip(); updateEnvChip(); if (!$('#sheet').hidden) openSheet($('#sheet').dataset.kind); if (!$('#help').hidden) toggleHelp(true); }
+function relabelAll() { applyI18n(document); syncSettings(); updateDock(); updatePlaceChip(); updateEnvChip(); globalThis.CREW_RELABEL?.(); if (!$('#sheet').hidden) openSheet($('#sheet').dataset.kind); if (!$('#help').hidden) toggleHelp(true); }
 
 /* ---------- HUD ---------- */
 const brg = h => ((-h * deg) % 360 + 360) % 360;
@@ -2195,6 +2203,7 @@ async function loadMissions() {
 const mtext = (def, key) => def?.[key]?.[I18N.lang] || def?.[key]?.[isZh() ? 'zh-Hant' : 'en'] || def?.[key]?.en || '';
 const sceneOf = def => MISSIONS.scenes.find(s => s.missionId === def.id);
 const MTIER = { beginner: { count: 3, radius: 10, gate: 8, dwell: 3, par: 240, form: 8 }, advanced: { count: 4, radius: 8, gate: 6.5, dwell: 4, par: 210, form: 6 }, expert: { count: 5, radius: 6, gate: 5, dwell: 5, par: 180, form: 4 } };
+const amP = (tier = AM.tier) => { const P = MTIER[tier], k = AM.k || 1; return k === 1 ? P : { ...P, radius: P.radius * k, gate: P.gate * k, form: P.form * k }; };
 function missionVehicle(def, scene) { if (def.vehicle === 'air') return 'drone'; if (def.vehicle === 'land') return 'ugv'; return scene?.place?.underwater ? 'rov' : 'boat'; }
 function missionPlace(def) {
   const sc = sceneOf(def); if (!sc) return null; const pl = sc.place;
@@ -2205,12 +2214,12 @@ const AM = { active: false, def: null, scene: null, tier: 'beginner', steps: [],
 function clearAeroMission() { for (const o of AM.objs) scene.remove(o); AM.objs = []; AM.active = false; AM.steps = []; AM.guide = null; }
 /* Lay out stations around the real landmark: above roofs for drones, on dry passable ground for robots, on/under water for boats and ROVs. */
 function layoutStations(def, sc, tier) {
-  const P = MTIER[tier], all = def.steps.map(s => s.kind), lm = sc.landmark || { width: 30, height: 20, depth: 30 }, veh = missionVehicle(def, sc);
+  const P = MTIER[tier], all = def.steps.map(s => s.kind), lm = sc.landmark || { width: 30, height: 20, depth: 30 }, lv = def.layoutVeh || missionVehicle(def, sc), veh = lv === 'car' ? 'ugv' : lv;
   // keep the scenario's variety at every tier: first each distinct step kind (in order), then the rest
   const kinds = [...new Set(all)].slice(0, P.count); for (const k of all) { if (kinds.length >= P.count) break; if (kinds.filter(x => x === k).length < all.filter(x => x === k).length && kinds.length < P.count) kinds.push(k); }
   kinds.sort((a, b) => all.indexOf(a) - all.indexOf(b));
   const size = Math.max(lm.width || 20, lm.depth || 20), seed = def.layoutSeed || 1, out = [];
-  const R0 = veh === 'drone' ? clamp(size * 1.1 + 25, 35, 140) : veh === 'ugv' ? clamp(size * 0.7 + 12, 18, 70) : clamp(size * 1.5 + 40, 50, 220);
+  const R0 = veh === 'plane' ? clamp(size * 2 + 420, 420, 900) : veh === 'drone' ? clamp(size * 1.1 + 25, 35, 140) : lv === 'car' ? clamp(size * 1.2 + 40, 45, 160) : veh === 'ugv' ? clamp(size * 0.7 + 12, 18, 70) : clamp(size * 1.5 + 40, 50, 220);
   for (let i = 0; i < kinds.length; i++) {
     let best = null;
     for (let tries = 0; tries < 24 && !best; tries++) {
@@ -2219,7 +2228,8 @@ function layoutStations(def, sc, tier) {
       if (veh === 'ugv' && (roof || water)) continue;
       if ((veh === 'boat' || veh === 'rov') && !water) continue;
       let y;
-      if (veh === 'drone') y = Math.max(g, roof ? roof.top : g) + clamp((lm.height || 20) * 0.6, 12, 55) + (i % 2) * 4;
+      if (veh === 'plane') { let hm = g; for (let q = 0; q < 6; q++) hm = Math.max(hm, DEM.heightAt(x + Math.sin(q) * 150, z + Math.cos(q) * 150)); y = hm + 110 + (i % 2) * 25; }
+      else if (veh === 'drone') y = Math.max(g, roof ? roof.top : g) + clamp((lm.height || 20) * 0.6, 12, 55) + (i % 2) * 4;
       else if (veh === 'ugv') y = g + 1.2;
       else if (veh === 'boat') y = ENV.levelAt(x, z).level + 1.5;
       else { const L = ENV.levelAt(x, z).level; y = Math.max(g + 2, L - clamp((L - g) * 0.5, 2, 18)); }
@@ -2232,9 +2242,9 @@ function layoutStations(def, sc, tier) {
 }
 function startAeroMission(def, tier) {
   clearAeroMission(); clearMission();
-  const sc = sceneOf(def); AM.def = def; AM.scene = sc; AM.tier = tier; AM.idx = 0; AM.t0 = APP.t; AM.contacts = 0; AM.over = 0; AM.done = false; AM.score = null; AM.hold = 0; AM.active = true;
+  const sc = def.scene || sceneOf(def); AM.def = def; AM.scene = sc; AM.tier = tier; AM.k = def.scale || 1; AM.idx = 0; AM.t0 = APP.t; AM.contacts = 0; AM.over = 0; AM.done = false; AM.score = null; AM.hold = 0; AM.active = true;
   AM.steps = layoutStations(def, sc, tier);
-  const P = MTIER[tier];
+  const P = amP(tier);
   AM.steps.forEach((s, i) => {
     let o;
     if (s.kind === 'gate') { o = gateMesh(P.gate); o.rotation.y = Math.PI / 2 - s.a; }
@@ -2246,18 +2256,18 @@ function startAeroMission(def, tier) {
 }
 function aeroMissionAction(kind) {               // 'photo' (F) or 'beacon' (G)
   if (!AM.active || AM.done) return false; const s = AM.steps[AM.idx]; if (!s || s.kind !== kind) return false;
-  const p = APP.veh.pos, P = MTIER[AM.tier]; if (Math.hypot(p.x - s.x, p.y - s.y, p.z - s.z) > P.radius * 2.2) return false;
+  const p = APP.veh.pos, P = amP(); if (Math.hypot(p.x - s.x, p.y - s.y, p.z - s.z) > P.radius * 2.2) return false;
   if (kind === 'photo') { camera.getWorldDirection(_v1); _v2.set(-p.x, DEM.heightAt(0, 0) + 10 - p.y, -p.z).normalize(); if (_v1.dot(_v2) < 0.6) { toast(t('mis.step.photo')); return false; } }
   advanceStep(); return true;
 }
 function advanceStep() { const s = AM.steps[AM.idx]; s.done = true; s.obj.traverse(m => m.material?.color?.set?.('#5a6a70')); AM.idx++; AM.hold = 0; if (AM.idx >= AM.steps.length) finishAero(); updateAeroHud(); }
 function finishAero() {
-  AM.done = true; const P = MTIER[AM.tier], el = APP.t - AM.t0;
+  AM.done = true; const P = amP(), el = APP.t - AM.t0;
   const obj = 70 * AM.steps.filter(s => s.done).length / AM.steps.length, stab = Math.max(0, 20 - AM.contacts * 4 - AM.over * 0.5), eff = 10 * clamp(P.par / Math.max(el, 1), 0, 1);
   AM.score = { obj: Math.round(obj), stab: Math.round(stab), eff: Math.round(eff), total: Math.round(obj + stab + eff), time: Math.round(el) };
 }
 function updateAeroMission(dt) {
-  if (!AM.active || AM.done) return; const v = APP.veh, p = v.pos, s = AM.steps[AM.idx], P = MTIER[AM.tier]; if (!s) return;
+  if (!AM.active || AM.done) return; const v = APP.veh, p = v.pos, s = AM.steps[AM.idx], P = amP(); if (!s) return;
   const w = v.warn || ''; if (w && w !== AM.lastWarn && /crash|Building|seabed|aground|hardLanding/.test(w)) AM.contacts++; AM.lastWarn = w;
   const spd = v.vel ? Math.hypot(v.vel.x, v.vel.y || 0, v.vel.z) : Math.abs(v.u || v.v || 0); if (spd > { drone: 9, ugv: 5, boat: 12, rov: 2.5 }[APP.kind] ?? 99) AM.over += dt;
   AM.steps.forEach((q, i) => { if (!q.done) q.obj.traverse(m => m.material?.color?.set?.(i === AM.idx ? (q.kind === 'gate' ? '#f0c879' : '#ffffff') : '#6fb7a5')); });
@@ -2271,11 +2281,288 @@ function updateAeroMission(dt) {
   updateAeroHud();
 }
 function updateAeroHud() {
-  const el = $('#mission'); if (!AM.active) return; el.hidden = false; const P = MTIER[AM.tier];
+  const el = $('#mission'); if (!AM.active) return; el.hidden = false; const P = amP();
   if (AM.done) { const S = AM.score; el.innerHTML = `<b>${esc(mtext(AM.def, 'name'))}</b><span>${esc(t('mis.complete'))} · ${esc(t('mis.score', { s: S.total }))}</span><span class="mut">${esc(t('mis.objectives'))} ${S.obj}/70 · ${esc(t('mis.stability'))} ${S.stab}/20 · ${esc(t('mis.efficiency'))} ${S.eff}/10 · ${S.time} s</span>`; return; }
   const s = AM.steps[AM.idx], d = s ? Math.hypot(APP.veh.pos.x - s.x, APP.veh.pos.z - s.z) : 0;
   const step = t('mis.step.' + s.kind, { s: s.kind === 'formation' ? Math.round(P.dwell * 1.5) : P.dwell, m: P.form });
   el.innerHTML = `<b>${esc(mtext(AM.def, 'name'))}</b><span>${AM.idx + 1}/${AM.steps.length} · ${esc(step)}</span><span class="mut">${fmtDist(d)} · ${Math.round(APP.t - AM.t0)} s${AM.hold > 0 ? ` · ${AM.hold.toFixed(1)} s` : ''}</span>`;
+}
+
+/* ======================= Resilience Crew Lab · crew mode (missions at real places, mentor, debrief, team bridge) ======================= */
+/* Active only when the page sets globalThis.AERO_CREW (sim/index.html of Resilience Crew Lab) and opens #crew/<missionId>.
+   The Crew Lab page embeds this simulator in a same-origin frame: telemetry, events and results go to the parent with
+   postMessage, and the parent's on-device coach model answers the apprentice's questions ("crew" tutor provider).
+   Civilian, non-combat, educational exercises only; the real place is geographic context. */
+const CREW_ICONS = {"sar-mountain":["#3f7d5a","M2 20 9 8l4 6 3-4 6 10zM15 5a2 2 0 1 0 0 .1M15 7v3M13.5 8.5h3"],"flood-extent":["#2d6fa3","M3 9l4-3 4 3 4-3 4 3M2 14c2-1.5 3.5-1.5 5 0s3.5 1.5 5 0 3.5-1.5 5 0 3.5 1.5 5 0M2 19c2-1.5 3.5-1.5 5 0s3.5 1.5 5 0 3.5-1.5 5 0 3.5 1.5 5 0"],"roof-inspect":["#8a5a3c","M3 12 12 4l9 8M5 10v10h14V10M9 20v-5h6v5M16 7V4h2v5"],"medical-delivery":["#c0392b","M4 8h16v12H4zM9 8V5h6v3M12 11v6M9 14h6"],"forest-observe":["#2e7d32","M7 3 3 11h8zM7 11v9M17 6l-4 8h8zM17 14v6M2 20h20"],"solar-inspect":["#d4a017","M3 18 6 9h14l-3 9zM8 9l-2 9M12 9l-1 9M16 9l-1 9M4.5 13.5h15M12 2v3M6 4l1.5 2M18 4l-1.5 2"],"bridge-record":["#5d6d7e","M2 17h20M2 12h20M5 12v8M19 12v8M12 12v8M5 12c2-5 12-5 14 0"],"storm-assess":["#6c5ce7","M4 10c0-4 4-6 8-6s8 2 8 6M2 14h13a3 3 0 1 0-3-3M2 18h17a3 3 0 1 1-3 3"],"landslide-watch":["#a0522d","M2 20 10 6l10 14zM10 6l2 6-3 3 2 5M15 15h2M14 18h3M6 18h2"],"wildfire-watch":["#e67e22","M12 21c-4 0-6-3-6-6 0-4 4-6 4-10 3 2 3 4 3 6 1-1 2-2 2-4 3 2 3 5 3 8 0 3-2 6-6 6zM12 21c-1.5 0-2.5-1-2.5-2.5S12 15 12 15s2.5 2 2.5 3.5S13.5 21 12 21"],"coast-erosion":["#c8a165","M2 8c3 0 4 3 7 3s4-3 7-3 4 2 6 2M2 13c3 0 4 3 7 3s4-3 7-3 4 2 6 2M13 20l3-4 3 4zM5 20l2-3 2 3"],"heritage-record":["#9b2d30","M3 9 12 3l9 6M3 9h18M5 9v9M9 9v9M15 9v9M19 9v9M2 20h20"],"wildlife-census":["#16a085","M4 12c3-4 7-4 10 0-3 4-7 4-10 0zM14 12l4-3v6zM8 12h.1M4 20h16M6 17v3M10 17v3"],"crop-survey":["#7cb342","M2 20 8 8h8l6 12zM6 14h12M4 17h16M10 8l-2 12M14 8l2 12M12 2v4M10 4h4"],"lighthouse-inspect":["#e0a800","M9 21 10 8h4l1 13zM9 8h6M10 8V5l2-2 2 2v3M3 6l4 1M21 6l-4 1M8 14h8"],"relay-comms":["#00838f","M12 10v11M8 21h8M12 10a2 2 0 1 0 0-.1M7 5a7 7 0 0 0 0 9M17 5a7 7 0 0 1 0 9M4 2a11 11 0 0 0 0 15M20 2a11 11 0 0 1 0 15"],"aerial-survey":["#34495e","M2 12h20M12 5l-2 7 2 7M5 9l2 3-2 3M19 12l3-2v4zM8 12l-1-5h2l3 5"],"relief-sorting":["#d35400","M3 10h8v9H3zM13 10h8v9h-8zM8 3h8v7H8zM6 13h2M16 13h2M11 5h2"],"accessible-route":["#2471a3","M12 4a1.5 1.5 0 1 0 0 .1M11 7v6h5l2 5M11 10h5M8 11a6 6 0 1 0 8 6"],"road-obstacle":["#e74c3c","M4 21 10 3h4l6 18zM8 15h8M9 11h6M2 21h20"],"shelter-inspect":["#27ae60","M3 11 12 4l9 7M5 10v10h14V10M10 20v-5h4v5M12 8v1"],"load-balance":["#8e44ad","M12 4v16M5 20h14M4 8h16M4 8l-2 6h4zM20 8l-2 6h4zM12 4a1 1 0 1 0 0 .1"],"vehicle-precheck":["#2c3e50","M3 15l2-6h14l2 6v4H3zM5 9l2-4h10l2 4M7 19v2M17 19v2M7 15h.1M17 15h.1M10 12l2 2 3-4"],"relay-transport":["#117a65","M2 15h7v4H2zM15 15h7v4h-7zM9 17h6M12 14l3 3-3 3M4 15v-3h3l2 3M17 15v-3h3l2 3"],"trail-patrol":["#6d4c41","M3 21c4-4 2-8 6-11s7-2 8-7M14 21c1-3 4-4 7-5M9 9h.1M6 15h.1M17 6l2-2"],"tunnel-portal":["#4e5d6c","M2 20V10a10 7 0 0 1 20 0v10M7 20v-7a5 4 0 0 1 10 0v7M2 20h20M12 15v5"],"market-logistics":["#b9770e","M3 10l2-5h14l2 5M3 10h18v10H3zM9 20v-6h6v6M3 10c0 2 3 2 3 0 0 2 3 2 3 0 0 2 3 2 3 0 0 2 3 2 3 0 0 2 3 2 3 0"],"marine-litter":["#1abc9c","M2 16c2-1.5 3.5-1.5 5 0s3.5 1.5 5 0 3.5-1.5 5 0 3.5 1.5 5 0M9 4h2v3l1 2v5H8V9l1-2zM15 9l3 1-1 4-3-1z"],"harbor-inspect":["#1f618d","M12 3v14M8 7h8M12 3a1.5 1.5 0 1 0 0 .1M4 13a8 8 0 0 0 16 0M4 13l2 2M20 13l-2 2M2 20h20"],"lifebuoy-delivery":["#e74c3c","M12 12m-8 0a8 8 0 1 0 16 0a8 8 0 1 0-16 0M12 12m-3.5 0a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0-7 0M6.3 6.3l3.2 3.2M17.7 6.3l-3.2 3.2M6.3 17.7l3.2-3.2M17.7 17.7l-3.2-3.2"],"water-sampling":["#3498db","M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3M7 15h10"],"pier-inspect":["#7f8c8d","M2 10h20M4 10v10M9 10v10M15 10v10M20 10v10M2 16c2-1 3-1 5 0s3 1 5 0 3-1 5 0 3 1 5 0M6 10V6h4v4"],"lake-patrol":["#2e86c1","M3 15h14l3-4H8l-2-3H4zM10 8V5h3l2 3M2 19c2-1.5 3.5-1.5 5 0s3.5 1.5 5 0 3.5-1.5 5 0 3.5 1.5 5 0"],"oil-sheen-watch":["#5b2c6f","M12 3c3 4 5 7 5 10a5 5 0 0 1-10 0c0-3 2-6 5-10zM2 20c2-1.5 3.5-1.5 5 0s3.5 1.5 5 0 3.5-1.5 5 0 3.5 1.5 5 0M10 14a2 2 0 0 0 2 2"],"reef-survey":["#ff6f61","M12 21v-8M12 13l-4-4V5M12 13l4-4V6M8 9 5 7M16 9l3-2M12 17l-3-2M12 17l3-2M4 21h16"],"seagrass-record":["#4caf50","M6 21c0-6-2-9-2-14M10 21c0-5 1-8 3-12M14 21c0-4-1-7-3-9M18 21c0-6 1-9 3-13M2 21h20"],"hull-inspect":["#2c3e50","M2 10h20l-3 7H5zM5 10V6h9l3 4M8 6V4M2 20c2-1.5 3.5-1.5 5 0s3.5 1.5 5 0 3.5-1.5 5 0 3.5 1.5 5 0M17 13h.1"],"cable-check":["#0e6655","M2 14c4-3 6 3 10 0s6-3 10 0M2 19h20M7 8h4v4H7zM11 10h3M9 8V5M15 4l3 3"],"lake-bottom":["#154360","M2 6c2-1.5 3.5-1.5 5 0s3.5 1.5 5 0 3.5-1.5 5 0 3.5 1.5 5 0M2 20h20M5 20l2-3 2 3M15 20l3-5 3 5M10 12h4v3h-4zM12 9v3"],"phishing":["#c0392b","M3 5h18v13H3zM3 5l9 7 9-7M17 12v4a2 2 0 0 1-4 0"],"mfa":["#2980b9","M7 3h10v18H7zM10 18h4M12 7a2 2 0 0 1 2 2v2h-4V9a2 2 0 0 1 2-2zM9.5 11h5v3h-5z"],"backup":["#16a085","M12 3c5 0 8 1.5 8 3s-3 3-8 3-8-1.5-8-3 3-3 8-3zM4 6v6c0 1.5 3 3 8 3M20 6v4M15 17a4 4 0 1 0 1.5-3.2M15 13v2h2"],"fact-check":["#8e44ad","M10 10m-6 0a6 6 0 1 0 12 0a6 6 0 1 0-12 0M14.5 14.5 20 20M7.5 10l2 2 3.5-4"],"permissions":["#d35400","M9 7a3 3 0 1 0 0 .1M3 20v-1a6 6 0 0 1 9-5M16 13v-2a2 2 0 0 1 4 0v2M15 13h6v6h-6z"],"handover":["#2c3e50","M8 4h8v3H8zM6 5H4v16h16V5h-2M8 12h8M8 16h5"],"comms-outage":["#7f8c8d","M12 20h.1M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 14 0M2 9.5a15 15 0 0 1 20 0M3 3l18 18"],"weather-brief":["#f39c12","M7 9a4 4 0 0 1 7.7-1.5A3.5 3.5 0 1 1 17 15H7a3 3 0 0 1 0-6zM9 19l-1 2M13 19l-1 2M17 19l-1 2"],"map-reading":["#27ae60","M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3zM9 3v15M15 6v15M12 10a1.5 1.5 0 1 0 0 .1"],"image-privacy":["#34495e","M3 7h4l2-3h6l2 3h4v12H3zM12 13m-3.5 0a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0-7 0M3 3l18 18"]};
+const CREW_ROLES = ['pilot', 'navigator', 'observer', 'coordinator'];
+const CREW = {
+  id: '', mission: null, type: '', T: null, def: null, tier: 'beginner', data: null, phase: 'idle', confirmed: false, checks: new Set(),
+  log: [], album0: 0, buoys0: 0, home: null, result: null, report: '', stepView: -1, minimized: false, briefPaused: false, room: '',
+  role: (() => { const r = new URLSearchParams(location.search).get('role'); return CREW_ROLES.includes(r) ? r : 'pilot'; })(),
+  embedded: (() => { try { return window.parent !== window; } catch { return true; } })(), lastTel: 0, asks: new Map(), askN: 0, lastIdx: 0,
+};
+const crewIcon = (type, size = 22) => { const [c, d] = CREW_ICONS[type] || ['#7fd4ff', 'M4 4h16v16H4z']; return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" aria-hidden="true" fill="none" stroke="${c}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`; };
+const ct = (k, vars) => t('crew.type.' + CREW.type + '.' + k, vars);
+const CREW_TIER = { basic: 'beginner', advanced: 'advanced', expert: 'expert' };
+const SPEECH_TAG = { 'zh-Hant': 'zh-TW', 'zh-Hans': 'zh-CN', en: 'en-US', ja: 'ja-JP', ko: 'ko-KR', vi: 'vi-VN', th: 'th-TH', id: 'id-ID', ms: 'ms-MY', fil: 'fil-PH', km: 'km-KH', my: 'my-MM', hi: 'hi-IN', bn: 'bn-BD', mr: 'mr-IN', ta: 'ta-IN', te: 'te-IN', ur: 'ur-PK', ar: 'ar-SA', fa: 'fa-IR', he: 'he-IL', tr: 'tr-TR', ru: 'ru-RU', uk: 'uk-UA', pl: 'pl-PL', cs: 'cs-CZ', ro: 'ro-RO', hu: 'hu-HU', el: 'el-GR', de: 'de-DE', nl: 'nl-NL', da: 'da-DK', sv: 'sv-SE', nb: 'nb-NO', fi: 'fi-FI', fr: 'fr-FR', es: 'es-ES', it: 'it-IT', pt: 'pt-BR', sw: 'sw-KE' };
+
+/* ---- bridge to the Crew Lab page ---- */
+function crewPost(type, payload = {}) { if (!CREW.embedded) return; try { window.parent.postMessage({ source: 'aero-crew', type, missionId: CREW.id, ...payload }, location.origin); } catch { } }
+addEventListener('message', e => {
+  if (e.origin !== location.origin || e.data?.source !== 'rcl') return; const d = e.data;
+  if (d.type === 'room') { CREW.room = d.code || ''; if (!$('#crewBrief')?.hidden) renderBrief(); }
+  else if (d.type === 'pause' && APP.started && !APP.paused) { APP.paused = true; updateDock(); toast(t('btn.pause')); }
+  else if (d.type === 'coach-status' && d.id == null) { CREW_COACH.state = d.state || 'idle'; CREW_COACH.progress = d.progress || 0; for (const w of CREW_COACH.waiters.splice(0)) w(d); }
+  else if (d.type === 'answer' || d.type === 'answer-progress' || d.type === 'answer-error' || d.type === 'coach-status') {
+    const a = CREW.asks.get(d.id); if (!a) return; a.touch();
+    if (d.type === 'coach-status') a.partial(t('crew.coachLoading', { p: Math.round((d.progress || 0) * 100) }));
+    else if (d.type === 'answer-progress') a.partial(d.text || '');
+    else if (d.type === 'answer') { CREW.asks.delete(d.id); a.resolve(d.text || ''); }
+    else { CREW.asks.delete(d.id); a.reject(new Error(d.code || 'coach')); }
+  }
+});
+/* the apprentice's question goes to the Crew Lab coach model running in the parent page (never to a server) */
+function crewAsk(q, onPartial) {
+  if (!CREW.embedded) return Promise.reject(new Error('standalone'));
+  const id = ++CREW.askN, lang = LANG_NAME[I18N.lang] || 'English';
+  return new Promise((resolve, reject) => {
+    let timer; const touch = () => { clearTimeout(timer); timer = setTimeout(() => { CREW.asks.delete(id); reject(new Error('timeout')); }, 180000); };
+    CREW.asks.set(id, { resolve: v => { clearTimeout(timer); resolve(v); }, reject: e => { clearTimeout(timer); reject(e); }, partial: onPartial, touch }); touch();
+    onPartial(t('crew.coachWait'));
+    crewPost('ask', { id, q, language: lang, context: flightContext().slice(0, 3800) });
+  });
+}
+/* load the parent's coach model on request (explicit user action; about 470 MB the first time, then cached by the browser) */
+const CREW_COACH = { state: 'unknown', progress: 0, waiters: [] };
+function crewLoadModel(onProgress) {
+  if (!CREW.embedded) return Promise.reject(new Error('standalone'));
+  return new Promise((resolve, reject) => {
+    const h = d => { if (d.state === 'ready') resolve(); else if (d.state === 'error' || (d.state === 'idle' && CREW_COACH.started)) reject(new Error(d.code || 'load')); else { onProgress?.(Math.round((d.progress || 0) * 100)); CREW_COACH.waiters.push(h); } };
+    CREW_COACH.started = true; CREW_COACH.waiters.push(h); crewPost('coach-load');
+  });
+}
+function crewContext() {
+  const objs = [1, 2, 3].map(i => ct('obj' + i)).join(' / ');
+  return `Crew Lab mission: ${ct('title')} (${CREW.mission?.level}). Brief: ${ct('brief')} Objectives: ${objs}. Instructor tip: ${ct('tip')} Apprentice role: ${t('crew.role.' + CREW.role)}. Phase: ${CREW.phase}. Educational, non-combat exercise.`;
+}
+
+/* ---- data ---- */
+async function loadCrewData() {
+  if (CREW.data) return CREW.data;
+  CREW.data = globalThis.AERO_CREW_DATA || await fetchJSON('data/crew-missions.json', { timeout: 20000 });
+  return CREW.data;
+}
+function crewLog(code, vars) { const e = { at: new Date().toISOString(), t: Math.round(APP.t), code, text: t('crew.ev.' + code, vars) }; CREW.log.push(e); crewPost('event', e); }
+const crewHash = s => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) | 0; return Math.abs(h); };
+
+async function startCrew(id) {
+  const data = await loadCrewData(); const m = data.missions.find(x => x.id === id) || data.missions.find(x => x.place);
+  if (!m) return;
+  const T = data.types[m.type]; CREW.id = m.id; CREW.mission = m; CREW.type = m.type; CREW.T = T; CREW.tier = CREW_TIER[m.level] || 'beginner';
+  try { history.replaceState(null, '', location.search + '#crew/' + encodeURIComponent(m.id)); } catch { }
+  document.body.dataset.crew = T.domain;
+  if (T.domain === 'digital' || !T.vehicle) {   // desk exercises run in the Crew Lab page; here: brief over free flight
+    crewReset(); CREW.def = null; await loadPlace(PLACE_BY_ID.get(DEFAULT_PLACE), 'drone', { keepHash: true, onReady: crewReady }); return;
+  }
+  const p = PLACE_BY_ID.get(m.place) || { i: -1, id: m.place, lat: m.p.lat, lon: m.p.lon, zh: m.p.zh, zhs: m.p.zhs, en: m.p.en, cc: m.p.cc, region: m.p.region, cat: m.p.cat, desc: '', src: '' };
+  const veh = T.vehicle;
+  CREW.def = {
+    id: 'crew-' + m.id, crew: true, steps: T.kinds.map(kind => ({ kind })), layoutVeh: veh, scale: veh === 'plane' ? 3.5 : veh === 'car' ? 1.4 : 1, layoutSeed: crewHash(m.id) % 9 + 1,
+    scene: { landmark: { width: 30, height: 20, depth: 30 }, place: { underwater: veh === 'rov' } }, name: {}, description: {},
+  };
+  crewNames(); crewReset();
+  APP.missionKind = 'aero';
+  const lp = loadPlace(p, veh, { mission: CREW.def, tier: CREW.tier, keepHash: true, quiet: true, onReady: crewReady });
+  openBrief(); renderMentor(true);   // read the brief while the real terrain loads
+  await lp;
+}
+function crewNames() { if (!CREW.def) return; CREW.def.name = { [I18N.lang]: ct('title'), en: ct('title') }; CREW.def.description = { [I18N.lang]: ct('brief'), en: ct('brief') }; }
+function crewReset() { CREW.phase = 'brief'; CREW.confirmed = false; CREW.checks = new Set(); CREW.log = []; CREW.result = null; CREW.report = ''; CREW.stepView = -1; CREW.lastIdx = 0; $('#crewDebrief') && ($('#crewDebrief').hidden = true); }
+function crewReady() {
+  CREW.home = APP.spawnAt ? { ...APP.spawnAt } : { x: 0, y: 0, z: 0 }; CREW.album0 = MIS.album.length; CREW.buoys0 = BUOYS.list.length;
+  $('#hudPlace').onclick = () => openBrief();
+  crewDockLabels(); if (!CREW.confirmed) openBrief(); else { $('#crewBrief') && ($('#crewBrief').hidden = true); $('#startOverlay').hidden = false; }
+  renderMentor(true); crewPost('ready', { mtype: CREW.type, place: APP.place?.id, vehicle: APP.kind, role: CREW.role });
+}
+
+/* ---- dock: "brief" replaces the AERO mission list, "back" returns to the Crew Lab ---- */
+ICON.back = '<path d="M15 5l-7 7 7 7M8 12h12"/>'; ICON.list = '<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/>';
+if (globalThis.AERO_CREW) {
+  for (const d of DOCK) { if (d[0] === 'missions') { d[0] = 'brief'; d[1] = 'list'; d[2] = 'crew.brief'; d[3] = ''; } else if (d[0] === 'places') { d[0] = 'back'; d[1] = 'back'; d[2] = 'crew.back'; } }
+  globalThis.CREW_ACT = { brief: () => CREW.id ? openBrief() : openSheet('missions'), back: () => crewBack() };
+  globalThis.CREW_GATE = () => { if (CREW.confirmed || !CREW.id) return true; openBrief(); toast(t('crew.confirmFirst'), 2500); return false; };
+  globalThis.CREW_RELABEL = () => { crewNames(); crewDockLabels(); if (!$('#crewBrief')?.hidden) renderBrief(); renderMentor(true); if (!$('#crewDebrief')?.hidden) renderDebrief(); };
+  addEventListener('keydown', e => { if (e.code === 'Escape' && !$('#crewBrief')?.hidden && CREW.confirmed) closeBrief(); }, true);
+}
+function crewDockLabels() { applyI18n($('#dock')); }
+function crewBack() {
+  globalThis.speechSynthesis?.cancel?.();
+  if (CREW.embedded) { APP.paused = true; updateDock(); crewPost('close'); }
+  else location.href = '../index.html#missions';
+}
+
+/* ---- briefing: objectives, checklist gate, role, real place ---- */
+function crewEl(id, cls) { let el = $('#' + id); if (!el) { el = document.createElement('section'); el.id = id; el.className = cls || 'glass'; el.hidden = true; $('#stage').appendChild(el); } return el; }
+function openBrief() {
+  const el = crewEl('crewBrief'); el.hidden = false; $('#startOverlay').hidden = true;
+  if (APP.started && !APP.paused) { APP.paused = true; CREW.briefPaused = true; updateDock(); }
+  renderBrief();
+}
+function closeBrief() {
+  const el = $('#crewBrief'); if (el) el.hidden = true; globalThis.speechSynthesis?.cancel?.();
+  if (!APP.started && APP.state === 'sim' && APP.veh) $('#startOverlay').hidden = false;
+  if (CREW.briefPaused) { CREW.briefPaused = false; APP.paused = false; updateDock(); }
+}
+function renderBrief() {
+  const el = $('#crewBrief'); if (!el || !CREW.id) return; const m = CREW.mission, T = CREW.T, p = APP.place, digital = !CREW.def;
+  const dur = { basic: 8, advanced: 12, expert: 15 }[m.level] || 10, n = digital ? 0 : AM.def === CREW.def && AM.steps.length ? AM.steps.length : Math.min(MTIER[CREW.tier].count, T.kinds.length);
+  el.innerHTML = `<header><span class="cbIcon">${crewIcon(CREW.type, 30)}</span><div class="cbTitle"><small>${esc(t('crew.brief'))} · ${esc(m.id.toUpperCase())}</small><h3>${esc(ct('title'))}</h3></div><button class="x" data-cb="close" aria-label="${esc(t('btn.close'))}">×</button></header>
+    <div class="cbTags"><span>${esc(t('crew.dom.' + T.domain))}</span><span>${esc(t('crew.lv.' + m.level))}</span>${digital ? '' : `<span>${esc(t('crew.veh.' + T.vehicle))}</span><span>${esc(t('crew.stations', { n }))}</span>`}<span>${esc(t('crew.duration', { m: dur }))}</span></div>
+    ${digital ? `<p class="mut">${esc(t('crew.digitalNote'))}</p>` : `<p class="cbPlace"><b>${esc(t('crew.place'))}:</b> ${esc(placeName(p))}${placeRegion(p) ? ' · ' + esc(placeRegion(p)) : ''} <span class="mut">(${p.lat.toFixed(4)}, ${p.lon.toFixed(4)})</span></p>`}
+    <p>${esc(ct('brief'))}</p>
+    <h4>${esc(t('crew.objectives'))}</h4><ol class="cbList">${[1, 2, 3].map(i => `<li>${esc(ct('obj' + i))}</li>`).join('')}</ol>
+    <h4>${esc(t('crew.checklist'))}</h4><div class="cbChecks">${[1, 2, 3].map(i => `<label><input type="checkbox" data-chk="${i}" ${CREW.checks.has(i) || CREW.confirmed ? 'checked' : ''} ${CREW.confirmed ? 'disabled' : ''}><span>${esc(ct('chk' + i))}</span></label>`).join('')}</div>
+    <label class="row cbRole"><span>${esc(t('crew.role'))}</span><select id="cbRole">${CREW_ROLES.map(r => opt(r, t('crew.role.' + r), CREW.role)).join('')}</select></label>
+    <p class="mut small">${esc(t('crew.roleTip.' + CREW.role))}</p>
+    <p class="cbTip"><b>${esc(t('crew.tip'))}:</b> ${esc(ct('tip'))}</p>
+    <p class="mut small">${esc(t('crew.fictional'))} ${CREW.room ? '· ' + esc(t('crew.teamOn', { code: CREW.room })) : CREW.embedded ? '' : ''}</p>
+    <div class="row cbBtns">${CREW.confirmed ? `<button class="btn primary" data-cb="close">${esc(t(APP.started ? 'btn.resume' : 'btn.start'))}</button>` : `<button class="btn primary" data-cb="confirm">${esc(t('crew.confirm'))}</button>`}<button class="btn" data-cb="speak">🔊 ${esc(t('crew.speak'))}</button>${CREW.embedded ? `<button class="btn" data-cb="back">${esc(t('crew.back'))}</button>` : ''}</div>`;
+  el.onclick = e => {
+    const b = e.target.closest('[data-cb]'); if (!b) return; const a = b.dataset.cb;
+    if (a === 'close') { if (!CREW.confirmed && !digital) { toast(t('crew.confirmFirst'), 2500); return; } closeBrief(); }
+    else if (a === 'confirm') {
+      if (CREW.checks.size < 3) { toast(t('crew.confirmFirst'), 2500); $$('#crewBrief [data-chk]').forEach(c => { if (!c.checked) c.parentElement.classList.add('crew-hl'); }); return; }
+      CREW.confirmed = true; CREW.phase = 'ready'; crewLog('confirm'); closeBrief(); renderMentor(true); crewPost('checklist', { count: 3 });
+    }
+    else if (a === 'speak') crewSpeak([ct('title'), ct('brief'), ...[1, 2, 3].map(i => ct('obj' + i)), ct('tip')].join('. '));
+    else if (a === 'back') crewBack();
+  };
+  el.onchange = e => {
+    const c = e.target.closest('[data-chk]'); if (c) { c.checked ? CREW.checks.add(+c.dataset.chk) : CREW.checks.delete(+c.dataset.chk); c.parentElement.classList.remove('crew-hl'); }
+    if (e.target.id === 'cbRole') { CREW.role = e.target.value; crewPost('role', { role: CREW.role }); renderBrief(); renderMentor(true); }
+  };
+}
+
+/* ---- step-by-step mentor (follows the mission state; can be read aloud; points at the control) ---- */
+function crewSteps() {
+  if (!CREW.def) return [{ k: 'brief', text: t('crew.step.brief') }, { k: 'report', text: t('crew.digitalNote') }];
+  const air = ['drone', 'rov', 'plane'].includes(APP.kind), P = amP(), list = [
+    { k: 'brief', text: t('crew.step.brief'), show: '#crewBrief, [data-act="brief"]' },
+    { k: 'controls', text: t(air ? 'crew.step.controls' : 'crew.step.controlsGround'), show: '#padL, #padR' },
+    { k: 'start', text: t(APP.kind === 'drone' ? 'crew.step.start' : 'crew.step.startOther'), show: '[data-act="start"]' },
+  ];
+  AM.steps.forEach((s, i) => {
+    const v = APP.veh?.pos || { x: 0, z: 0 }, d = Math.hypot(s.x - v.x, s.z - v.z), dir = compassWord(bearingTo(v.x, v.z, s.x, s.z));
+    const act = t('crew.step.act.' + s.kind, { s: s.kind === 'formation' ? Math.round(P.dwell * 1.5) : P.dwell, m: Math.round(P.form) });
+    list.push({ k: 'st' + i, i, text: t('crew.step.navigate', { n: i + 1, total: AM.steps.length, d: fmtDist(d), dir }) + ' ' + act, show: s.kind === 'photo' ? '[data-act="photo"]' : s.kind === 'beacon' ? '[data-act="buoy"]' : '#mini' });
+  });
+  list.push({ k: 'return', text: t('crew.step.return'), show: '#mini' }, { k: 'report', text: t('crew.step.report'), show: '#crewDebrief' });
+  return list;
+}
+function crewCurrentStep(list) {
+  if (CREW.phase === 'brief') return 0;
+  if (!APP.started) return CREW.confirmed ? 2 : 0;
+  if (CREW.phase === 'debrief') return list.length - 1;
+  if (CREW.phase === 'return') return list.length - 2;
+  if (APP.t - AM.t0 < 6 && AM.idx === 0) return 1;
+  return 3 + Math.min(AM.idx, AM.steps.length - 1);
+}
+function renderMentor(full) {
+  if (!CREW.id) return; const el = crewEl('crewMentor', 'glass'); el.hidden = false; el.classList.toggle('min', CREW.minimized);
+  const list = crewSteps(), cur = crewCurrentStep(list), idx = CREW.stepView >= 0 ? Math.min(CREW.stepView, list.length - 1) : cur, st = list[idx];
+  const prog = !CREW.def ? '' : CREW.phase === 'debrief' ? t('crew.missionDone') : !APP.started ? t('crew.notStarted') : `${Math.min(AM.idx + 1, AM.steps.length)}/${AM.steps.length} · ${Math.round(APP.t - AM.t0)} s${AM.hold > 0 ? ` · ${AM.hold.toFixed(1)} s` : ''}`;
+  if (full || !el.firstChild) {
+    el.innerHTML = `<div class="cmHead"><span class="ic">${crewIcon(CREW.type, 18)}</span><b>${esc(ct('title'))}</b><button class="x sm" data-cm="min" aria-label="${esc(t(CREW.minimized ? 'crew.mentorOn' : 'crew.hide'))}">${CREW.minimized ? '+' : '–'}</button></div>
+      <div class="cmProg mut"></div><div class="cmLabel small"><span>${esc(t('crew.mentorTitle'))}</span> <span class="cmN"></span></div><p class="cmStep"></p><p class="cmRole mut small">${esc(t('crew.roleTip.' + CREW.role))}</p>
+      <div class="cmBtns"><button class="btn sm" data-cm="prev" aria-label="${esc(t('crew.prev'))}">‹</button><button class="btn sm" data-cm="speak">🔊 ${esc(t('crew.speak'))}</button><button class="btn sm" data-cm="show">⌖ ${esc(t('crew.show'))}</button><button class="btn sm" data-cm="next" aria-label="${esc(t('crew.next'))}">›</button>${CREW.def && APP.started && CREW.phase !== 'debrief' ? `<button class="btn sm" data-cm="finish">${esc(t('crew.finish'))}</button>` : ''}</div>`;
+    el.onclick = e => {
+      const b = e.target.closest('[data-cm]'); if (!b) return; const a = b.dataset.cm, L = crewSteps(), c = crewCurrentStep(L), i = CREW.stepView >= 0 ? CREW.stepView : c;
+      if (a === 'min') { CREW.minimized = !CREW.minimized; renderMentor(true); }
+      else if (a === 'prev') { CREW.stepView = Math.max(0, i - 1); renderMentor(); }
+      else if (a === 'next') { const n = Math.min(L.length - 1, i + 1); CREW.stepView = n === c ? -1 : n; renderMentor(); }
+      else if (a === 'speak') crewSpeak($('#crewMentor .cmStep').textContent + ' ' + t('crew.roleTip.' + CREW.role));
+      else if (a === 'show') crewHighlight(L[i]?.show);
+      else if (a === 'finish') crewFinish(true);
+    };
+    el.dataset.key = '';
+  }
+  const key = `${idx}|${st?.text}|${prog}`; if (el.dataset.key === key) return; el.dataset.key = key;
+  $('.cmProg', el).textContent = prog; $('.cmN', el).textContent = `${idx + 1}/${list.length}`; $('.cmStep', el).textContent = st?.text || '';
+}
+function crewHighlight(sel) {
+  if (!sel) return; const els = $$(sel).filter(x => x.offsetParent !== null || x.id === 'mini'); if (!els.length) { toast(t('crew.show') + ' —'); return; }
+  for (const x of els) { x.classList.remove('crew-hl'); void x.offsetWidth; x.classList.add('crew-hl'); setTimeout(() => x.classList.remove('crew-hl'), 3200); }
+}
+function crewSpeak(text) {
+  const S = globalThis.speechSynthesis; if (!S || !globalThis.SpeechSynthesisUtterance) { toast(t('crew.noVoice')); return; }
+  S.cancel(); const tag = SPEECH_TAG[I18N.lang] || I18N.lang, base = tag.split('-')[0].toLowerCase();
+  const voices = S.getVoices() || [], v = voices.find(x => x.lang?.toLowerCase() === tag.toLowerCase()) || voices.find(x => x.lang?.toLowerCase().split(/[-_]/)[0] === base);
+  if (voices.length && !v) toast(t('crew.noVoice'), 3500);
+  const u = new SpeechSynthesisUtterance(text.slice(0, 1200)); u.lang = tag; if (v) u.voice = v; u.rate = 1; S.speak(u);
+}
+
+/* ---- per-frame: stations, return to the start point, telemetry ---- */
+function updateCrew(dt, run) {
+  if (!CREW.id || !CREW.def || APP.state !== 'sim') return;
+  if (APP.started && CREW.phase === 'ready') { CREW.phase = 'run'; crewLog('start'); crewPost('start'); renderMentor(true); }
+  if (CREW.phase === 'run' || CREW.phase === 'return') {
+    if (AM.idx > CREW.lastIdx) { for (let n = CREW.lastIdx + 1; n <= AM.idx; n++) crewLog('station', { n }); CREW.lastIdx = AM.idx; CREW.stepView = -1; renderMentor(true); }
+    const v = APP.veh, w = v?.warn || ''; if (w && w !== CREW.lastWarn && /crash|Building|seabed|aground|hardLanding/.test(w)) crewLog('crash', { w: t(w, { ...(v.warnP || {}), why: v.why ? t(v.why) : '' }) }); CREW.lastWarn = w;
+    if (CREW.phase === 'run' && AM.done) { CREW.phase = 'return'; crewLog('done'); CREW.stepView = -1; toast(t('crew.step.return'), 6000); }
+    if (CREW.phase === 'return' && run && v) {
+      const h = CREW.home, d = Math.hypot(v.pos.x - h.x, v.pos.z - h.z), spd = v.vel ? Math.hypot(v.vel.x, v.vel.y || 0, v.vel.z) : Math.abs(v.u || v.v || 0);
+      const ok = APP.kind === 'plane' ? d < 350 : APP.kind === 'drone' ? d < 8 && (v.landed || v.agl < 1.2) : APP.kind === 'rov' ? d < 10 : d < 14 && spd < 1.2;
+      if (ok) { crewLog('home'); crewFinish(false); }
+    }
+  }
+  if (performance.now() - (CREW.lastMentor || 0) > 250) { CREW.lastMentor = performance.now(); renderMentor(); }
+  if (CREW.embedded && performance.now() - CREW.lastTel > 1000) {
+    CREW.lastTel = performance.now(); const v = APP.veh;
+    crewPost('telemetry', { phase: CREW.phase, progress: AM.idx, total: AM.steps.length, speed: v?.vel ? Math.hypot(v.vel.x, v.vel.z) : Math.abs(v?.u || 0), altitude: v?.agl ?? 0, battery: v?.battery != null ? v.battery * 100 : 100, score: crewScore().total, vehicle: APP.kind, role: CREW.role });
+  }
+}
+function crewScore() {
+  const total = AM.steps.length || 1, done = AM.steps.filter(s => s.done).length, el = AM.t0 != null ? APP.t - AM.t0 : 0;
+  const par = (MTIER[CREW.tier]?.par || 240) * (APP.kind === 'plane' || APP.kind === 'car' ? 1.5 : 1);
+  const stations = Math.round(60 * done / total), safety = Math.max(0, 20 - AM.contacts * 4), time = Math.round(Math.max(0, 15 - Math.max(0, el - par) / 24));
+  const photos = Math.max(0, MIS.album.length - CREW.album0), buoys = Math.max(0, BUOYS.list.length - CREW.buoys0), inspect = Math.min(5, photos + buoys);
+  return { stations, safety, time, inspect, total: stations + safety + time + inspect, done, count: total, elapsed: Math.round(el), contacts: AM.contacts, photos, buoys };
+}
+function crewFinish(early) {
+  if (CREW.phase === 'debrief') return; if (early) crewLog('finish');
+  CREW.phase = 'debrief'; CREW.result = crewScore(); APP.paused = true; updateDock(); CREW.stepView = -1; renderMentor(true);
+  crewPost('complete', { result: CREW.result, early: !!early });
+  renderDebrief();
+}
+function crewRecord() {
+  const p = APP.place;
+  return { app: 'Resilience Crew Lab', version: '3.0.0', created: new Date().toISOString(), locale: I18N.lang, missionId: CREW.id, type: CREW.type, title: ct('title'), level: CREW.mission?.level, role: CREW.role,
+    place: p ? { id: p.id, name: placeName(p), lat: p.lat, lon: p.lon } : null, vehicle: APP.kind, time: { date: APP.sun.date, minute: Math.round(APP.sun.min), preset: SET.timeMode, season: SET.season, weather: SET.wxMode },
+    result: CREW.result, events: CREW.log, report: CREW.report, note: 'Educational, non-combat exercise; simulated data.' };
+}
+function renderDebrief() {
+  const el = crewEl('crewDebrief'); el.hidden = false; const S = CREW.result || crewScore();
+  el.innerHTML = `<header><span class="cbIcon">${crewIcon(CREW.type, 30)}</span><div class="cbTitle"><small>${esc(t('crew.debrief'))}</small><h3>${esc(ct('title'))}</h3></div><button class="x" data-cd="close" aria-label="${esc(t('btn.close'))}">×</button></header>
+    <div class="scoreBig">${esc(t('crew.total', { s: S.total }))}</div>
+    <p>${esc(t('crew.scoreLine', { c: S.done, t: S.count, s: S.safety, tm: S.time, i: S.inspect }))}</p>
+    <p class="mut">${esc(t('crew.time', { t: S.elapsed + ' s' }))} · ${esc(t('crew.contacts', { n: S.contacts }))} · ${esc(t('crew.photos', { n: S.photos }))}</p>
+    <p class="mut small">${esc(t('crew.debriefIntro'))}</p>
+    <textarea id="cdReport" rows="4" placeholder="${esc(t('crew.reportPh'))}">${esc(CREW.report)}</textarea>
+    <div class="row cbBtns"><button class="btn primary" data-cd="save">${esc(t('crew.saveReport'))}</button><button class="btn" data-cd="export">${esc(t('crew.export'))}</button><button class="btn" data-cd="retry">${esc(t('crew.retry'))}</button><button class="btn" data-cd="next">${esc(t('crew.nextMission'))}</button>${CREW.embedded ? `<button class="btn" data-cd="back">${esc(t('crew.back'))}</button>` : ''}</div>
+    <h4>${esc(t('crew.log'))}</h4><ol class="cdLog small">${CREW.log.map(e => `<li><span class="mut">${e.t} s</span> ${esc(e.text)}</li>`).join('')}</ol>`;
+  el.onclick = e => {
+    const b = e.target.closest('[data-cd]'); if (!b) return; const a = b.dataset.cd; CREW.report = $('#cdReport')?.value || CREW.report;
+    if (a === 'close') el.hidden = true;
+    else if (a === 'save') { try { const k = 'rcl3:reports', all = JSON.parse(LS.get(k) || '[]'); all.unshift(crewRecord()); LS.set(k, JSON.stringify(all.slice(0, 50))); } catch { } crewLog('report'); crewPost('report', { record: crewRecord() }); toast(t('crew.saved'), 2500); renderDebrief(); }
+    else if (a === 'export') { const url = URL.createObjectURL(new Blob([JSON.stringify(crewRecord(), null, 2)], { type: 'application/json' })), l = document.createElement('a'); l.href = url; l.download = `crew-${CREW.id}.json`; l.click(); setTimeout(() => URL.revokeObjectURL(url), 4000); }
+    else if (a === 'retry') crewRetry();
+    else if (a === 'next') { const L = CREW.data.missions.filter(x => x.place), i = L.findIndex(x => x.id === CREW.id); startCrew(L[(i + 1) % L.length].id); }
+    else if (a === 'back') crewBack();
+  };
+}
+async function crewRetry() {
+  $('#crewDebrief').hidden = true; crewReset(); CREW.confirmed = true; CREW.phase = 'ready'; CREW.checks = new Set([1, 2, 3]); const msg = await spawn(APP.kind); if (msg) toast(t(msg));
+  APP.started = false; APP.paused = true; startAeroMission(CREW.def, CREW.tier); crewReady(); updateDock();
 }
 
 /* ======================= loading a destination, main loop, Google 3D tiles, boot ======================= */
@@ -2291,7 +2578,7 @@ async function loadPlace(p, kind = 'drone', opts = {}) {
   if (!p) return; const seq = ++LOADSEQ, say = m => { $('#loadMsg').textContent = m; };
   APP.state = 'loading'; APP.place = p; APP.paused = true; APP.started = false; $('#loading').hidden = false; $('#startOverlay').hidden = true;
   LS.set('aero6:last', JSON.stringify({ id: p.id, v: kind }));
-  try { history.replaceState(null, '', '#' + encodeURIComponent(p.id) + '/' + kind); } catch { }
+  if (!opts.keepHash) try { history.replaceState(null, '', '#' + encodeURIComponent(p.id) + '/' + kind); } catch { }
   try {
     initRenderer(); const Q = QUALITY[APP.quality];
     Object.assign(TERRAIN, { factor: Q.factor, seg: Q.seg, maxActive: Q.maxActive, maxZ: Q.maxZ }); VEC.radius = Q.bld; TREES.enabled = SET.trees && Q.trees; TREES.radius = Q.treeR || 700;
@@ -2313,13 +2600,14 @@ async function loadPlace(p, kind = 'drone', opts = {}) {
     APP.oceanNear = seaNear || VEC.waters.some(w => w.cls === 'ocean');
     APP.state = 'sim'; APP.t = 0; applyWeather();
     const msg = await spawn(kind); if (msg) toast(t(msg));
-    if (opts.mission) { startAeroMission(opts.mission, opts.tier || 'beginner'); toast(mtext(opts.mission, 'description'), 9000); }
+    if (opts.mission) { startAeroMission(opts.mission, opts.tier || 'beginner'); if (!opts.quiet) toast(mtext(opts.mission, 'description'), 9000); }
     else restartMission();
     if (SET.gkey) { say(t('load.google')); await enableGoogle(SET.gkey); }
     $('#startOverlay').hidden = false; updateDock(); syncSettings(); updatePlaceChip(); applyFov();
     $('#startPlace').textContent = placeName(p); setStartHint();
     localizePlace(p).then(() => { updatePlaceChip(); if (!$('#startOverlay').hidden) $('#startPlace').textContent = placeName(p); });
     say(DEM.fails && ![...DEM.cache.values()].some(Boolean) ? t('load.blocked') : '');
+    opts.onReady?.();
   } catch (e) { say(t('load.fail', { msg: e.message })); console.error(e); }
 }
 function setStartHint() {
@@ -2406,6 +2694,7 @@ function simFrame(dt, dtr) {
   }
   BUOYS.update(dt, envT);
   if (run) { updateMission(); updateAeroMission(dt); }
+  if (globalThis.AERO_CREW) updateCrew(dt, run);
   if (APP.frameN % 4 === 0) updateHUD();
   AUDIO.update(v, !run);
   $('#loading').hidden = TERRAIN.ready || !!APP.google;
@@ -2423,6 +2712,7 @@ function simFrame(dt, dtr) {
 document.addEventListener('visibilitychange', () => { if (document.hidden && APP.started && !APP.paused) { APP.paused = true; updateDock(); } });
 addEventListener('hashchange', async () => {
   const [hid, hv, h3] = decodeURIComponent(location.hash.slice(1)).split('/');
+  if (hid === 'crew') { if (hv && globalThis.AERO_CREW && hv !== CREW.id) startCrew(hv); return; }
   if (hid === 'mission' && hv) { await loadMissions(); const d = MISSIONS.defs.find(x => x.id === hv); if (d) startAeroAt(d, MTIER[h3] ? h3 : 'beginner'); return; }
   const p = PLACE_BY_ID.get(hid); if (!p) return; const kind = VEHICLE_KINDS.includes(hv) ? hv : suggestVehicle(p);
   if (p !== APP.place) loadPlace(p, kind); else if (kind !== APP.kind && APP.state === 'sim') { const msg = await spawn(kind); if (msg) toast(t(msg)); APP.started = false; APP.paused = true; $('#startOverlay').hidden = false; updateDock(); restartMission(); }
@@ -2437,6 +2727,7 @@ async function boot() {
   $('#attrib').textContent = t('attr.line');
   requestAnimationFrame(frame);
   const [hid, hv, h3] = decodeURIComponent(location.hash.slice(1)).split('/');
+  if (hid === 'crew' && hv && globalThis.AERO_CREW) return startCrew(hv);
   if (hid === 'mission' && hv) { await loadMissions(); const d = MISSIONS.defs.find(x => x.id === hv); if (d) return startAeroAt(d, MTIER[h3] ? h3 : 'beginner'); }
   const p = PLACE_BY_ID.get(hid) || PLACE_BY_ID.get(new URLSearchParams(location.search).get('place')) || PLACE_BY_ID.get(DEFAULT_PLACE) || PLACES[0];
   const kind = VEHICLE_KINDS.includes(hv) ? hv : hid && PLACE_BY_ID.get(hid) ? suggestVehicle(p) : 'drone';
@@ -2456,7 +2747,8 @@ const CLOUD = {
   openai: { model: 'gpt-6-luna', url: 'https://platform.openai.com/api-keys' },
   gemini: { model: 'gemini-3.8-flash', url: 'https://aistudio.google.com/apikey' },
 };
-const TUT = { provider: LS.get('aero6:tutor') || 'faq', history: [], worker: null, ready: null, busy: false, loadedModel: null };
+const TUT_KEY = globalThis.AERO_CREW ? 'rcl3:tutor' : 'aero6:tutor';
+const TUT = { provider: LS.get(TUT_KEY) || (globalThis.AERO_CREW ? 'crew' : 'faq'), history: [], worker: null, ready: null, busy: false, loadedModel: null };
 const tutKey = p => LS.get('aero6:key:' + p) || '';
 const tutModel = p => LS.get('aero6:model:' + p) || CLOUD[p]?.model || '';
 /* the worker source is inlined so the same code runs from the package (local vendor files) and from the single-file build (CDN) */
@@ -2511,6 +2803,7 @@ function flightContext() {
     `Weather (${SET.wxMode === 'live' ? 'live Open-Meteo' : 'preset ' + SET.wxMode}): ${W.temp != null ? Math.round(W.temp) + ' °C, ' : ''}wind ${(W.wind ?? 0).toFixed(1)} m/s from ${Math.round(W.windDir ?? 0)}°, gusts ${(W.gust ?? 0).toFixed(1)} m/s, cloud ${Math.round(W.cloud ?? 0)}%, visibility ${Math.round((W.vis ?? 0) / 100) / 10} km, precipitation ${(W.precip ?? 0).toFixed(1)} mm/h${W.storm ? ', thunderstorm' : ''}${W.snow ? ', snow' : ''}; waves ${(W.hs ?? 0).toFixed(1)} m.`,
     `Vehicle: ${v.kind}${v.kind === 'drone' ? ` mode ${v.mode}, battery ${Math.round(v.battery * 100)}%, height above ground ${v.agl.toFixed(1)} m, ${v.landed ? 'landed' : 'flying'}` : ''}${v.kind === 'plane' ? `, airspeed ${Math.round(v.airspeed * 3.6)} km/h, height ${Math.round(v.agl)} m` : ''}${v.kind === 'rov' ? `, depth ${v.depth.toFixed(1)} m` : ''}; warnings: ${v.warn ? t(v.warn, { ...(v.warnP || {}), why: v.why ? t(v.why) : '' }) : 'none'}.`,
     AM.active && AM.def ? `Mission: ${mtext(AM.def, 'name')} (${AM.tier}); step ${AM.idx + 1}/${AM.steps.length}: ${AM.steps[AM.idx] ? AM.steps[AM.idx].kind : 'done'}. Mission brief: ${mtext(AM.def, 'description')}` : MIS.kind !== 'free' ? `Mission: ${MIS.kind}.` : 'Free flight.',
+    globalThis.AERO_CREW && CREW.type ? crewContext() : '',
     `Controls (Mode 2): left hand W/S climb-descend and A/D turn; right hand arrow keys forward/back and slide. F photo, G drop buoy, C where am I, B place story, V camera, Space pause, R restart.`,
   ];
   return lines.filter(Boolean).join('\n');
@@ -2561,6 +2854,10 @@ async function tutorAsk(q, out) {
   try {
     let text = '';
     if (TUT.provider === 'faq') text = faqAnswer(q);
+    else if (TUT.provider === 'crew') {
+      try { text = await crewAsk(q, partial => { ans.textContent = partial; out.scrollTop = out.scrollHeight; }); }
+      catch (e) { text = t('crew.coachFail') + '\n\n' + faqAnswer(q); }
+    }
     else if (TUT.provider === 'qwen' || TUT.provider === 'smol') {
       if (TUT.loadedModel !== TUT.provider || !TUT.ready) throw new Error(t('tut.notLoaded'));
       await TUT.ready; ans.textContent = '';
@@ -2572,28 +2869,28 @@ async function tutorAsk(q, out) {
   finally { TUT.busy = false; out.scrollTop = out.scrollHeight; }
 }
 function renderTutor(s) {
-  const pv = TUT.provider, cloud = !!CLOUD[pv], local = pv === 'qwen' || pv === 'smol';
+  const pv = TUT.provider, cloud = !!CLOUD[pv], local = pv === 'qwen' || pv === 'smol', crew = pv === 'crew';
   s.innerHTML = `<header><h3>${esc(t('tut.title'))}</h3><button class="x" data-close aria-label="${esc(t('btn.close'))}">×</button></header>
-    <label class="row"><span>${esc(t('tut.provider'))}</span><select id="tProv">${[['faq', 'tut.faq'], ['qwen', 'tut.localQwen'], ['smol', 'tut.localSmol'], ['claude', 'tut.claude'], ['openai', 'tut.openai'], ['gemini', 'tut.gemini']].map(([k, l]) => opt(k, t(l), pv)).join('')}</select></label>
+    <label class="row"><span>${esc(t('tut.provider'))}</span><select id="tProv">${[...(globalThis.AERO_CREW ? [['crew', 'crew.ai']] : []), ['faq', 'tut.faq'], ['qwen', 'tut.localQwen'], ['smol', 'tut.localSmol'], ['claude', 'tut.claude'], ['openai', 'tut.openai'], ['gemini', 'tut.gemini']].map(([k, l]) => opt(k, t(l), pv)).join('')}</select></label>
     ${cloud ? `<div class="row"><input id="tKey" type="password" autocomplete="off" spellcheck="false" placeholder="${esc(t('tut.key'))}" value="${esc(tutKey(pv))}"><input id="tModel" type="text" spellcheck="false" placeholder="${esc(t('tut.model'))}" value="${esc(tutModel(pv))}"><a class="btn sm" href="${CLOUD[pv].url}" target="_blank" rel="noopener">${esc(t('tut.getKey'))}</a></div>` : ''}
-    ${local ? `<div class="row"><button class="btn sm" id="tLoad">${esc(TUT.loadedModel === pv ? t('tut.ready') : t('tut.load'))}</button><span id="tProg" class="mut"></span></div>` : ''}
-    <p class="mut small">${esc(t(cloud || local ? 'tut.privacy' : 'tut.faqNote'))}</p>
+    ${local || (crew && CREW.embedded) ? `<div class="row"><button class="btn sm" id="tLoad">${esc((crew ? CREW_COACH.state === 'ready' : TUT.loadedModel === pv) ? t('tut.ready') : t('tut.load'))}</button><span id="tProg" class="mut"></span></div>` : ''}
+    <p class="mut small" id="tNote">${esc(t(crew ? 'crew.coachLocalNote' : cloud || local ? 'tut.privacy' : 'tut.faqNote'))}</p>
     <div id="tOut" class="chat"></div>
     <div class="chips">${['s1', 's2', 's3', 's4'].map(k => `<button class="chip sugg" data-s="${k}">${esc(t('tut.' + k))}</button>`).join('')}</div>
     <form id="tForm" class="row"><input id="tQ" type="text" autocomplete="off" placeholder="${esc(t('tut.placeholder'))}"><button class="btn primary" type="submit">${esc(t('tut.send'))}</button></form>
     <p class="mut small">${esc(t('tut.disclaimer'))}</p>`;
   const out = $('#tOut'); for (const m of TUT.history.slice(-8)) { const d = document.createElement('div'); d.className = 'msg ' + (m.role === 'user' ? 'user' : 'bot'); d.textContent = m.content; out.appendChild(d); }
   s.onclick = e => { if (e.target.closest('[data-close]')) return closeSheet(); const b = e.target.closest('.sugg'); if (b) tutorAsk(t('tut.' + b.dataset.s), out); };
-  $('#tProv').onchange = e => { TUT.provider = e.target.value; LS.set('aero6:tutor', TUT.provider); renderTutor(s); };
+  $('#tProv').onchange = e => { TUT.provider = e.target.value; LS.set(TUT_KEY, TUT.provider); renderTutor(s); };
   $('#tKey')?.addEventListener('change', e => LS.set('aero6:key:' + pv, e.target.value.trim()));
   $('#tModel')?.addEventListener('change', e => LS.set('aero6:model:' + pv, e.target.value.trim()));
   $('#tLoad')?.addEventListener('click', async e => {
     const btn = e.target; btn.disabled = true;
-    try { await loadLocalModel(pv, p => { $('#tProg').textContent = t('tut.loading', { p }); }); $('#tProg').textContent = t('tut.ready'); btn.textContent = t('tut.ready'); }
+    try { await (crew ? crewLoadModel(p => { $('#tProg').textContent = t('tut.loading', { p }); }) : loadLocalModel(pv, p => { $('#tProg').textContent = t('tut.loading', { p }); })); $('#tProg').textContent = t('tut.ready'); btn.textContent = t('tut.ready'); }
     catch (err) { $('#tProg').textContent = t('tut.error', { msg: err.message }); btn.disabled = false; }
   });
   $('#tForm').onsubmit = e => { e.preventDefault(); const q = $('#tQ').value; $('#tQ').value = ''; tutorAsk(q, out); };
 }
 
-window.__AERO = { APP, SET, TERRAIN, VEC, DEM, ENV, MIS, AM, WX, WAVES, GEO, POST, TREES, BUOYS, I18N, MISSIONS, TUT, loadPlace, spawn, setTimePreset, applyWeather, startAeroAt, t, camSmooth, refineSunTime, updateAeroMission, aeroMissionAction, updateCamera, readInput, loadMissions };
+window.__AERO = { APP, SET, TERRAIN, VEC, DEM, ENV, MIS, AM, WX, WAVES, GEO, POST, TREES, BUOYS, I18N, MISSIONS, TUT, loadPlace, spawn, setTimePreset, applyWeather, startAeroAt, t, camSmooth, refineSunTime, updateAeroMission, aeroMissionAction, updateCamera, readInput, loadMissions, CREW, startCrew, crewScore, amP };
 boot();
