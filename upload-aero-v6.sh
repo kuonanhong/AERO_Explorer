@@ -145,7 +145,7 @@ publish_site() {
   # remote and authentication (credentials stay in gh / ssh-agent / the OS keychain; never in URLs)
   if [ -z "$REMOTE" ]; then
     if have gh && gh auth status -h github.com >/dev/null 2>&1; then REMOTE="https://github.com/$REPO.git"; gh auth setup-git -h github.com >/dev/null 2>&1 || true; say "auth        : GitHub CLI"
-    elif ssh -o BatchMode=yes -o ConnectTimeout=8 -T git@github.com 2>&1 | grep -qi 'successfully authenticated'; then REMOTE="git@github.com:$REPO.git"; say "auth        : SSH key"
+    elif ssh -o BatchMode=yes -o ConnectTimeout=8 -T git@github.com 2>&1 | grep -i 'successfully authenticated' >/dev/null; then REMOTE="git@github.com:$REPO.git"; say "auth        : SSH key"
     else
       REMOTE="https://github.com/$REPO.git"
       if have gh && [ "$DRY" = 0 ] && [ -t 0 ]; then warn "not logged in to GitHub; opening the GitHub CLI login"; gh auth login --hostname github.com --git-protocol https --web && gh auth setup-git -h github.com || die "GitHub login did not finish"
@@ -184,7 +184,7 @@ publish_site() {
     if [ "$sz" -gt 99000000 ]; then printf '%s\t%s\n' "$f" "$sz" >> "$big"; continue; fi
     if [ "$f" = config.js ] && [ -f "$d" ] && ! grep -q 'AERO Explorer v6' "$d"; then
       # the site already has its own settings (e.g. AERO v5.1 keys used by the classic pages): keep them, only follow your aiModelBase
-      local lb rb; lb="$(sed -n "s/.*aiModelBase: *'\([^']*\)'.*/\1/p" "$s" | head -n 1)"; rb="$(sed -n "s/.*aiModelBase: *'\([^']*\)'.*/\1/p" "$d" | head -n 1)"
+      local lb rb; lb="$(sed -n "s/.*aiModelBase: *'\([^']*\)'.*/\1/p" "$s" | awk 'NR==1')"; rb="$(sed -n "s/.*aiModelBase: *'\([^']*\)'.*/\1/p" "$d" | awk 'NR==1')"
       if [ -n "$lb" ] && [ "$lb" != "$rb" ]; then printf 'C\t%s\t0\n' "$f" >> "$changes"; n_mod=$((n_mod+1)); fi
       continue
     fi
@@ -198,7 +198,7 @@ publish_site() {
   fi
   say "new files: $n_new   changed: $n_mod   deleted: $n_del   upload size: $(human "$bytes")"
   if [ $((n_new+n_mod+n_del)) -eq 0 ]; then ok "website is already up to date"; return 0; fi
-  cut -f1,2 "$changes" | head -n 40 | sed 's/^/    /'; [ "$(wc -l < "$changes")" -gt 40 ] && say "    … $(( $(wc -l < "$changes") - 40 )) more"
+  head -n 40 "$changes" | cut -f1,2 | sed 's/^/    /'; [ "$(wc -l < "$changes")" -gt 40 ] && say "    … $(( $(wc -l < "$changes") - 40 )) more"
   [ "$DRY" = 1 ] && return 0
   confirm "Publish these website changes to github.com/$REPO ($BRANCH)?" || { warn "website upload skipped"; return 0; }
   if [ -z "$(git -C "$WORKDIR" config user.email || true)" ]; then
@@ -212,7 +212,7 @@ publish_site() {
   while IFS="$tab" read -r k f sz; do
     case "$k" in
       A|M) mkdir -p "$(dirname "$dest/$f")"; cp -p "$SITE/$f" "$dest/$f"; git -C "$WORKDIR" add -- "$TARGET/$f"; acc=$((acc + sz)) ;;
-      C) local lb; lb="$(sed -n "s/.*aiModelBase: *'\([^']*\)'.*/\1/p" "$SITE/$f" | head -n 1)"
+      C) local lb; lb="$(sed -n "s/.*aiModelBase: *'\([^']*\)'.*/\1/p" "$SITE/$f" | awk 'NR==1')"
          sed -i.bak "s|aiModelBase: *'[^']*'|aiModelBase: '$lb'|" "$dest/$f" && rm -f "$dest/$f.bak"; git -C "$WORKDIR" add -- "$TARGET/$f" ;;
       D) git -C "$WORKDIR" rm -q --ignore-unmatch -- "$TARGET/$f" ;;
     esac
@@ -270,7 +270,7 @@ upload_models() {
   # safety: no credentials, no Git-LFS pointer stubs, a README with origin and licence
   while IFS= read -r f; do
     case "$f" in .env*|*/.env*|*.pem|*.key|*credentials*|*token*.txt) die "remove credentials from models/: $f" ;; esac
-    if head -c 120 "$MODELS_DIR/$f" 2>/dev/null | grep -q 'git-lfs.github.com/spec'; then die "models/$f is a Git LFS pointer, not the real weights (download the actual file)"; fi
+    if case "$(head -c 120 "$MODELS_DIR/$f" 2>/dev/null | LC_ALL=C tr -d '\000')" in *git-lfs.github.com/spec*) true ;; *) false ;; esac; then die "models/$f is a Git LFS pointer, not the real weights (download the actual file)"; fi
   done < "$list"
   local weights; weights="$(grep -vE '^README\.md$' "$list" || true)"
   [ -n "$weights" ] || { say "models/ holds no weight files (use --fetch-models or copy your own) — nothing to upload"; return 0; }
@@ -294,7 +294,7 @@ upload_models() {
   say "destination : $MODELS_TO $( [ "$MODELS_TO" = hf ] && printf '%s' "huggingface.co/$HF_REPO" || printf '%s' "$R2_BUCKET")"
   say "model files : $(wc -l < "$list" | tr -d ' ') ($(human "$total")); new or changed: $n"
   if [ "$n" -eq 0 ]; then ok "models are already up to date"; model_base; return 0; fi
-  awk -F'\t' '{ printf "    %s  (%s bytes)\n", $2, $1 }' "$todo" | head -n 30
+  head -n 30 "$todo" | awk -F'\t' '{ printf "    %s  (%s bytes)\n", $2, $1 }'
   [ "$DRY" = 1 ] && { model_base; return 0; }
   confirm "Upload $n model file(s) to $MODELS_TO?" || { warn "model upload skipped"; return 0; }
   if [ "$MODELS_TO" = hf ]; then
