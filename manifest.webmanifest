@@ -1,1 +1,19 @@
-{"name":"AERO 翱翔 海陸空探索模擬器","short_name":"AERO","start_url":"./","display":"standalone","background_color":"#10252e","theme_color":"#10252e","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]}
+{
+  "name": "AERO Explorer · Real World",
+  "short_name": "AERO",
+  "description": "Fly, sail and drive over real terrain, imagery, buildings and weather at 2,776 destinations.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "any",
+  "background_color": "#0b1114",
+  "theme_color": "#0b1114",
+  "categories": ["education", "games", "travel"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
