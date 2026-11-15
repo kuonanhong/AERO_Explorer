@@ -1,0 +1,1439 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-11-15",
+  "title": "無人機教材與應用知識庫",
+  "scope": "原始教材下載、人工整理導讀與本地檢索。外部資源提供摘要與來源連結，未鏡像所有連出網站；Drone Map提供官方流程導讀與入口，未匯入登入資料或即時空域。",
+  "materials": [
+    {
+      "id": "approved-models",
+      "title": "無人機廠牌與型號",
+      "path": "materials/course/approved-models.pdf",
+      "type": "pdf",
+      "bytes": 84321,
+      "sha256": "f5bf963a4e2668672dc4293806b1c193c552f84f374c3c8ef83a6155a5a04506",
+      "topics": [
+        "機型",
+        "資安"
+      ],
+      "description": "資料統計截至民國115年5月7日的無人機產品資安檢測與審驗廠牌、型號及安全等級表。",
+      "originalName": "無人機廠牌與型號.pdf",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 3,
+      "summary": "資料統計截至民國115年5月7日的無人機產品資安檢測與審驗廠牌、型號及安全等級表。",
+      "category": "course"
+    },
+    {
+      "id": "course-0919",
+      "title": "9/19 課程簡報：證照與術科",
+      "path": "materials/course/course-0919.pdf",
+      "type": "pdf",
+      "bytes": 1554459,
+      "sha256": "8f9a4995aea3f8b3165d5ec5758b777f0222324bea26914dd39374bafa3daff0",
+      "topics": [
+        "飛前檢查",
+        "四面停懸",
+        "8字",
+        "證照",
+        "flight"
+      ],
+      "description": "介紹證照分級、定位與一般模式、飛前檢查、四面停懸、8字水平圓及側面前進後退。法規段落為教材版本，實際作業需核對主管機關最新公告。",
+      "originalName": "9_19課程簡報.pdf",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 20,
+      "summary": "介紹證照分級、定位與一般模式、飛前檢查、四面停懸、8字水平圓及側面前進後退。法規段落為教材版本，實際作業需核對主管機關最新公告。",
+      "category": "course"
+    },
+    {
+      "id": "drone-principles",
+      "title": "無人機及法規講義",
+      "path": "materials/course/drone-principles.pdf",
+      "type": "pdf",
+      "bytes": 24589443,
+      "sha256": "b109fed653ad6e269fb8e1195174617aad9fd06f4c096822551df862074492ed",
+      "topics": [
+        "構造",
+        "飛行原理",
+        "導航",
+        "法規",
+        "flight"
+      ],
+      "description": "涵蓋無人機類型、機體與飛控、導航、通訊、電池、飛行原理與應用，以及操作證、空域與註冊介紹。",
+      "originalName": "無人機及法規講義.pdf",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 61,
+      "summary": "涵蓋無人機類型、機體與飛控、導航、通訊、電池、飛行原理與應用，以及操作證、空域與註冊介紹。",
+      "category": "course"
+    },
+    {
+      "id": "course-1031",
+      "title": "10/31 簡報：機型、任務與開源工作流程",
+      "path": "materials/course/course-1031.pptx",
+      "type": "pptx",
+      "bytes": 1790172,
+      "sha256": "e6cb0b2ed5f686ef98eb5a18b9775275efa813087bdd1030b4234a3a9b2696a1",
+      "topics": [
+        "機型比較",
+        "測繪",
+        "QGroundControl",
+        "WebODM",
+        "QGIS",
+        "mapping",
+        "gis"
+      ],
+      "description": "比較消費、專業與行業機型及任務能力，並示範飛行拍攝、攝影測量、圖資巡檢工作流程；價格與規格保留教材當時版本。",
+      "originalName": "10.31簡報.pptx",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 21,
+      "summary": "比較消費、專業與行業機型及任務能力，並示範飛行拍攝、攝影測量、圖資巡檢工作流程；價格與規格保留教材當時版本。",
+      "category": "course"
+    },
+    {
+      "id": "advanced-g3",
+      "title": "高級第三組術科教材",
+      "path": "materials/course/advanced-g3.pdf",
+      "type": "pdf",
+      "bytes": 5864019,
+      "sha256": "5b9c8ce4927b96bc6e25a89d4b073a53b938ce3e84ad70856146621a01cc3cbb",
+      "topics": [
+        "任務規劃",
+        "興趣點",
+        "矩形航線",
+        "緊急處置",
+        "flight"
+      ],
+      "description": "包含飛前檢查、航點與地理圍欄設定、四面停懸、8字水平圓、矩形航線、興趣點飛行與飛後檢查。",
+      "originalName": "高級第三組.PDF",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 11,
+      "summary": "包含飛前檢查、航點與地理圍欄設定、四面停懸、8字水平圓、矩形航線、興趣點飛行與飛後檢查。",
+      "category": "course"
+    },
+    {
+      "id": "emergency-procedures",
+      "title": "005D 緊急處置程序問答",
+      "path": "materials/course/emergency-procedures.pdf",
+      "type": "pdf",
+      "bytes": 2044303,
+      "sha256": "1d000786f09c60401b220b0dffd6d8999af8368555221cec7023c5dbe08dc4e5",
+      "topics": [
+        "緊急處置",
+        "動力異常",
+        "GNSS",
+        "flight"
+      ],
+      "description": "掃描式教材，整理動力／電力、導航及訊號異常等情境的辨識與應處參考。",
+      "originalName": "005D-緊急處置程序問答.pdf",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 4,
+      "summary": "掃描式教材，整理動力／電力、導航及訊號異常等情境的辨識與應處參考。",
+      "category": "course"
+    },
+    {
+      "id": "course-info",
+      "title": "課程資訊一",
+      "path": "materials/course/course-info.pdf",
+      "type": "pdf",
+      "bytes": 620239,
+      "sha256": "cf993ffb5b40c20a3fc756180ce4728fe9fdc474b379d56440b4cb68251c56a7",
+      "topics": [
+        "課程",
+        "巡檢",
+        "空拍"
+      ],
+      "description": "115年無人機巡邏檢查應用班第01期課程明細：60小時、模擬器、組裝、空拍、剪輯與成果討論；包含訓練單位公開聯絡資訊。",
+      "originalName": "課程資訊ㄧ.pdf",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 3,
+      "summary": "115年無人機巡邏檢查應用班第01期課程明細：60小時、模擬器、組裝、空拍、剪輯與成果討論；包含訓練單位公開聯絡資訊。",
+      "category": "course"
+    },
+    {
+      "id": "suantou-training-site",
+      "title": "蒜頭公園室外課空照圖",
+      "path": "materials/course/suantou-training-site.jpg",
+      "type": "jpg",
+      "bytes": 201720,
+      "sha256": "0f4c8893c2436adc225ceeab3b8d573f04bd73226b217d38188602651f18cdd7",
+      "topics": [
+        "場地",
+        "環境調查",
+        "mapping",
+        "gis"
+      ],
+      "description": "課程戶外練習場地的空照參考圖，可搭配環境調查與場地辨識。",
+      "originalName": "無人機蒜頭公園室外課空照圖.jpg",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "summary": "課程戶外練習場地的空照參考圖，可搭配環境調查與場地辨識。",
+      "category": "course"
+    },
+    {
+      "id": "course-info-2",
+      "title": "課程資訊二",
+      "path": "materials/course/course-info-2.png",
+      "type": "png",
+      "bytes": 312489,
+      "sha256": "a03e1c4288faf9283e5e4efb8b3152198602bbfa992a376c1212d5082f259167",
+      "topics": [
+        "課程"
+      ],
+      "description": "使用者提供的課程資訊圖片。",
+      "originalName": "課程資訊二.png",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "summary": "使用者提供的課程資訊圖片。",
+      "category": "course"
+    },
+    {
+      "id": "under-2kg",
+      "title": "2公斤以下術科教材",
+      "path": "materials/course/under-2kg.pdf",
+      "type": "pdf",
+      "bytes": 5812853,
+      "sha256": "3fc4c262f6ed608ec00c94df2b01ebc1ce86549e8d0ba28566c4336a902c35e6",
+      "topics": [
+        "飛前檢查",
+        "基礎操控",
+        "術科",
+        "flight"
+      ],
+      "description": "2公斤以下級距的術科項目、操控與檢查參考教材。",
+      "originalName": "2公斤以下.PDF",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 8,
+      "summary": "2公斤以下級距的術科項目、操控與檢查參考教材。",
+      "category": "course"
+    },
+    {
+      "id": "course-poster",
+      "title": "無人機巡邏檢查應用班第01期",
+      "path": "materials/course/course-poster.jpg",
+      "type": "jpg",
+      "bytes": 204474,
+      "sha256": "94d7443ab71ebad35be7dd0073a20f765567d3c082e2b8dcd74bb08fd07fa36b",
+      "topics": [
+        "課程"
+      ],
+      "description": "使用者提供的班別與課程宣傳資訊圖。",
+      "originalName": "無人機巡邏檢查應用班第01期.jpg",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "summary": "使用者提供的班別與課程宣傳資訊圖。",
+      "category": "course"
+    },
+    {
+      "id": "advanced-all",
+      "title": "高級全考科",
+      "path": "materials/course/advanced-all.pdf",
+      "type": "pdf",
+      "bytes": 15936957,
+      "sha256": "63da0d252734870c1ffb65babf19982f3aab12624f427a7a5ba9efd03fe02025",
+      "topics": [
+        "術科",
+        "高級",
+        "flight"
+      ],
+      "description": "33頁掃描式高級術科參考教材；保留原始圖表供逐頁查閱。",
+      "originalName": "高級全考科.pdf",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 33,
+      "summary": "33頁掃描式高級術科參考教材；保留原始圖表供逐頁查閱。",
+      "category": "course"
+    },
+    {
+      "id": "basic-practical",
+      "title": "005D 術科基本級",
+      "path": "materials/course/basic-practical.pdf",
+      "type": "pdf",
+      "bytes": 4958952,
+      "sha256": "1997250690273dbc15ab5c7b80cd47ebfd64419d6bf4c25066a733bf1ad3cdc6",
+      "topics": [
+        "術科",
+        "基礎操控",
+        "flight"
+      ],
+      "description": "9頁掃描式基本級術科教材，保留原始測驗圖表。",
+      "originalName": "005D術科基本級.pdf",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 9,
+      "summary": "9頁掃描式基本級術科教材，保留原始測驗圖表。",
+      "category": "course"
+    },
+    {
+      "id": "simulator-setup",
+      "title": "模擬器設定",
+      "path": "materials/course/simulator-setup.pdf",
+      "type": "pdf",
+      "bytes": 1861425,
+      "sha256": "bd3c8e1e237c0484df3a3d91368ba8cdcda056b2a6c70adfd8f02352c6171463",
+      "topics": [
+        "遙控器",
+        "校正",
+        "模擬器",
+        "flight"
+      ],
+      "description": "6頁圖解：辨識8通道操控器、微調與模式開關置中、通道校正、搖桿行程及設定後練習。圖中軟體介面供操作概念對照，未確認與翱祥v2完全相同。",
+      "originalName": "模擬器設定.pdf",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 6,
+      "summary": "6頁圖解：辨識8通道操控器、微調與模式開關置中、通道校正、搖桿行程及設定後練習。圖中軟體介面供操作概念對照，未確認與翱祥v2完全相同。",
+      "category": "course"
+    },
+    {
+      "id": "advanced-g1",
+      "title": "高級第一組術科教材",
+      "path": "materials/course/advanced-g1.pdf",
+      "type": "pdf",
+      "bytes": 5818890,
+      "sha256": "05353180282c5fc602ca7a47671b0e9f5c08611fbbf765c2453e4f7865fec342",
+      "topics": [
+        "航點",
+        "地理圍欄",
+        "燈號航線",
+        "任務模式",
+        "flight"
+      ],
+      "description": "包含飛行任務設定、四面停懸、8字水平圓、燈號識別矩形航線、任務模式飛行及異常處置。",
+      "originalName": "高級第一組.PDF",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 11,
+      "summary": "包含飛行任務設定、四面停懸、8字水平圓、燈號識別矩形航線、任務模式飛行及異常處置。",
+      "category": "course"
+    },
+    {
+      "id": "assembly-battery-instructions",
+      "title": "電池使用說明",
+      "path": "materials/assembly/assembly-battery-instructions.jpg",
+      "type": "jpg",
+      "bytes": 510529,
+      "sha256": "588f16d50da60ee5034e13e6457f5e46d18c04c501ceb9551f06ae2c84c6ef49",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "電池與充電說明頁",
+      "originalName": "LINE_NOTE_261019_1.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 1,
+      "summary": "電池與充電說明頁",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-frame-propellers",
+      "title": "機體與A/B螺旋槳",
+      "path": "materials/assembly/assembly-frame-propellers.jpg",
+      "type": "jpg",
+      "bytes": 416764,
+      "sha256": "d33b403765949a3a8565f65e6ae1ac80f4812c5f5bfaf24e7e7a4715cbbbc09d",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "組裝完成的機體、保護框與A/B槳標記",
+      "originalName": "LINE_NOTE_261019_2.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 2,
+      "summary": "組裝完成的機體、保護框與A/B槳標記",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-controller",
+      "title": "木製遙控器",
+      "path": "materials/assembly/assembly-controller.jpg",
+      "type": "jpg",
+      "bytes": 360485,
+      "sha256": "e0f36c14e96fe08a5a92f2caca23c4ce456707e80110d9a431fb0c0961545784",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "遙控器搖桿及開關配置",
+      "originalName": "LINE_NOTE_261019_3.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 3,
+      "summary": "遙控器搖桿及開關配置",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-battery-detail",
+      "title": "電池細節",
+      "path": "materials/assembly/assembly-battery-detail.jpg",
+      "type": "jpg",
+      "bytes": 242935,
+      "sha256": "8cb86167ed2737b00c268aea4e4fe3f6494e3711264603cfe0575b6a3b80784b",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "電池外觀與標示",
+      "originalName": "LINE_NOTE_261019_4.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 4,
+      "summary": "電池外觀與標示",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-battery",
+      "title": "電池與接頭",
+      "path": "materials/assembly/assembly-battery.jpg",
+      "type": "jpg",
+      "bytes": 264607,
+      "sha256": "b1507c0a7ca2ef9e3b3f3861570014d496f2bfdb43226168aef8bdb80842ce28",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "電池本體、電線與接頭",
+      "originalName": "LINE_NOTE_261019_5.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 5,
+      "summary": "電池本體、電線與接頭",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-usb-charger",
+      "title": "USB充電線",
+      "path": "materials/assembly/assembly-usb-charger.jpg",
+      "type": "jpg",
+      "bytes": 253934,
+      "sha256": "d25b64adb936eee416f96ec2afd2a0c7ff435ce1c3640699cc92a9fb19cfdf98",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "套件USB充電配件",
+      "originalName": "LINE_NOTE_261019_6.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 6,
+      "summary": "套件USB充電配件",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-assembled-kit",
+      "title": "組裝完成套件",
+      "path": "materials/assembly/assembly-assembled-kit.jpg",
+      "type": "jpg",
+      "bytes": 434332,
+      "sha256": "15d193700346eeb9d4c205ea313bf10cd672effb35a10cd48de383a17fdad0fe",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "木製遙控器與四軸無人機",
+      "originalName": "LINE_NOTE_261019_7.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 7,
+      "summary": "木製遙控器與四軸無人機",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-motor-diagram",
+      "title": "馬達接線圖",
+      "path": "materials/assembly/assembly-motor-diagram.jpg",
+      "type": "jpg",
+      "bytes": 214061,
+      "sha256": "3ae36fcc2f50b956232f7170d0130237f6d4b1d0166450ddc88b16f3307bf840",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "課堂白板上的A/B馬達與線色配置示意",
+      "originalName": "LINE_NOTE_261019_8.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 8,
+      "summary": "課堂白板上的A/B馬達與線色配置示意",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-flight-controller",
+      "title": "飛控與馬達配線",
+      "path": "materials/assembly/assembly-flight-controller.jpg",
+      "type": "jpg",
+      "bytes": 429988,
+      "sha256": "060dfa3bc990d8a16c0eddaead494b3129a35b745b3f71108bcac771b65519ce",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "機體底面飛控板與各馬達接線",
+      "originalName": "LINE_NOTE_261019_9.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 9,
+      "summary": "機體底面飛控板與各馬達接線",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-classroom-1",
+      "title": "課堂操作紀錄一",
+      "path": "materials/assembly/assembly-classroom-1.jpg",
+      "type": "jpg",
+      "bytes": 261270,
+      "sha256": "3addf14bd395d8f9476a307fc3f7be1499f7808c1f870d64e1f02c7062dfa3b4",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "包含可辨識人物的課堂紀錄，未列入預覽畫廊",
+      "originalName": "LINE_NOTE_261019_10.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": false,
+      "containsPeople": true,
+      "sequence": 10,
+      "summary": "包含可辨識人物的課堂紀錄，未列入預覽畫廊",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-classroom-2",
+      "title": "課堂操作紀錄二",
+      "path": "materials/assembly/assembly-classroom-2.jpg",
+      "type": "jpg",
+      "bytes": 256019,
+      "sha256": "97cf15f1be46c6cf090194c30a62da3e230a5619e38465c603206ff5113f8711",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "包含可辨識人物的課堂紀錄，未列入預覽畫廊",
+      "originalName": "LINE_NOTE_261019_11.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": false,
+      "containsPeople": true,
+      "sequence": 11,
+      "summary": "包含可辨識人物的課堂紀錄，未列入預覽畫廊",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-frame-parts",
+      "title": "機體木片零件",
+      "path": "materials/assembly/assembly-frame-parts.jpg",
+      "type": "jpg",
+      "bytes": 396634,
+      "sha256": "2a3a0bda627125dbc03ebd91badf42d3d3f39a46a4fd3338ee19629690baaf64",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "尚未拆下的機體與保護框木片",
+      "originalName": "LINE_NOTE_261019_12.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 12,
+      "summary": "尚未拆下的機體與保護框木片",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-assembly-manual",
+      "title": "木製四軸組裝說明書",
+      "path": "materials/assembly/assembly-assembly-manual.jpg",
+      "type": "jpg",
+      "bytes": 288733,
+      "sha256": "4667983a2553474f8b91e3adbfdf76da5bb12bdcf0507530a81951590089952e",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "Assembly Four Axis Aircraft說明書封面與套件",
+      "originalName": "LINE_NOTE_261019_13.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 13,
+      "summary": "Assembly Four Axis Aircraft說明書封面與套件",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-electronics",
+      "title": "電子零件",
+      "path": "materials/assembly/assembly-electronics.jpg",
+      "type": "jpg",
+      "bytes": 357108,
+      "sha256": "43bcca5ac2742116f604ac36dd05ed71462e2021e82f3646da5ee8235d52cec3",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "飛控／遙控電路及套件零件",
+      "originalName": "LINE_NOTE_261019_14.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 14,
+      "summary": "飛控／遙控電路及套件零件",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-controller-parts",
+      "title": "遙控器木片零件",
+      "path": "materials/assembly/assembly-controller-parts.jpg",
+      "type": "jpg",
+      "bytes": 310446,
+      "sha256": "d84d4b1fee6f448ebc97390e2492558ce7670ad77952fefd1c8e8d16bdf408c6",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "木製遙控器的待組裝零件",
+      "originalName": "LINE_NOTE_261019_15.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 15,
+      "summary": "木製遙控器的待組裝零件",
+      "category": "assembly"
+    },
+    {
+      "id": "aero-4d-sources",
+      "title": "AERO 4D 時空圖鑑：做法與資料來源",
+      "path": "materials/reference/aero-4d-sources.pdf",
+      "type": "pdf",
+      "bytes": 362319,
+      "sha256": "6e4063f4f302e8542f6e0ac66bc9abe8651cc9e339ecf830007f848ad80d0f0d",
+      "topics": [
+        "GIS",
+        "4D",
+        "資料來源",
+        "mapping",
+        "gis"
+      ],
+      "description": "2026-10-16版本說明，記載2776處目的地、地形與影像來源、單張深度估計和多視角重建之差異，以及匯出與外部服務限制。",
+      "originalName": "AERO_4D_時空圖鑑_做法與資料來源.md.pdf",
+      "preview": true,
+      "pages": 1,
+      "summary": "2026-10-16版本說明，記載2776處目的地、地形與影像來源、單張深度估計和多視角重建之差異，以及匯出與外部服務限制。",
+      "category": "reference"
+    },
+    {
+      "id": "aero-realworld",
+      "title": "AERO 實景模擬器（使用者提供版本）",
+      "path": "materials/tools/AERO_RealWorld_Sim.html",
+      "type": "html",
+      "bytes": 1418226,
+      "sha256": "233aaa55f00454ceaa9474352cfeaa7573b443a41ecb42fca82a1d607ef8f3e8",
+      "topics": [
+        "模擬飛行",
+        "OSM",
+        "地形",
+        "即時天氣",
+        "flight"
+      ],
+      "description": "獨立HTML：多旋翼、固定翼、快艇與汽車實景體驗，包含地形、OSM、天氣與照片點任務。需連線使用地形、地圖與影像等外部服務。",
+      "originalName": "AERO_RealWorld_Sim.html",
+      "preview": false,
+      "summary": "獨立HTML：多旋翼、固定翼、快艇與汽車實景體驗，包含地形、OSM、天氣與照片點任務。需連線使用地形、地圖與影像等外部服務。",
+      "category": "tools"
+    },
+    {
+      "id": "aero-4d",
+      "title": "AERO 4D 時空圖鑑（使用者提供版本）",
+      "path": "materials/tools/AERO_4D_Explorer.html",
+      "type": "html",
+      "bytes": 1385772,
+      "sha256": "e9816d4596c4df81fd4d6fa85852241975772a26cde0a399685dd9092304f228",
+      "topics": [
+        "GIS",
+        "歷史地圖",
+        "照片年表",
+        "3D重建",
+        "mapping",
+        "gis"
+      ],
+      "description": "獨立HTML：地點、歷史地圖與衛星時間軸、照片年表、深度估計、錄影及素材清單匯出。需連線使用地形、地圖與影像等外部服務。",
+      "originalName": "AERO_4D_Explorer.html",
+      "preview": false,
+      "summary": "獨立HTML：地點、歷史地圖與衛星時間軸、照片年表、深度估計、錄影及素材清單匯出。需連線使用地形、地圖與影像等外部服務。",
+      "category": "tools"
+    }
+  ],
+  "packages": [
+    {
+      "id": "course-materials",
+      "title": "課程教材・文件包",
+      "path": "downloads/course-documents.zip",
+      "bytes": 51666356,
+      "sha256": "e2adc4975ed871ed1bbd49fb8b9b2ca73903503376482abb2b193d005558ed96",
+      "note": "15份原始教學文件重新打包；原課程ZIP內重複的模擬器改由下方獨立下載。"
+    },
+    {
+      "id": "wooden-quadcopter",
+      "title": "木製組裝無人機・原始包",
+      "path": "downloads/wooden-quadcopter.zip",
+      "bytes": 5008966,
+      "sha256": "5196720f510754dc9faaddc4a42aec56d8de3b09578bf56b08f4d5394422e5f6",
+      "note": "15張原始教學與課堂照片。"
+    },
+    {
+      "id": "aoxiang-simulator-v2",
+      "title": "翱祥模擬器v2・Windows",
+      "path": "downloads/aoxiang-simulator-v2.zip",
+      "bytes": 71655584,
+      "sha256": "7f41fe9034e60d4eaaaaed6fdbb2e9c2c44b3fe90a186aef8536249afc136476",
+      "note": "原始ZIP；完整解壓後使用Drone.exe。無法直接在瀏覽器或macOS執行。"
+    }
+  ],
+  "sources": [
+    {
+      "id": "kb-65-odm",
+      "order": 1,
+      "screenshot_item": 65,
+      "title": "無人機空拍測繪 · OpenDroneMap",
+      "repo": "OpenDroneMap/ODM",
+      "url": "https://github.com/OpenDroneMap/ODM",
+      "summary": "ODM 將空拍影像處理為點雲、紋理三維模型、正射影像與數值高程模型；README 列出 GeoTIFF、LAZ、OBJ 與對應的成果檢視工具。",
+      "topics": [
+        "攝影測量",
+        "正射影像",
+        "點雲",
+        "DSM／DEM",
+        "成果檢核"
+      ],
+      "applications": {
+        "aero": [
+          "以模擬航線說明影像取樣與空間覆蓋，再用公開測試資料認識重建成果。",
+          "比較一般照片與帶地理參考的 GeoTIFF，辨認飛行模擬與實際測繪成果的差別。"
+        ],
+        "resilience": [
+          "將教學空拍資料製成災前／災後對照圖，記錄影像日期、範圍與解析度。",
+          "在 QGIS 檢視正射影像，在 CloudCompare 檢視點雲；輸出可供救災課堂討論的圖件。"
+        ]
+      },
+      "exercise": {
+        "title": "從航線到成果圖",
+        "steps": [
+          "選擇一組公開或已授權的空拍影像與對應任務範圍。",
+          "利用 ODM 官方教學處理資料，記錄參數與影像拍攝時間。",
+          "比較 GeoTIFF、LAZ 與三維模型各自能回答的問題。"
+        ],
+        "deliverable": "一張成果類型比較表與帶時間、來源、比例尺的教學地圖。"
+      },
+      "license": {
+        "name": "AGPL-3.0",
+        "status": "repository-declared",
+        "url": "https://github.com/OpenDroneMap/ODM/blob/master/LICENSE"
+      },
+      "links": [
+        {
+          "label": "ODM 官方文件",
+          "url": "https://docs.opendronemap.org/"
+        },
+        {
+          "label": "參數說明",
+          "url": "https://docs.opendronemap.org/arguments/"
+        }
+      ],
+      "verified_at": "2026-11-15",
+      "source_readme": "https://github.com/OpenDroneMap/ODM/blob/master/README.md",
+      "source_blob_sha": "d3b8719f4e0ca35eebec1126d7decf1dc113ee54",
+      "ingestion_scope": "已讀取來源 README 並撰寫主題摘要與教學應用；未抓取清單內所有外部網站，也未聲稱已把完整外部知識訓練進模型。",
+      "application_note": "應用與練習為本次整理提出的教學設計，非原作者對本站的背書。"
+    },
+    {
+      "id": "kb-64-dronecraft",
+      "order": 2,
+      "screenshot_item": 64,
+      "title": "自主無人機原理",
+      "repo": "ntakouris/awesome-dronecraft",
+      "url": "https://github.com/ntakouris/awesome-dronecraft",
+      "summary": "按學習主題整理模擬與控制、控制理論、感測器與狀態估測、SLAM、路徑規劃、機電與飛行控制器，適合建立自主飛行系統的知識脈絡。",
+      "topics": [
+        "PID 控制",
+        "感測器",
+        "狀態估測",
+        "SLAM",
+        "路徑規劃",
+        "飛控"
+      ],
+      "applications": {
+        "aero": [
+          "以目標高度、實際高度和誤差曲線解釋回授控制。",
+          "對照木製四軸的馬達、槳葉、接收器與飛控，建立訊號到動作的關係。"
+        ],
+        "resilience": [
+          "在教學模擬中比較定位可靠與定位不確定情境，討論人工接管和任務中止。",
+          "由地圖規劃訓練航線，辨識定位、規劃與控制三個不同環節。"
+        ]
+      },
+      "exercise": {
+        "title": "自主系統拆解",
+        "steps": [
+          "畫出感測、估測、規劃、控制、致動器的資料流程。",
+          "以模擬飛行記錄一次高度改變及回復穩定的過程。",
+          "標示哪些狀態可觀察、哪些只是估計。"
+        ],
+        "deliverable": "一張系統流程圖與一段模擬觀察紀錄。"
+      },
+      "license": {
+        "name": "未宣告",
+        "status": "no-license-found",
+        "note": "根目錄僅 README.md，GitHub metadata 未列授權；本頁只提供原創導讀與連結。"
+      },
+      "links": [
+        {
+          "label": "控制理論章節",
+          "url": "https://github.com/ntakouris/awesome-dronecraft#control-theory"
+        },
+        {
+          "label": "感測與狀態估測章節",
+          "url": "https://github.com/ntakouris/awesome-dronecraft#sensors-and-state-estimation"
+        }
+      ],
+      "verified_at": "2026-11-15",
+      "source_readme": "https://github.com/ntakouris/awesome-dronecraft/blob/master/README.md",
+      "source_blob_sha": "79343d027dd5d82edc2c7929b7034080ac2fed33",
+      "ingestion_scope": "已讀取來源 README 並撰寫主題摘要與教學應用；未抓取清單內所有外部網站，也未聲稱已把完整外部知識訓練進模型。",
+      "application_note": "應用與練習為本次整理提出的教學設計，非原作者對本站的背書。"
+    },
+    {
+      "id": "kb-63-drones-en",
+      "order": 3,
+      "screenshot_item": 63,
+      "title": "無人機資源大全 · 英文",
+      "repo": "janesmae/awesome-drones",
+      "url": "https://github.com/janesmae/awesome-drones",
+      "summary": "彙整模擬器、飛控韌體、函式庫、地面站、機架與電子元件；用付費及停更標記協助閱讀。可作為工具與零件名稱的英文索引。",
+      "topics": [
+        "模擬器",
+        "地面控制站",
+        "飛控韌體",
+        "FC／ESC／RX／TX",
+        "日誌分析"
+      ],
+      "applications": {
+        "aero": [
+          "對照翱祥模擬器與清單中的模擬器，整理操控方式及教學目的。",
+          "建立 FC、ESC、RX、TX 等縮寫的雙語卡，配合組裝教材辨認零件。"
+        ],
+        "resilience": [
+          "比較地面站、飛控及任務規劃軟體的職責，選取適合課堂的工具流程。",
+          "建立任務結束後應保存的日誌、影像與任務紀錄清單。"
+        ]
+      },
+      "exercise": {
+        "title": "工具角色比較",
+        "steps": [
+          "選出一個模擬器、一個地面站和一個飛控專案。",
+          "閱讀各專案官方說明，記錄支援平台與用途。",
+          "以一個民用搜救訓練情境說明三者如何合作。"
+        ],
+        "deliverable": "三欄工具比較表，附官方來源與查閱日期。"
+      },
+      "license": {
+        "name": "CC0-1.0",
+        "status": "repository-declared",
+        "url": "https://github.com/janesmae/awesome-drones#license"
+      },
+      "links": [
+        {
+          "label": "模擬器索引",
+          "url": "https://github.com/janesmae/awesome-drones#simulators"
+        },
+        {
+          "label": "地面站索引",
+          "url": "https://github.com/janesmae/awesome-drones#ground-control-stations"
+        }
+      ],
+      "verified_at": "2026-11-15",
+      "source_readme": "https://github.com/janesmae/awesome-drones/blob/master/README.md",
+      "source_blob_sha": "6a7900e5be9b002097baa7f4ae66862db662baf1",
+      "ingestion_scope": "已讀取來源 README 並撰寫主題摘要與教學應用；未抓取清單內所有外部網站，也未聲稱已把完整外部知識訓練進模型。",
+      "application_note": "應用與練習為本次整理提出的教學設計，非原作者對本站的背書。"
+    },
+    {
+      "id": "kb-62-drones-zh",
+      "order": 4,
+      "screenshot_item": 62,
+      "title": "無人機資源大全 · 中文",
+      "repo": "apachecn/awesome-drones-zh",
+      "url": "https://github.com/apachecn/awesome-drones-zh",
+      "summary": "中文整理課程、模擬器、飛控、MAVLink／MAVROS、地面站與硬體詞彙，原文註明來自知乎文章。部分工具名稱與狀態較舊，適合作為詞彙與主題導讀。",
+      "topics": [
+        "中文入門",
+        "無人機課程",
+        "MAVLink",
+        "地面站",
+        "組裝元件"
+      ],
+      "applications": {
+        "aero": [
+          "把中文術語連到課程教材與木製四軸零件名稱。",
+          "用模擬器操作畫面辨認遙控輸入、姿態回應和顯示資訊。"
+        ],
+        "resilience": [
+          "建立飛手、觀察員、任務記錄員共用的術語表。",
+          "以地面站為題討論任務規劃、遙測與成果保存的分工。"
+        ]
+      },
+      "exercise": {
+        "title": "建立雙語詞彙表",
+        "steps": [
+          "從課程教材挑選十個實際遇到的元件或軟體名詞。",
+          "對照中文資源與英文資源，補上英文縮寫及用途。",
+          "對於選用工具，另查官方網站確認目前支援狀態。"
+        ],
+        "deliverable": "十項中文、英文、用途與教材頁碼對照。"
+      },
+      "license": {
+        "name": "未宣告",
+        "status": "no-license-found",
+        "note": "根目錄僅 README.md，GitHub metadata 未列授權；只提供原創導讀與連結。"
+      },
+      "links": [
+        {
+          "label": "中文資源原始索引",
+          "url": "https://github.com/apachecn/awesome-drones-zh/blob/master/README.md"
+        }
+      ],
+      "verified_at": "2026-11-15",
+      "source_readme": "https://github.com/apachecn/awesome-drones-zh/blob/master/README.md",
+      "source_blob_sha": "74120428b1f0649af31e701779a71775f857f31c",
+      "ingestion_scope": "已讀取來源 README 並撰寫主題摘要與教學應用；未抓取清單內所有外部網站，也未聲稱已把完整外部知識訓練進模型。",
+      "application_note": "應用與練習為本次整理提出的教學設計，非原作者對本站的背書。"
+    },
+    {
+      "id": "kb-61-dataviz",
+      "order": 5,
+      "screenshot_item": 61,
+      "title": "資料視覺化與資訊圖表",
+      "repo": "hal9ai/awesome-dataviz",
+      "url": "https://github.com/hal9ai/awesome-dataviz",
+      "original_url": "https://github.com/fasouto/awesome-dataviz",
+      "summary": "彙整圖表、地圖、儀表板與科學視覺化工具，包含 Chart.js、Plotly、Leaflet 等。原 fasouto 專案已移轉至 hal9ai；依現行來源標示作者與 CC BY 4.0。",
+      "topics": [
+        "時間序列",
+        "地圖呈現",
+        "任務儀表板",
+        "圖例與單位",
+        "資料品質"
+      ],
+      "applications": {
+        "aero": [
+          "將模擬高度、速度與操作時間畫成時間序列，找出不穩定區段。",
+          "把模擬資料與實測資料分別標示，保留座標、單位和資料時間。"
+        ],
+        "resilience": [
+          "建立訓練任務的覆蓋範圍、完成數與資料缺漏圖表。",
+          "以地圖和時間軸一起呈現通報、觀察與確認紀錄。"
+        ]
+      },
+      "exercise": {
+        "title": "任務資料說清楚",
+        "steps": [
+          "整理一段模擬飛行紀錄，明確標示資料為模擬。",
+          "製作高度時間圖和任務位置圖，加入單位與圖例。",
+          "檢查缺值、時間排序與座標格式。"
+        ],
+        "deliverable": "一張時間圖與一張位置圖，附資料來源與限制。"
+      },
+      "license": {
+        "name": "CC BY 4.0",
+        "status": "verified-license-file",
+        "url": "https://github.com/hal9ai/awesome-dataviz/blob/main/LICENSE",
+        "attribution": "Awesome Dataviz；原創者 Fabio Souto（fasouto），由 Javier Luraschi 維護，現位於 hal9ai/awesome-dataviz。此處為重新撰寫的教學導讀。"
+      },
+      "links": [
+        {
+          "label": "現行圖表工具索引",
+          "url": "https://github.com/hal9ai/awesome-dataviz#javascript-tools"
+        },
+        {
+          "label": "現行授權",
+          "url": "https://github.com/hal9ai/awesome-dataviz/blob/main/LICENSE"
+        }
+      ],
+      "verified_at": "2026-11-15",
+      "source_readme": "https://github.com/hal9ai/awesome-dataviz/blob/main/README.md",
+      "source_blob_sha": "57c7fb7a0d671437a1706fef9487daf2f040b0b0",
+      "ingestion_scope": "已讀取來源 README 並撰寫主題摘要與教學應用；未抓取清單內所有外部網站，也未聲稱已把完整外部知識訓練進模型。",
+      "application_note": "應用與練習為本次整理提出的教學設計，非原作者對本站的背書。"
+    },
+    {
+      "id": "kb-60-osm",
+      "order": 6,
+      "screenshot_item": 60,
+      "title": "開放街圖 · OpenStreetMap",
+      "repo": "osmlab/awesome-openstreetmap",
+      "url": "https://github.com/osmlab/awesome-openstreetmap",
+      "summary": "整理 OSM 編輯器、資料查詢、地圖顯示與協作任務工具；列有 Overpass、Leaflet、HOT 與 TeachOSM，能銜接地圖識讀與人道救援圖資練習。",
+      "topics": [
+        "OpenStreetMap",
+        "Overpass",
+        "Leaflet",
+        "圖資更新",
+        "協作製圖"
+      ],
+      "applications": {
+        "aero": [
+          "在地圖上辨認道路、河川與訓練範圍，理解圖層和位置標記。",
+          "比較底圖與空拍影像的日期、比例與覆蓋差異。"
+        ],
+        "resilience": [
+          "規劃教學用地圖標記表，保留觀察時間與資料來源。",
+          "參考 HOT／TeachOSM 的協作方式，分工檢查地圖完整性。"
+        ]
+      },
+      "exercise": {
+        "title": "地圖資料查核",
+        "steps": [
+          "選取公開的教學區域，記錄底圖來源與查閱日期。",
+          "以 Overpass 或既有資料查詢所需地物並標記缺漏。",
+          "與另一組資料交叉核對；將未確認項目明確標示。"
+        ],
+        "deliverable": "帶來源、日期與查核狀態的教學地圖。"
+      },
+      "license": {
+        "name": "CC0-1.0（資源清單）",
+        "status": "repository-declared",
+        "url": "https://github.com/osmlab/awesome-openstreetmap/blob/main/LICENSE",
+        "note": "此授權僅描述資源清單；OSM 地圖資料、圖磚和列出的工具各有其使用規範。"
+      },
+      "links": [
+        {
+          "label": "OSM 工具索引",
+          "url": "https://github.com/osmlab/awesome-openstreetmap#tools"
+        },
+        {
+          "label": "人道任務協作索引",
+          "url": "https://github.com/osmlab/awesome-openstreetmap#tasking-managers"
+        }
+      ],
+      "verified_at": "2026-11-15",
+      "source_readme": "https://github.com/osmlab/awesome-openstreetmap/blob/main/README.md",
+      "source_blob_sha": "1dd071abbb530066c0ba15e3e25053d6803847cc",
+      "ingestion_scope": "已讀取來源 README 並撰寫主題摘要與教學應用；未抓取清單內所有外部網站，也未聲稱已把完整外部知識訓練進模型。",
+      "application_note": "應用與練習為本次整理提出的教學設計，非原作者對本站的背書。"
+    },
+    {
+      "id": "kb-59-gis",
+      "order": 7,
+      "screenshot_item": 59,
+      "title": "地理資訊系統（GIS）大全",
+      "repo": "sacridini/Awesome-Geospatial",
+      "url": "https://github.com/sacridini/Awesome-Geospatial",
+      "summary": "跨 GIS 軟體、空間資料庫、網頁地圖、遙測、點雲及程式庫的資源目錄，列有 QGIS、PostGIS、Leaflet、MapLibre 等，適合把飛行任務和測繪成果接到空間分析。",
+      "topics": [
+        "GIS",
+        "QGIS",
+        "GeoTIFF",
+        "GeoJSON",
+        "座標系統",
+        "空間分析"
+      ],
+      "applications": {
+        "aero": [
+          "匯入教學航點與成果圖層，辨認點、線、面和影像資料。",
+          "記錄每份資料的座標參考系統、單位與時間。"
+        ],
+        "resilience": [
+          "將訓練範圍、公開道路圖層與正射影像疊合，檢查位置一致性。",
+          "整理救災演練圖件的資料來源、時間、圖例與限制。"
+        ]
+      },
+      "exercise": {
+        "title": "做一張可交接的 GIS 地圖",
+        "steps": [
+          "以 QGIS 開啟公開教學圖資與 ODM 成果。",
+          "確認座標參考系統，檢查各圖層是否對齊。",
+          "輸出含來源、日期、圖例、比例尺與製圖者的圖件。"
+        ],
+        "deliverable": "一張可供課堂交接的地圖及圖層清單。"
+      },
+      "license": {
+        "name": "CC0-1.0（資源清單）",
+        "status": "repository-declared",
+        "url": "https://github.com/sacridini/Awesome-Geospatial/blob/master/LICENSE"
+      },
+      "links": [
+        {
+          "label": "GIS 工具索引",
+          "url": "https://github.com/sacridini/Awesome-Geospatial#geographic-information-system"
+        },
+        {
+          "label": "網頁地圖索引",
+          "url": "https://github.com/sacridini/Awesome-Geospatial#web-map-development"
+        }
+      ],
+      "verified_at": "2026-11-15",
+      "source_readme": "https://github.com/sacridini/Awesome-Geospatial/blob/master/README.md",
+      "source_blob_sha": "11a2546e7dcf5b1dea1b290de209a8d18bca2b64",
+      "ingestion_scope": "已讀取來源 README 並撰寫主題摘要與教學應用；未抓取清單內所有外部網站，也未聲稱已把完整外部知識訓練進模型。",
+      "application_note": "應用與練習為本次整理提出的教學設計，非原作者對本站的背書。"
+    }
+  ],
+  "practices": [
+    {
+      "id": "assembly",
+      "title": "木製四軸：從零件到檢查表",
+      "summary": "先讀機體、飛控與A/B槳的照片，再建立自己的裝配檢查紀錄。",
+      "topics": [
+        "assembly",
+        "木製",
+        "組裝",
+        "飛控",
+        "螺旋槳"
+      ],
+      "steps": [
+        "對照零件圖，標記機體前方、飛控方向、馬達位置及A/B槳；以原套件說明確認配置。",
+        "在斷電狀態下整理接線、接頭、木片結構與保護框，記錄鬆動、磨損或疑點。",
+        "把配線與槳配置拍照，交由授課教練核對；通電／轉動測試遵守原廠及課程流程。",
+        "記錄電池外觀、充電配件與遙控器操作檢查，完成後再轉入模擬操控。"
+      ],
+      "output": "一張有方向標記的配線圖與飛前檢查表。",
+      "materialIds": [
+        "assembly-motor-diagram",
+        "assembly-flight-controller",
+        "assembly-frame-propellers",
+        "assembly-battery-instructions"
+      ],
+      "sourceIds": [
+        "kb-64-dronecraft",
+        "kb-63-drones-en",
+        "kb-62-drones-zh"
+      ]
+    },
+    {
+      "id": "flight",
+      "title": "操控基礎：校正、四面停懸與8字",
+      "summary": "以課程圖解對照自己的控制器，逐項記錄練習結果。",
+      "topics": [
+        "flight",
+        "操控",
+        "校正",
+        "四面停懸",
+        "8字",
+        "模擬器"
+      ],
+      "steps": [
+        "下載翱祥模擬器v2並在Windows完整解壓；Drone.exe與Drone_Data等檔案須保留同一套目錄。",
+        "讀模擬器設定PDF，核對軸向、中心位置與行程；PDF介面未確認與翱祥v2完全相同，依實際畫面對照。",
+        "先練習起降及穩定停懸，再改變機頭方向；用9/19與基本級教材對照姿態與操控。",
+        "在網頁模擬器練習轉向與拍攝，記錄偏移、過度修正及再練項目；術科考試依最新公告。"
+      ],
+      "output": "四面停懸與8字的自評紀錄，附一項下次要改善的操作。",
+      "materialIds": [
+        "simulator-setup",
+        "course-0919",
+        "basic-practical",
+        "under-2kg"
+      ],
+      "sourceIds": [
+        "kb-64-dronecraft",
+        "kb-63-drones-en"
+      ]
+    },
+    {
+      "id": "mapping",
+      "title": "空拍測繪：QGC → WebODM → QGIS",
+      "summary": "從任務規劃、照片品質，到正射影像與地理資訊分析。",
+      "topics": [
+        "mapping",
+        "測繪",
+        "WebODM",
+        "OpenDroneMap",
+        "QGIS",
+        "QGroundControl"
+      ],
+      "steps": [
+        "閱讀10/31簡報，比對飛行規劃、攝影測量與GIS三階段各自需要的資料。",
+        "用下方估算器觀察高度、焦距與重疊率對GSD及拍攝間隔的影響，記錄假設。",
+        "選用授權的教學影像，在外部WebODM/ODM建立處理任務；檢查影像清晰度、覆蓋與定位資料。",
+        "將產出的正射影像、DSM/DTM或點雲匯入QGIS，核對座標系統、單位與檢核點誤差。"
+      ],
+      "output": "含來源、座標系統、解析度與誤差說明的測繪成果頁；本網站不執行ODM運算。",
+      "materialIds": [
+        "course-1031",
+        "aero-4d-sources"
+      ],
+      "sourceIds": [
+        "kb-65-odm",
+        "kb-59-gis"
+      ]
+    },
+    {
+      "id": "autonomy",
+      "title": "自主飛行：航點、返航與地理圍欄",
+      "summary": "用任務教材理解飛控、估測、規劃與控制的分工。",
+      "topics": [
+        "flight",
+        "mapping",
+        "自主",
+        "航點",
+        "地理圍欄",
+        "返航"
+      ],
+      "steps": [
+        "對照高級第一組與第三組教材，列出航點、歸航點、興趣點與地理圍欄各自作用。",
+        "在紙上或模擬環境畫出矩形航線，說明各段目標與人工接管時機。",
+        "依原機型手冊與授課教練指導討論定位失效、低電量或通訊異常；記錄「辨識→終止／接管→回報」流程。",
+        "回到模擬任務比對實際操作與計畫，註明軟體模擬未涵蓋的真機條件。"
+      ],
+      "output": "一份航線草圖與三項異常情境處置討論。",
+      "materialIds": [
+        "advanced-g1",
+        "advanced-g3",
+        "emergency-procedures"
+      ],
+      "sourceIds": [
+        "kb-64-dronecraft",
+        "kb-63-drones-en",
+        "kb-62-drones-zh"
+      ]
+    },
+    {
+      "id": "gis",
+      "title": "OSM與GIS：災區道路及避難資訊",
+      "summary": "將底圖、觀測紀錄與救災圖層分開，保留每層來源及時間。",
+      "topics": [
+        "gis",
+        "mapping",
+        "OSM",
+        "GIS",
+        "救災",
+        "GeoJSON"
+      ],
+      "steps": [
+        "用OpenStreetMap辨識道路、建物與地形，核對來源時間與現場資訊。",
+        "在QGIS建立教學用道路阻斷點或淹水範圍圖層；明確標示為演練資料。",
+        "比對各圖層座標系統，為紀錄加上時間、來源、確認狀態與可信度。",
+        "在Crew Lab對應的淹水、道路障礙或地圖判讀情境練習交接，附上官方空域查詢紀錄。"
+      ],
+      "output": "可交接的GeoJSON／地圖與資料字典；OSM內容依其授權標示出處。",
+      "materialIds": [
+        "course-1031",
+        "suantou-training-site",
+        "aero-4d-sources"
+      ],
+      "sourceIds": [
+        "kb-60-osm",
+        "kb-59-gis"
+      ]
+    },
+    {
+      "id": "report",
+      "title": "資訊視覺化：把觀測變成可交接報告",
+      "summary": "以明確的尺度、圖例、時間與不確定性說明救災觀測。",
+      "topics": [
+        "gis",
+        "mapping",
+        "資料視覺化",
+        "資訊圖表",
+        "救災",
+        "報告"
+      ],
+      "steps": [
+        "選定一個演練任務，區分已確認觀測、推估與尚未確認資訊。",
+        "選用地圖、時間序列或長條圖呈現同類資料，補上單位、圖例與資料日期。",
+        "用模擬器截圖或合法教學照片補充視角，避免把單張深度估計當作實測地形。",
+        "匯出下方學習紀錄，與組員交換檢查來源是否可追溯、結論是否超出證據。"
+      ],
+      "output": "一頁成果簡報：任務、方法、圖表、限制、來源及下一步。",
+      "materialIds": [
+        "course-1031",
+        "aero-4d-sources"
+      ],
+      "sourceIds": [
+        "kb-61-dataviz",
+        "kb-65-odm",
+        "kb-59-gis"
+      ]
+    }
+  ],
+  "droneMap": {
+    "title": "Drone Map・無人機行動服務",
+    "verified_at": "2026-11-15",
+    "url": "https://drone.caa.gov.tw/",
+    "android": "https://play.google.com/store/apps/details?id=com.tradevan.drone_map",
+    "ios": "https://apps.apple.com/tw/app/drone-map-%E7%84%A1%E4%BA%BA%E6%A9%9F%E8%A1%8C%E5%8B%95%E6%9C%8D%E5%8B%99/id1498896499",
+    "summary": "彙整官方公開說明與操作入口。即時圖資、個人操作證、所屬無人機及活動案件請在官方App或管理系統查詢；本站沒有同步登入後資料，也不判定某地可否飛行。",
+    "versionNote": "查閱時官方網站圖資使用說明標示資料截至民國115年7月24日；App商店說明另有舊日期。實際任務以當次官方公告及主管機關資訊為準。",
+    "entries": [
+      {
+        "id": "drone-map-airspace",
+        "title": "活動區域與空域查詢",
+        "summary": "以地址、經緯度或地圖位置查詢區域，閱讀限制內容與公告。圖層涵蓋民航局、地方政府及中央機關提請公告的區域；還須確認其他適用主管機關規範。",
+        "topics": [
+          "flight",
+          "mapping",
+          "空域",
+          "Drone Map",
+          "法規"
+        ],
+        "url": "https://drone.caa.gov.tw/"
+      },
+      {
+        "id": "drone-map-weather",
+        "title": "氣象、風向風速與日出日落",
+        "summary": "官方App提供天氣相關資訊，版本紀錄包含能見度與日出日落功能。教學紀錄應保存查詢時間，並與現場條件及原機型限制交叉確認。",
+        "topics": [
+          "flight",
+          "天氣",
+          "風速",
+          "能見度"
+        ],
+        "url": "https://apps.apple.com/tw/app/drone-map-%E7%84%A1%E4%BA%BA%E6%A9%9F%E8%A1%8C%E5%8B%95%E6%9C%8D%E5%8B%99/id1498896499"
+      },
+      {
+        "id": "drone-map-news",
+        "title": "消息公告與推播",
+        "summary": "在App閱讀公告與推播，並用官方最新消息核對臨時活動、區域與時間的變動。",
+        "topics": [
+          "flight",
+          "公告",
+          "推播"
+        ],
+        "url": "https://drone.caa.gov.tw/Default/DataList1"
+      },
+      {
+        "id": "drone-map-account",
+        "title": "個人帳戶、操作證與無人機",
+        "summary": "登入官方服務查詢自己的操作證、效期與無人機資訊；需要驗證的身分與個人資料留在官方服務。",
+        "topics": [
+          "flight",
+          "操作證",
+          "證照",
+          "帳戶",
+          "無人機"
+        ],
+        "url": "https://drone.caa.gov.tw/"
+      },
+      {
+        "id": "drone-map-activity",
+        "title": "活動案件、報到與報離",
+        "summary": "依身分及核准案件在官方服務查看活動內容、進行適用的報到／報離並接收資訊；本網站的學習檢核不會送出官方申請或報到。",
+        "topics": [
+          "flight",
+          "活動",
+          "報到",
+          "報離",
+          "救災"
+        ],
+        "url": "https://www.caa.gov.tw/NewsPublish-Content.aspx?a=381&lang=1&ngid=1&nid=2178"
+      },
+      {
+        "id": "drone-map-corporate",
+        "title": "法人活動與能力審查資訊",
+        "summary": "官方版本紀錄包含法人活動登載與能力審查核可資訊；政府機關、學校、法人依帳戶角色使用相關業務。",
+        "topics": [
+          "法人",
+          "能力審查",
+          "活動"
+        ],
+        "url": "https://apps.apple.com/tw/app/drone-map-%E7%84%A1%E4%BA%BA%E6%A9%9F%E8%A1%8C%E5%8B%95%E6%9C%8D%E5%8B%99/id1498896499"
+      },
+      {
+        "id": "drone-map-safety",
+        "title": "飛安事件回報",
+        "summary": "官方App版本紀錄包含飛安事件回報入口。課堂練習只記錄情境與改善事項；實際事件依官方程序處理。",
+        "topics": [
+          "flight",
+          "飛安",
+          "回報",
+          "緊急處置"
+        ],
+        "url": "https://apps.apple.com/tw/app/drone-map-%E7%84%A1%E4%BA%BA%E6%A9%9F%E8%A1%8C%E5%8B%95%E6%9C%8D%E5%8B%99/id1498896499"
+      },
+      {
+        "id": "drone-map-help",
+        "title": "使用說明、客服與法規文件",
+        "summary": "從官方管理系統查看操作手冊、常見問答與法規文件；課程內舊版法規與機型表作為學習資料，實務應另核對最新公告。",
+        "topics": [
+          "flight",
+          "法規",
+          "教材",
+          "客服"
+        ],
+        "url": "https://drone.caa.gov.tw/Default/DataList3"
+      }
+    ],
+    "sources": [
+      {
+        "title": "Google Play官方App說明",
+        "url": "https://play.google.com/store/apps/details?id=com.tradevan.drone_map"
+      },
+      {
+        "title": "App Store官方說明及版本紀錄",
+        "url": "https://apps.apple.com/tw/app/drone-map-%E7%84%A1%E4%BA%BA%E6%A9%9F%E8%A1%8C%E5%8B%95%E6%9C%8D%E5%8B%99/id1498896499"
+      },
+      {
+        "title": "民航局遙控無人機管理資訊系統",
+        "url": "https://drone.caa.gov.tw/"
+      },
+      {
+        "title": "民航局Drone Map 2.0啟用說明",
+        "url": "https://www.caa.gov.tw/NewsPublish-Content.aspx?a=381&lang=1&ngid=1&nid=2178"
+      }
+    ]
+  },
+  "originalPackages": [
+    {
+      "id": "course-materials",
+      "title": "課程教材",
+      "originalFilename": "課程教材.zip",
+      "bytes": 122911568,
+      "sha256": "c8b01a01e8beb19be125d92c1ffe75e92d5fe1de9da89c3a10c077a879f35735",
+      "effectiveFileCount": 16,
+      "nestedSimulatorDuplicate": "193 entries match standalone simulator by path, byte size and CRC32; zip container hashes differ."
+    },
+    {
+      "id": "wooden-quadcopter",
+      "title": "assembly four axis aircraft 木製組裝無人機",
+      "originalFilename": "assembly four axis aircraft 木製組裝無人機.zip",
+      "bytes": 5008966,
+      "sha256": "5196720f510754dc9faaddc4a42aec56d8de3b09578bf56b08f4d5394422e5f6",
+      "effectiveFileCount": 15
+    },
+    {
+      "id": "aoxiang-simulator-v2",
+      "title": "翱祥模擬器v2",
+      "originalFilename": "翱祥模擬器v2.zip",
+      "bytes": 71655584,
+      "sha256": "7f41fe9034e60d4eaaaaed6fdbb2e9c2c44b3fe90a186aef8536249afc136476",
+      "effectiveFileCount": 193,
+      "runtime": "Windows desktop Unity application; Drone.exe; not browser executable."
+    }
+  ]
+}

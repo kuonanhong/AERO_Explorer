@@ -63,3 +63,18 @@ Fly a drone, light aircraft, speedboat, car, ground robot or underwater drone at
 **Upload** — `bash upload-aero-v6.sh` (see `--help`): SHA-256 diff, only changed/new files pushed in ~20 MB parts (HTTP/1.1, large post buffer), resumable dedicated clone, retries, keeps v5.1 as `classic-v5.html` / `README_v5.md` and the site's existing `config.js`, enables Pages; models/weights from `models/` go to Hugging Face or R2/S3 (never GitHub Pages) and `--set-model-base` points the tutor at your mirror. No API keys are ever stored in the site.
 
 **Data & licences** — see the Chinese section above (Esri World Imagery, AWS Terrain Tiles, OpenStreetMap/OpenFreeMap, Open-Meteo, Wikimedia, Taiwan Tourism Administration, UNESCO; three.js, 3d-tiles-renderer, transformers.js, ONNX Runtime, Qwen2.5, SmolLM2, AERO MIT).
+
+
+## 教材與應用知識庫（2026-11-15）
+
+[開啟教材與應用](learning/index.html)：33 項原始教材與補充工具、三份材料下載包、依截圖 65 → 59 排序的七個開源來源、六組實作、Drone Map 官方功能導讀、學習紀錄匯出與測繪估算器。首頁與教練可開啟教材，教練依同一份目錄檢索摘要並列出引用。
+
+- 課程教材：15 份文件重新打包，移除與獨立模擬器重複的巢狀 ZIP；文件原始內容保留。
+- 木製組裝無人機：15 張原始照片及原始 ZIP。
+- 翱祥模擬器 v2：完整原始 Windows ZIP，完整解壓後使用 `Drone.exe`；不在瀏覽器執行。
+- 補充資料：兩份原始 HTML 與 4D 做法及資料來源 PDF。
+- [catalog.json](learning/catalog.json) 記錄教材、主題、練習、官方服務與引用；[materials-manifest.json](learning/materials-manifest.json) 提供檔案來源與 SHA-256。
+
+外部資源為整理導讀與連結，並未鏡像全部外部知識或重新訓練模型。Drone Map 彙整公開功能與官方入口，未匯入個人證照、案件或即時空域；實務查詢與申報仍在官方服務完成。原始教材與外部資料依各自作者及授權，不因本網站程式授權而改變。
+
+驗證涵蓋教材及下載包完整性、引用連結、檢索、JavaScript 語法，以及瀏覽器中的搜尋、分類、手機版、紀錄保存／匯出與兩站教練查詢。Windows 模擬器未在本機執行；外部服務及生成式模型答案不在本次驗證範圍。

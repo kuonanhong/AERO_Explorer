@@ -1,0 +1,388 @@
+[
+  {
+    "id": "kb-65-odm",
+    "order": 1,
+    "screenshot_item": 65,
+    "title": "無人機空拍測繪 · OpenDroneMap",
+    "repo": "OpenDroneMap/ODM",
+    "url": "https://github.com/OpenDroneMap/ODM",
+    "summary": "ODM 將空拍影像處理為點雲、紋理三維模型、正射影像與數值高程模型；README 列出 GeoTIFF、LAZ、OBJ 與對應的成果檢視工具。",
+    "topics": [
+      "攝影測量",
+      "正射影像",
+      "點雲",
+      "DSM／DEM",
+      "成果檢核"
+    ],
+    "applications": {
+      "aero": [
+        "以模擬航線說明影像取樣與空間覆蓋，再用公開測試資料認識重建成果。",
+        "比較一般照片與帶地理參考的 GeoTIFF，辨認飛行模擬與實際測繪成果的差別。"
+      ],
+      "resilience": [
+        "將教學空拍資料製成災前／災後對照圖，記錄影像日期、範圍與解析度。",
+        "在 QGIS 檢視正射影像，在 CloudCompare 檢視點雲；輸出可供救災課堂討論的圖件。"
+      ]
+    },
+    "exercise": {
+      "title": "從航線到成果圖",
+      "steps": [
+        "選擇一組公開或已授權的空拍影像與對應任務範圍。",
+        "利用 ODM 官方教學處理資料，記錄參數與影像拍攝時間。",
+        "比較 GeoTIFF、LAZ 與三維模型各自能回答的問題。"
+      ],
+      "deliverable": "一張成果類型比較表與帶時間、來源、比例尺的教學地圖。"
+    },
+    "license": {
+      "name": "AGPL-3.0",
+      "status": "repository-declared",
+      "url": "https://github.com/OpenDroneMap/ODM/blob/master/LICENSE"
+    },
+    "links": [
+      {
+        "label": "ODM 官方文件",
+        "url": "https://docs.opendronemap.org/"
+      },
+      {
+        "label": "參數說明",
+        "url": "https://docs.opendronemap.org/arguments/"
+      }
+    ],
+    "verified_at": "2026-11-15",
+    "source_readme": "https://github.com/OpenDroneMap/ODM/blob/master/README.md",
+    "source_blob_sha": "d3b8719f4e0ca35eebec1126d7decf1dc113ee54",
+    "ingestion_scope": "已讀取來源 README 並撰寫主題摘要與教學應用；未抓取清單內所有外部網站，也未聲稱已把完整外部知識訓練進模型。",
+    "application_note": "應用與練習為本次整理提出的教學設計，非原作者對本站的背書。"
+  },
+  {
+    "id": "kb-64-dronecraft",
+    "order": 2,
+    "screenshot_item": 64,
+    "title": "自主無人機原理",
+    "repo": "ntakouris/awesome-dronecraft",
+    "url": "https://github.com/ntakouris/awesome-dronecraft",
+    "summary": "按學習主題整理模擬與控制、控制理論、感測器與狀態估測、SLAM、路徑規劃、機電與飛行控制器，適合建立自主飛行系統的知識脈絡。",
+    "topics": [
+      "PID 控制",
+      "感測器",
+      "狀態估測",
+      "SLAM",
+      "路徑規劃",
+      "飛控"
+    ],
+    "applications": {
+      "aero": [
+        "以目標高度、實際高度和誤差曲線解釋回授控制。",
+        "對照木製四軸的馬達、槳葉、接收器與飛控，建立訊號到動作的關係。"
+      ],
+      "resilience": [
+        "在教學模擬中比較定位可靠與定位不確定情境，討論人工接管和任務中止。",
+        "由地圖規劃訓練航線，辨識定位、規劃與控制三個不同環節。"
+      ]
+    },
+    "exercise": {
+      "title": "自主系統拆解",
+      "steps": [
+        "畫出感測、估測、規劃、控制、致動器的資料流程。",
+        "以模擬飛行記錄一次高度改變及回復穩定的過程。",
+        "標示哪些狀態可觀察、哪些只是估計。"
+      ],
+      "deliverable": "一張系統流程圖與一段模擬觀察紀錄。"
+    },
+    "license": {
+      "name": "未宣告",
+      "status": "no-license-found",
+      "note": "根目錄僅 README.md，GitHub metadata 未列授權；本頁只提供原創導讀與連結。"
+    },
+    "links": [
+      {
+        "label": "控制理論章節",
+        "url": "https://github.com/ntakouris/awesome-dronecraft#control-theory"
+      },
+      {
+        "label": "感測與狀態估測章節",
+        "url": "https://github.com/ntakouris/awesome-dronecraft#sensors-and-state-estimation"
+      }
+    ],
+    "verified_at": "2026-11-15",
+    "source_readme": "https://github.com/ntakouris/awesome-dronecraft/blob/master/README.md",
+    "source_blob_sha": "79343d027dd5d82edc2c7929b7034080ac2fed33",
+    "ingestion_scope": "已讀取來源 README 並撰寫主題摘要與教學應用；未抓取清單內所有外部網站，也未聲稱已把完整外部知識訓練進模型。",
+    "application_note": "應用與練習為本次整理提出的教學設計，非原作者對本站的背書。"
+  },
+  {
+    "id": "kb-63-drones-en",
+    "order": 3,
+    "screenshot_item": 63,
+    "title": "無人機資源大全 · 英文",
+    "repo": "janesmae/awesome-drones",
+    "url": "https://github.com/janesmae/awesome-drones",
+    "summary": "彙整模擬器、飛控韌體、函式庫、地面站、機架與電子元件；用付費及停更標記協助閱讀。可作為工具與零件名稱的英文索引。",
+    "topics": [
+      "模擬器",
+      "地面控制站",
+      "飛控韌體",
+      "FC／ESC／RX／TX",
+      "日誌分析"
+    ],
+    "applications": {
+      "aero": [
+        "對照翱祥模擬器與清單中的模擬器，整理操控方式及教學目的。",
+        "建立 FC、ESC、RX、TX 等縮寫的雙語卡，配合組裝教材辨認零件。"
+      ],
+      "resilience": [
+        "比較地面站、飛控及任務規劃軟體的職責，選取適合課堂的工具流程。",
+        "建立任務結束後應保存的日誌、影像與任務紀錄清單。"
+      ]
+    },
+    "exercise": {
+      "title": "工具角色比較",
+      "steps": [
+        "選出一個模擬器、一個地面站和一個飛控專案。",
+        "閱讀各專案官方說明，記錄支援平台與用途。",
+        "以一個民用搜救訓練情境說明三者如何合作。"
+      ],
+      "deliverable": "三欄工具比較表，附官方來源與查閱日期。"
+    },
+    "license": {
+      "name": "CC0-1.0",
+      "status": "repository-declared",
+      "url": "https://github.com/janesmae/awesome-drones#license"
+    },
+    "links": [
+      {
+        "label": "模擬器索引",
+        "url": "https://github.com/janesmae/awesome-drones#simulators"
+      },
+      {
+        "label": "地面站索引",
+        "url": "https://github.com/janesmae/awesome-drones#ground-control-stations"
+      }
+    ],
+    "verified_at": "2026-11-15",
+    "source_readme": "https://github.com/janesmae/awesome-drones/blob/master/README.md",
+    "source_blob_sha": "6a7900e5be9b002097baa7f4ae66862db662baf1",
+    "ingestion_scope": "已讀取來源 README 並撰寫主題摘要與教學應用；未抓取清單內所有外部網站，也未聲稱已把完整外部知識訓練進模型。",
+    "application_note": "應用與練習為本次整理提出的教學設計，非原作者對本站的背書。"
+  },
+  {
+    "id": "kb-62-drones-zh",
+    "order": 4,
+    "screenshot_item": 62,
+    "title": "無人機資源大全 · 中文",
+    "repo": "apachecn/awesome-drones-zh",
+    "url": "https://github.com/apachecn/awesome-drones-zh",
+    "summary": "中文整理課程、模擬器、飛控、MAVLink／MAVROS、地面站與硬體詞彙，原文註明來自知乎文章。部分工具名稱與狀態較舊，適合作為詞彙與主題導讀。",
+    "topics": [
+      "中文入門",
+      "無人機課程",
+      "MAVLink",
+      "地面站",
+      "組裝元件"
+    ],
+    "applications": {
+      "aero": [
+        "把中文術語連到課程教材與木製四軸零件名稱。",
+        "用模擬器操作畫面辨認遙控輸入、姿態回應和顯示資訊。"
+      ],
+      "resilience": [
+        "建立飛手、觀察員、任務記錄員共用的術語表。",
+        "以地面站為題討論任務規劃、遙測與成果保存的分工。"
+      ]
+    },
+    "exercise": {
+      "title": "建立雙語詞彙表",
+      "steps": [
+        "從課程教材挑選十個實際遇到的元件或軟體名詞。",
+        "對照中文資源與英文資源，補上英文縮寫及用途。",
+        "對於選用工具，另查官方網站確認目前支援狀態。"
+      ],
+      "deliverable": "十項中文、英文、用途與教材頁碼對照。"
+    },
+    "license": {
+      "name": "未宣告",
+      "status": "no-license-found",
+      "note": "根目錄僅 README.md，GitHub metadata 未列授權；只提供原創導讀與連結。"
+    },
+    "links": [
+      {
+        "label": "中文資源原始索引",
+        "url": "https://github.com/apachecn/awesome-drones-zh/blob/master/README.md"
+      }
+    ],
+    "verified_at": "2026-11-15",
+    "source_readme": "https://github.com/apachecn/awesome-drones-zh/blob/master/README.md",
+    "source_blob_sha": "74120428b1f0649af31e701779a71775f857f31c",
+    "ingestion_scope": "已讀取來源 README 並撰寫主題摘要與教學應用；未抓取清單內所有外部網站，也未聲稱已把完整外部知識訓練進模型。",
+    "application_note": "應用與練習為本次整理提出的教學設計，非原作者對本站的背書。"
+  },
+  {
+    "id": "kb-61-dataviz",
+    "order": 5,
+    "screenshot_item": 61,
+    "title": "資料視覺化與資訊圖表",
+    "repo": "hal9ai/awesome-dataviz",
+    "url": "https://github.com/hal9ai/awesome-dataviz",
+    "original_url": "https://github.com/fasouto/awesome-dataviz",
+    "summary": "彙整圖表、地圖、儀表板與科學視覺化工具，包含 Chart.js、Plotly、Leaflet 等。原 fasouto 專案已移轉至 hal9ai；依現行來源標示作者與 CC BY 4.0。",
+    "topics": [
+      "時間序列",
+      "地圖呈現",
+      "任務儀表板",
+      "圖例與單位",
+      "資料品質"
+    ],
+    "applications": {
+      "aero": [
+        "將模擬高度、速度與操作時間畫成時間序列，找出不穩定區段。",
+        "把模擬資料與實測資料分別標示，保留座標、單位和資料時間。"
+      ],
+      "resilience": [
+        "建立訓練任務的覆蓋範圍、完成數與資料缺漏圖表。",
+        "以地圖和時間軸一起呈現通報、觀察與確認紀錄。"
+      ]
+    },
+    "exercise": {
+      "title": "任務資料說清楚",
+      "steps": [
+        "整理一段模擬飛行紀錄，明確標示資料為模擬。",
+        "製作高度時間圖和任務位置圖，加入單位與圖例。",
+        "檢查缺值、時間排序與座標格式。"
+      ],
+      "deliverable": "一張時間圖與一張位置圖，附資料來源與限制。"
+    },
+    "license": {
+      "name": "CC BY 4.0",
+      "status": "verified-license-file",
+      "url": "https://github.com/hal9ai/awesome-dataviz/blob/main/LICENSE",
+      "attribution": "Awesome Dataviz；原創者 Fabio Souto（fasouto），由 Javier Luraschi 維護，現位於 hal9ai/awesome-dataviz。此處為重新撰寫的教學導讀。"
+    },
+    "links": [
+      {
+        "label": "現行圖表工具索引",
+        "url": "https://github.com/hal9ai/awesome-dataviz#javascript-tools"
+      },
+      {
+        "label": "現行授權",
+        "url": "https://github.com/hal9ai/awesome-dataviz/blob/main/LICENSE"
+      }
+    ],
+    "verified_at": "2026-11-15",
+    "source_readme": "https://github.com/hal9ai/awesome-dataviz/blob/main/README.md",
+    "source_blob_sha": "57c7fb7a0d671437a1706fef9487daf2f040b0b0",
+    "ingestion_scope": "已讀取來源 README 並撰寫主題摘要與教學應用；未抓取清單內所有外部網站，也未聲稱已把完整外部知識訓練進模型。",
+    "application_note": "應用與練習為本次整理提出的教學設計，非原作者對本站的背書。"
+  },
+  {
+    "id": "kb-60-osm",
+    "order": 6,
+    "screenshot_item": 60,
+    "title": "開放街圖 · OpenStreetMap",
+    "repo": "osmlab/awesome-openstreetmap",
+    "url": "https://github.com/osmlab/awesome-openstreetmap",
+    "summary": "整理 OSM 編輯器、資料查詢、地圖顯示與協作任務工具；列有 Overpass、Leaflet、HOT 與 TeachOSM，能銜接地圖識讀與人道救援圖資練習。",
+    "topics": [
+      "OpenStreetMap",
+      "Overpass",
+      "Leaflet",
+      "圖資更新",
+      "協作製圖"
+    ],
+    "applications": {
+      "aero": [
+        "在地圖上辨認道路、河川與訓練範圍，理解圖層和位置標記。",
+        "比較底圖與空拍影像的日期、比例與覆蓋差異。"
+      ],
+      "resilience": [
+        "規劃教學用地圖標記表，保留觀察時間與資料來源。",
+        "參考 HOT／TeachOSM 的協作方式，分工檢查地圖完整性。"
+      ]
+    },
+    "exercise": {
+      "title": "地圖資料查核",
+      "steps": [
+        "選取公開的教學區域，記錄底圖來源與查閱日期。",
+        "以 Overpass 或既有資料查詢所需地物並標記缺漏。",
+        "與另一組資料交叉核對；將未確認項目明確標示。"
+      ],
+      "deliverable": "帶來源、日期與查核狀態的教學地圖。"
+    },
+    "license": {
+      "name": "CC0-1.0（資源清單）",
+      "status": "repository-declared",
+      "url": "https://github.com/osmlab/awesome-openstreetmap/blob/main/LICENSE",
+      "note": "此授權僅描述資源清單；OSM 地圖資料、圖磚和列出的工具各有其使用規範。"
+    },
+    "links": [
+      {
+        "label": "OSM 工具索引",
+        "url": "https://github.com/osmlab/awesome-openstreetmap#tools"
+      },
+      {
+        "label": "人道任務協作索引",
+        "url": "https://github.com/osmlab/awesome-openstreetmap#tasking-managers"
+      }
+    ],
+    "verified_at": "2026-11-15",
+    "source_readme": "https://github.com/osmlab/awesome-openstreetmap/blob/main/README.md",
+    "source_blob_sha": "1dd071abbb530066c0ba15e3e25053d6803847cc",
+    "ingestion_scope": "已讀取來源 README 並撰寫主題摘要與教學應用；未抓取清單內所有外部網站，也未聲稱已把完整外部知識訓練進模型。",
+    "application_note": "應用與練習為本次整理提出的教學設計，非原作者對本站的背書。"
+  },
+  {
+    "id": "kb-59-gis",
+    "order": 7,
+    "screenshot_item": 59,
+    "title": "地理資訊系統（GIS）大全",
+    "repo": "sacridini/Awesome-Geospatial",
+    "url": "https://github.com/sacridini/Awesome-Geospatial",
+    "summary": "跨 GIS 軟體、空間資料庫、網頁地圖、遙測、點雲及程式庫的資源目錄，列有 QGIS、PostGIS、Leaflet、MapLibre 等，適合把飛行任務和測繪成果接到空間分析。",
+    "topics": [
+      "GIS",
+      "QGIS",
+      "GeoTIFF",
+      "GeoJSON",
+      "座標系統",
+      "空間分析"
+    ],
+    "applications": {
+      "aero": [
+        "匯入教學航點與成果圖層，辨認點、線、面和影像資料。",
+        "記錄每份資料的座標參考系統、單位與時間。"
+      ],
+      "resilience": [
+        "將訓練範圍、公開道路圖層與正射影像疊合，檢查位置一致性。",
+        "整理救災演練圖件的資料來源、時間、圖例與限制。"
+      ]
+    },
+    "exercise": {
+      "title": "做一張可交接的 GIS 地圖",
+      "steps": [
+        "以 QGIS 開啟公開教學圖資與 ODM 成果。",
+        "確認座標參考系統，檢查各圖層是否對齊。",
+        "輸出含來源、日期、圖例、比例尺與製圖者的圖件。"
+      ],
+      "deliverable": "一張可供課堂交接的地圖及圖層清單。"
+    },
+    "license": {
+      "name": "CC0-1.0（資源清單）",
+      "status": "repository-declared",
+      "url": "https://github.com/sacridini/Awesome-Geospatial/blob/master/LICENSE"
+    },
+    "links": [
+      {
+        "label": "GIS 工具索引",
+        "url": "https://github.com/sacridini/Awesome-Geospatial#geographic-information-system"
+      },
+      {
+        "label": "網頁地圖索引",
+        "url": "https://github.com/sacridini/Awesome-Geospatial#web-map-development"
+      }
+    ],
+    "verified_at": "2026-11-15",
+    "source_readme": "https://github.com/sacridini/Awesome-Geospatial/blob/master/README.md",
+    "source_blob_sha": "11a2546e7dcf5b1dea1b290de209a8d18bca2b64",
+    "ingestion_scope": "已讀取來源 README 並撰寫主題摘要與教學應用；未抓取清單內所有外部網站，也未聲稱已把完整外部知識訓練進模型。",
+    "application_note": "應用與練習為本次整理提出的教學設計，非原作者對本站的背書。"
+  }
+]

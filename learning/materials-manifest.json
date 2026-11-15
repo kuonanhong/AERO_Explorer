@@ -1,0 +1,725 @@
+{
+  "schemaVersion": 1,
+  "preparedOn": "2026-11-15",
+  "packages": [
+    {
+      "id": "course-materials",
+      "title": "課程教材",
+      "originalFilename": "課程教材.zip",
+      "bytes": 122911568,
+      "sha256": "c8b01a01e8beb19be125d92c1ffe75e92d5fe1de9da89c3a10c077a879f35735",
+      "effectiveFileCount": 16,
+      "nestedSimulatorDuplicate": "193 entries match standalone simulator by path, byte size and CRC32; zip container hashes differ."
+    },
+    {
+      "id": "wooden-quadcopter",
+      "title": "assembly four axis aircraft 木製組裝無人機",
+      "originalFilename": "assembly four axis aircraft 木製組裝無人機.zip",
+      "bytes": 5008966,
+      "sha256": "5196720f510754dc9faaddc4a42aec56d8de3b09578bf56b08f4d5394422e5f6",
+      "effectiveFileCount": 15
+    },
+    {
+      "id": "aoxiang-simulator-v2",
+      "title": "翱祥模擬器v2",
+      "originalFilename": "翱祥模擬器v2.zip",
+      "bytes": 71655584,
+      "sha256": "7f41fe9034e60d4eaaaaed6fdbb2e9c2c44b3fe90a186aef8536249afc136476",
+      "effectiveFileCount": 193,
+      "runtime": "Windows desktop Unity application; Drone.exe; not browser executable."
+    }
+  ],
+  "materials": [
+    {
+      "id": "approved-models",
+      "title": "無人機廠牌與型號",
+      "path": "materials/course/approved-models.pdf",
+      "type": "pdf",
+      "bytes": 84321,
+      "sha256": "f5bf963a4e2668672dc4293806b1c193c552f84f374c3c8ef83a6155a5a04506",
+      "topics": [
+        "機型",
+        "資安"
+      ],
+      "description": "資料統計截至民國115年5月7日的無人機產品資安檢測與審驗廠牌、型號及安全等級表。",
+      "originalName": "無人機廠牌與型號.pdf",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 3,
+      "summary": "資料統計截至民國115年5月7日的無人機產品資安檢測與審驗廠牌、型號及安全等級表。",
+      "category": "course"
+    },
+    {
+      "id": "course-0919",
+      "title": "9/19 課程簡報：證照與術科",
+      "path": "materials/course/course-0919.pdf",
+      "type": "pdf",
+      "bytes": 1554459,
+      "sha256": "8f9a4995aea3f8b3165d5ec5758b777f0222324bea26914dd39374bafa3daff0",
+      "topics": [
+        "飛前檢查",
+        "四面停懸",
+        "8字",
+        "證照",
+        "flight"
+      ],
+      "description": "介紹證照分級、定位與一般模式、飛前檢查、四面停懸、8字水平圓及側面前進後退。法規段落為教材版本，實際作業需核對主管機關最新公告。",
+      "originalName": "9_19課程簡報.pdf",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 20,
+      "summary": "介紹證照分級、定位與一般模式、飛前檢查、四面停懸、8字水平圓及側面前進後退。法規段落為教材版本，實際作業需核對主管機關最新公告。",
+      "category": "course"
+    },
+    {
+      "id": "drone-principles",
+      "title": "無人機及法規講義",
+      "path": "materials/course/drone-principles.pdf",
+      "type": "pdf",
+      "bytes": 24589443,
+      "sha256": "b109fed653ad6e269fb8e1195174617aad9fd06f4c096822551df862074492ed",
+      "topics": [
+        "構造",
+        "飛行原理",
+        "導航",
+        "法規",
+        "flight"
+      ],
+      "description": "涵蓋無人機類型、機體與飛控、導航、通訊、電池、飛行原理與應用，以及操作證、空域與註冊介紹。",
+      "originalName": "無人機及法規講義.pdf",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 61,
+      "summary": "涵蓋無人機類型、機體與飛控、導航、通訊、電池、飛行原理與應用，以及操作證、空域與註冊介紹。",
+      "category": "course"
+    },
+    {
+      "id": "course-1031",
+      "title": "10/31 簡報：機型、任務與開源工作流程",
+      "path": "materials/course/course-1031.pptx",
+      "type": "pptx",
+      "bytes": 1790172,
+      "sha256": "e6cb0b2ed5f686ef98eb5a18b9775275efa813087bdd1030b4234a3a9b2696a1",
+      "topics": [
+        "機型比較",
+        "測繪",
+        "QGroundControl",
+        "WebODM",
+        "QGIS",
+        "mapping",
+        "gis"
+      ],
+      "description": "比較消費、專業與行業機型及任務能力，並示範飛行拍攝、攝影測量、圖資巡檢工作流程；價格與規格保留教材當時版本。",
+      "originalName": "10.31簡報.pptx",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 21,
+      "summary": "比較消費、專業與行業機型及任務能力，並示範飛行拍攝、攝影測量、圖資巡檢工作流程；價格與規格保留教材當時版本。",
+      "category": "course"
+    },
+    {
+      "id": "advanced-g3",
+      "title": "高級第三組術科教材",
+      "path": "materials/course/advanced-g3.pdf",
+      "type": "pdf",
+      "bytes": 5864019,
+      "sha256": "5b9c8ce4927b96bc6e25a89d4b073a53b938ce3e84ad70856146621a01cc3cbb",
+      "topics": [
+        "任務規劃",
+        "興趣點",
+        "矩形航線",
+        "緊急處置",
+        "flight"
+      ],
+      "description": "包含飛前檢查、航點與地理圍欄設定、四面停懸、8字水平圓、矩形航線、興趣點飛行與飛後檢查。",
+      "originalName": "高級第三組.PDF",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 11,
+      "summary": "包含飛前檢查、航點與地理圍欄設定、四面停懸、8字水平圓、矩形航線、興趣點飛行與飛後檢查。",
+      "category": "course"
+    },
+    {
+      "id": "emergency-procedures",
+      "title": "005D 緊急處置程序問答",
+      "path": "materials/course/emergency-procedures.pdf",
+      "type": "pdf",
+      "bytes": 2044303,
+      "sha256": "1d000786f09c60401b220b0dffd6d8999af8368555221cec7023c5dbe08dc4e5",
+      "topics": [
+        "緊急處置",
+        "動力異常",
+        "GNSS",
+        "flight"
+      ],
+      "description": "掃描式教材，整理動力／電力、導航及訊號異常等情境的辨識與應處參考。",
+      "originalName": "005D-緊急處置程序問答.pdf",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 4,
+      "summary": "掃描式教材，整理動力／電力、導航及訊號異常等情境的辨識與應處參考。",
+      "category": "course"
+    },
+    {
+      "id": "course-info",
+      "title": "課程資訊一",
+      "path": "materials/course/course-info.pdf",
+      "type": "pdf",
+      "bytes": 620239,
+      "sha256": "cf993ffb5b40c20a3fc756180ce4728fe9fdc474b379d56440b4cb68251c56a7",
+      "topics": [
+        "課程",
+        "巡檢",
+        "空拍"
+      ],
+      "description": "115年無人機巡邏檢查應用班第01期課程明細：60小時、模擬器、組裝、空拍、剪輯與成果討論；包含訓練單位公開聯絡資訊。",
+      "originalName": "課程資訊ㄧ.pdf",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 3,
+      "summary": "115年無人機巡邏檢查應用班第01期課程明細：60小時、模擬器、組裝、空拍、剪輯與成果討論；包含訓練單位公開聯絡資訊。",
+      "category": "course"
+    },
+    {
+      "id": "suantou-training-site",
+      "title": "蒜頭公園室外課空照圖",
+      "path": "materials/course/suantou-training-site.jpg",
+      "type": "jpg",
+      "bytes": 201720,
+      "sha256": "0f4c8893c2436adc225ceeab3b8d573f04bd73226b217d38188602651f18cdd7",
+      "topics": [
+        "場地",
+        "環境調查",
+        "mapping",
+        "gis"
+      ],
+      "description": "課程戶外練習場地的空照參考圖，可搭配環境調查與場地辨識。",
+      "originalName": "無人機蒜頭公園室外課空照圖.jpg",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "summary": "課程戶外練習場地的空照參考圖，可搭配環境調查與場地辨識。",
+      "category": "course"
+    },
+    {
+      "id": "course-info-2",
+      "title": "課程資訊二",
+      "path": "materials/course/course-info-2.png",
+      "type": "png",
+      "bytes": 312489,
+      "sha256": "a03e1c4288faf9283e5e4efb8b3152198602bbfa992a376c1212d5082f259167",
+      "topics": [
+        "課程"
+      ],
+      "description": "使用者提供的課程資訊圖片。",
+      "originalName": "課程資訊二.png",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "summary": "使用者提供的課程資訊圖片。",
+      "category": "course"
+    },
+    {
+      "id": "under-2kg",
+      "title": "2公斤以下術科教材",
+      "path": "materials/course/under-2kg.pdf",
+      "type": "pdf",
+      "bytes": 5812853,
+      "sha256": "3fc4c262f6ed608ec00c94df2b01ebc1ce86549e8d0ba28566c4336a902c35e6",
+      "topics": [
+        "飛前檢查",
+        "基礎操控",
+        "術科",
+        "flight"
+      ],
+      "description": "2公斤以下級距的術科項目、操控與檢查參考教材。",
+      "originalName": "2公斤以下.PDF",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 8,
+      "summary": "2公斤以下級距的術科項目、操控與檢查參考教材。",
+      "category": "course"
+    },
+    {
+      "id": "course-poster",
+      "title": "無人機巡邏檢查應用班第01期",
+      "path": "materials/course/course-poster.jpg",
+      "type": "jpg",
+      "bytes": 204474,
+      "sha256": "94d7443ab71ebad35be7dd0073a20f765567d3c082e2b8dcd74bb08fd07fa36b",
+      "topics": [
+        "課程"
+      ],
+      "description": "使用者提供的班別與課程宣傳資訊圖。",
+      "originalName": "無人機巡邏檢查應用班第01期.jpg",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "summary": "使用者提供的班別與課程宣傳資訊圖。",
+      "category": "course"
+    },
+    {
+      "id": "advanced-all",
+      "title": "高級全考科",
+      "path": "materials/course/advanced-all.pdf",
+      "type": "pdf",
+      "bytes": 15936957,
+      "sha256": "63da0d252734870c1ffb65babf19982f3aab12624f427a7a5ba9efd03fe02025",
+      "topics": [
+        "術科",
+        "高級",
+        "flight"
+      ],
+      "description": "33頁掃描式高級術科參考教材；保留原始圖表供逐頁查閱。",
+      "originalName": "高級全考科.pdf",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 33,
+      "summary": "33頁掃描式高級術科參考教材；保留原始圖表供逐頁查閱。",
+      "category": "course"
+    },
+    {
+      "id": "basic-practical",
+      "title": "005D 術科基本級",
+      "path": "materials/course/basic-practical.pdf",
+      "type": "pdf",
+      "bytes": 4958952,
+      "sha256": "1997250690273dbc15ab5c7b80cd47ebfd64419d6bf4c25066a733bf1ad3cdc6",
+      "topics": [
+        "術科",
+        "基礎操控",
+        "flight"
+      ],
+      "description": "9頁掃描式基本級術科教材，保留原始測驗圖表。",
+      "originalName": "005D術科基本級.pdf",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 9,
+      "summary": "9頁掃描式基本級術科教材，保留原始測驗圖表。",
+      "category": "course"
+    },
+    {
+      "id": "simulator-setup",
+      "title": "模擬器設定",
+      "path": "materials/course/simulator-setup.pdf",
+      "type": "pdf",
+      "bytes": 1861425,
+      "sha256": "bd3c8e1e237c0484df3a3d91368ba8cdcda056b2a6c70adfd8f02352c6171463",
+      "topics": [
+        "遙控器",
+        "校正",
+        "模擬器",
+        "flight"
+      ],
+      "description": "6頁圖解：辨識8通道操控器、微調與模式開關置中、通道校正、搖桿行程及設定後練習。圖中軟體介面供操作概念對照，未確認與翱祥v2完全相同。",
+      "originalName": "模擬器設定.pdf",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 6,
+      "summary": "6頁圖解：辨識8通道操控器、微調與模式開關置中、通道校正、搖桿行程及設定後練習。圖中軟體介面供操作概念對照，未確認與翱祥v2完全相同。",
+      "category": "course"
+    },
+    {
+      "id": "advanced-g1",
+      "title": "高級第一組術科教材",
+      "path": "materials/course/advanced-g1.pdf",
+      "type": "pdf",
+      "bytes": 5818890,
+      "sha256": "05353180282c5fc602ca7a47671b0e9f5c08611fbbf765c2453e4f7865fec342",
+      "topics": [
+        "航點",
+        "地理圍欄",
+        "燈號航線",
+        "任務模式",
+        "flight"
+      ],
+      "description": "包含飛行任務設定、四面停懸、8字水平圓、燈號識別矩形航線、任務模式飛行及異常處置。",
+      "originalName": "高級第一組.PDF",
+      "sourcePackage": "course-materials",
+      "preview": true,
+      "pages": 11,
+      "summary": "包含飛行任務設定、四面停懸、8字水平圓、燈號識別矩形航線、任務模式飛行及異常處置。",
+      "category": "course"
+    },
+    {
+      "id": "assembly-battery-instructions",
+      "title": "電池使用說明",
+      "path": "materials/assembly/assembly-battery-instructions.jpg",
+      "type": "jpg",
+      "bytes": 510529,
+      "sha256": "588f16d50da60ee5034e13e6457f5e46d18c04c501ceb9551f06ae2c84c6ef49",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "電池與充電說明頁",
+      "originalName": "LINE_NOTE_261019_1.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 1,
+      "summary": "電池與充電說明頁",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-frame-propellers",
+      "title": "機體與A/B螺旋槳",
+      "path": "materials/assembly/assembly-frame-propellers.jpg",
+      "type": "jpg",
+      "bytes": 416764,
+      "sha256": "d33b403765949a3a8565f65e6ae1ac80f4812c5f5bfaf24e7e7a4715cbbbc09d",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "組裝完成的機體、保護框與A/B槳標記",
+      "originalName": "LINE_NOTE_261019_2.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 2,
+      "summary": "組裝完成的機體、保護框與A/B槳標記",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-controller",
+      "title": "木製遙控器",
+      "path": "materials/assembly/assembly-controller.jpg",
+      "type": "jpg",
+      "bytes": 360485,
+      "sha256": "e0f36c14e96fe08a5a92f2caca23c4ce456707e80110d9a431fb0c0961545784",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "遙控器搖桿及開關配置",
+      "originalName": "LINE_NOTE_261019_3.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 3,
+      "summary": "遙控器搖桿及開關配置",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-battery-detail",
+      "title": "電池細節",
+      "path": "materials/assembly/assembly-battery-detail.jpg",
+      "type": "jpg",
+      "bytes": 242935,
+      "sha256": "8cb86167ed2737b00c268aea4e4fe3f6494e3711264603cfe0575b6a3b80784b",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "電池外觀與標示",
+      "originalName": "LINE_NOTE_261019_4.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 4,
+      "summary": "電池外觀與標示",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-battery",
+      "title": "電池與接頭",
+      "path": "materials/assembly/assembly-battery.jpg",
+      "type": "jpg",
+      "bytes": 264607,
+      "sha256": "b1507c0a7ca2ef9e3b3f3861570014d496f2bfdb43226168aef8bdb80842ce28",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "電池本體、電線與接頭",
+      "originalName": "LINE_NOTE_261019_5.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 5,
+      "summary": "電池本體、電線與接頭",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-usb-charger",
+      "title": "USB充電線",
+      "path": "materials/assembly/assembly-usb-charger.jpg",
+      "type": "jpg",
+      "bytes": 253934,
+      "sha256": "d25b64adb936eee416f96ec2afd2a0c7ff435ce1c3640699cc92a9fb19cfdf98",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "套件USB充電配件",
+      "originalName": "LINE_NOTE_261019_6.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 6,
+      "summary": "套件USB充電配件",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-assembled-kit",
+      "title": "組裝完成套件",
+      "path": "materials/assembly/assembly-assembled-kit.jpg",
+      "type": "jpg",
+      "bytes": 434332,
+      "sha256": "15d193700346eeb9d4c205ea313bf10cd672effb35a10cd48de383a17fdad0fe",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "木製遙控器與四軸無人機",
+      "originalName": "LINE_NOTE_261019_7.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 7,
+      "summary": "木製遙控器與四軸無人機",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-motor-diagram",
+      "title": "馬達接線圖",
+      "path": "materials/assembly/assembly-motor-diagram.jpg",
+      "type": "jpg",
+      "bytes": 214061,
+      "sha256": "3ae36fcc2f50b956232f7170d0130237f6d4b1d0166450ddc88b16f3307bf840",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "課堂白板上的A/B馬達與線色配置示意",
+      "originalName": "LINE_NOTE_261019_8.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 8,
+      "summary": "課堂白板上的A/B馬達與線色配置示意",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-flight-controller",
+      "title": "飛控與馬達配線",
+      "path": "materials/assembly/assembly-flight-controller.jpg",
+      "type": "jpg",
+      "bytes": 429988,
+      "sha256": "060dfa3bc990d8a16c0eddaead494b3129a35b745b3f71108bcac771b65519ce",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "機體底面飛控板與各馬達接線",
+      "originalName": "LINE_NOTE_261019_9.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 9,
+      "summary": "機體底面飛控板與各馬達接線",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-classroom-1",
+      "title": "課堂操作紀錄一",
+      "path": "materials/assembly/assembly-classroom-1.jpg",
+      "type": "jpg",
+      "bytes": 261270,
+      "sha256": "3addf14bd395d8f9476a307fc3f7be1499f7808c1f870d64e1f02c7062dfa3b4",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "包含可辨識人物的課堂紀錄，未列入預覽畫廊",
+      "originalName": "LINE_NOTE_261019_10.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": false,
+      "containsPeople": true,
+      "sequence": 10,
+      "summary": "包含可辨識人物的課堂紀錄，未列入預覽畫廊",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-classroom-2",
+      "title": "課堂操作紀錄二",
+      "path": "materials/assembly/assembly-classroom-2.jpg",
+      "type": "jpg",
+      "bytes": 256019,
+      "sha256": "97cf15f1be46c6cf090194c30a62da3e230a5619e38465c603206ff5113f8711",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "包含可辨識人物的課堂紀錄，未列入預覽畫廊",
+      "originalName": "LINE_NOTE_261019_11.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": false,
+      "containsPeople": true,
+      "sequence": 11,
+      "summary": "包含可辨識人物的課堂紀錄，未列入預覽畫廊",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-frame-parts",
+      "title": "機體木片零件",
+      "path": "materials/assembly/assembly-frame-parts.jpg",
+      "type": "jpg",
+      "bytes": 396634,
+      "sha256": "2a3a0bda627125dbc03ebd91badf42d3d3f39a46a4fd3338ee19629690baaf64",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "尚未拆下的機體與保護框木片",
+      "originalName": "LINE_NOTE_261019_12.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 12,
+      "summary": "尚未拆下的機體與保護框木片",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-assembly-manual",
+      "title": "木製四軸組裝說明書",
+      "path": "materials/assembly/assembly-assembly-manual.jpg",
+      "type": "jpg",
+      "bytes": 288733,
+      "sha256": "4667983a2553474f8b91e3adbfdf76da5bb12bdcf0507530a81951590089952e",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "Assembly Four Axis Aircraft說明書封面與套件",
+      "originalName": "LINE_NOTE_261019_13.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 13,
+      "summary": "Assembly Four Axis Aircraft說明書封面與套件",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-electronics",
+      "title": "電子零件",
+      "path": "materials/assembly/assembly-electronics.jpg",
+      "type": "jpg",
+      "bytes": 357108,
+      "sha256": "43bcca5ac2742116f604ac36dd05ed71462e2021e82f3646da5ee8235d52cec3",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "飛控／遙控電路及套件零件",
+      "originalName": "LINE_NOTE_261019_14.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 14,
+      "summary": "飛控／遙控電路及套件零件",
+      "category": "assembly"
+    },
+    {
+      "id": "assembly-controller-parts",
+      "title": "遙控器木片零件",
+      "path": "materials/assembly/assembly-controller-parts.jpg",
+      "type": "jpg",
+      "bytes": 310446,
+      "sha256": "d84d4b1fee6f448ebc97390e2492558ce7670ad77952fefd1c8e8d16bdf408c6",
+      "topics": [
+        "木製四軸",
+        "組裝",
+        "assembly"
+      ],
+      "description": "木製遙控器的待組裝零件",
+      "originalName": "LINE_NOTE_261019_15.jpg",
+      "sourcePackage": "wooden-quadcopter",
+      "preview": true,
+      "containsPeople": false,
+      "sequence": 15,
+      "summary": "木製遙控器的待組裝零件",
+      "category": "assembly"
+    },
+    {
+      "id": "aero-4d-sources",
+      "title": "AERO 4D 時空圖鑑：做法與資料來源",
+      "path": "materials/reference/aero-4d-sources.pdf",
+      "type": "pdf",
+      "bytes": 362319,
+      "sha256": "6e4063f4f302e8542f6e0ac66bc9abe8651cc9e339ecf830007f848ad80d0f0d",
+      "topics": [
+        "GIS",
+        "4D",
+        "資料來源",
+        "mapping",
+        "gis"
+      ],
+      "description": "2026-10-16版本說明，記載2776處目的地、地形與影像來源、單張深度估計和多視角重建之差異，以及匯出與外部服務限制。",
+      "originalName": "AERO_4D_時空圖鑑_做法與資料來源.md.pdf",
+      "preview": true,
+      "pages": 1,
+      "summary": "2026-10-16版本說明，記載2776處目的地、地形與影像來源、單張深度估計和多視角重建之差異，以及匯出與外部服務限制。",
+      "category": "reference"
+    },
+    {
+      "id": "aero-realworld",
+      "title": "AERO 實景模擬器（使用者提供版本）",
+      "path": "materials/tools/AERO_RealWorld_Sim.html",
+      "type": "html",
+      "bytes": 1418226,
+      "sha256": "233aaa55f00454ceaa9474352cfeaa7573b443a41ecb42fca82a1d607ef8f3e8",
+      "topics": [
+        "模擬飛行",
+        "OSM",
+        "地形",
+        "即時天氣",
+        "flight"
+      ],
+      "description": "獨立HTML：多旋翼、固定翼、快艇與汽車實景體驗，包含地形、OSM、天氣與照片點任務。需連線使用地形、地圖與影像等外部服務。",
+      "originalName": "AERO_RealWorld_Sim.html",
+      "preview": false,
+      "summary": "獨立HTML：多旋翼、固定翼、快艇與汽車實景體驗，包含地形、OSM、天氣與照片點任務。需連線使用地形、地圖與影像等外部服務。",
+      "category": "tools"
+    },
+    {
+      "id": "aero-4d",
+      "title": "AERO 4D 時空圖鑑（使用者提供版本）",
+      "path": "materials/tools/AERO_4D_Explorer.html",
+      "type": "html",
+      "bytes": 1385772,
+      "sha256": "e9816d4596c4df81fd4d6fa85852241975772a26cde0a399685dd9092304f228",
+      "topics": [
+        "GIS",
+        "歷史地圖",
+        "照片年表",
+        "3D重建",
+        "mapping",
+        "gis"
+      ],
+      "description": "獨立HTML：地點、歷史地圖與衛星時間軸、照片年表、深度估計、錄影及素材清單匯出。需連線使用地形、地圖與影像等外部服務。",
+      "originalName": "AERO_4D_Explorer.html",
+      "preview": false,
+      "summary": "獨立HTML：地點、歷史地圖與衛星時間軸、照片年表、深度估計、錄影及素材清單匯出。需連線使用地形、地圖與影像等外部服務。",
+      "category": "tools"
+    }
+  ],
+  "notes": [
+    "檔名已由ZIP原始CP437誤解碼還原UTF-8後，再轉成ASCII網站路徑。",
+    "原始PDF/PPTX/JPG/PNG內容保留；未執行封存中的EXE/DLL。",
+    "此manifest中的描述為教材索引，不宣稱教材內法規、價格、機型規格仍為現況。",
+    "原始素材授權未另行聲明；保留原作者標示，不推定成為網站程式碼授權。"
+  ]
+}

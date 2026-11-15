@@ -132,6 +132,7 @@ dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:8px 0;font-si
 .wimg{float:inline-end;width:120px;border-radius:8px;margin:0 0 6px 10px}
 .chat{display:flex;flex-direction:column;gap:8px;min-height:120px;max-height:42vh;overflow:auto;padding:8px;border:1px solid var(--line);border-radius:10px;background:rgba(0,0,0,.2);margin:8px 0}
 .msg{padding:7px 10px;border-radius:10px;max-width:92%;white-space:pre-wrap;font-size:13.5px}.msg.user{align-self:flex-end;background:rgba(240,200,121,.18)}.msg.bot{align-self:flex-start;background:rgba(127,212,255,.1)}.msg.err{background:rgba(255,107,85,.15)}
+.learning-references{display:flex;flex-direction:column;gap:4px;margin-top:8px;padding-top:6px;border-top:1px solid var(--line);white-space:normal}.learning-references small{color:var(--mut)}.learning-references a{overflow-wrap:anywhere}
 #attrib{position:absolute;inset-inline-end:6px;bottom:3px;font-size:9.5px;color:rgba(236,231,220,.62);max-width:75%;text-align:end;pointer-events:none;text-shadow:0 1px 2px #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:760px){#hudPlace{max-width:56vw;padding:5px 9px} #hpT{font-size:13.5px} #tape{top:auto;bottom:22px;left:auto;inset-inline-end:10px;transform:none} #hudEnv{top:calc(max(10px,env(safe-area-inset-top)));font-size:11px;padding:5px 8px;max-width:40vw} #hudEnv span:nth-of-type(1){display:none} #mini{top:calc(max(10px,env(safe-area-inset-top)) + 64px)} #mission{top:calc(max(10px,env(safe-area-inset-top)) + 64px);font-size:12px} #hudInst>div{min-width:50px;padding:2px 6px} #hudInst b{font-size:12px} #sheet{inset:6px;border-radius:12px} .list{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.spin{animation-duration:3s}}
@@ -169,7 +170,7 @@ body[data-crew] #mission{display:none}
     <div id="hudInst"></div>
     <div id="warn" hidden></div>
     <div id="toast" hidden></div>
-    <div id="startOverlay" class="glass" hidden><div id="startPlace"></div><div id="startHint"></div><div class="row"><button id="startBtn" class="btn primary big" type="button"><span data-i18n="btn.start"></span> <kbd>Space</kbd></button><button id="startHelp" class="btn sm" type="button"><span data-i18n="btn.help"></span> <kbd>H</kbd></button></div></div>
+    <div id="startOverlay" class="glass" hidden><div id="startPlace"></div><div id="startHint"></div><div class="row"><button id="startBtn" class="btn primary big" type="button"><span data-i18n="btn.start"></span> <kbd>Space</kbd></button><button id="startHelp" class="btn sm" type="button"><span data-i18n="btn.help"></span> <kbd>H</kbd></button><a id="learningEntry" class="btn sm" href="learning/index.html" target="_blank" rel="noopener">教材與應用 · Learn ↗</a></div></div>
     <section id="card" hidden></section>
     <section id="help" hidden></section>
     <aside id="drawer" hidden></aside>
