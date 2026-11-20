@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =====================================================================================================
-#  AERO Explorer v6 · one-command upload of site updates and AI models / weights
+#  AERO Explorer v7 · one-command upload of site updates and AI models / weights
 #  macOS (bash 3.2+), Linux, WSL, Git Bash on Windows.   Needs: git.   Optional: gh, hf, aws, curl.
 #
 #  What it does
@@ -14,14 +14,14 @@
 #    The site never contains API keys: cloud-AI keys typed into the tutor stay in each viewer's browser.
 #
 #  Usage
-#    bash upload-aero-v6.sh                    plan, ask once, upload site + models
-#    bash upload-aero-v6.sh --dry-run          show the plan only, change nothing
-#    bash upload-aero-v6.sh --yes              no questions (CI / scheduled jobs)
-#    bash upload-aero-v6.sh --site-only        or --models-only
-#    bash upload-aero-v6.sh --fetch-models     download the two default on-device tutor models into models/
+#    bash upload-aero-v7.sh                    plan, ask once, upload site + models
+#    bash upload-aero-v7.sh --dry-run          show the plan only, change nothing
+#    bash upload-aero-v7.sh --yes              no questions (CI / scheduled jobs)
+#    bash upload-aero-v7.sh --site-only        or --models-only
+#    bash upload-aero-v7.sh --fetch-models     download the two default on-device tutor models into models/
 #                                              (Qwen2.5-0.5B-Instruct q8, SmolLM2-135M-Instruct q8; SHA-256 verified)
-#    bash upload-aero-v6.sh --models-only --models-to hf --hf-repo <user>/AERO-models --set-model-base
-#    bash upload-aero-v6.sh --models-to r2 --r2-account <32-hex id> --r2-bucket aero-models --r2-public-url https://models.example.org
+#    bash upload-aero-v7.sh --models-only --models-to hf --hf-repo <user>/AERO-models --set-model-base
+#    bash upload-aero-v7.sh --models-to r2 --r2-account <32-hex id> --r2-bucket aero-models --r2-public-url https://models.example.org
 #
 #  Options (environment variable in brackets)
 #    --repo OWNER/NAME     GitHub repository              [AERO_REPO, default kuonanhong/AERO_Explorer]
@@ -30,7 +30,7 @@
 #    --remote URL          explicit git remote (ssh/https/file) [AERO_REMOTE]
 #    --workdir DIR         dedicated publish clone        [AERO_WORKDIR, default ~/.cache/aero-upload/<repo>]
 #    --message TEXT        commit message
-#    --prune               also delete site files you removed locally (only files a previous v6 upload added)
+#    --prune               also delete site files you removed locally (only files a previous upload added)
 #    --no-pages            do not touch the GitHub Pages setting
 #    --no-classic          do not keep the old v5.1 index.html as classic-v5.html
 #    --models-to hf|r2     model destination (default: hf when the hf CLI is logged in, else r2 when configured)
@@ -40,7 +40,7 @@
 #    -h | --help
 # =====================================================================================================
 set -Eeuo pipefail
-VERSION_TAG="aero-v6-upload 1.0"
+VERSION_TAG="aero-v7-upload 1.0"
 here="$(cd -- "$(dirname -- "${BASH_SOURCE[0]:-$0}")" && pwd)"
 
 # ---------------- options ----------------
@@ -87,11 +87,11 @@ STATE_ROOT="${XDG_CACHE_HOME:-$HOME/.cache}/aero-upload"; mkdir -p "$STATE_ROOT"
 # ---------------- locate the site folder ----------------
 if [ -z "$SITE" ]; then
   if [ -f "$here/index.html" ] && grep -q 'data-aero="v6"' "$here/index.html"; then SITE="$here"
-  elif [ -f "$here/AERO_Explorer_v6/index.html" ]; then SITE="$here/AERO_Explorer_v6"
-  else die "cannot find the AERO v6 site folder next to this script (use --site DIR)"; fi
+  elif [ -f "$here/AERO_Explorer_v7/index.html" ]; then SITE="$here/AERO_Explorer_v7"
+  else die "cannot find the AERO v7 site folder next to this script (use --site DIR)"; fi
 fi
 SITE="$(cd "$SITE" && pwd)"; MODELS_DIR="$SITE/models"
-say "${B}AERO Explorer v6 uploader${N}  ($VERSION_TAG)"
+say "${B}AERO Explorer v7 uploader${N}  ($VERSION_TAG)"
 say "site folder : $SITE"
 say "repository  : github.com/$REPO  branch $BRANCH  target ${TARGET}"
 [ "$DRY" = 1 ] && say "${Y}dry run: nothing will be changed${N}"
@@ -140,6 +140,8 @@ SITE_CHANGED=0
 BATCH_BYTES="${AERO_BATCH_MB:-20}"; BATCH_BYTES=$((BATCH_BYTES * 1024 * 1024))
 publish_site() {
   step "Website: comparing your folder with the last upload"
+  if [ -f "$SITE/data/catx/index.json" ]; then say "world catalogue: $(sed -n 's/.*"count":\([0-9]*\).*/\1/p' "$SITE/data/catx/index.json" | awk 'NR==1') sights (data/catx)"
+  else warn "the world catalogue (data/catx) has not been built yet, so the site would show 2,777 destinations. Run  bash make-v7.sh  first to get 20,000+."; fi
   local slug; slug="$(printf '%s' "$REPO" | tr '/' '_')"
   [ -n "$WORKDIR" ] || WORKDIR="$STATE_ROOT/$slug"
   # remote and authentication (credentials stay in gh / ssh-agent / the OS keychain; never in URLs)
@@ -173,11 +175,11 @@ publish_site() {
   local dest="$WORKDIR/$TARGET"; mkdir -p "$dest"; dest="$(cd "$dest" && pwd)"
   local keep_index=0 keep_readme=0
   if [ "$CLASSIC" = 1 ] && [ -f "$dest/index.html" ] && ! grep -q 'data-aero="v6"' "$dest/index.html" && [ ! -f "$dest/classic-v5.html" ]; then keep_index=1; say "keeping the current (v5.1) index.html as classic-v5.html"; fi
-  if [ -f "$dest/README.md" ] && ! grep -q 'AERO Explorer v6' "$dest/README.md" && [ ! -f "$dest/README_v5.md" ]; then keep_readme=1; say "keeping the current README.md as README_v5.md"; fi
+  if [ -f "$dest/README.md" ] && ! grep -q 'AERO Explorer v[67]' "$dest/README.md" && [ ! -f "$dest/README_v5.md" ]; then keep_readme=1; say "keeping the current README.md as README_v5.md"; fi
   # compare file by file (SHA-256); models/ weights never go to GitHub Pages
   local list="$STATE_ROOT/$slug.files" changes="$STATE_ROOT/$slug.changes" big="$STATE_ROOT/$slug.big" n_new=0 n_mod=0 bytes=0 tab; tab="$(printf '\t')"
   : > "$changes"; : > "$big"
-  ( cd "$SITE" && find . -type f ! -path './.git/*' ! -name '.DS_Store' ! -name 'Thumbs.db' ! -name '*.part' ! -name '*.tmp' \
+  ( cd "$SITE" && find . -type f ! -path './.git/*' ! -name '.DS_Store' ! -name 'Thumbs.db' ! -name '*.part' ! -name '*.tmp' ! -path './studio/work/*' ! -path './tours_out/*' ! -name 'media-local.json' ! -name '.aero-v7-files.txt' ! -name '*.pyc' ! -path '*/__pycache__/*' \
       \( ! -path './models/*' -o -name 'README.md' -o -name 'model-manifest.json' \) | sed 's|^\./||' | LC_ALL=C sort ) > "$list"
   while IFS= read -r f; do
     local s="$SITE/$f" d="$dest/$f" sz; sz="$(filesize "$s")"
@@ -192,10 +194,12 @@ publish_site() {
     elif [ "$(filesize "$d")" != "$sz" ] || [ "$(sha256_of "$s")" != "$(sha256_of "$d")" ]; then printf 'M\t%s\t%s\n' "$f" "$sz" >> "$changes"; n_mod=$((n_mod+1)); bytes=$((bytes+sz)); fi
   done < "$list"
   if [ -s "$big" ]; then warn "these files are larger than GitHub's 100 MB limit and are skipped (put weights under models/ and use the model upload):"; sed 's/^/    /' "$big" >&2; fi
-  # optional prune: only files that a previous v6 upload added and that you deleted locally
-  local n_del=0; if [ "$PRUNE" = 1 ] && [ -f "$dest/.aero-v6-files.txt" ]; then
-    while IFS= read -r f; do [ -n "$f" ] || continue; if ! grep -qxF "$f" "$list" && [ -f "$dest/$f" ]; then printf 'D\t%s\t0\n' "$f" >> "$changes"; n_del=$((n_del+1)); fi; done < "$dest/.aero-v6-files.txt"
-  fi
+  # optional prune: only files that a previous upload added and that you deleted locally
+  local n_del=0 old; for old in "$dest/.aero-v7-files.txt" "$dest/.aero-v6-files.txt"; do if [ "$PRUNE" = 1 ] && [ -f "$old" ]; then
+    while IFS= read -r f; do [ -n "$f" ] || continue; if ! grep -qxF "$f" "$list" && [ -f "$dest/$f" ] && ! grep -q "^D${tab}$f${tab}" "$changes"; then printf 'D\t%s\t0\n' "$f" >> "$changes"; n_del=$((n_del+1)); fi; done < "$old"
+  fi; done
+  # files of v6 that v7 replaces
+  for f in app/aero-v6.js upload-aero-v6.sh .aero-v6-files.txt; do if [ -f "$dest/$f" ] && [ ! -f "$SITE/$f" ] && ! grep -q "^D${tab}$f${tab}" "$changes"; then printf 'D\t%s\t0\n' "$f" >> "$changes"; n_del=$((n_del+1)); fi; done
   say "new files: $n_new   changed: $n_mod   deleted: $n_del   upload size: $(human "$bytes")"
   if [ $((n_new+n_mod+n_del)) -eq 0 ]; then ok "website is already up to date"; return 0; fi
   head -n 40 "$changes" | cut -f1,2 | sed 's/^/    /'; [ "$(wc -l < "$changes")" -gt 40 ] && say "    … $(( $(wc -l < "$changes") - 40 )) more"
@@ -205,7 +209,7 @@ publish_site() {
     local login=""; have gh && login="$(gh api user --jq '.login' 2>/dev/null || true)"
     git -C "$WORKDIR" config user.name "${login:-AERO uploader}"; git -C "$WORKDIR" config user.email "${login:-aero-uploader}@users.noreply.github.com"
   fi
-  local base_msg="${MSG:-AERO v6 update: $n_new new, $n_mod changed, $n_del deleted ($(date +%Y-%m-%d))}" part=1 acc=0
+  local base_msg="${MSG:-AERO v7 update: $n_new new, $n_mod changed, $n_del deleted ($(date +%Y-%m-%d))}" part=1 acc=0
   [ "$keep_index" = 1 ] && cp -p "$dest/index.html" "$dest/classic-v5.html" && git -C "$WORKDIR" add -- "$TARGET/classic-v5.html"
   [ "$keep_readme" = 1 ] && cp -p "$dest/README.md" "$dest/README_v5.md" && git -C "$WORKDIR" add -- "$TARGET/README_v5.md"
   # send in parts of about $AERO_BATCH_MB MB (default 20): each part is committed and pushed on its own
@@ -218,8 +222,8 @@ publish_site() {
     esac
     if [ "$acc" -ge "$BATCH_BYTES" ]; then commit_part "$base_msg (part $part)"; push_pending; part=$((part+1)); acc=0; fi
   done < "$changes"
-  cp "$list" "$dest/.aero-v6-files.txt"; [ -f "$dest/.nojekyll" ] || : > "$dest/.nojekyll"
-  git -C "$WORKDIR" add -- "$TARGET/.aero-v6-files.txt" "$TARGET/.nojekyll"
+  cp "$list" "$dest/.aero-v7-files.txt"; [ -f "$dest/.nojekyll" ] || : > "$dest/.nojekyll"
+  git -C "$WORKDIR" add -- "$TARGET/.aero-v7-files.txt" "$TARGET/.nojekyll"
   if [ "$part" -gt 1 ]; then commit_part "$base_msg (part $part, last)"; else commit_part "$base_msg"; fi
   push_pending
   SITE_CHANGED=1; enable_pages

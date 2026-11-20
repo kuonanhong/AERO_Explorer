@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" dir="ltr" data-aero="v6">
+<html lang="en" dir="ltr" data-aero="v6" data-aero-version="7.0.0">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#0b1114">
-<meta name="description" content="AERO Explorer v6 — fly, sail and drive over real terrain, satellite imagery, OpenStreetMap buildings and real weather at 2,776 destinations, with time of day, moon, seasons, weather and lens effects.">
+<meta name="description" content="AERO Explorer v7 — fly, sail and drive over real terrain, satellite imagery, OpenStreetMap buildings and real weather at more than 20,000 destinations, each with five-minute guided aerial tours on history, culture, nature and geography.">
 <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>AERO Explorer · Real World</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1114'/%3E%3Cpath d='M12 40l20-22 20 22' fill='none' stroke='%23f0c879' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='44' r='5' fill='%237fd4ff'/%3E%3C/svg%3E">
@@ -156,6 +156,37 @@ body[data-crew] #mission{display:none}
 .crew-hl{outline:3px solid var(--brass)!important;outline-offset:2px;animation:crewpulse .8s ease-in-out 4}@keyframes crewpulse{50%{outline-color:transparent}}
 @media (max-width:760px){#crewMentor{top:calc(max(8px,env(safe-area-inset-top)) + 54px);width:min(360px,70vw);font-size:12.5px;padding:6px 8px}.cbTitle h3{font-size:17px}}
 @media (max-height:560px) and (orientation:landscape){#crewMentor{top:48px;width:min(360px,42vw);max-height:calc(100% - 175px);font-size:12px}#crewMentor .cmRole{display:none}body:has(#startOverlay:not([hidden])) #crewMentor{max-height:108px}}
+
+/* ---- v7: guided tours ---- */
+body[data-tour] #dock,body[data-tour] #hudPlace,body[data-tour] #tape,body[data-tour] #hudEnv,body[data-tour] #mini,body[data-tour] #mission,body[data-tour] #hudInst,body[data-tour] #warn,body[data-tour] #startOverlay,body[data-tour] #attrib,body[data-tour] #crewMentor,body[data-tour] #toast{display:none!important}
+#tour{position:absolute;inset:0;z-index:20;pointer-events:none;color:#fff}
+#tour>*{position:absolute}
+#tourFade{inset:0;background:#000;opacity:0}
+#tourTitle{left:6%;right:6%;top:25%;text-align:center;opacity:0;text-shadow:0 2px 14px rgba(0,0,0,.8),0 0 3px rgba(0,0,0,.7)}
+#tourTitle small{display:block;color:var(--brass);font-size:clamp(12px,2.6vh,22px);font-weight:600;letter-spacing:.08em}
+#tourTitle h2{margin:.35em 0 .25em;font-size:clamp(22px,6.2vh,60px);line-height:1.22;font-weight:700;text-wrap:balance}
+#tourTitle p{margin:0;font-size:clamp(13px,3vh,27px);opacity:.94;text-wrap:balance}
+#tourCap{left:7%;right:7%;bottom:max(9.5%,66px);text-align:center;font-size:clamp(16px,4.3vh,42px);line-height:1.36;font-weight:600;text-shadow:0 0 4px #000,0 2px 10px rgba(0,0,0,.9);opacity:0;text-wrap:balance}
+#tourCred{left:4.5%;top:8%;max-width:64%;display:flex;flex-direction:column;gap:.35em;font-size:clamp(10px,2.1vh,19px);line-height:1.4;opacity:0;text-shadow:0 1px 8px rgba(0,0,0,.9),0 0 3px #000}
+#tourCred b{color:var(--brass);font-size:1.25em}#tourCred i{font-style:normal;opacity:.88}
+#tourMark{inset-inline-start:10px;bottom:5px;font-size:10.5px;opacity:.72;text-shadow:0 1px 2px #000}
+#tourMsg{left:50%;top:50%;transform:translate(-50%,-50%);padding:10px 16px;border-radius:12px;background:rgba(11,17,20,.74);font-size:14px;white-space:nowrap}
+#tourEnd{left:50%;top:52%;transform:translate(-50%,-50%);display:flex;flex-wrap:wrap;gap:10px;justify-content:center;pointer-events:auto;width:min(92%,640px)}
+#tourEnd .btn{background:rgba(11,17,20,.78)}#tourEnd .btn.primary{background:var(--brass)}
+#tourBar{left:50%;transform:translateX(-50%);bottom:max(18px,env(safe-area-inset-bottom));width:min(96%,1000px);display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:12px;background:rgba(11,17,20,.7);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--line);pointer-events:auto;transition:opacity .45s;direction:ltr}
+#tour.idle #tourBar{opacity:0}
+#tourBar button{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-width:34px;height:32px;padding:0 8px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.07);color:var(--paper);cursor:pointer;font-size:12.5px;white-space:nowrap}
+#tourBar button:hover{border-color:var(--brass)}#tourBar button svg{width:18px;height:18px}#tourBar button.on{background:#b3261e;border-color:#b3261e;color:#fff}
+#tourSeek{flex:1;min-width:50px;accent-color:var(--brass)}#tourTime{font-variant-numeric:tabular-nums;font-size:12px;white-space:nowrap;padding:0 4px}
+@media (max-width:760px){#tourBar button[data-tb=prev],#tourBar button[data-tb=next]{display:none}#tourBar{gap:4px;padding:5px}#tourBar button{padding:0 6px;font-size:11.5px}#tourCap{bottom:max(11%,62px)}}
+body[data-studio] #tourBar,body[data-studio] #tourEnd{display:none!important}
+#stTours h4 small{font-weight:400;margin-inline-start:6px}
+.trow{display:flex;align-items:center;gap:8px;padding:7px 8px;border:1px solid var(--line);border-radius:10px;margin:5px 0;background:rgba(255,255,255,.04)}
+.trow>i{font-style:normal;color:var(--brass);width:1.4em;text-align:center;flex:none}
+.trow>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.trow b{font-size:13.5px;overflow-wrap:anywhere}.trow div span{font-size:11.5px;color:var(--mut)}
+.tbtns{display:flex;gap:5px;flex:none}
+#tvid video,#tvid iframe{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:10px;background:#000;margin:4px 0 8px}
+#catSeg{max-height:74px;overflow:auto}
 </style>
 </head>
 <body data-controls="keys">
@@ -170,7 +201,7 @@ body[data-crew] #mission{display:none}
     <div id="hudInst"></div>
     <div id="warn" hidden></div>
     <div id="toast" hidden></div>
-    <div id="startOverlay" class="glass" hidden><div id="startPlace"></div><div id="startHint"></div><div class="row"><button id="startBtn" class="btn primary big" type="button"><span data-i18n="btn.start"></span> <kbd>Space</kbd></button><button id="startHelp" class="btn sm" type="button"><span data-i18n="btn.help"></span> <kbd>H</kbd></button><a id="learningEntry" class="btn sm" href="learning/index.html" target="_blank" rel="noopener">教材與應用 · Learn ↗</a></div></div>
+    <div id="startOverlay" class="glass" hidden><div id="startPlace"></div><div id="startHint"></div><div class="row"><button id="startBtn" class="btn primary big" type="button"><span data-i18n="btn.start"></span> <kbd>Space</kbd></button><button id="startHelp" class="btn sm" type="button"><span data-i18n="btn.help"></span> <kbd>H</kbd></button><button id="startTour" class="btn sm" type="button">▶ <span data-i18n="tour.startBtn"></span> <kbd>B</kbd></button><a id="learningEntry" class="btn sm" href="learning/index.html" target="_blank" rel="noopener">教材與應用 · Learn ↗</a></div></div>
     <section id="card" hidden></section>
     <section id="help" hidden></section>
     <aside id="drawer" hidden></aside>
@@ -185,6 +216,6 @@ body[data-crew] #mission{display:none}
   </nav>
 </div>
 <script>globalThis.AERO_PWA=true;globalThis.AERO_VENDOR_AI="vendor/ai/";globalThis.AERO_DRACO="vendor/three/examples/jsm/libs/draco/gltf/";</script>
-<script type="module" src="app/aero-v6.js"></script>
+<script type="module" src="app/aero-v7.js"></script>
 </body>
 </html>

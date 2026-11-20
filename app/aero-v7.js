@@ -17,7 +17,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const pad2 = n => String(n).padStart(2, '0');
 const hhmm = m => `${pad2(Math.floor((((m % 1440) + 1440) % 1440) / 60))}:${pad2(Math.floor(((m % 60) + 60) % 60))}`;
 const LS = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch { } } };
-const UA = 'AERO-RealWorld/1.0 (https://github.com/kuonanhong/AERO_Explorer)';
+const UA = 'AERO-Explorer/7.0 (https://github.com/kuonanhong/AERO_Explorer)';
 const strip = (() => { const p = new DOMParser(); return s => s ? (p.parseFromString(String(s), 'text/html').body.textContent || '').replace(/\s+/g, ' ').trim() : ''; })();
 async function fetchJSON(url, { timeout = 15000, headers, signal } = {}) {
   const c = new AbortController(); const t = setTimeout(() => c.abort(), timeout); const on = () => c.abort(); signal?.addEventListener('abort', on, { once: true });
@@ -38,13 +38,13 @@ const tileSize = z => WORLD_M / 2 ** z;
 function tileBounds(z, x, y) { const s = tileSize(z), mx = -Math.PI * R_E + x * s, my = Math.PI * R_E - y * s; const X0 = (mx - GEO.mx0) * GEO.k, Z0 = -(my - GEO.my0) * GEO.k; return { X0, X1: X0 + s * GEO.k, Z0, Z1: Z0 + s * GEO.k }; }
 function localToTile(X, Z, z) { const s = tileSize(z), mx = X / GEO.k + GEO.mx0, my = -Z / GEO.k + GEO.my0; return [(mx + Math.PI * R_E) / s, (Math.PI * R_E - my) / s]; }
 
-/* Destinations (2776, same catalogue as the 4D viewer). Row: [id, lat, lon, zh, en, cc, region, cat, desc, src, mission, zhHans, detailShard] */
+/* Destinations: 2,777 load with the page; the world catalogue (data/catx, 20,000+) streams in afterwards. Row: [id, lat, lon, zh, en, cc, region, cat, desc, src, mission, zhHans, detailShard] */
 const RAW = $('#places-data') ? JSON.parse($('#places-data').textContent) : await fetchJSON('data/places.json', { timeout: 30000 });
 const PLACES = RAW.map((r, i) => ({ i, id: r[0], lat: r[1], lon: r[2], zh: r[3], en: r[4], cc: r[5], region: r[6], cat: r[7], desc: r[8], src: r[9], mission: !!r[10], zhs: r[11] || '', shard: r[12] || '' }));
 const PLACE_BY_ID = new Map(PLACES.map(p => [p.id, p]));
 const CAT = { scenic: '風景', heritage: '人文古蹟', mountain: '山岳', lake: '湖泊', museum: '博物館', forest: '森林', diving: '潛點', park: '公園', cave: '洞穴', warehouse: '倉庫', reef: '珊瑚礁', statue: '雕像', bridge: '橋梁', grain: '穀倉', rubble: '災後紀錄', medical: '醫院', solar: '太陽能場', wreck: '沉船', cable: '纜線', harbor: '港區', mission: '任務場景' };
 const QUICK = [
-  ['tw-376550000a_003128', 'drone'], ['tw-376480000a_000382', 'boat'], ['tw-376550000a_001176', 'plane'], ['tw-376420000a_000348', 'boat'],
+  ['tw-x-suantou-eco-park', 'drone'], ['tw-376550000a_003128', 'drone'], ['tw-376480000a_000382', 'boat'], ['tw-376550000a_001176', 'plane'], ['tw-376420000a_000348', 'boat'],
   ['tw-382000000a_109990', 'drone'], ['tw-345040000g_000010', 'car'], ['tw-379000000a_000023', 'drone'], ['tw-382000000a_109751', 'drone'],
   ['tw-a15010100h_000041', 'boat'], ['mission-place-air-statue', 'drone'], ['mission-place-air-bridge', 'plane'], ['unesco-1418', 'plane'],
   ['unesco-75', 'plane'], ['unesco-166', 'boat'], ['unesco-394', 'boat'], ['unesco-274', 'drone'],
@@ -155,7 +155,7 @@ async function setLang(lang) {
   I18N.en = await loadDict('en'); I18N.dict = await loadDict(lang); I18N.lang = lang;
   if (globalThis.AERO_CREW) { const ce = await loadCrewDict('en'), cl = lang === 'en' ? ce : await loadCrewDict(lang); for (const [k, v] of Object.entries(ce)) if (k[0] !== '_') I18N.en[k] = v; for (const [k, v] of Object.entries(cl)) if (k[0] !== '_') I18N.dict[k] = v; }
   const dir = I18N.dict._dir || 'ltr'; document.documentElement.lang = lang; document.documentElement.dir = dir; document.documentElement.dataset.dir = dir;
-  applyI18n(document); document.title = t('app.title');
+  applyI18n(document); document.title = t('app.title'); catxNames();
 }
 function applyI18n(root) {
   for (const el of $$('[data-i18n]', root)) el.textContent = t(el.dataset.i18n);
@@ -1701,6 +1701,7 @@ const KEYS = new Set(), PADKEYS = new Map(), SM = {};
 const typing = el => !!el?.closest?.('input,textarea,select,[contenteditable]') && el.offsetParent !== null;
 addEventListener('keydown', e => {
   if (typing(e.target)) { if (e.code === 'Escape') { e.target.blur(); closeOverlays(); } return; }
+  if (TOUR.on) { if (!e.repeat) tourKey(e); if (!e.metaKey && !e.ctrlKey && !e.altKey) e.preventDefault(); return; }
   KEYS.add(e.code);
   if (APP.state === 'sim' && !e.repeat) hotkey(e);
   if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.code) && APP.state === 'sim') e.preventDefault();
@@ -2101,9 +2102,7 @@ async function placeDetails(p) {
   try { if (!detailCache.has(p.shard)) detailCache.set(p.shard, await fetchJSON(`data/catalogue-details-${p.shard}.json`, { timeout: 15000 })); return detailCache.get(p.shard)[p.id] || null; } catch { return null; }
 }
 async function wikiNearby(p) {
-  const [wl, variant] = WIKI_LANG[I18N.lang] || [I18N.lang.split('-')[0]];
-  const gs = await fetchJSON(`https://${wl}.wikipedia.org/w/api.php?action=query&list=geosearch&gscoord=${p.lat}|${p.lon}&gsradius=${p.id.startsWith('unesco') ? 5000 : 1500}&gslimit=5&format=json&origin=*`, { timeout: 10000 });
-  const hit = gs.query?.geosearch?.[0]; if (!hit) return null;
+  const w0 = await wikiTitleFor(p); if (!w0) return null; const wl = w0.wl, variant = w0.variant, hit = { title: w0.title, dist: w0.dist ?? 0 };
   const sm = await fetchJSON(`https://${wl}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(hit.title.replace(/ /g, '_'))}`, { timeout: 10000, headers: variant ? { 'Accept-Language': variant } : undefined });
   return { title: sm.title || hit.title, extract: sm.extract || '', url: sm.content_urls?.desktop?.page || `https://${wl}.wikipedia.org/wiki/${encodeURIComponent(hit.title)}`, img: sm.thumbnail?.source || '', dist: hit.dist };
 }
@@ -2112,10 +2111,12 @@ async function showStory() {
   const src = P.src ? `<a class="btn sm" href="${esc(P.src)}" target="_blank" rel="noopener">${esc(t('story.source'))}</a>` : '';
   card.innerHTML = `<header><h3>${esc(placeName(P))}</h3><button class="x" data-close aria-label="${esc(t('btn.close'))}">×</button></header>
     <p class="mut">${esc([placeAltName(P), placeLine(P)].filter(Boolean).join(' · '))}</p>
-    <div id="stDesc"><p>${esc(isZh() ? (I18N.lang === 'zh-Hans' ? P.desc : P.desc) : '')}</p></div>
+    <div id="stTours"></div>
+    <div id="stDesc"><p>${esc(isZh() ? P.desc : (P.descEn || ''))}</p></div>
     <div id="stWiki" class="mut">${esc(t('story.loading'))}</div>
     <div id="stPhotos" class="thumbs"></div>
     <div class="row">${src}<a class="btn sm" href="AERO_4D_Explorer.html#${encodeURIComponent(P.id)}" target="_blank" rel="noopener">${esc(t('set.link4d'))}</a></div>`;
+  renderStoryTours(P);
   placeDetails(P).then(d => { if (!d || $('#card').hidden) return; const txt = d.description?.[I18N.lang] || (isZh() ? d.description?.['zh-Hant'] : d.description?.en) || ''; if (txt) $('#stDesc').innerHTML = `<p>${esc(txt)}</p>${d.attribution ? `<p class="mut small">${esc(d.attribution)} · ${esc(d.license || '')}</p>` : ''}`; });
   wikiNearby(P).then(w => {
     const el = $('#stWiki'); if (!el) return;
@@ -2133,33 +2134,30 @@ async function showStory() {
 }
 
 /* ---------- destinations sheet ---------- */
-const PS = { region: 'tw', veh: null };
+const PS = { region: 'tw', veh: null, cat: 'all', sort: 'near' };
 function renderPlacesSheet() {
   const s = $('#sheet');
   s.innerHTML = `<header><h3>${esc(t('menu.title'))}</h3><button class="x" data-close aria-label="${esc(t('btn.close'))}">×</button></header>
     <p class="mut">${esc(t('menu.lead'))}</p>
+    <p class="small mut" id="placeCount"></p>
     <input id="q" type="search" placeholder="${esc(t('menu.searchPh'))}" aria-label="${esc(t('menu.search'))}" autocomplete="off">
     <div class="seg" id="regSeg">${['tw', 'world', 'all'].map(r => `<button data-r="${r}" aria-pressed="${PS.region === r}">${esc(t(r === 'tw' ? 'menu.region.tw' : r === 'world' ? 'menu.region.world' : 'menu.allRegions'))}</button>`).join('')}</div>
     <div class="seg" id="vehSeg"><span class="mut">${esc(t('set.vehicle'))}</span>${['auto', ...VEHICLE_KINDS].map(k => `<button data-v="${k}" aria-pressed="${(PS.veh || 'auto') === k}">${esc(k === 'auto' ? t('menu.autoVeh') : t('veh.' + k))}</button>`).join('')}</div>
+    <div class="seg" id="catSeg">${['all', ...placeCats()].map(c => `<button data-c="${esc(c)}" aria-pressed="${PS.cat === c}">${esc(c === 'all' ? t('menu.cat.all') : catName(c))}</button>`).join('')}</div>
+    <div class="seg" id="sortSeg">${['near', 'pop'].map(k => `<button data-s="${k}" aria-pressed="${PS.sort === k}">${esc(t('menu.sort.' + k))}</button>`).join('')}</div>
     <h4>${esc(t('menu.quick'))}</h4><div class="chips" id="quick">${QUICK.map(({ p, v }) => `<button class="res chip" data-id="${esc(p.id)}" data-v="${v}"><b>${esc(placeName(p))}</b><span>${esc(placeRegion(p))} · ${esc(t('veh.' + v))}</span></button>`).join('')}</div>
     <h4 id="resHead"></h4><div class="list" id="results"></div>
     <p class="small mut"><b>${esc(t('menu.real'))}</b>: ${esc(t('menu.realList'))}<br><b>${esc(t('menu.sim'))}</b>: ${esc(t('menu.simList'))}</p>`;
   s.onclick = e => {
     if (e.target.closest('[data-close]')) return closeSheet();
     const r = e.target.closest('#regSeg button'); if (r) { PS.region = r.dataset.r; $$('#regSeg button').forEach(b => b.setAttribute('aria-pressed', b === r)); renderResults(); return; }
+    const cb = e.target.closest('#catSeg button'); if (cb) { PS.cat = cb.dataset.c; $$('#catSeg button').forEach(b => b.setAttribute('aria-pressed', b === cb)); renderResults(); return; }
+    const sb = e.target.closest('#sortSeg button'); if (sb) { PS.sort = sb.dataset.s; $$('#sortSeg button').forEach(b => b.setAttribute('aria-pressed', b === sb)); renderResults(); return; }
     const vb = e.target.closest('#vehSeg button'); if (vb) { PS.veh = vb.dataset.v === 'auto' ? null : vb.dataset.v; $$('#vehSeg button').forEach(b => b.setAttribute('aria-pressed', b === vb)); return; }
     const b = e.target.closest('.res[data-id]'); if (b) { const p = PLACE_BY_ID.get(b.dataset.id); closeSheet(); loadPlace(p, PS.veh || b.dataset.v || suggestVehicle(p)); }
   };
   let qt; $('#q').addEventListener('input', () => { clearTimeout(qt); qt = setTimeout(renderResults, 140); });
-  renderResults(); if (!IS_TOUCH) setTimeout(() => $('#q')?.focus(), 50);
-}
-function renderResults() {
-  const q = ($('#q')?.value || '').trim().toLowerCase();
-  let list = PLACES.filter(p => PS.region === 'all' || (PS.region === 'tw' ? p.cc === 'TW' : p.cc !== 'TW'));
-  if (q) list = list.filter(p => `${p.zh} ${p.zhs} ${p.en} ${p.region} ${placeRegion(p)} ${p.cc} ${catName(p.cat)}`.toLowerCase().includes(q));
-  else if (APP.place) { const o = APP.place; list = list.map(p => ({ p, d: haversine(o.lat, o.lon, p.lat, p.lon) })).sort((a, b) => a.d - b.d).map(x => x.p); }
-  $('#resHead').textContent = q ? t('menu.found', { n: list.length }) : t('menu.nearest');
-  $('#results').innerHTML = list.slice(0, 120).map(p => `<button class="res" data-id="${esc(p.id)}"><b>${esc(placeName(p))}</b><span>${esc(placeLine(p))}${APP.place ? ' · ' + esc(fmtDist(haversine(APP.place.lat, APP.place.lon, p.lat, p.lon))) : ''}</span></button>`).join('') || `<p class="mut">${esc(t('menu.none'))}</p>`;
+  renderResults(); placeCountLine(); loadCatalogueX(); if (!IS_TOUCH) setTimeout(() => $('#q')?.focus(), 50);
 }
 
 /* ---------- missions sheet ---------- */
@@ -2577,7 +2575,7 @@ function setQuality(q) {
 async function refreshLiveWeather() { const p = APP.place; if (!p) return; const w = await Promise.race([fetchWeather(p.lat, p.lon), sleep(12000).then(() => ({ ok: false, err: 'timeout' }))]); Object.assign(WX, w, { fetchedFor: p.id }); }
 let LOADSEQ = 0;
 async function loadPlace(p, kind = 'drone', opts = {}) {
-  if (!p) return; const seq = ++LOADSEQ, say = m => { $('#loadMsg').textContent = m; };
+  if (!p) return; if (TOUR.on) tourExit(true); const seq = ++LOADSEQ, say = m => { $('#loadMsg').textContent = m; };
   APP.state = 'loading'; APP.place = p; APP.paused = true; APP.started = false; $('#loading').hidden = false; $('#startOverlay').hidden = true;
   LS.set('aero6:last', JSON.stringify({ id: p.id, v: kind }));
   if (!opts.keepHash) try { history.replaceState(null, '', '#' + encodeURIComponent(p.id) + '/' + kind); } catch { }
@@ -2666,7 +2664,7 @@ function simFrame(dt, dtr) {
   const inp = readInput(dt); APP.lastIn = inp;
   { const lv = ENV.levelAt(v.pos.x, v.pos.z); ENV.waterLevel = lv.level; APP.isSea = lv.sea; }
   if (run) { acc += dt; let n = 0; while (acc >= 1 / 120 && n < 8) { v.step(1 / 120, inp, ENV, APP.t); acc -= 1 / 120; n++; } }
-  updateModel(dt); updateCamera(dt);
+  updateModel(dt); updateCamera(dt); if (TOUR.on) tourFrame(dt, dtr);
   if (APP.google) updateGoogle(); else TERRAIN.update(camera);
   const cp = camera.position, agl = cp.y - DEM.heightAt(cp.x, cp.z);
   VEC.update(v.pos.x, v.pos.z, agl);
@@ -2702,6 +2700,7 @@ function simFrame(dt, dtr) {
   $('#loading').hidden = TERRAIN.ready || !!APP.google;
   if (!TERRAIN.ready && envT > 12 && TERRAIN.imgOK === 0 && (TERRAIN.imgFails > 0 || DEM.fails > 0 || envT > 30)) $('#loadMsg').textContent = t('load.blocked');
   POST.render(renderer, scene, camera);
+  if (TOUR.rec) tourAfterRender();
   if (APP.capture) {
     const shot = renderer.domElement.toDataURL('image/jpeg', 0.85), it = APP.capture; APP.capture = false;
     if (it === 'album' || it === 'mission') { MIS.album.push(shot); showCompare({ title: t('btn.photo') + ' · ' + placeName(APP.place) }, shot); toast(t('toast.photoSaved'), 1500); } else showCompare(it, shot);
@@ -2716,6 +2715,9 @@ addEventListener('hashchange', async () => {
   const [hid, hv, h3] = decodeURIComponent(location.hash.slice(1)).split('/');
   if (hid === 'crew') { if (hv && globalThis.AERO_CREW && hv !== CREW.id) startCrew(hv); return; }
   if (hid === 'mission' && hv) { await loadMissions(); const d = MISSIONS.defs.find(x => x.id === hv); if (d) startAeroAt(d, MTIER[h3] ? h3 : 'beginner'); return; }
+  if (hid?.startsWith('wd-') && !PLACE_BY_ID.get(hid)) await loadCatalogueX();
+  if (hv === 'tour') { const tp = PLACE_BY_ID.get(hid); if (tp && !(TOUR.on && TOUR.run?.plan.place === tp && TOUR.run.plan.id === h3)) startTour(tp, h3 || ''); return; }
+  if (TOUR.on) tourExit(true);
   const p = PLACE_BY_ID.get(hid); if (!p) return; const kind = VEHICLE_KINDS.includes(hv) ? hv : suggestVehicle(p);
   if (p !== APP.place) loadPlace(p, kind); else if (kind !== APP.kind && APP.state === 'sim') { const msg = await spawn(kind); if (msg) toast(t(msg)); APP.started = false; APP.paused = true; $('#startOverlay').hidden = false; updateDock(); restartMission(); }
 });
@@ -2725,15 +2727,20 @@ async function boot() {
   $('#hudPlace').onclick = () => openSheet('places'); $('#hudEnv').onclick = () => toggleDrawer(true);
   $('#startBtn').onclick = () => togglePause();
   $('#startHelp').onclick = () => toggleHelp(true);
+  if ($('#startTour')) $('#startTour').onclick = () => { AUDIO.start(); showStory(); };
   APP.quality = SET.quality === 'auto' ? autoQuality() : SET.quality;
   $('#attrib').textContent = t('attr.line');
   requestAnimationFrame(frame);
   const [hid, hv, h3] = decodeURIComponent(location.hash.slice(1)).split('/');
   if (hid === 'crew' && hv && globalThis.AERO_CREW) return startCrew(hv);
   if (hid === 'mission' && hv) { await loadMissions(); const d = MISSIONS.defs.find(x => x.id === hv); if (d) return startAeroAt(d, MTIER[h3] ? h3 : 'beginner'); }
+  if (hid?.startsWith('wd-') && !PLACE_BY_ID.get(hid)) { $('#loadMsg').textContent = t('menu.countLoading'); await loadCatalogueX(); }
+  if (await tourStudioBoot()) return;
   const p = PLACE_BY_ID.get(hid) || PLACE_BY_ID.get(new URLSearchParams(location.search).get('place')) || PLACE_BY_ID.get(DEFAULT_PLACE) || PLACES[0];
   const kind = VEHICLE_KINDS.includes(hv) ? hv : hid && PLACE_BY_ID.get(hid) ? suggestVehicle(p) : 'drone';
   await loadPlace(p, kind);
+  tourIndex(); setTimeout(loadCatalogueX, 1200);
+  if (hv === 'tour' && PLACE_BY_ID.get(hid) === p) startTour(p, h3 || '', { autoplay: false });
   if (globalThis.AERO_PWA && 'serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => { });
 }
 
@@ -2912,5 +2919,552 @@ function renderTutor(s) {
   $('#tForm').onsubmit = e => { e.preventDefault(); const q = $('#tQ').value; $('#tQ').value = ''; tutorAsk(q, out); };
 }
 
-window.__AERO = { APP, SET, TERRAIN, VEC, DEM, ENV, MIS, AM, WX, WAVES, GEO, POST, TREES, BUOYS, I18N, MISSIONS, TUT, loadPlace, spawn, setTimePreset, applyWeather, startAeroAt, t, camSmooth, refineSunTime, updateAeroMission, aeroMissionAction, updateCamera, readInput, loadMissions, CREW, startCrew, crewScore, amP };
+/* ======================= v7 · extended catalogue: 20,000+ sights of the world with names in the viewer's language ======================= */
+/* The first 2,776 destinations load with the page (data/places.json). The extension (data/catx/*.json, built from Wikidata, CC0)
+   streams in afterwards in small files, so the first flight starts as fast as before. Every destination uses the same real terrain,
+   satellite imagery, OpenStreetMap buildings, sun, moon and weather, because the scene is built from coordinates, not from a list. */
+const CATX = { index: null, loaded: false, loading: null, fail: false, namesFor: '' };
+function catxAdd(rows) {
+  for (const r of rows) {
+    const id = 'wd-' + r[0]; if (PLACE_BY_ID.has(id)) continue;
+    const p = { i: PLACES.length, id, q: r[0], lat: r[1], lon: r[2], zh: r[3] || r[4] || r[0], en: r[4] || r[3] || r[0], cc: r[5] || '', region: r[6] || '', cat: r[7] || 'scenic',
+      desc: r[8] || '', descEn: r[9] || '', zhs: r[10] || '', pop: r[11] || 0, img: r[12] || '', wz: r[13] === '=' ? r[3] : r[13] || '', we: r[14] === '=' ? r[4] : r[14] || '', src: 'https://www.wikidata.org/wiki/' + r[0], mission: false, shard: '', x: true };
+    PLACES.push(p); PLACE_BY_ID.set(id, p);
+  }
+}
+function catxNames() {   // names in the viewer's language (Chinese and English names travel with the catalogue itself)
+  const lang = I18N.lang, idx = CATX.index; if (!idx || CATX.namesFor === lang || ['zh-Hant', 'zh-Hans', 'en'].includes(lang) || !(idx.names || []).includes(lang)) return;
+  CATX.namesFor = lang;
+  fetchJSON(`data/catx/names-${lang}.json`, { timeout: 45000 }).then(m => { for (const q in m) I18N.names['wd-' + q + '|' + lang] = m[q]; catxRefresh(); updatePlaceChip(); }).catch(() => { CATX.namesFor = ''; });
+}
+function loadCatalogueX() {
+  if (CATX.loading) return CATX.loading;
+  CATX.loading = (async () => {
+    try {
+      CATX.index = globalThis.AERO_CATX_INDEX || await fetchJSON('data/catx/index.json', { timeout: 20000 });
+      catxNames();
+      for (const f of CATX.index.shards || []) { try { catxAdd(await fetchJSON('data/catx/' + f, { timeout: 60000 })); } catch { CATX.fail = true; } catxRefresh(); await sleep(25); }
+    } catch { CATX.fail = true; }
+    CATX.loaded = true; catxRefresh();
+  })();
+  return CATX.loading;
+}
+function catxRefresh() { const s = $('#sheet'); if (s && !s.hidden && s.dataset.kind === 'places') { placeCountLine(); renderResults(); } }
+const popOf = p => p.pop || (p.id.startsWith('unesco') ? 70 : p.id.startsWith('mission') ? 1 : 6);
+function placeCountLine() {
+  const el = $('#placeCount'); if (!el) return; let tw = 0; for (const p of PLACES) if (p.cc === 'TW') tw++;
+  el.textContent = t('menu.count', { n: PLACES.length.toLocaleString(I18N.lang), tw: tw.toLocaleString(I18N.lang), w: (PLACES.length - tw).toLocaleString(I18N.lang) }) + (CATX.loaded ? '' : ' · ' + t('menu.countLoading'));
+}
+/* the Wikipedia article of a destination in the viewer's language: exact title from Wikidata for catalogue-extension places,
+   nearest geotagged article for the others */
+async function wikiTitleFor(p) {
+  const [wl, variant] = WIKI_LANG[I18N.lang] || [I18N.lang.split('-')[0]];
+  if (p.x) {
+    if (wl === 'zh' && p.wz) return { wl, variant, title: p.wz };
+    if (wl === 'en' && p.we) return { wl, variant, title: p.we };
+    try {
+      const e = await fetchJSON(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${p.q}&props=sitelinks&sitefilter=${wl}wiki|enwiki&format=json&origin=*`, { timeout: 9000 });
+      const sl = e.entities?.[p.q]?.sitelinks || {}; if (sl[wl + 'wiki']) return { wl, variant, title: sl[wl + 'wiki'].title }; if (sl.enwiki) return { wl: 'en', title: sl.enwiki.title };
+    } catch { }
+    if (p.we) return { wl: 'en', title: p.we }; if (p.wz) return { wl: 'zh', variant: 'zh-tw', title: p.wz };
+    return null;
+  }
+  const gs = await fetchJSON(`https://${wl}.wikipedia.org/w/api.php?action=query&list=geosearch&gscoord=${p.lat}|${p.lon}&gsradius=${p.id.startsWith('unesco') ? 5000 : 1500}&gslimit=5&format=json&origin=*`, { timeout: 10000 });
+  const hits = gs.query?.geosearch || [], names = [p.zh, p.zhs, p.en].filter(Boolean).map(s => s.toLowerCase());
+  const hit = hits.find(h => names.some(n => n.includes(h.title.toLowerCase()) || h.title.toLowerCase().includes(n))) || hits[0]; return hit ? { wl, variant, title: hit.title, dist: hit.dist } : null;
+}
+
+/* ======================= v7 · guided aerial tours: five-minute films flown live over the real place ======================= */
+/* A tour is a script of camera shots (orbit, reveal, fly-over, top-down …) aimed at real coordinates, with captions,
+   a generated score and optional narration in the viewer's own voice engine. The picture is the same real terrain,
+   satellite imagery, OpenStreetMap buildings, sun, moon, season and weather as free flight, so every destination can
+   have tours: curated scripts (researched, with sources) for featured places, and automatic ones everywhere else.
+   Any tour can be recorded to a video file in the browser; the Studio script records them in a batch. */
+const TOUR = { on: false, run: null, idx: null, idxP: null, sets: new Map(), cc: LS.get('aero7:cc') || 'auto', voice: LS.get('aero7:voice') !== '0', music: LS.get('aero7:music') !== '0', rec: null, studio: null, bound: false };
+const TOUR_FOV = 74, TOUR_STEP = 0.5;
+const TOUR_ICON = { history: '◷', culture: '❖', nature: '❦', geography: '▲', overview: '◎', nearby: '✦', flight: '✈' };
+const tourEase = u => u * u * (3 - 2 * u);
+const tourTxt = o => !o ? '' : typeof o === 'string' ? o : (o[I18N.lang] || (isZh() ? (o['zh-Hant'] || o.zh) : '') || o.en || o['zh-Hant'] || o.zh || '');
+const tourClock = s => { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ':' + pad2(s % 60); };
+function tourIndex() {
+  return TOUR.idxP ||= (async () => {
+    try { TOUR.idx = globalThis.AERO_TOURS_INDEX || await fetchJSON('data/tours/index.json', { timeout: 15000 }); } catch { TOUR.idx = { places: {} }; }
+    // recorded videos: media.json lists the published ones (file, address or YouTube id); media-local.json the ones recorded on this computer
+    const M = TOUR.idx.media = { items: {} }, local = /^(localhost$|127\.|\[::1\])/.test(location.hostname);
+    for (const f of ['media.json', ...(local ? ['media-local.json'] : [])]) {
+      try { const m = await fetchJSON('data/tours/' + f, { timeout: 8000 }); for (const [k, v] of Object.entries(m.items || {})) { const o = M.items[k] ||= {}; for (const [l, x] of Object.entries(typeof v === 'string' ? { '*': v } : v)) o[l] = /^https?:|^[\w-]{11}$/.test(x) ? x : (m.base || '') + x; } } catch { }
+    }
+    return TOUR.idx;
+  })();
+}
+async function tourSetOf(p) {   // the researched scripts of a featured destination, or null
+  const idx = await tourIndex(), e = idx.places?.[p.id]; if (!e) return null;
+  if (!TOUR.sets.has(p.id)) { try { TOUR.sets.set(p.id, globalThis.AERO_TOURS?.[p.id] || await fetchJSON('data/tours/' + e.file, { timeout: 20000 })); } catch { TOUR.sets.set(p.id, null); } }
+  return TOUR.sets.get(p.id);
+}
+function tourMedia(pid, tid) { const it = TOUR.idx?.media?.items?.[pid + '/' + tid]; if (!it) return null; const f = it[I18N.lang] || (isZh() ? it['zh-Hant'] : null) || it['*'] || it.en || it['zh-Hant']; return !f ? null : /^[\w-]{11}$/.test(f) ? { yt: f } : { src: f }; }
+
+/* ---------- script -> flight plan in local metres ---------- */
+function tourPlan(set, tour, p) {
+  const pois = {}; for (const [k, v] of Object.entries(set.pois || {})) { const [x, z] = toLocal(v.lat, v.lon); pois[k] = { k, x, z, h: v.h || 0, zh: v.zh, en: v.en, lat: v.lat, lon: v.lon }; }
+  const here = { k: '_c', x: 0, z: 0, h: 0 }, P = k => pois[k] || here; let t0 = 0; const shots = [];
+  for (const s of tour.shots) {
+    const A = P(s.at), B = s.to ? P(s.to) : null, path = s.path ? s.path.map(P) : null, alt = Math.max(3, +s.alt || 120);
+    const o = { t0, dur: +s.dur, move: s.move, A, B, path, alt, alt0: s.alt0 != null ? Math.max(2, +s.alt0) : null, dist: s.dist != null ? Math.max(8, +s.dist) : Math.max(60, alt * 1.6), dist0: s.dist0 != null ? Math.max(6, +s.dist0) : null,
+      from: s.from != null ? +s.from : 180, arc: s.arc != null ? +s.arc : null, pitch: s.pitch != null ? clamp(+s.pitch, -90, 25) : null, time: s.time || tour.time || 'morning', weather: s.weather || tour.weather || 'few',
+      caps: s.caps || { zh: s.zh || [], en: s.en || [] }, lift: 0, prep: false };
+    if (o.move === 'reveal') { o.alt0 ??= Math.max(8, alt * 0.15); o.dist0 ??= Math.max(30, o.dist * 0.22); o.arc ??= 12; }
+    if (o.move === 'push') o.dist0 ??= o.dist * 2.6; if (o.move === 'pull') o.dist0 ??= Math.max(20, o.dist / 2.6);
+    if (o.move === 'rise') o.alt0 ??= Math.max(6, alt * 0.22); if (o.move === 'descend') o.alt0 ??= alt * 3;
+    if (o.move === 'orbit') o.arc ??= 70; if (o.move === 'track') o.arc ??= 25; if (o.move === 'pan') o.arc ??= 60; if (o.move === 'topdown') o.arc ??= 24;
+    if ((o.move === 'flyover' && !B) || (o.move === 'follow' && !(path?.length > 1))) o.move = 'orbit', o.arc ??= 60;
+    shots.push(o); t0 += o.dur;
+  }
+  shots.forEach((s, i) => { const q = shots[i - 1]; s.envCut = !!q && (q.time !== s.time || q.weather !== s.weather); });
+  return { place: p, set, id: tour.id, theme: tour.theme || 'overview', title: tour.title, tagline: tour.tagline, season: tour.season || 'today', shots, dur: t0, auto: !!set.auto, credit: set.credit || null, langs: set.langs || ['zh', 'en'] };
+}
+const tourGnd = (x, z) => Math.max(DEM.heightAt(x, z), 0);
+function tourTerr(x, z) { const r = SET.buildings ? VEC.roofAt(x, z) : null; return Math.max(DEM.heightAt(x, z), 0.3, r ? r.top : -1e9); }
+function tourPolyline(s) {   // smooth path through the points of a "follow" shot, with distance along it
+  const P = s.path, n = P.length, pts = [], cr = (a, b, c, d, u) => 0.5 * ((2 * b) + (-a + c) * u + (2 * a - 5 * b + 4 * c - d) * u * u + (-a + 3 * b - 3 * c + d) * u * u * u);
+  for (let i = 0; i < n - 1; i++) { const a = P[Math.max(0, i - 1)], b = P[i], c = P[i + 1], d = P[Math.min(n - 1, i + 2)]; for (let k = 0; k < 24; k++) { const u = k / 24; pts.push({ x: cr(a.x, b.x, c.x, d.x, u), z: cr(a.z, b.z, c.z, d.z, u) }); } }
+  pts.push({ x: P[n - 1].x, z: P[n - 1].z }); let L = 0; pts[0].l = 0; for (let i = 1; i < pts.length; i++) { L += Math.hypot(pts[i].x - pts[i - 1].x, pts[i].z - pts[i - 1].z); pts[i].l = L; }
+  s.poly = pts; s.polyL = Math.max(1, L);
+}
+function tourAlong(s, f, o) { const pts = s.poly, l = clamp(f, 0, 1) * s.polyL; let i = 1; while (i < pts.length - 1 && pts[i].l < l) i++; const a = pts[i - 1], b = pts[i], u = (l - a.l) / Math.max(1e-6, b.l - a.l); o.x = lerp(a.x, b.x, u); o.z = lerp(a.z, b.z, u); return o; }
+const _tp = { x: 0, z: 0 }, _tq = { x: 0, z: 0 };
+/* camera position (x, y, z), the bearing it looks along and its tilt for shot s at progress u (0…1) */
+function tourPose(s, u, o) {
+  const A = s.A, gA = tourGnd(A.x, A.z), e = tourEase(u), lin = u, m = s.move; let x, y, z, yaw = null, pitch = s.pitch, tx = A.x, tz = A.z, ty = gA + (A.h || 0) * 0.55, look = true;
+  const at = (b, d) => { x = A.x + Math.sin(b * rad) * d; z = A.z - Math.cos(b * rad) * d; };
+  if (m === 'orbit') { at(s.from + s.arc * lin, s.dist0 != null ? lerp(s.dist0, s.dist, e) : s.dist); y = gA + (s.alt0 != null ? lerp(s.alt0, s.alt, e) : s.alt); }
+  else if (m === 'reveal' || m === 'push' || m === 'pull') { const k = m === 'reveal' ? e : 0.35 * lin + 0.65 * e; at(s.from + (s.arc || 0) * lin, lerp(s.dist0 ?? s.dist, s.dist, k)); y = gA + lerp(s.alt0 ?? s.alt, s.alt, k); }
+  else if (m === 'rise' || m === 'descend') { const k = 0.3 * lin + 0.7 * e, a = lerp(s.alt0, s.alt, k); at(s.from + (s.arc || 0) * lin, s.dist0 != null ? lerp(s.dist0, s.dist, k) : Math.max(35, Math.min(s.dist, Math.max(s.alt, s.alt0) * 0.9))); y = gA + a; }
+  else if (m === 'track') { const b0 = s.from * rad, b1 = (s.from + s.arc) * rad; x = lerp(A.x + Math.sin(b0) * s.dist, A.x + Math.sin(b1) * s.dist, lin); z = lerp(A.z - Math.cos(b0) * s.dist, A.z - Math.cos(b1) * s.dist, lin); y = gA + s.alt; }
+  else if (m === 'pan') { at(s.from, s.dist); y = gA + s.alt; look = false; yaw = s.from + 180 + s.arc * lin; if (pitch == null) pitch = Math.atan2(ty - y, s.dist) * deg; }
+  else if (m === 'topdown') { const B = s.B; x = B ? lerp(A.x, B.x, lin) : A.x; z = B ? lerp(A.z, B.z, lin) : A.z; y = (B ? lerp(gA, tourGnd(B.x, B.z), lin) : gA) + s.alt; look = false; yaw = (s.from - 180) + s.arc * lin; pitch = -89.2; }
+  else if (m === 'flyover') { const B = s.B, k = 0.92 * (0.25 * e + 0.75 * lin); x = lerp(A.x, B.x, k); z = lerp(A.z, B.z, k); y = lerp(gA, tourGnd(B.x, B.z), k) + s.alt; look = false; yaw = bearingTo(A.x, A.z, B.x, B.z); pitch ??= -14; }
+  else { if (!s.poly) tourPolyline(s); const f = 0.94 * lin; tourAlong(s, f, _tp); tourAlong(s, f + 0.05, _tq); x = _tp.x; z = _tp.z; y = tourGnd(x, z) * 0 + lerp(tourGnd(s.path[0].x, s.path[0].z), tourGnd(s.path[s.path.length - 1].x, s.path[s.path.length - 1].z), f) + s.alt; look = false; yaw = bearingTo(_tp.x, _tp.z, _tq.x, _tq.z); pitch ??= -16; }
+  o.x = x; o.y = y; o.z = z; o.tx = tx; o.ty = ty; o.tz = tz; o.look = look; o.yaw = yaw; o.pitch = pitch; return o;
+}
+function tourSight(x, y, z, tx, ty, tz) {   // is the line from the camera to its subject clear of the terrain?
+  for (let i = 1; i < 14; i++) { const f = i / 14; if (DEM.heightAt(lerp(x, tx, f), lerp(z, tz, f)) > lerp(y, ty, f) - 2) return false; } return true;
+}
+function tourPrepShot(s) {   // once per shot, when its terrain heights are known: raise the camera if a ridge would hide the subject
+  s.prep = true; s.lift = 0; if (!['orbit', 'reveal', 'push', 'pull', 'track', 'rise', 'descend'].includes(s.move)) return;
+  const o = {}; for (const lift of [0, 15, 35, 70, 120, 200, 320, 500, 800]) { let ok = true; for (const u of [0.15, 0.5, 1]) { tourPose(s, u, o); if (!tourSight(o.x, Math.max(o.y + lift, tourTerr(o.x, o.z) + 4), o.z, o.tx, o.ty, o.tz)) { ok = false; break; } } if (ok) { s.lift = lift; return; } }
+  s.lift = 800;
+}
+/* ask for the terrain tiles a camera at p would need, without changing what is on screen (used just before each cut) */
+function tourWarm(p) {
+  const T = TERRAIN, f = T.frame; let pending = 0;
+  const visit = n => { n.last = f; if (n.z < T.maxZ && T.dist(n, p) < n.size * T.factor) { if (!n.children) n.children = [0, 1, 2, 3].map(q => new TNode(n.z + 1, n.x * 2 + (q & 1), n.y * 2 + (q >> 1), n)); let ready = true; for (const c of n.children) { if (c.state === 0) T.request(c); if (c.state !== 2) { ready = false; if (c.state === 1) pending++; } } if (ready) for (const c of n.children) visit(c); } };
+  for (const r of T.roots) if (r.state === 2) visit(r); return pending;
+}
+const tourBusy = () => TERRAIN.queue.size + TERRAIN.active + [...VEC.tiles.values()].filter(tl => tl.state === 1).length;
+
+/* ---------- environment for the film: light, weather, season (the viewer's own settings come back afterwards) ---------- */
+function tourEnv(time, weather, season) {
+  let redo = false; if (season && SET.season !== season) { SET.season = season; redo = true; }
+  if (weather && SET.wxMode !== weather) { SET.wxMode = weather; applyWeather(); }
+  if (time && (SET.timeMode !== time || redo)) setTimePreset(time); else if (redo) setTimePreset(SET.timeMode);
+}
+
+/* ---------- start, stop ---------- */
+async function startTour(p, ref, opts = {}) {
+  if (!p) return; if (TOUR.on) tourExit(true);
+  if (APP.place !== p || APP.state !== 'sim') { await loadPlace(p, 'drone', { quiet: true }); if (APP.place !== p || APP.state !== 'sim') return; }
+  closeOverlays(); $('#card').hidden = true;
+  let set = null, tour = null;
+  if (ref && typeof ref === 'object') { set = ref.set; tour = ref.tour; }
+  else { const id = String(ref || ''); if (!id.startsWith('auto-')) { set = await tourSetOf(p); tour = set?.tours.find(x => x.id === id) || (id ? null : set?.tours[0]); } if (!tour) { tourOverlayMsg(t('tour.autoWait')); set = await tourAutoSet(p).catch(() => null); tour = set?.tours.find(x => x.id === id) || set?.tours[0]; tourOverlayMsg(''); } }
+  if (!tour) { toast(t('tour.none')); return; }
+  AUDIO.start(); tourBind();
+  const plan = tourPlan(set, tour, p), v = APP.veh;
+  const R = TOUR.run = { plan, t: 0, playing: false, i: -1, cap: '', capK: '', y: 0, cut: true, ended: false, uiT: 0, ready: false, rec: !!opts.record, from: clamp(+opts.from || 0, 0, plan.dur - 5), pose: {}, tmp: {},
+    saved: { time: SET.timeMode, season: SET.season, wx: SET.wxMode, fish: SET.fisheye, zoom: APP.zoom, cam: APP.cam, pos: v.pos.clone(), heading: v.heading, paused: APP.paused, started: APP.started, sunMin: APP.sun.min, sunDate: APP.sun.date, live: APP.live } };
+  TOUR.on = true; document.body.dataset.tour = plan.theme; APP.paused = true; SET.fisheye = false; APP.cam = 'chase'; APP.zoom = SET.fov / TOUR_FOV; applyFov(); $('#startOverlay').hidden = true;
+  try { history.replaceState(null, '', '#' + encodeURIComponent(p.id) + '/tour/' + encodeURIComponent(plan.id)); } catch { }
+  tourOverlay(true); tourSay('prep', 0);
+  SET.season = plan.season; tourEnv(plan.shots[0].time, plan.shots[0].weather, null); setTimePreset(plan.shots[0].time);
+  // terrain heights for every subject of the film, then the first view (and, for a recording, every view once so the tiles are cached)
+  const pts = new Map(); for (const s of plan.shots) for (const q of [s.A, s.B, ...(s.path || [])]) if (q) pts.set(q.k, q);
+  await Promise.race([Promise.all([...pts.values()].flatMap(q => [DEM.prefetch(q.x, q.z, DEM_MAX_Z, 1), DEM.prefetch(q.x, q.z, 12, 1)])), sleep(9000)]);
+  if (TOUR.run !== R) return;
+  R.warm = { list: (opts.prewarm ?? !!opts.record) ? plan.shots.flatMap((s, i) => [[i, 0], [i, 0.5], [i, 1]]) : [[0, 0], [0, 0.5]], k: 0, t0: performance.now(), since: performance.now(), auto: opts.autoplay !== false };
+  if (opts.record) tourRecStart(R, opts);
+}
+function tourExit(silent) {
+  const R = TOUR.run; if (!R) return; tourRecStop(true); TOUR.on = false; TOUR.run = null; delete document.body.dataset.tour; tourOverlay(false); scoreStop(); try { speechSynthesis?.cancel(); } catch { }
+  const s = R.saved, v = APP.veh; SET.fisheye = s.fish; APP.zoom = s.zoom; APP.cam = s.cam; SET.season = s.season; SET.wxMode = s.wx; applyWeather(); setTimePreset(s.time);
+  if (s.time === 'custom' || s.live) { APP.sun.min = s.sunMin; APP.sun.date = s.sunDate; APP.live = s.live; applyTime(); }
+  if (v) { v.pos.copy(s.pos); v.heading = s.heading; } camSmooth.init = false; APP.paused = true; APP.started = false; $('#startOverlay').hidden = false; applyFov(); updateDock(); syncSettings();
+  try { history.replaceState(null, '', '#' + encodeURIComponent(APP.place.id) + '/' + APP.kind); } catch { }
+  if (!silent && TOUR.studio) tourStudioNext();
+}
+function tourPlay(on) { const R = TOUR.run; if (!R || !R.ready) return; if (R.ended && on) { tourSeek(0); } R.playing = on; if (on) { AUDIO.start(); scoreSeek(R); try { speechSynthesis?.resume(); } catch { } } else { scoreMute(); try { speechSynthesis?.pause(); } catch { } } R.uiT = 0; tourBar(); }
+function tourSeek(tt) { const R = TOUR.run; if (!R || R.rec && TOUR.rec) return; R.t = clamp(tt, 0, R.plan.dur - 0.05); R.i = -1; R.ended = false; R.capK = ''; $('#tourEnd').hidden = true; try { speechSynthesis?.cancel(); } catch { } if (R.playing) scoreSeek(R); }
+function tourOverlayMsg(msg) { const el = $('#loadMsg'); if (!el) return; $('#loading').hidden = !msg; el.textContent = msg; }
+function tourSay(kind, pct) { const el = $('#tourMsg'); if (!el) return; el.hidden = !kind; if (kind) el.textContent = kind === 'prep' ? t('tour.prep', { p: Math.round(pct) }) : kind; }
+
+/* ---------- one frame of the film (called from the main loop after the vehicle camera) ---------- */
+function tourFrame(dt, dtr) {
+  const R = TOUR.run; if (!R) return; const plan = R.plan;
+  if (R.warm) {   // pre-roll: look at the coming views until their tiles are in
+    const W = R.warm, [si, u] = W.list[W.k], s = plan.shots[si], now = performance.now(); if (!s.prep) tourPrepShot(s);
+    if (si !== R.i) { R.i = si; if (W.list.length > 2) tourEnv(s.time, s.weather, null); }
+    tourApply(R, s, u, 1, true); tourFade(1); tourSay('prep', W.list.length > 2 ? 100 * W.k / W.list.length : Math.min(95, (now - W.t0) / 80));
+    if ((now - W.since > 700 && tourBusy() === 0 && TERRAIN.ready) || now - W.since > (W.list.length > 2 ? 7000 : 12000)) { W.k++; W.since = now; }
+    if (W.k >= W.list.length) { const auto = W.auto; R.warm = null; R.i = -1; R.ready = true; R.cut = true; R.t = R.from; tourSay(''); const s0 = plan.shots[0]; tourEnv(s0.time, s0.weather, null); if (auto) tourPlay(true); else { tourBar(); tourReadyPanel(); } if (TOUR.rec && TOUR.rec.wait) TOUR.rec.wait(); }
+    return;
+  }
+  if (R.playing) { R.t += Math.min(dtr, 0.5); if (R.t >= plan.dur) { R.t = plan.dur; R.playing = false; R.ended = true; tourEnded(R); } }
+  const tt = Math.min(R.t, plan.dur - 1e-3); let i = R.i; if (i < 0 || tt < plan.shots[i].t0 || tt >= plan.shots[i].t0 + plan.shots[i].dur) { i = plan.shots.findIndex(s => tt >= s.t0 && tt < s.t0 + s.dur); if (i < 0) i = plan.shots.length - 1; }
+  const s = plan.shots[i], nx = plan.shots[i + 1], u = clamp((tt - s.t0) / s.dur, 0, 1), since = tt - s.t0, left = s.t0 + s.dur - tt;
+  if (i !== R.i) { R.i = i; R.cut = true; if (!s.prep) tourPrepShot(s); tourEnv(s.time, s.weather, null); }
+  tourApply(R, s, u, dt, R.cut); R.cut = false;
+  // the next view loads behind the current one, so the cut lands on a finished picture
+  if (nx && left < 6 && APP.frameN % 3 === 0) { if (!nx.prep && left < 5.5) tourPrepShot(nx); tourPose(nx, 0, R.tmp); const y = Math.max(R.tmp.y + nx.lift, tourTerr(R.tmp.x, R.tmp.z) + 4); tourWarm({ x: R.tmp.x, y, z: R.tmp.z }); if (APP.frameN % 30 === 0) { DEM.prefetch(R.tmp.x, R.tmp.z, DEM_MAX_Z, 1); if (left < 3.5) VEC.update(R.tmp.look ? R.tmp.tx : R.tmp.x, R.tmp.look ? R.tmp.tz : R.tmp.z, 0); } }
+  // dip to black over cuts, in at the start and out at the end
+  let f = 0; if (i > 0) f = Math.max(f, (s.envCut ? 1 : 0.85) * (1 - since / (s.envCut ? 0.8 : 0.32))); if (nx) f = Math.max(f, (nx.envCut ? 1 : 0.85) * (1 - left / (nx.envCut ? 0.55 : 0.22)));
+  if (i === 0) f = Math.max(f, 1 - tt / 1.4); if (!nx) f = Math.max(f, 1 - (plan.dur - tt) / 1.6); R.fade = clamp(f, 0, 1); tourFade(R.fade);
+  // captions
+  const lang = tourCapLang(plan), list = lang ? (s.caps[lang] || s.caps['*'] || s.caps.en || []) : [], n = list.length; let cap = '', ca = 0, k = '';
+  if (n) { const seg = s.dur / n, j = Math.min(n - 1, Math.floor(since / seg)), a = since - j * seg; cap = list[j]; k = i + ':' + j + ':' + lang; ca = clamp(Math.min(a / 0.3, (seg - a - 0.15) / 0.3), 0, 1); if (k !== R.capK && R.playing && a < 1.2) tourSpeak(cap, lang, seg); }
+  R.capK = k; R.cap = cap; R.capA = ca; R.titleA = clamp(Math.min((tt - 0.9) / 0.7, (7.2 - tt) / 0.7), 0, 1); R.credA = clamp(Math.min((tt - (plan.dur - 9)) / 0.8, (plan.dur - 0.5 - tt) / 0.8), 0, 1);
+  tourDom(R); if (R.playing) scoreTick(R);
+}
+function tourApply(R, s, u, dt, cut) {
+  const o = tourPose(s, u, R.pose), v = APP.veh, clr = clamp(s.alt * 0.25, 4, 40); let need = -1e9;
+  for (const k of [0, 0.015, 0.03, 0.05]) { const q = k ? tourPose(s, Math.min(1, u + k), R.tmp) : o; need = Math.max(need, tourTerr(q.x, q.z)); }
+  const want = Math.max(o.y + s.lift, need + clr); R.y = cut ? want : R.y + (want - R.y) * (1 - Math.exp(-dt * 4)); R.y = Math.max(R.y, tourTerr(o.x, o.z) + clr * 0.5);
+  let yaw = o.yaw, pitch = o.pitch;
+  if (o.look) { const hd = Math.hypot(o.tx - o.x, o.tz - o.z), g = Math.atan2(o.ty - R.y, Math.max(1, hd)) * deg; yaw = bearingTo(o.x, o.z, o.tx, o.tz); pitch = s.pitch != null ? clamp(g, s.pitch - 14, s.pitch + 14) : g; }
+  camera.position.set(o.x, R.y, o.z); camera.rotation.set(clamp(pitch, -89.5, 30) * rad, -yaw * rad, 0, 'YXZ');
+  // the scene is centred on what the camera looks at: buildings, trees and elevation load there
+  let fx = o.tx, fz = o.tz; if (!o.look) { const d = clamp((R.y - tourGnd(o.x, o.z)) / Math.tan(Math.max(8, -pitch) * rad), 0, 1500); fx = o.x + Math.sin(yaw * rad) * d; fz = o.z - Math.cos(yaw * rad) * d; }
+  v.pos.set(fx, tourGnd(fx, fz) + 0.5, fz); if (APP.model) APP.model.visible = false; if (blob) blob.visible = false;
+  if (APP.frameN % 20 === 0) DEM.prefetch(o.x, o.z, DEM_MAX_Z, 1);
+}
+function tourEnded(R) {
+  scoreMute(2); tourBar();
+  if (TOUR.rec) { tourRecStop(false); if (TOUR.studio) return; }
+  const el = $('#tourEnd'), list = R.plan.set.tours || [], j = list.findIndex(x => x.id === R.plan.id), nxt = list.length > 1 ? list[(j + 1) % list.length] : null;
+  el.hidden = false; el.innerHTML = `<button class="btn primary" data-ta="replay">↻ ${esc(t('tour.replay'))}</button>${nxt ? `<button class="btn" data-ta="next">▶ ${esc(t('tour.next'))}: ${esc(tourTxt(nxt.title))}</button>` : ''}<button class="btn" data-ta="exit">✕ ${esc(t('tour.exit'))}</button>`;
+  el.onclick = e => { const a = e.target.closest('[data-ta]')?.dataset.ta; if (a === 'replay') { el.hidden = true; tourSeek(0); tourPlay(true); } else if (a === 'next') startTour(R.plan.place, { set: R.plan.set, tour: nxt }); else if (a === 'exit') tourExit(); };
+}
+
+/* ---------- on-screen layer: title, captions, credits, player bar ---------- */
+function tourCapLang(plan) { if (TOUR.cc === 'off') return ''; if (plan.auto) return '*'; if (TOUR.cc === 'zh' || TOUR.cc === 'en') return TOUR.cc; return isZh() ? 'zh' : 'en'; }
+function tourCredits(plan) {
+  const L = [t('tour.cr.image'), t('tour.cr.text', { src: plan.credit || t('tour.cr.sources', { n: plan.set.sources?.length || 0 }) }), t('tour.cr.music'), 'AERO Explorer v7 · kuonanhong.github.io/AERO_Explorer'];
+  const air = plan.set.airspace ? tourTxt({ 'zh-Hant': plan.set.airspace.zh, en: plan.set.airspace.en }) : t('tour.c.fly1'); return { head: t('tour.cr.head'), lines: L, air };
+}
+function tourOverlay(show) {
+  let el = $('#tour'); if (!el) { el = document.createElement('div'); el.id = 'tour'; el.hidden = true; el.innerHTML = `<div id="tourFade"></div><div id="tourTitle"><small></small><h2></h2><p></p></div><div id="tourCred"></div><div id="tourCap"></div><div id="tourMark"></div><div id="tourMsg" hidden></div><div id="tourEnd" hidden></div><div id="tourBar"></div>`; $('#stage').appendChild(el); }
+  el.hidden = !show; if (!show) return; const R = TOUR.run, plan = R.plan, cr = tourCredits(plan);
+  $('#tourTitle small').textContent = `${TOUR_ICON[plan.theme] || '◎'} ${t('tour.theme.' + plan.theme)} · ${placeName(plan.place)}`; $('#tourTitle h2').textContent = tourTxt(plan.title); $('#tourTitle p').textContent = tourTxt(plan.tagline);
+  $('#tourCred').innerHTML = `<b>${esc(cr.head)}</b>${cr.lines.map(l => `<span>${esc(l)}</span>`).join('')}<i>${esc(cr.air)}</i>`; $('#tourMark').textContent = t('tour.sim'); $('#tourEnd').hidden = true; R.lastCap = null;
+  $('#tourBar').innerHTML = `<button data-tb="play" title="Space"></button><button data-tb="prev" title="←">⏮</button><button data-tb="next" title="→">⏭</button><span id="tourTime"></span><input id="tourSeek" type="range" min="0" max="${plan.dur}" step="0.1" value="0" aria-label="${esc(t('tour.title'))}">
+    <button data-tb="cc" title="C"></button><button data-tb="voice" title="N"></button><button data-tb="music" title="M"></button><button data-tb="rec" title="R"></button><button data-tb="exit" title="Esc">✕</button>`;
+  $('#tourBar').onclick = e => { const a = e.target.closest('[data-tb]')?.dataset.tb; if (a) tourAct(a); }; $('#tourSeek').oninput = e => tourSeek(+e.target.value);
+  tourBar();
+}
+function tourBar() {
+  const R = TOUR.run, b = k => $(`#tourBar [data-tb="${k}"]`); if (!R || !b('play')) return;
+  b('play').innerHTML = svg(R.playing ? 'pause' : 'play'); b('cc').textContent = 'CC ' + ({ auto: '', zh: '中', en: 'EN', off: '✕' }[TOUR.cc]); b('voice').textContent = (TOUR.voice ? '🔊 ' : '🔇 ') + t('tour.voice'); b('music').textContent = (TOUR.music ? '♪ ' : '♪✕ ') + t('tour.music');
+  b('rec').textContent = TOUR.rec ? '■ ' + t('tour.recording') : '⏺ ' + t('tour.record'); b('rec').classList.toggle('on', !!TOUR.rec); b('cc').hidden = !!R.plan.auto && false;
+}
+function tourAct(a) {
+  const R = TOUR.run; if (!R) return; const sh = R.plan.shots;
+  if (a === 'play') tourPlay(!R.playing); else if (a === 'exit') tourExit();
+  else if (a === 'next') tourSeek(sh[Math.min(sh.length - 1, R.i + 1)].t0); else if (a === 'prev') tourSeek(R.t - sh[Math.max(0, R.i)].t0 > 2.5 ? sh[Math.max(0, R.i)].t0 : sh[Math.max(0, R.i - 1)].t0);
+  else if (a === 'cc') { const o = ['auto', 'zh', 'en', 'off']; TOUR.cc = o[(o.indexOf(TOUR.cc) + 1) % o.length]; LS.set('aero7:cc', TOUR.cc); R.capK = ''; }
+  else if (a === 'voice') { TOUR.voice = !TOUR.voice; LS.set('aero7:voice', TOUR.voice ? '1' : '0'); if (!TOUR.voice) try { speechSynthesis?.cancel(); } catch { } }
+  else if (a === 'music') { TOUR.music = !TOUR.music; LS.set('aero7:music', TOUR.music ? '1' : '0'); scoreVolume(); }
+  else if (a === 'rec') { if (TOUR.rec) tourRecStop(true); else startTour(R.plan.place, { set: R.plan.set, tour: R.plan.set.tours.find(x => x.id === R.plan.id) }, { record: true }); }
+  tourBar();
+}
+function tourKey(e) {
+  const c = e.code; if (c === 'Space' || c === 'KeyK') tourAct('play'); else if (c === 'Escape') tourExit(); else if (c === 'ArrowRight') tourAct('next'); else if (c === 'ArrowLeft') tourAct('prev');
+  else if (c === 'KeyC') tourAct('cc'); else if (c === 'KeyN') tourAct('voice'); else if (c === 'KeyM') tourAct('music'); else if (c === 'KeyR') tourAct('rec'); else if (c === 'KeyF') toggleFullscreen();
+}
+function tourBind() {
+  if (TOUR.bound) return; TOUR.bound = true; document.addEventListener('visibilitychange', () => { if (document.hidden && TOUR.run?.playing && !TOUR.rec) tourPlay(false); });
+  const wake = () => { if (TOUR.run) { TOUR.run.uiT = 0; $('#tour')?.classList.remove('idle'); } }; $('#stage').addEventListener('pointermove', wake); $('#stage').addEventListener('pointerdown', wake);
+}
+function tourFade(a) { const el = $('#tourFade'); if (el) el.style.opacity = a.toFixed(3); }
+function tourDom(R) {
+  const cap = $('#tourCap'); if (R.cap !== R.lastCap) { cap.textContent = R.cap; R.lastCap = R.cap; } cap.style.opacity = (R.cap ? R.capA : 0).toFixed(2);
+  $('#tourTitle').style.opacity = R.titleA.toFixed(2); $('#tourCred').style.opacity = R.credA.toFixed(2);
+  if (APP.frameN % 6 === 0) { $('#tourTime').textContent = tourClock(R.t) + ' / ' + tourClock(R.plan.dur); const sk = $('#tourSeek'); if (document.activeElement !== sk) sk.value = R.t; if (R.playing) { R.uiT += 0.1; if (R.uiT > 3.5) $('#tour').classList.add('idle'); } }
+}
+
+/* ---------- narration in the viewer's own speech engine (never part of a recording) ---------- */
+function tourSpeak(text, lang, slot) {
+  const S = globalThis.speechSynthesis; if (!TOUR.voice || TOUR.rec || !S || !globalThis.SpeechSynthesisUtterance || !text) return;
+  try { S.cancel(); const u = new SpeechSynthesisUtterance(text), tag = lang === 'zh' ? 'zh-TW' : lang === 'en' ? 'en-US' : (SPEECH_TAG[I18N.lang] || I18N.lang); u.lang = tag; const zh = /^(zh|ja|ko)/.test(tag);
+    u.rate = clamp((zh ? text.length / 4.6 : text.length / 15) / Math.max(2, slot - 0.6), 0.95, 1.35); u.volume = 1; const vs = S.getVoices().filter(x => x.lang?.replace('_', '-').toLowerCase().startsWith(tag.toLowerCase())); if (vs.length) u.voice = vs.find(x => x.localService) || vs[0]; S.speak(u); } catch { }
+}
+
+/* ---------- generated score: slow pads, a bass note and sparse bells in a mode chosen by the theme ---------- */
+const SCORE = { out: null, bus: null, k: 0, rec: null };
+const SCORE_SET = {
+  nature: { root: 48, chords: [[0, 4, 7, 11], [9, 12, 16, 19], [5, 9, 12, 16], [7, 11, 14, 16]], scale: [0, 2, 4, 7, 9] },
+  history: { root: 50, chords: [[0, 3, 7, 10], [-4, 0, 3, 7], [3, 7, 10, 14], [-2, 2, 5, 9]], scale: [0, 2, 3, 5, 7, 10] },
+  culture: { root: 45, chords: [[0, 3, 7, 10], [3, 7, 10, 14], [-2, 2, 5, 9], [-5, -2, 2, 5]], scale: [0, 3, 5, 7, 10] },
+  geography: { root: 52, chords: [[0, 7, 12, 15], [-4, 3, 8, 12], [3, 10, 15, 19], [-2, 5, 10, 14]], scale: [0, 3, 5, 7, 10] },
+  overview: { root: 50, chords: [[0, 4, 7, 11], [-3, 0, 4, 7], [5, 9, 12, 16], [-5, -1, 2, 7]], scale: [0, 2, 4, 7, 9] },
+};
+const scoreHz = m => 440 * 2 ** ((m - 69) / 12);
+function scoreRand(k, salt) { let x = Math.imul(k + 1, 2654435761) ^ Math.imul(salt + 7, 1597334677); x ^= x >>> 15; x = Math.imul(x, 2246822519); x ^= x >>> 13; return ((x >>> 0) % 100000) / 100000; }
+function scoreInit() {
+  const ctx = AUDIO.ctx; if (!ctx) return false; if (SCORE.out && SCORE.ctx === ctx) return true;
+  const out = ctx.createGain(); out.gain.value = 0; out.connect(ctx.destination); const bus = ctx.createGain(); bus.gain.value = 1; bus.connect(out);
+  const d1 = ctx.createDelay(1), d2 = ctx.createDelay(1), fb = ctx.createGain(), lp = ctx.createBiquadFilter(), wet = ctx.createGain(); d1.delayTime.value = 0.31; d2.delayTime.value = 0.47; fb.gain.value = 0.46; lp.type = 'lowpass'; lp.frequency.value = 2400; wet.gain.value = 0.5;
+  bus.connect(d1); d1.connect(d2); d2.connect(lp); lp.connect(fb); fb.connect(d1); d1.connect(wet); d2.connect(wet); wet.connect(out);
+  Object.assign(SCORE, { ctx, out, bus }); return true;
+}
+function scoreNote(at, hz, dur, gain, type, attack) {
+  const ctx = SCORE.ctx, o = ctx.createOscillator(), g = ctx.createGain(), a = Math.max(at, ctx.currentTime + 0.01); o.type = type; o.frequency.value = hz;
+  g.gain.setValueAtTime(0.0001, a); g.gain.linearRampToValueAtTime(gain, a + attack); if (attack < 0.1) g.gain.exponentialRampToValueAtTime(0.0001, a + dur); else { g.gain.setValueAtTime(gain, a + Math.max(attack, dur - 3)); g.gain.linearRampToValueAtTime(0.0001, a + dur); }
+  o.connect(g).connect(SCORE.bus); o.start(a); o.stop(a + dur + 0.1);
+}
+function scoreStep(R, k, at, late) {
+  const S = SCORE_SET[R.plan.theme] || SCORE_SET.overview, bar = Math.floor(k / 16), c = S.chords[bar % S.chords.length], seed = R.plan.title ? tourTxt(R.plan.title).length : 3;
+  if (k % 16 === 0 || late) { const rest = (16 - k % 16) * TOUR_STEP + 0.9; for (const n of c) { scoreNote(at, scoreHz(S.root + n), rest, 0.05, 'triangle', 2.2); scoreNote(at, scoreHz(S.root + n) * 1.003, rest, 0.035, 'sine', 2.8); } scoreNote(at, scoreHz(S.root + c[0] - 12), rest, 0.085, 'sine', 1.5); }
+  if (!late && k % 2 === 0 && scoreRand(k, seed) < 0.36) { const n = S.scale[Math.floor(scoreRand(k, seed + 3) * S.scale.length)] + (scoreRand(k, seed + 5) < 0.3 ? 24 : 12); scoreNote(at, scoreHz(S.root + n), 3.2, 0.06, 'sine', 0.012); scoreNote(at, scoreHz(S.root + n) * 2, 1.6, 0.012, 'sine', 0.01); }
+}
+function scoreVolume() { const R = TOUR.run; if (!SCORE.out) return; const c = SCORE.ctx, on = R?.playing && (TOUR.music || TOUR.rec); SCORE.out.gain.cancelScheduledValues(c.currentTime); SCORE.out.gain.setTargetAtTime(on ? 0.85 : 0, c.currentTime, on ? 0.5 : 0.12); }
+function scoreSeek(R) { if (!scoreInit()) return; SCORE.k = Math.ceil(R.t / TOUR_STEP); if (SCORE.k % 16 !== 0) scoreStep(R, SCORE.k, SCORE.ctx.currentTime + 0.05, true); scoreVolume(); }
+function scoreTick(R) {
+  if (!SCORE.out) return; const c = SCORE.ctx; while (SCORE.k * TOUR_STEP < R.t + 1.2 && SCORE.k * TOUR_STEP < R.plan.dur - 7) { scoreStep(R, SCORE.k, c.currentTime + (SCORE.k * TOUR_STEP - R.t), false); SCORE.k++; }
+  if (R.plan.dur - R.t < 6 && !R.outro) { R.outro = true; SCORE.out.gain.cancelScheduledValues(c.currentTime); SCORE.out.gain.setTargetAtTime(0, c.currentTime, 1.6); } else if (R.plan.dur - R.t >= 6) R.outro = false;
+}
+function scoreMute(tc = 0.12) { if (SCORE.out) { const c = SCORE.ctx; SCORE.out.gain.cancelScheduledValues(c.currentTime); SCORE.out.gain.setTargetAtTime(0, c.currentTime, tc); } }
+function scoreStop() { scoreMute(); }
+
+/* ---------- recording: the picture with title, captions and credits drawn in, plus the score, into one video file ---------- */
+function tourWrap(g, text, maxW) {
+  const out = []; let line = ''; const cjk = /[　-鿿＀-￯]/.test(text), units = cjk ? [...text] : text.split(/(\s+)/);
+  for (const w of units) { if (g.measureText(line + w).width > maxW && line.trim()) { out.push(line.trim()); line = /^\s+$/.test(w) ? '' : w; } else line += w; }
+  if (line.trim()) out.push(line.trim()); return out;
+}
+function tourPaint(R) {   // compose one frame of the recording on a 2D canvas
+  const rec = TOUR.rec, g = rec.g, W = rec.w, H = rec.h, src = renderer.domElement, sw = src.width, sh = src.height, k = Math.max(W / sw, H / sh), plan = R.plan, F = '"Noto Sans TC","PingFang TC","Microsoft JhengHei","Noto Sans",system-ui,sans-serif';
+  g.globalAlpha = 1; g.drawImage(src, (sw - W / k) / 2, (sh - H / k) / 2, W / k, H / k, 0, 0, W, H);
+  const text = (s, x, y, a, font, align = 'center', col = '#fff') => { g.globalAlpha = a; g.font = font; g.textAlign = align; g.textBaseline = 'middle'; g.lineJoin = 'round'; g.lineWidth = Math.max(2, H / 240); g.strokeStyle = 'rgba(0,0,0,.72)'; g.strokeText(s, x, y); g.fillStyle = col; g.fillText(s, x, y); };
+  g.shadowColor = 'rgba(0,0,0,.55)'; g.shadowBlur = H / 90;
+  if (R.titleA > 0.01) { const a = R.titleA; text(`${t('tour.theme.' + plan.theme)} · ${placeName(plan.place)}`, W / 2, H * 0.31, a, `600 ${H * 0.03}px ${F}`, 'center', '#f0c879'); g.font = `700 ${H * 0.066}px ${F}`; const ls = tourWrap(g, tourTxt(plan.title), W * 0.86); ls.forEach((l, j) => text(l, W / 2, H * 0.40 + j * H * 0.082, a, `700 ${H * 0.066}px ${F}`)); g.font = `400 ${H * 0.032}px ${F}`; tourWrap(g, tourTxt(plan.tagline), W * 0.8).forEach((l, j) => text(l, W / 2, H * 0.40 + ls.length * H * 0.082 + H * 0.012 + j * H * 0.045, a, `400 ${H * 0.032}px ${F}`)); }
+  if (R.cap && R.capA > 0.01) { g.font = `600 ${H * 0.047}px ${F}`; const ls = tourWrap(g, R.cap, W * 0.86), lh = H * 0.062, y0 = H * 0.905 - (ls.length - 1) * lh; ls.forEach((l, j) => text(l, W / 2, y0 + j * lh, R.capA, `600 ${H * 0.047}px ${F}`)); }
+  if (R.credA > 0.01) { const cr = rec.cred ||= tourCredits(plan), a = R.credA, x = W * 0.045; let y = H * 0.1; text(cr.head, x, y, a, `700 ${H * 0.03}px ${F}`, 'left', '#f0c879'); y += H * 0.045; g.font = `400 ${H * 0.0235}px ${F}`; for (const l of [...cr.lines, cr.air]) for (const ll of tourWrap(g, l, W * 0.62)) { text(ll, x, y, a, `400 ${H * 0.0235}px ${F}`, 'left'); y += H * 0.034; } }
+  g.shadowBlur = 0; text(t('tour.sim'), W * 0.012, H * 0.975, 0.78, `500 ${H * 0.019}px ${F}`, 'left'); text('Esri World Imagery · AWS Terrain Tiles · © OpenStreetMap', W * 0.988, H * 0.975, 0.78, `400 ${H * 0.017}px ${F}`, 'right');
+  if (R.fade > 0.003) { g.globalAlpha = R.fade; g.fillStyle = '#000'; g.fillRect(0, 0, W, H); } g.globalAlpha = 1;
+}
+function tourAfterRender() { const R = TOUR.run; if (R && TOUR.rec?.on) { if (!R.warm) tourPaint(R); else { const g = TOUR.rec.g; g.fillStyle = '#000'; g.fillRect(0, 0, TOUR.rec.w, TOUR.rec.h); } TOUR.rec.track?.requestFrame?.(); } }
+function tourRecMime() { const M = globalThis.MediaRecorder; if (!M) return ''; return ['video/mp4;codecs=avc1.640028,mp4a.40.2', 'video/mp4;codecs=avc1.42E01F,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'].find(m => M.isTypeSupported(m)) || ''; }
+function tourRecStart(R, opts) {
+  const mime = tourRecMime(); if (!mime) { toast(t('tour.noRec')); R.rec = false; return; }
+  const w = opts.w || 1280, h = opts.h || 720, cv = document.createElement('canvas'); cv.width = w; cv.height = h; const g = cv.getContext('2d', { alpha: false }); g.fillRect(0, 0, w, h);
+  const stream = cv.captureStream(opts.fps || 30), tracks = [...stream.getVideoTracks()]; let dest = null;
+  if (scoreInit()) { dest = SCORE.ctx.createMediaStreamDestination(); SCORE.out.connect(dest); tracks.push(...dest.stream.getAudioTracks()); }
+  const mr = new MediaRecorder(new MediaStream(tracks), { mimeType: mime, videoBitsPerSecond: opts.bps || 6_000_000, audioBitsPerSecond: 128_000 }), chunks = [];
+  const rec = TOUR.rec = { on: false, cv, g, w, h, mr, chunks, mime, dest, plan: R.plan, name: opts.name ? opts.name + (mime.startsWith('video/mp4') ? '.mp4' : '.webm') : tourFileName(R.plan, mime), keep: true, done: opts.done };
+  mr.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+  mr.onstop = () => { const blob = new Blob(chunks, { type: mime.split(';')[0] }); try { if (dest) SCORE.out.disconnect(dest); } catch { } if (TOUR.rec === rec) TOUR.rec = null; if (rec.keep && blob.size > 50000) tourRecSave(rec, blob); else rec.done?.(null); tourBar(); };
+  rec.wait = () => { rec.wait = null; rec.on = true; mr.start(1000); tourBar(); };   // the recorder starts with the first frame of the film
+  tourBar();
+}
+function tourRecStop(discard) { const rec = TOUR.rec; if (!rec) return; rec.keep = !discard; rec.on = false; try { if (rec.mr.state !== 'inactive') rec.mr.stop(); else { TOUR.rec = null; rec.done?.(null); } } catch { TOUR.rec = null; } }
+function tourFileName(plan, mime) { const safe = s => String(s).replace(/[\\/:*?"<>|\s]+/g, '_').slice(0, 60); return `${safe(plan.place.zh || plan.place.en)}_${safe(plan.id)}_${safe(tourTxt(plan.title))}_${tourCapLang(plan) === 'en' ? 'en' : tourCapLang(plan) === 'zh' ? 'zh-Hant' : I18N.lang}.${mime.startsWith('video/mp4') ? 'mp4' : 'webm'}`; }
+async function tourRecSave(rec, blob) {
+  if (TOUR.studio) { try { const r = await fetch('/studio/put?name=' + encodeURIComponent(rec.name), { method: 'POST', body: blob }); if (!r.ok) throw new Error(r.status); rec.done?.({ name: rec.name, bytes: blob.size }); } catch (e) { rec.done?.({ error: String(e) }); } return; }
+  const a = document.createElement('a'), url = URL.createObjectURL(blob); a.href = url; a.download = rec.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 60000); toast(t('tour.saved', { name: rec.name }), 8000); rec.done?.({ name: rec.name, bytes: blob.size });
+}
+
+/* ======================= v7 · automatic tours for every destination, the tour list in the story card, Studio batch ======================= */
+/* Where no researched script exists, the film is assembled on the spot: the camera plan comes from the real terrain around the
+   coordinates (highest ground, relief, neighbours), the captions from the Wikipedia article in the viewer's language (CC BY-SA,
+   credited on screen), Wikidata descriptions of nearby places, the catalogue, and facts computed from the scene itself. */
+const TOUR_AUTO = new Map();
+const TOUR_STOP = /^(references?|see also|external links?|notes?|further reading|bibliography|sources|citations|gallery|參考|参考|參見|参见|外部連結|外部链接|注釋|註釋|注释|腳註|脚注|延伸閱讀|相關條目|相关条目|関連項目|外部リンク|出典|参考文献|각주|같이 보기|외부 링크|einzelnachweise|weblinks|literatur|siehe auch|voir aussi|notes et références|liens externes|références|véase también|referencias|enlaces externos|bibliografía|note|voci correlate|collegamenti esterni|referências|ligações externas|ver também|примечания|ссылки|литература|см\. также|kaynakça|dış bağlantılar|przypisy|linki zewnętrzne|zobacz też|referensi|pranala luar|lihat pula|tham khảo|liên kết ngoài|xem thêm|อ้างอิง|แหล่งข้อมูลอื่น|مراجع|وصلات خارجية|انظر أيضا)(?![a-z])/i;
+const TOUR_HEAD = {
+  history: /histor|歷史|历史|沿革|由來|由来|歴史|年表|역사|geschichte|histoire|historia|storia|история|істор|tarih|sejarah|lịch sử|ประวัติ|تاريخ|تاریخ|היסטור|dzieje|dějiny|történe|ιστορ/i,
+  geography: /geograph|geolog|topograph|hydrolog|climate|location|地理|地質|地质|地形|地勢|地势|氣候|气候|水文|位置|気候|지리|기후|geografie|geologie|klima|lage|géograph|géolog|climat|geograf|clima|ubicaci|географ|климат|геолог|coğrafya|iklim|letak|địa lý|khí hậu|ภูมิศาสตร์|ภูมิอากาศ|جغراف|مناخ/i,
+  nature: /nature|natural|ecolog|flora|fauna|wildlife|environment|biodivers|biolog|conservation|vegetation|自然|生態|生态|環境|环境|動物|动物|植物|保育|物種|物种|植生|자연|생태|natur|ökolog|tierwelt|écolog|faune|flore|naturaleza|ecolog|природ|флора|фауна|doğa|alam|thiên nhiên|sinh thái|ธรรมชาติ|طبيع|بيئ/i,
+  culture: /cultur|architect|art\b|arts|religio|festival|touris|people|society|legend|myth|design|structure|building|features|visit|文化|建築|建筑|藝術|艺术|宗教|祭|慶典|觀光|观光|旅遊|旅游|交通|傳說|传说|人文|社區|特色|設施|景點|景点|活動|构造|構造|参观|参拜|文化財|観光|문화|건축|관광|kultur|architektur|tourismus|bauwerk|architecture|tourisme|arquitectura|turismo|architettura|культур|архитект|туризм|kültür|mimari|turizm|budaya|arsitektur|pariwisata|văn hóa|kiến trúc|du lịch|วัฒนธรรม|สถาปัตย|ثقاف|عمار|سياح/i,
+};
+/* geotagged articles that are not sights: events, schools, offices, administrative units, stations */
+const TOUR_SKIP = /地震|颱風|台风|事故|事件|空難|選舉區|选区|國民小學|国民小学|國小|國中|中學|中学|小學|小学|大學|大学|學校|学校|學院|幼兒園|[村里鄉鎮區市縣]$|[村里] ?[(（]|政府|議會|议会|公所|警察|消防|法院|車站|车站|站$|公司|醫院|医院|診所|郵局|銀行|earthquake|typhoon|hurricane|accident|incident|crash|constituency|electoral|school|university|college|academy|kindergarten|village|township|\bdistrict|municipality|city hall|town hall|council|police|court\b|railway station|metro station|\bstation$|hospital|clinic|company|\bbank\b|post office/i;
+const tourIsCJK = s => /[぀-ヿ㐀-鿿가-힯]/.test(s);
+const tourNeed = s => (tourIsCJK(s) ? [...s].length / 4.6 : s.length / 16) + 1.3;
+/* article text -> caption-sized pieces: whole sentences where they fit, split at commas where they do not */
+function tourChunks(text) {
+  const out = [], clean = String(text || '').replace(/\[[^\]]{0,12}\]/g, '').replace(/\s+/g, ' ').trim(); if (!clean) return out;
+  for (let s of clean.match(/[^。！？!?.]+(?:[。！？!?]+|\.+(?=\s|$)|$)|\.+/g) || []) {
+    s = s.trim(); if ([...s].length < (tourIsCJK(s) ? 7 : 22)) { if (out.length && [...(out[out.length - 1] + s)].length < (tourIsCJK(s) ? 52 : 150)) out[out.length - 1] += (tourIsCJK(s) ? '' : ' ') + s; continue; }
+    const max = tourIsCJK(s) ? 52 : 150; if ([...s].length <= max) { out.push(s); continue; }
+    const bits = s.split(/([，；、：,;:])/), parts = []; for (let i = 0; i < bits.length; i += 2) parts.push(bits[i] + (bits[i + 1] || ''));
+    let cur = ''; for (const part of parts) { if ([...(cur + part)].length > max && cur) { out.push(cur.trim()); cur = part; } else cur += part; } if (cur.trim()) out.push(cur.trim());
+  }
+  return out.filter(s => [...s].length <= (tourIsCJK(s) ? 70 : 190));
+}
+async function tourWiki(p) {   // the article of this place, as sections of plain paragraphs
+  const w = await wikiTitleFor(p).catch(() => null); if (!w || (w.dist != null && w.dist > (p.id.startsWith('unesco') ? 5000 : 900))) return null;
+  const u = `https://${w.wl}.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(w.title)}&prop=text&redirects=1&disableeditsection=1&disabletoc=1&format=json&formatversion=2&origin=*${w.variant ? '&variant=' + w.variant : ''}`;
+  const j = await fetchJSON(u, { timeout: 15000 }), html = j.parse?.text; if (!html) return null;
+  const doc = new DOMParser().parseFromString(html, 'text/html'), secs = [{ h: '', ps: [] }];
+  for (const el of doc.querySelectorAll('h2, p')) {
+    if (el.closest('table, .infobox, .navbox, .reflist, .thumb, figure, blockquote, li, .hatnote, .mw-empty-elt, .noprint, .metadata')) continue;
+    if (el.tagName === 'H2') { const h = el.textContent.trim(); if (TOUR_STOP.test(h)) break; secs.push({ h, ps: [] }); continue; }
+    for (const x of el.querySelectorAll('sup, style, script, .mw-editsection, .reference, .noprint, .IPA, .nowrap > small')) x.remove(); const tx = el.textContent.replace(/\s+/g, ' ').trim(); if ([...tx].length >= 10) secs[secs.length - 1].ps.push(tx);
+  }
+  return { title: j.parse.title || w.title, url: `https://${w.wl}.wikipedia.org/wiki/${encodeURIComponent((j.parse.title || w.title).replace(/ /g, '_'))}`, secs: secs.filter(s => s.ps.length), wl: w.wl, variant: w.variant };
+}
+async function tourNearWiki(p, wl, variant) {
+  const u = `https://${wl}.wikipedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${p.lat}|${p.lon}&ggsradius=10000&ggslimit=40&prop=coordinates|description&colimit=40&format=json&formatversion=2&origin=*${variant ? '&variant=' + variant : ''}`;
+  const j = await fetchJSON(u, { timeout: 12000 }); return (j.query?.pages || []).filter(x => x.coordinates?.[0]).map(x => ({ name: x.title, lat: x.coordinates[0].lat, lon: x.coordinates[0].lon, desc: x.description || '', d: haversine(p.lat, p.lon, x.coordinates[0].lat, x.coordinates[0].lon) }));
+}
+function tourTerrain(R = 3500, N = 40) {   // what the elevation model says about the surroundings of the origin
+  let max = { h: -1e9 }, min = { h: 1e9 }, sum = 0, sea = 0; for (let j = 0; j <= N; j++) for (let i = 0; i <= N; i++) { const x = (i / N * 2 - 1) * R, z = (j / N * 2 - 1) * R, h = DEM.heightAt(x, z); sum += h; if (h < 0.3) sea++; if (h > max.h) max = { x, z, h }; if (h < min.h) min = { x, z, h }; }
+  return { max, min, mean: sum / (N + 1) ** 2, relief: max.h - Math.max(0, min.h), sea: sea / (N + 1) ** 2, here: DEM.heightAt(0, 0) };
+}
+const TOUR_SEQ = {
+  overview: 'reveal:c orbit:c topdown:c push:c fly:c>n0 orbit:n0 fly:n0>n1 orbit:n1 pan:c track:c fly:c>n2 orbit:n2 rise:c orbitw:c pull:c',
+  geography: 'rise:c topdown:c orbitw:c fly:c>hi orbit:hi pan:hi topdownw:c fly:hi>c track:c orbit:c pan:c push:c descend:c orbitw:c pull:c',
+  history: 'push:c orbit:c track:c topdown:c orbit:c reveal:c fly:c>n0 orbit:n0 pan:c track:c fly:n0>c orbit:c topdown:c rise:c pull:c',
+  culture: 'track:c orbit:c push:c fly:c>n0 orbit:n0 track:n0 fly:n0>n1 orbit:n1 topdown:n1 fly:n1>c pan:c orbit:c topdown:c orbitw:c pull:c',
+  nature: 'reveal:c topdownw:c orbitw:c fly:c>hi pan:hi orbit:hi fly:hi>c track:c topdown:c push:c orbit:c rise:c pan:c orbitw:c pull:c',
+  nearby: 'reveal:c fly:c>n0 orbit:n0 topdown:n0 fly:n0>n1 orbit:n1 track:n1 fly:n1>n2 orbit:n2 fly:n2>n3 orbit:n3 fly:n3>c pan:c orbitw:c pull:c',
+  flight: 'rise:c pan:c topdown:c orbit:c track:c orbitw:c fly:c>hi pan:hi fly:hi>c descend:c push:c orbit:c topdownw:c rise:c pull:c',
+};
+const TOUR_DUR = [22, 18, 20, 20, 18, 22, 20, 18, 22, 20, 20, 18, 22, 18, 22];
+const TOUR_LOOK = { overview: ['morning', 'few'], geography: ['afternoon', 'clear'], history: ['afternoon', 'few'], culture: ['morning', 'partly'], nature: ['morning', 'few'], nearby: ['afternoon', 'few'], flight: ['noon', 'clear'] };
+function tourAutoShots(kind, pois, S, b0) {
+  const shots = [], has = k => !!pois[k]; let b = b0;
+  TOUR_SEQ[kind].split(' ').forEach((step, i) => {
+    let [mv, tg] = step.split(':'), to = null; if (tg.includes('>')) [tg, to] = tg.split('>');
+    if (!has(tg) || (to && !has(to)) || (to && haversine(pois[tg].lat, pois[tg].lon, pois[to].lat, pois[to].lon) < 120)) { mv = ['orbit', 'track', 'pan', 'push'][i % 4]; tg = 'c'; to = null; }
+    const near = tg !== 'c', s = near ? clamp(S * 0.6, 110, 420) : S, d = { dur: TOUR_DUR[i], at: tg, from: Math.round((b % 360 + 360) % 360), sub: tg }; b += 67;
+    if (mv === 'reveal') Object.assign(d, { move: 'reveal', alt0: s * 0.07 + 6, alt: s * 0.5, dist0: s * 0.3, dist: s * 1.6, arc: 14 });
+    else if (mv === 'orbit') Object.assign(d, { move: 'orbit', alt: s * 0.36, dist: s * 0.95, arc: i % 2 ? -80 : 80 });
+    else if (mv === 'orbitw') Object.assign(d, { move: 'orbit', alt: s * 0.85, dist: s * 2.3, arc: i % 2 ? 55 : -55 });
+    else if (mv === 'topdown') Object.assign(d, { move: 'topdown', alt: s * 0.9, arc: 30 });
+    else if (mv === 'topdownw') Object.assign(d, { move: 'topdown', alt: s * 2.2, arc: -24 });
+    else if (mv === 'push') Object.assign(d, { move: 'push', alt: s * 0.17 + 8, dist0: s * 1.15, dist: s * 0.36 });
+    else if (mv === 'pull') Object.assign(d, { move: 'pull', alt0: s * 0.28, alt: s * 1.05, dist0: s * 0.5, dist: s * 2.7 });
+    else if (mv === 'track') Object.assign(d, { move: 'track', alt: s * 0.2 + 6, dist: s * 0.62, arc: 34 });
+    else if (mv === 'pan') Object.assign(d, { move: 'pan', alt: s * 0.55, dist: s * 1.1, arc: i % 2 ? 110 : -110, pitch: -9 });
+    else if (mv === 'rise') Object.assign(d, { move: 'rise', alt0: s * 0.12 + 5, alt: s * 1.4, dist: s * 0.8 });
+    else if (mv === 'descend') Object.assign(d, { move: 'descend', alt0: s * 1.5, alt: s * 0.2 + 6, dist: s * 0.7 });
+    else if (mv === 'fly') Object.assign(d, { move: 'flyover', to, alt: clamp(S * 0.42, 90, 520), pitch: -15, sub: to });
+    shots.push(d);
+  });
+  return shots;
+}
+function tourFill(shots, lines, pois) {   // captions onto shots: a place is named when the camera first reaches it, the rest follows in order
+  const q = [...lines], seen = new Set();
+  for (const s of shots) {
+    const caps = []; let left = s.dur - 0.6; const n = pois[s.sub];
+    if (n?.line && !seen.has(s.sub)) { seen.add(s.sub); caps.push(n.line); left -= tourNeed(n.line); if (n.more && tourNeed(n.more) <= left) { caps.push(n.more); left -= tourNeed(n.more); } }
+    while (caps.length < 2 && q.length && tourNeed(q[0]) <= left) { const c = q.shift(); caps.push(c); left -= tourNeed(c); }
+    if (!caps.length && q.length && tourNeed(q[0]) <= s.dur + 2) caps.push(q.shift());
+    s.caps = { '*': caps };
+  }
+}
+async function tourAutoSet(p) {
+  const key = p.id + '|' + I18N.lang; if (TOUR_AUTO.has(key)) return TOUR_AUTO.get(key);
+  const [wl, variant] = WIKI_LANG[I18N.lang] || [I18N.lang.split('-')[0]];
+  const [wiki, nearW] = await Promise.all([tourWiki(p).catch(() => null), tourNearWiki(p, wl, variant).catch(() => [])]);
+  const T = tourTerrain(), dirOf = (lat, lon) => { const [x, z] = toLocal(lat, lon); return compassWord(bearingTo(0, 0, x, z)); };
+  // neighbours: Wikipedia places with coordinates first, then the catalogue
+  let near = nearW.filter(n => n.d > 250 && n.d < 9000 && n.name !== wiki?.title && !TOUR_SKIP.test(n.name) && !TOUR_SKIP.test(n.desc)).sort((a, b) => a.d - b.d);
+  const cat = PLACES.filter(q => q !== p).map(q => ({ name: placeName(q), lat: q.lat, lon: q.lon, desc: catName(q.cat), d: haversine(p.lat, p.lon, q.lat, q.lon) })).filter(n => n.d > 250 && n.d < 15000).sort((a, b) => a.d - b.d);
+  const picked = []; for (const n of [...near, ...cat]) { if (picked.length >= 4) break; if (picked.every(m => haversine(m.lat, m.lon, n.lat, n.lon) > 300 && m.name !== n.name)) picked.push(n); }
+  const built = ['heritage', 'museum', 'statue', 'bridge', 'warehouse'].includes(p.cat), base = { heritage: 170, museum: 170, statue: 120, bridge: 260, warehouse: 170, park: 380, scenic: 420, lake: 800, forest: 600, mountain: 1300, cave: 380, diving: 500, reef: 600 }[p.cat] || 380;
+  const S = built ? base : clamp(Math.max(base, T.relief * 0.8), base, 2200);
+  const pois = { c: { zh: p.zh, en: p.en, lat: p.lat, lon: p.lon, h: built ? 18 : 0 } };
+  if (T.relief > 40 && Math.hypot(T.max.x, T.max.z) > 250) { const [la, lo] = toLatLon(T.max.x, T.max.z); pois.hi = { lat: la, lon: lo, line: t('tour.c.high', { dir: compassWord(bearingTo(0, 0, T.max.x, T.max.z)), dist: fmtDist(Math.hypot(T.max.x, T.max.z)), h: Math.round(T.max.h) }) }; }
+  picked.forEach((n, i) => { pois['n' + i] = { lat: n.lat, lon: n.lon, line: t('tour.c.poi', { dir: dirOf(n.lat, n.lon), dist: fmtDist(n.d), name: n.name }), more: n.desc && n.desc !== n.name ? t('tour.c.poiDesc', { name: n.name, desc: n.desc }) : '' }; });
+  // caption material
+  const st = sunTimesOf(p, APP.sun.date), W = WX, lat = Math.abs(p.lat).toFixed(3) + (p.lat >= 0 ? '°N' : '°S'), lon = Math.abs(p.lon).toFixed(3) + (p.lon >= 0 ? '°E' : '°W');
+  const where = t('tour.c.where', { place: placeName(p), region: placeRegion(p) || '—', lat, lon, h: Math.round(T.here) }), relief = t('tour.c.relief', { r: (3.5).toLocaleString(I18N.lang), max: Math.round(T.max.h), min: Math.round(Math.max(0, T.min.h)), d: Math.round(T.relief) });
+  const sea = T.sea > 0.03 || APP.oceanNear ? t('tour.c.sea') : t('tour.c.inland', { h: Math.round(T.mean) }), sun = t('tour.c.sun', { rise: hhmm(st.rise), set: hhmm(st.set), alt: Math.round(st.noonAlt) });
+  const wx = W.ok ? t('tour.c.wx', { temp: Math.round(W.temp), wind: (W.wind ?? 0).toFixed(1), cloud: Math.round(W.cloud ?? 0), dir: compassWord(W.windDir ?? 0) }) : '', own = isZh() ? p.desc : (p.descEn || '');
+  const secText = re => wiki ? wiki.secs.filter(s => s.h && re.test(s.h)).flatMap(s => s.ps) : [], intro = wiki ? wiki.secs.filter(s => !s.h).flatMap(s => s.ps) : [];
+  const exact = !!wiki && (p.x || [p.zh, p.zhs, p.en, placeName(p)].some(n => n && (n.includes(wiki.title) || wiki.title.includes(n))));   // an article about a neighbour may introduce the area, not stand in for this place's own history
+  const used = new Set(), take = k => { if (!exact) return []; const ps = secText(TOUR_HEAD[k]).filter(x => !used.has(x)); ps.forEach(x => used.add(x)); return ps.flatMap(tourChunks); };
+  const src = wiki ? t('tour.c.src', { title: wiki.title }) : '', end = t('tour.c.end'), L = {};
+  L.history = take('history'); const geo = take('geography'); L.nature = take('nature'); L.culture = take('culture');
+  const rest = exact ? wiki.secs.filter(s => s.h).flatMap(s => s.ps).filter(x => !used.has(x)).flatMap(tourChunks) : [];
+  const lead = wiki && !exact ? [t('tour.c.wikiLead', { title: wiki.title })] : [];
+  L.overview = [where, ...tourChunks(own), ...lead, ...intro.flatMap(tourChunks).slice(0, exact ? 30 : 8), ...rest.slice(0, 6)].slice(0, 22); if (src) L.overview.push(src); L.overview.push(end);
+  L.geography = [where, relief, sea, ...geo.slice(0, 18), sun, wx, t('tour.c.near', { n: cat.filter(n => n.d < 15000).length }), ...(geo.length && src ? [src] : []), end].filter(Boolean);
+  L.flight = [t('tour.c.fly0', { place: placeName(p) }), sun, wx, t('tour.c.flyTop', { h: Math.round(T.max.h), agl: Math.round(Math.max(0, T.max.h - T.here)) }), t('tour.c.fly2'), t('tour.c.fly3'), t('tour.c.fly4'), t('tour.c.fly1'), end].filter(Boolean);
+  L.nearby = picked.length >= 2 ? [t('tour.c.nearLead', { place: placeName(p), n: picked.length }), sun, end].filter(Boolean) : [];
+  const kinds = ['overview', 'geography', ...['history', 'culture', 'nature'].filter(k => L[k].length >= 4), ...(L.nearby.length ? ['nearby'] : []), 'flight'];
+  const tours = kinds.map((k, j) => {
+    const shots = tourAutoShots(k, pois, S, (APP.sunAz || 120) + 25 + j * 40); tourFill(shots, k === 'history' || k === 'culture' || k === 'nature' ? [...L[k].slice(0, 26), ...(src ? [src] : []), end] : L[k], pois);
+    return { id: 'auto-' + k, theme: k, title: t('tour.auto.' + k, { place: placeName(p) }), tagline: t('tour.autoTag.' + k), time: TOUR_LOOK[k][0], weather: TOUR_LOOK[k][1], season: 'today', shots };
+  });
+  const set = { auto: true, place: p.id, pois, tours, sources: wiki ? [{ title: wiki.title, url: wiki.url }] : [], credit: wiki ? t('tour.cr.wiki', { title: wiki.title }) : t('tour.cr.computed'), wiki };
+  TOUR_AUTO.set(key, set); return set;
+}
+
+/* ---------- the tour list inside the story card ---------- */
+function tourRow(p, tr, curated) {
+  const m = curated ? tourMedia(p.id, tr.id) : null;
+  return `<div class="trow"><i>${TOUR_ICON[tr.theme] || '◎'}</i><div><b>${esc(tourTxt(tr.title))}</b><span>${esc(t('tour.theme.' + tr.theme))} · 5:00${tr.tagline ? ' · ' + esc(tourTxt(tr.tagline)) : ''}</span></div><span class="tbtns">${m ? `<button class="btn sm" data-video="${esc(tr.id)}">▣ ${esc(t('tour.video'))}</button>` : ''}<button class="btn sm primary" data-tour="${esc(tr.id)}">▶ ${esc(t('tour.live'))}</button></span></div>`;
+}
+async function renderStoryTours(P) {
+  const el = $('#stTours'); if (!el) return; const alive = () => $('#stTours') === el && APP.place === P && !$('#card').hidden;
+  el.innerHTML = `<h4>${esc(t('tour.title'))} <small class="mut">${esc(t('tour.lead'))}</small></h4><div id="tvid"></div><div id="tlistC"></div><div id="tlistA"><p class="mut small">${esc(t('tour.autoWait'))}</p></div><p class="mut small" id="tnote"></p>`;
+  el.onclick = e => {
+    const b = e.target.closest('[data-tour]'); if (b) { AUDIO.start(); startTour(P, b.dataset.tour); return; }
+    const vb = e.target.closest('[data-video]'); if (vb) { const m = tourMedia(P.id, vb.dataset.video), box = $('#tvid'); if (!m) return; box.innerHTML = m.yt ? `<iframe src="https://www.youtube-nocookie.com/embed/${esc(m.yt)}?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="video"></iframe>` : `<video src="${esc(m.src)}" controls autoplay playsinline preload="metadata"></video>`; box.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+  };
+  const set = await tourSetOf(P).catch(() => null); if (!alive()) return;
+  if (set) { $('#tlistC').innerHTML = `<h5>${esc(t('tour.curated'))} · ${set.tours.length}</h5>` + set.tours.map(tr => tourRow(P, tr, true)).join(''); $('#tnote').textContent = (set.airspace ? tourTxt({ 'zh-Hant': set.airspace.zh, en: set.airspace.en }) + ' ' : '') + t('tour.simNote'); } else $('#tnote').textContent = t('tour.simNote');
+  try { const auto = await tourAutoSet(P); if (!alive()) return; $('#tlistA').innerHTML = `<h5>${esc(t('tour.autoHead'))} · ${auto.tours.length}</h5>` + auto.tours.map(tr => tourRow(P, tr, false)).join(''); }
+  catch { if (alive()) $('#tlistA').innerHTML = ''; }
+}
+function tourReadyPanel() { const el = $('#tourEnd'); el.hidden = false; el.innerHTML = `<button class="btn primary big" data-ta="go">▶ ${esc(t('tour.play'))}</button><button class="btn" data-ta="exit">✕ ${esc(t('tour.exit'))}</button>`; el.onclick = e => { const a = e.target.closest('[data-ta]')?.dataset.ta; if (a === 'go') { el.hidden = true; tourPlay(true); } else if (a === 'exit') tourExit(); }; }
+
+/* ---------- Studio: record a list of tours one after another (page opened by studio.py with ?studio=1) ---------- */
+async function tourStudioBoot() {
+  const q = new URLSearchParams(location.search); if (!q.has('studio')) return false;
+  const post = (path, body) => fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).catch(() => { });
+  try { const jobs = await fetchJSON('/studio/jobs', { timeout: 15000 }); TOUR.studio = { jobs: jobs.jobs || [], k: -1, post, opts: jobs }; } catch (e) { console.error('studio', e); return false; }
+  document.body.dataset.studio = '1'; if (TOUR.studio.opts.quality) { APP.quality = TOUR.studio.opts.quality; SET.quality = APP.quality; }
+  addEventListener('error', e => post('/studio/log', { level: 'error', msg: String(e.message) })); tourStudioNext(); return true;
+}
+async function tourStudioNext() {
+  const S = TOUR.studio; if (!S) return; S.k++; const job = S.jobs[S.k];
+  if (!job) { await S.post('/studio/done', { all: true }); document.title = 'AERO Studio · done'; tourSay(''); toast('Studio: all tours recorded', 60000); return; }
+  try {
+    await S.post('/studio/log', { level: 'info', msg: `start ${S.k + 1}/${S.jobs.length} ${job.place} ${job.tour} ${job.lang}` });
+    if (job.lang && job.lang !== I18N.lang) await setLang(job.lang); TOUR.cc = 'auto'; TOUR.voice = false;
+    if (!PLACE_BY_ID.get(job.place) && job.place.startsWith('wd-')) await loadCatalogueX();
+    const p = PLACE_BY_ID.get(job.place); if (!p) throw new Error('unknown place ' + job.place);
+    await startTour(p, job.tour, { record: true, w: job.w || S.opts.w, h: job.h || S.opts.h, bps: job.bps || S.opts.bps, fps: S.opts.fps, from: S.opts.from, prewarm: S.opts.prewarm !== false, name: job.name, done: async res => { await S.post('/studio/done', { job, result: res }); if (TOUR.on) tourExit(true); setTimeout(tourStudioNext, 800); } });
+    if (!TOUR.on) throw new Error('tour did not start');
+  } catch (e) { await S.post('/studio/done', { job, result: { error: String(e.message || e) } }); if (TOUR.on) tourExit(true); setTimeout(tourStudioNext, 800); }
+}
+
+/* ======================= v7 · destinations sheet for a catalogue of 20,000+ places ======================= */
+const _regName = new Map();
+function regCached(p) { const k = I18N.lang + '|' + p.cc + '|' + (p.cc === 'TW' ? p.region : ''); let v = _regName.get(k); if (v === undefined) { v = placeRegion(p).toLowerCase(); _regName.set(k, v); } return v; }
+function placeCats() { const n = new Map(); for (const p of PLACES) if (!p.mission) n.set(p.cat, (n.get(p.cat) || 0) + 1); return [...n].filter(([c, k]) => k >= 8 && c !== 'mission').sort((a, b) => b[1] - a[1]).map(([c]) => c); }
+function renderResults() {
+  const q = ($('#q')?.value || '').trim().toLowerCase(), o = APP.place, L = I18N.lang;
+  let list = PLACES.filter(p => (PS.region === 'all' || (PS.region === 'tw' ? p.cc === 'TW' : p.cc !== 'TW')) && (PS.cat === 'all' || p.cat === PS.cat));
+  if (q) list = list.filter(p => `${p.zh} ${p.zhs} ${p.en} ${I18N.names[p.id + '|' + L] || ''} ${regCached(p)} ${p.cc} ${catName(p.cat)}`.toLowerCase().includes(q));
+  const n = list.length;
+  if (PS.sort === 'pop') list.sort((a, b) => popOf(b) - popOf(a) || a.i - b.i);
+  else if (o) { for (const p of list) p._d = haversine(o.lat, o.lon, p.lat, p.lon); list.sort((a, b) => a._d - b._d); }
+  $('#resHead').textContent = q || PS.cat !== 'all' || PS.sort === 'pop' ? t('menu.found', { n: n.toLocaleString(L) }) : t('menu.nearest');
+  $('#results').innerHTML = list.slice(0, 150).map(p => `<button class="res" data-id="${esc(p.id)}"><b>${esc(placeName(p))}</b><span>${esc(placeLine(p))}${o ? ' · ' + esc(fmtDist(haversine(o.lat, o.lon, p.lat, p.lon))) : ''}</span></button>`).join('') || `<p class="mut">${esc(t('menu.none'))}</p>`;
+}
+
+window.__AERO = { TOUR, CATX, SCORE, startTour, tourExit, tourPlay, tourSeek, tourAutoSet, tourSetOf, tourPlan, tourPose, tourChunks, loadCatalogueX, catxAdd, PLACES, PLACE_BY_ID, APP, SET, TERRAIN, VEC, DEM, ENV, MIS, AM, WX, WAVES, GEO, POST, TREES, BUOYS, I18N, MISSIONS, TUT, loadPlace, spawn, setTimePreset, applyWeather, startAeroAt, t, camSmooth, refineSunTime, updateAeroMission, aeroMissionAction, updateCamera, readInput, loadMissions, CREW, startCrew, crewScore, amP };
 boot();
