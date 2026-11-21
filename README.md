@@ -31,7 +31,7 @@ python3 studio/studio.py --list      # 4. 要把導覽錄成影片檔： python3
 `python3 studio/studio.py` 會在本機開一個 Chrome 視窗，逐部飛完導覽並錄影（畫面含片名、字幕、片尾與配樂），存到 `tours_out/`。
 每部約 6–7 分鐘（先預載場景，再即時錄 5 分鐘），40 部約 4.5 小時；可中斷，重跑會跳過已完成的。錄影期間請保持連網、視窗不要最小化。
 - `--only suantou`（只錄某景點）、`--tour t1`、`--langs zh-Hant,en`（另錄英文字幕版）、`--size 1920x1080 --mbps 8`、`--list`。
-- 錄好的影片會出現在本機網站該景點的「景點故事」裡（「影片」按鈕）。要放到公開網站：把影片上傳到 YouTube 或其他空間後，
+- 錄好的影片會出現在本機網站該景點的「景點故事」裡（「影片」按鈕）；用同學實拍素材剪的版本以「實拍版」按鈕並列（清單在 `data/tours/media-local.json`，鍵名 `real`）。要放到公開網站：把影片上傳到 YouTube 或其他空間後，
   在 `data/tours/media.json` 的 `items` 寫入 `"<景點id>/<導覽id>": {"zh-Hant": "<YouTube 影片 id 或影片網址>"}` 再上傳網站。
   GitHub Pages 單檔上限 100 MB、整站建議 1 GB 以內，40 部 5 分鐘影片不適合直接放進同一個儲存庫。
 - 公開分享的影片只含字幕與程式合成的配樂，不含系統語音。

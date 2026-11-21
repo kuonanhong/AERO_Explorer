@@ -2647,11 +2647,11 @@ let lastT = performance.now(), acc = 0, lastPrefetch = 0; APP.envT = 0;
 const FPSWIN = { t: 0, n: 0 };
 let FRAME_ERR = 0;
 function frame(now) {
-  requestAnimationFrame(frame);
+  if (!TOUR.studio?.clock) requestAnimationFrame(frame);   // the Studio paces frames itself (see tourStudioClock)
   const dtr = Math.max(1e-3, (now - lastT) / 1000), dt = Math.min(0.05, dtr); lastT = now;
   APP.fps = lerp(APP.fps, 1 / dtr, 0.05);
   if (APP.state !== 'sim' || !APP.veh || !renderer) return;
-  try { simFrame(dt, dtr); } catch (e) { if (FRAME_ERR++ < 3) console.error('frame', e); }   // one bad frame must not stop the loop
+  try { simFrame(dt, dtr); } catch (e) { APP.lastErr = String(e && e.stack || e); if (FRAME_ERR++ < 3) console.error('frame', e); }   // one bad frame must not stop the loop
 }
 function simFrame(dt, dtr) {
   APP.frameN++; APP.envT += dt; const run = !APP.paused, v = APP.veh, envT = APP.envT;
@@ -3002,7 +3002,10 @@ async function tourSetOf(p) {   // the researched scripts of a featured destinat
   if (!TOUR.sets.has(p.id)) { try { TOUR.sets.set(p.id, globalThis.AERO_TOURS?.[p.id] || await fetchJSON('data/tours/' + e.file, { timeout: 20000 })); } catch { TOUR.sets.set(p.id, null); } }
   return TOUR.sets.get(p.id);
 }
-function tourMedia(pid, tid) { const it = TOUR.idx?.media?.items?.[pid + '/' + tid]; if (!it) return null; const f = it[I18N.lang] || (isZh() ? it['zh-Hant'] : null) || it['*'] || it.en || it['zh-Hant']; return !f ? null : /^[\w-]{11}$/.test(f) ? { yt: f } : { src: f }; }
+function tourMedia(pid, tid, kind) {   // kind 'real': an edition cut from real drone footage, listed next to the recording of the simulated flight
+  const it = TOUR.idx?.media?.items?.[pid + '/' + tid]; if (!it) return null; const f = kind === 'real' ? it.real : it[I18N.lang] || (isZh() ? it['zh-Hant'] : null) || it['*'] || it.en || it['zh-Hant'];
+  return !f ? null : /^[\w-]{11}$/.test(f) ? { yt: f } : { src: f };
+}
 
 /* ---------- script -> flight plan in local metres ---------- */
 function tourPlan(set, tour, p) {
@@ -3413,15 +3416,15 @@ async function tourAutoSet(p) {
 
 /* ---------- the tour list inside the story card ---------- */
 function tourRow(p, tr, curated) {
-  const m = curated ? tourMedia(p.id, tr.id) : null;
-  return `<div class="trow"><i>${TOUR_ICON[tr.theme] || '◎'}</i><div><b>${esc(tourTxt(tr.title))}</b><span>${esc(t('tour.theme.' + tr.theme))} · 5:00${tr.tagline ? ' · ' + esc(tourTxt(tr.tagline)) : ''}</span></div><span class="tbtns">${m ? `<button class="btn sm" data-video="${esc(tr.id)}">▣ ${esc(t('tour.video'))}</button>` : ''}<button class="btn sm primary" data-tour="${esc(tr.id)}">▶ ${esc(t('tour.live'))}</button></span></div>`;
+  const m = curated ? tourMedia(p.id, tr.id) : null, mr = curated ? tourMedia(p.id, tr.id, 'real') : null;
+  return `<div class="trow"><i>${TOUR_ICON[tr.theme] || '◎'}</i><div><b>${esc(tourTxt(tr.title))}</b><span>${esc(t('tour.theme.' + tr.theme))} · 5:00${tr.tagline ? ' · ' + esc(tourTxt(tr.tagline)) : ''}</span></div><span class="tbtns">${mr ? `<button class="btn sm" data-video="${esc(tr.id)}" data-kind="real">▣ ${esc(t('tour.videoReal'))}</button>` : ''}${m ? `<button class="btn sm" data-video="${esc(tr.id)}">▣ ${esc(t('tour.video'))}</button>` : ''}<button class="btn sm primary" data-tour="${esc(tr.id)}">▶ ${esc(t('tour.live'))}</button></span></div>`;
 }
 async function renderStoryTours(P) {
   const el = $('#stTours'); if (!el) return; const alive = () => $('#stTours') === el && APP.place === P && !$('#card').hidden;
   el.innerHTML = `<h4>${esc(t('tour.title'))} <small class="mut">${esc(t('tour.lead'))}</small></h4><div id="tvid"></div><div id="tlistC"></div><div id="tlistA"><p class="mut small">${esc(t('tour.autoWait'))}</p></div><p class="mut small" id="tnote"></p>`;
   el.onclick = e => {
     const b = e.target.closest('[data-tour]'); if (b) { AUDIO.start(); startTour(P, b.dataset.tour); return; }
-    const vb = e.target.closest('[data-video]'); if (vb) { const m = tourMedia(P.id, vb.dataset.video), box = $('#tvid'); if (!m) return; box.innerHTML = m.yt ? `<iframe src="https://www.youtube-nocookie.com/embed/${esc(m.yt)}?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="video"></iframe>` : `<video src="${esc(m.src)}" controls autoplay playsinline preload="metadata"></video>`; box.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+    const vb = e.target.closest('[data-video]'); if (vb) { const m = tourMedia(P.id, vb.dataset.video, vb.dataset.kind), box = $('#tvid'); if (!m) return; box.innerHTML = m.yt ? `<iframe src="https://www.youtube-nocookie.com/embed/${esc(m.yt)}?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="video"></iframe>` : `<video src="${esc(m.src)}" controls autoplay playsinline preload="metadata"></video>`; box.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
   };
   const set = await tourSetOf(P).catch(() => null); if (!alive()) return;
   if (set) { $('#tlistC').innerHTML = `<h5>${esc(t('tour.curated'))} · ${set.tours.length}</h5>` + set.tours.map(tr => tourRow(P, tr, true)).join(''); $('#tnote').textContent = (set.airspace ? tourTxt({ 'zh-Hant': set.airspace.zh, en: set.airspace.en }) + ' ' : '') + t('tour.simNote'); } else $('#tnote').textContent = t('tour.simNote');
@@ -3436,7 +3439,28 @@ async function tourStudioBoot() {
   const post = (path, body) => fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).catch(() => { });
   try { const jobs = await fetchJSON('/studio/jobs', { timeout: 15000 }); TOUR.studio = { jobs: jobs.jobs || [], k: -1, post, opts: jobs }; } catch (e) { console.error('studio', e); return false; }
   document.body.dataset.studio = '1'; if (TOUR.studio.opts.quality) { APP.quality = TOUR.studio.opts.quality; SET.quality = APP.quality; }
-  addEventListener('error', e => post('/studio/log', { level: 'error', msg: String(e.message) })); tourStudioNext(); return true;
+  addEventListener('error', e => post('/studio/log', { level: 'error', msg: 'error: ' + String(e.message) }));
+  addEventListener('unhandledrejection', e => post('/studio/log', { level: 'error', msg: 'error: ' + String(e.reason?.message || e.reason) }));
+  try { navigator.wakeLock?.request('screen').catch(() => { }); } catch { }
+  tourStudioClock(); tourStudioNext(); return true;
+}
+/* A browser only draws animation frames for a window it believes is visible: a covered window or a sleeping display would stall a
+   recording half-way. In the Studio the frames are therefore paced by a worker timer, which keeps running in both cases. */
+function tourStudioClock() {
+  const S = TOUR.studio, gap = 1000 / (S.opts.fps || 30) - 3; let last = 0, n0 = 0, shown = '', still = 0;
+  try {   // one tick is requested after each frame, so a slow frame never piles up work and other tasks (recorder, network) always get their turn
+    const w = new Worker(URL.createObjectURL(new Blob(['onmessage = e => setTimeout(() => postMessage(0), e.data)'], { type: 'text/javascript' })));
+    w.onmessage = () => { const t0 = performance.now(); last = t0; try { frame(t0); } finally { w.postMessage(Math.max(3, gap - (performance.now() - t0))); } }; S.clock = w; w.postMessage(50);
+  }
+  catch (e) { S.post('/studio/log', { msg: 'worker clock unavailable (' + e.message + '); using animation frames' }); }
+  setInterval(() => {   // progress line for the terminal every 15 s
+    const R = TOUR.run, fps = (APP.frameN - n0) / 15; n0 = APP.frameN; still = fps < 0.5 ? still + 1 : 0;
+    let m = !R ? 'loading the place' : R.warm ? `preparing scenery ${Math.round(100 * R.warm.k / R.warm.list.length)}%` : R.playing ? `recording ${tourClock(R.t)} / ${tourClock(R.plan.dur)}` : R.ended ? 'saving the video' : 'waiting';
+    m += ` · ${fps.toFixed(0)} fps` + (document.hidden ? ' · window hidden' : '') + (TOUR.rec ? ` · recorder ${TOUR.rec.mr.state}` : '');
+    if (APP.lastErr && APP.lastErr !== shown) { shown = APP.lastErr; m += ' · error: ' + shown.split('\n').slice(0, 3).join(' | ').slice(0, 400); }
+    if (still >= 2) m += ' · nothing is being drawn: bring the AERO window to the front and keep the display awake';
+    S.post('/studio/log', { msg: `[${S.k + 1}/${S.jobs.length}] ` + m });
+  }, 15000);
 }
 async function tourStudioNext() {
   const S = TOUR.studio; if (!S) return; S.k++; const job = S.jobs[S.k];

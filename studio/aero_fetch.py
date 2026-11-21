@@ -314,7 +314,13 @@ def phase1(args):
         query = f'SELECT ?i ?s ?co WHERE {{ ?i wdt:P31 wd:{q}; wikibase:sitelinks ?s; wdt:P625 ?co. FILTER(?s >= {n}) }}'
         try: rows = sparql(query)
         except Exception as e:
-            say(f'  [{i}/{len(CLASSES)}] {key}: skipped for now ({str(e)[:80]})'); continue
+            say(f'  [{i}/{len(CLASSES)}] {key}: too large in one piece ({str(e)[:60]}); asking in smaller parts')
+            rows = []
+            try:
+                for lo, hi in ((n, n + 1), (n + 1, n + 3), (n + 3, n + 8), (n + 8, n + 20), (n + 20, 100000)):
+                    rows += sparql(f'SELECT ?i ?s ?co WHERE {{ ?i wdt:P31 wd:{q}; wikibase:sitelinks ?s; wdt:P625 ?co. FILTER(?s >= {lo} && ?s < {hi}) }}'); time.sleep(1.5)
+            except Exception as e2:
+                say(f'  [{i}/{len(CLASSES)}] {key}: skipped for now ({str(e2)[:80]})'); continue
         out = {}
         for b in rows:
             p = wkt_point(b['co']['value'])
@@ -422,6 +428,27 @@ def phase2(args):
         save_json(path, out); done += 1
         if done % 40 == 0: say(f'  {min(len(ids), start + 50)}/{len(ids)}')
         time.sleep(0.15)
+    have = set()
+    for f in os.listdir(os.path.join(WD, 'ent')): have.update((load_json(os.path.join(WD, 'ent', f), {}) or {}).keys())
+    miss = [q for q in ids if q not in have]
+    if miss: say(f'  {len(miss)} more sights joined the list; fetching their names')
+    for start in range(0, len(miss), 50):
+        chunk = miss[start:start + 50]
+        url = WDAPI + '?' + urllib.parse.urlencode({'action': 'wbgetentities', 'format': 'json', 'ids': '|'.join(chunk), 'props': 'labels|descriptions|sitelinks',
+                                                   'languages': '|'.join(ALL_CODES), 'sitefilter': '|'.join(ALL_SITES), 'maxlag': '5'})
+        try:
+            d = jget(url, timeout=60)
+            if 'error' in d: time.sleep(6); d = jget(url, timeout=60)
+            if 'error' in d: continue
+        except Exception as e:
+            say(f'  extra names {start}: {str(e)[:80]} (will retry on the next run)'); continue
+        out = {q: {'l': {}, 'd': {}, 'w': {}} for q in chunk}
+        for q, e in (d.get('entities') or {}).items():
+            if 'missing' in e or q not in out: continue
+            out[q] = {'l': {k: v['value'] for k, v in (e.get('labels') or {}).items()},
+                      'd': {k: v['value'] for k, v in (e.get('descriptions') or {}).items() if k in ('en', 'zh', 'zh-tw', 'zh-hant', 'zh-cn', 'zh-hans', 'ja')},
+                      'w': {k: v['title'] for k, v in (e.get('sitelinks') or {}).items()}}
+        save_json(os.path.join(WD, 'ent', f'x_{chunk[0]}_{len(chunk)}.json'), out); time.sleep(0.15)
     say(f'\n▶ Wikidata 3/4: country, photo, elevation, heritage status')
     for start in range(0, len(ids), 200):
         path = os.path.join(WD, 'fact', f'{start // 200:05d}.json')
@@ -448,6 +475,30 @@ def phase2(args):
         save_json(path, out)
         if (start // 200) % 20 == 0: say(f'  {min(len(ids), start + 200)}/{len(ids)}')
         time.sleep(0.6)
+    have = set()
+    for f in os.listdir(os.path.join(WD, 'fact')): have.update((load_json(os.path.join(WD, 'fact', f), {}) or {}).keys())
+    miss = [q for q in ids if q not in have]
+    for start in range(0, len(miss), 200):
+        chunk = miss[start:start + 200]
+        query = ('SELECT ?i ?cc ?img ?elev ?her ?adm WHERE { VALUES ?i { %s } OPTIONAL { ?i wdt:P17 ?c. ?c wdt:P297 ?cc } OPTIONAL { ?i wdt:P18 ?img } '
+                 'OPTIONAL { ?i wdt:P2044 ?elev } OPTIONAL { ?i wdt:P1435 ?her } OPTIONAL { ?i wdt:P131 ?adm } }') % ' '.join('wd:' + q for q in chunk)
+        try: res = sparql(query)
+        except Exception as e:
+            say(f'  extra facts {start}: {str(e)[:80]} (will retry on the next run)'); continue
+        out = {q: {} for q in chunk}
+        for b in res:
+            r = out.setdefault(qid(b['i']['value']), {})
+            if 'cc' in b and 'cc' not in r: r['cc'] = b['cc']['value']
+            if 'img' in b and 'img' not in r: r['img'] = urllib.parse.unquote(b['img']['value'].rsplit('/', 1)[-1])
+            if 'elev' in b and 'elev' not in r:
+                try: r['elev'] = round(float(b['elev']['value']))
+                except Exception: pass
+            if 'her' in b:
+                h = qid(b['her']['value'])
+                if h == 'Q9259': r['whs'] = 1
+                else: r['her'] = 1
+            if 'adm' in b and 'adm' not in r: r['adm'] = qid(b['adm']['value'])
+        save_json(os.path.join(WD, 'fact', f'x_{chunk[0]}_{len(chunk)}.json'), out); time.sleep(0.6)
     return rows
 
 

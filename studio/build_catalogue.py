@@ -146,7 +146,9 @@ def main():
         r = x['r']; n = r.get('n') or {}; d = r.get('d') or {}; w = r.get('w') or {}; zh, en = x['zh'], x['en']; zhs = clean(n.get('zh-Hans', ''), 60)
         wz, we = w.get('zhwiki', ''), w.get('enwiki', ''); adm = r.get('adm') or {}
         region = clean(adm.get('zh-Hant') or adm.get('zh-tw') or adm.get('en') or '', 40)
-        rows.append([r['q'], round(r['lat'], 5), round(r['lon'], 5), zh, en, r.get('cc') or '', region, x['cat'], clean(d.get('zh-Hant', ''), 120), clean(d.get('en', ''), 160),
+        cc = r.get('cc') or ''
+        if {'range', 'desert'} & set(r.get('types') or []) and (r.get('s') or 0) >= 40: cc, region = '', ''   # a mountain system or desert spans countries; Wikidata's first country would mislead
+        rows.append([r['q'], round(r['lat'], 5), round(r['lon'], 5), zh, en, cc, region, x['cat'], clean(d.get('zh-Hant', ''), 120), clean(d.get('en', ''), 160),
                      '' if zhs == zh else zhs, int(r.get('s') or 0), '', '=' if wz and wz == zh else wz, '=' if we and we == en else we])
         for l, m in names.items():
             v = clean(n.get(l, ''), 90)

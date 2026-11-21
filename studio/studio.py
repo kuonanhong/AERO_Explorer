@@ -128,7 +128,12 @@ def recorded(base):
 
 def finish(args, all_jobs):
     """media list for the local site, and web-ready copies when ffmpeg is installed"""
-    items, ff = {}, shutil.which('ffmpeg'); web = os.path.join(OUT, 'web'); n = 0
+    items, ff = {}, shutil.which('ffmpeg'); web = os.path.join(OUT, 'web'); n = 0; mpath = os.path.join(V7, 'data', 'tours', 'media-local.json')
+    try:                                                     # keep what is already listed and still on disk (for example a film cut from real footage)
+        for k, v in (json.load(open(mpath, encoding='utf-8')).get('items') or {}).items():
+            keep = {l: f for l, f in v.items() if os.path.exists(os.path.join(OUT, f))}
+            if keep: items[k] = keep
+    except Exception: pass
     for j in all_jobs:
         src = recorded(j['name'])
         if not src: continue
@@ -144,7 +149,7 @@ def finish(args, all_jobs):
                 elif os.path.exists(dst + '.tmp.mp4'): os.remove(dst + '.tmp.mp4')
             if os.path.exists(dst): rel = 'web/' + os.path.basename(dst)
         items.setdefault(j['place'] + '/' + j['tour'], {})[j['lang']] = rel; n += 1
-    json.dump({'base': 'tours_out/', 'items': items}, open(os.path.join(V7, 'data', 'tours', 'media-local.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    json.dump({'base': 'tours_out/', 'items': items}, open(mpath, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     say(f'\n{n} video(s) in {OUT}' + ('' if ff else '  (ffmpeg not found: files are kept exactly as recorded)'))
     say('They now play inside the story card when the site is opened from this computer (start.command).')
 
@@ -182,15 +187,20 @@ def main():
     if chrome and not args.no_browser:
         prof = os.path.join(WORK, 'chrome-profile'); os.makedirs(prof, exist_ok=True)
         cmd = [chrome, f'--app={url}', f'--user-data-dir={prof}', f'--window-size={w},{h + 40}', '--window-position=40,40', '--autoplay-policy=no-user-gesture-required', '--disable-background-timer-throttling',
-               '--disable-renderer-backgrounding', '--disable-backgrounding-occluded-windows', '--disable-features=CalculateNativeWinOcclusion', '--force-device-scale-factor=1', '--no-first-run',
+               '--disable-renderer-backgrounding', '--disable-backgrounding-occluded-windows', '--disable-features=CalculateNativeWinOcclusion,MacWebContentsOcclusion,IntensiveWakeUpThrottling',
+               '--disable-background-media-suspend', '--force-device-scale-factor=1', '--no-first-run',
                '--no-default-browser-check', '--disable-session-crashed-bubble', '--hide-crash-restore-bubble']
         say('Opening', os.path.basename(chrome), '— keep that window open and visible; do not minimise it.')
         proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if sys.platform == 'darwin' and shutil.which('caffeinate'):          # keep the display and the computer awake while the window is open
+            try: subprocess.Popen(['caffeinate', '-dims', '-w', str(proc.pid)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            except Exception: pass
+        say('A line of progress appears here every 15 seconds. The first video is ready after about 7 minutes.')
     else: say(f'Chrome was not found. Open this address in Chrome or Edge and click once inside the page:\n  {url}')
     try:
         while not STATE['done'].wait(5):
             if proc and proc.poll() is not None: say('The browser window was closed; stopping.'); break
-            if time.time() - STATE['last'] > 1500: say('No progress for 25 minutes; stopping.'); break
+            if time.time() - STATE['last'] > 600: say('No sign of life from the page for 10 minutes; stopping. Run the same command again to continue.'); break
     except KeyboardInterrupt: say('\nStopped. Run the same command again to continue with the remaining tours.')
     if proc and proc.poll() is None:
         try: proc.terminate()
