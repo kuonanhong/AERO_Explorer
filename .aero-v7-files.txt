@@ -85,6 +85,16 @@ data/tours/tw-382000000a_109751.json
 data/tours/tw-382000000a_109990.json
 data/tours/tw-a15010100h_000041.json
 data/tours/tw-x-suantou-eco-park.json
+data/tours/unesco-1037.json
+data/tours/unesco-1152.json
+data/tours/unesco-1195.json
+data/tours/unesco-1418.json
+data/tours/unesco-145.json
+data/tours/unesco-304.json
+data/tours/unesco-403.json
+data/tours/unesco-447.json
+data/tours/unesco-672.json
+data/tours/unesco-75.json
 i18n/ar.json
 i18n/bn.json
 i18n/cs.json

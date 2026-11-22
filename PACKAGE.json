@@ -1,13 +1,13 @@
 {
  "name": "AERO Explorer",
  "version": "7.0.0",
- "build": "6c527537b7",
- "built": "2026-11-21",
- "files": 367,
+ "build": "e84210aff1",
+ "built": "2026-11-22",
+ "files": 377,
  "destinations": 28777,
  "destinations_base": 2777,
  "destinations_world": 26000,
- "tour_places": 10,
- "tours": 40,
+ "tour_places": 20,
+ "tours": 80,
  "languages": 40
 }
