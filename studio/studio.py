@@ -161,12 +161,15 @@ def main():
     ap.add_argument('--size', default='1280x720'); ap.add_argument('--mbps', type=float, default=5.0); ap.add_argument('--fps', type=int, default=30)
     ap.add_argument('--quality', default='high', choices=['low', 'mid', 'high']); ap.add_argument('--from', dest='start', type=float, default=0, help=argparse.SUPPRESS)
     ap.add_argument('--chrome', default=''); ap.add_argument('--no-browser', action='store_true'); ap.add_argument('--no-prewarm', action='store_true', help=argparse.SUPPRESS)
+    ap.add_argument('--limit', type=int, default=0, help='record at most this many tours in this run (0 = all that are left)')
     args = ap.parse_args()
     if not os.path.exists(os.path.join(V7, 'index.html')): sys.exit('✗ run this from the studio/ folder inside the AERO Explorer v7 package')
     os.makedirs(OUT, exist_ok=True); os.makedirs(WORK, exist_ok=True); STATE['log'] = open(os.path.join(OUT, 'studio-log.txt'), 'a', encoding='utf-8')
     w, h = (int(x) for x in args.size.lower().split('x'))
     if args.start: STATE['min'] = 50_000                      # partial test recordings are small
     allj = [] if args.serve else make_jobs(args); todo = [j for j in allj if args.force or not recorded(j['name'])]
+    left = len(todo)
+    if args.limit > 0: todo = todo[:args.limit]
     if args.list or (not args.serve and not todo):
         for j in allj: say(('  done ' if recorded(j['name']) else '  todo '), j['name'], '·', j['title'])
         say(f'{len(allj)} tour(s), {len(todo)} to record (about {len(todo) * 6.5 / 60:.1f} h)');
@@ -183,6 +186,7 @@ def main():
             while True: time.sleep(3600)
         except KeyboardInterrupt: return
     say(f'AERO Studio: {len(todo)} tour(s) to record, {w}x{h} at {args.mbps:g} Mbit/s — about {len(todo) * 6.5 / 60:.1f} hours. Output: {OUT}')
+    if len(todo) < left: say(f'(--limit {args.limit}: {left - len(todo)} more tour(s) are left for the next run)')
     url += f'?studio=1&lang={urllib.parse.quote(todo[0]["lang"])}'; chrome = args.chrome or find_chrome(); proc = None
     if chrome and not args.no_browser:
         prof = os.path.join(WORK, 'chrome-profile'); os.makedirs(prof, exist_ok=True)
