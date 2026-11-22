@@ -159,6 +159,7 @@ async function setLang(lang) {
 }
 function applyI18n(root) {
   for (const el of $$('[data-i18n]', root)) el.textContent = t(el.dataset.i18n);
+  for (const el of $$('[data-i18n-en]', root)) { const k = el.dataset.i18nEn; el.textContent = I18N.lang !== 'en' && I18N.dict[k] && I18N.dict[k] !== I18N.en[k] ? (I18N.en[k] || '') : ''; }   // the same text in English, under the viewer's language
   for (const el of $$('[data-i18n-ph]', root)) el.placeholder = t(el.dataset.i18nPh);
   for (const el of $$('[data-i18n-title]', root)) { el.title = t(el.dataset.i18nTitle); el.setAttribute('aria-label', el.title); }
 }
@@ -1981,6 +1982,10 @@ function buildDrawer() {
     </div>
     <details><summary data-i18n="set.google"></summary><p class="mut" data-i18n="set.googleHint"></p><div class="row"><input id="gkey" type="password" autocomplete="off" spellcheck="false" placeholder="AIza…"><button class="btn sm" id="gApply" data-i18n="btn.apply"></button></div></details>
     <div class="links"><a id="l4d" href="AERO_4D_Explorer.html" target="_blank" rel="noopener" data-i18n="set.link4d"></a><a id="lClassic" href="classic-v5.html" data-i18n="set.linkClassic"></a><a href="https://github.com/kuonanhong/AERO_Explorer" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="contact"><b data-i18n="contact.head"></b>
+      <a class="cline" href="https://line.me/R/ti/p/%40530pgchc" target="_blank" rel="noopener"><span data-i18n="contact.line"></span><small data-i18n-en="contact.line"></small></a>
+      <a href="https://kuonanhong.github.io/AERO_Explorer/" target="_blank" rel="noopener"><span data-i18n="contact.aero"></span><small data-i18n-en="contact.aero"></small></a>
+      <a href="https://kuonanhong.github.io/Resilience_Crew_Lab/" target="_blank" rel="noopener"><span data-i18n="contact.rcl"></span><small data-i18n-en="contact.rcl"></small></a></div>
     <p id="pStats" class="mut"></p>`;
   applyI18n(d); d.addEventListener('click', e => { if (e.target.closest('[data-close]')) toggleDrawer(false); });
   for (const [id, url] of [['#lClassic', 'classic-v5.html'], ['#l4d', 'AERO_4D_Explorer.html']]) {   // hide links to pages this copy does not have
@@ -2957,8 +2962,8 @@ function placeCountLine() {
 }
 /* the Wikipedia article of a destination in the viewer's language: exact title from Wikidata for catalogue-extension places,
    nearest geotagged article for the others */
-async function wikiTitleFor(p) {
-  const [wl, variant] = WIKI_LANG[I18N.lang] || [I18N.lang.split('-')[0]];
+async function wikiTitleFor(p, lang = I18N.lang) {   // lang: the interface language whose Wikipedia is wanted (the tours also ask for the English one)
+  const [wl, variant] = WIKI_LANG[lang] || [lang.split('-')[0]];
   if (p.x) {
     if (wl === 'zh' && p.wz) return { wl, variant, title: p.wz };
     if (wl === 'en' && p.we) return { wl, variant, title: p.we };
@@ -2984,7 +2989,18 @@ const TOUR = { on: false, run: null, idx: null, idxP: null, sets: new Map(), cc:
 const TOUR_FOV = 74, TOUR_STEP = 0.5;
 const TOUR_ICON = { history: '◷', culture: '❖', nature: '❦', geography: '▲', overview: '◎', nearby: '✦', flight: '✈' };
 const tourEase = u => u * u * (3 - 2 * u);
-const tourTxt = o => !o ? '' : typeof o === 'string' ? o : (o[I18N.lang] || (isZh() ? (o['zh-Hant'] || o.zh) : '') || o.en || o['zh-Hant'] || o.zh || '');
+/* The researched scripts are written in Traditional Chinese and English. Readers of Simplified Chinese get the Chinese text converted
+   with a table that covers every character the scripts use (tools/t2s_map.json; the build reports a character it does not know). */
+const TOUR_T2S = {"p":"並并乾干亙亘亞亚佈布佔占併并來来侶侣係系倉仓個个們们倫伦偉伟側侧偵侦偽伪傑杰傘伞備备傳传債债傷伤傾倾僅仅僑侨價价儀仪億亿兒儿內内兩两凍冻凱凯別别則则剛刚創创劃划劇剧劍剑勁劲動动務务勝胜勞劳勢势匯汇區区協协卻却厲厉參参叢丛呂吕員员問问啟启單单嘗尝嘯啸噴喷噸吨嚮向嚴严國国圍围園园圓圆圖图團团埡垭執执堅坚報报場场塊块塗涂塚冢墾垦壇坛壓压壞坏壩坝壯壮壺壶壽寿夢梦夾夹奧奥奪夺婦妇媽妈學学宮宫實实寧宁寫写寬宽寶宝將将專专尋寻對对導导層层屬属岡冈島岛峽峡崗岗崙仑嶺岭嶼屿嶽岳巒峦巔巅巖岩師师帳帐帶带幣币幹干幾几庫库廂厢廟庙廠厂廢废廣广廳厅張张強强彎弯彥彦後后徑径從从復复徵征愛爱態态慶庆憶忆應应懸悬戰战戲戏戶户捨舍掃扫掛挂採采揚扬換换損损搗捣撈捞撐撑撿捡擁拥擇择擊击擋挡據据擠挤擬拟擴扩擺摆擾扰攔拦攜携攝摄攤摊敘叙敵敌數数斷断於于昇升時时暫暂曆历曠旷曬晒書书會会東东條条棄弃棗枣棧栈棲栖楊杨楨桢業业極极榮荣構构樁桩樂乐樑梁樓楼標标樞枢樣样樹树樺桦橋桥機机橢椭橫横檜桧檢检櫚榈櫟栎櫸榉櫻樱欄栏權权欒栾欖榄歐欧歡欢歲岁歷历歸归殘残殼壳毀毁氈毡氣气氫氢汙污決决沒没沖冲況况涼凉淨净淺浅減减測测湧涌湯汤準准溝沟溫温滅灭滲渗滿满漁渔漢汉漲涨漸渐漿浆潛潜澤泽澱淀濁浊濃浓濕湿濟济濤涛濱滨濺溅濾滤瀕濒灘滩灣湾為为烏乌無无煉炼煙烟熱热燈灯燒烧營营燭烛爭争爾尔牆墙牠它狀状狹狭獅狮獎奖獨独獲获獵猎獸兽獻献獼猕現现瑪玛環环產产畢毕畫画異异當当疊叠發发盞盏盡尽監监盤盘盪荡眾众矽硅砲炮確确碼码磚砖磧碛磯矶礦矿礫砾祿禄禍祸禎祯禦御禮礼稜棱種种稱称積积窪洼筆笔節节範范築筑簡简簽签籃篮籌筹籠笼紀纪約约紅红紋纹納纳紐纽紗纱紙纸級级紛纷紡纺紮扎細细紹绍終终組组結结絕绝給给絨绒統统絲丝經经綠绿綬绶維维網网綿绵緊紧緋绯緒绪線线緣缘編编緩缓緻致縣县縫缝縮缩總总織织繞绕繡绣繩绳繪绘繫系繳缴繼继續续纜缆罰罚羅罗義义翬翚翹翘聖圣聞闻聯联聲声聳耸職职聽听脅胁脈脉腳脚膠胶膽胆臉脸臥卧臨临臺台與与興兴舉举舊旧荊荆莊庄莖茎華华菸烟萊莱萬万葉叶著着葦苇蒐搜蓋盖蓮莲蓴莼蔣蒋蔭荫蕭萧薊蓟薑姜薦荐薩萨薰熏藍蓝藝艺藥药蘆芦蘇苏蘚藓蘭兰處处虛虚號号蝕蚀蝦虾螢萤蟲虫術术衛卫衝冲補补裝装裡里製制複复襲袭見见規规覓觅視视親亲覽览觀观觸触訂订計计訊讯討讨託托記记訝讶訪访設设許许訴诉詞词詢询試试詩诗話话該该認认誕诞語语誦诵說说誰谁課课調调談谈請请論论諮咨諾诺謀谋講讲證证識识議议護护讀读變变讓让豎竖豐丰貓猫貝贝貞贞負负貧贫貨货貫贯責责貴贵買买費费貼贴資资賈贾賓宾賞赏賢贤賣卖質质賴赖賽赛贈赠趕赶跡迹蹟迹蹤踪躍跃車车軌轨軍军軟软軸轴較较載载輕轻輛辆輩辈輪轮輸输轉转轎轿轟轰辦办農农迴回這这連连週周進进遊游運运過过達达違违遙遥遜逊遠远適适遶绕遷迁選选遺遗還还邊边郵邮鄉乡鄰邻釋释釐厘針针釣钓鈔钞鈣钙鉤钩銀银銅铜銳锐銷销鋪铺鋸锯鋼钢錄录錐锥錦锦錫锡錯错鍬锹鍰锾鎮镇鏈链鏡镜鏢镖鏽锈鐘钟鐵铁鑽钻鑿凿長长門门閉闭開开閒闲間间閣阁閩闽閱阅闊阔關关闢辟陰阴陳陈陸陆陽阳隊队階阶際际隨随險险隸隶隻只雙双雜杂雞鸡離离難难雲云電电霧雾靈灵靜静韋韦響响頁页頂顶頃顷項项順顺須须預预領领頭头頸颈顆颗題题額额顏颜類类顧顾顯显風风颱台飄飘飛飞飯饭飲饮飾饰養养餘余館馆餵喂饑饥馬马駁驳駐驻駕驾駛驶駝驼駱骆駿骏騎骑騰腾騾骡驗验驚惊驛驿體体髮发鬆松鬚须鬥斗鬧闹魚鱼魯鲁鮊鲌鮑鲍鮪鲔鮭鲑鯉鲤鯖鲭鯨鲸鯽鲫鰱鲢鰹鲣鰻鳗鱗鳞鳥鸟鳳凤鳴鸣鳶鸢鴕鸵鴝鸲鴨鸭鴴鸻鵑鹃鵰雕鵲鹊鶇鸫鶲鹟鶴鹤鷗鸥鷚鹨鷥鸶鷲鹫鷴鹇鷸鹬鷹鹰鷺鹭鹹咸鹼碱鹽盐麗丽麥麦麼么黃黄點点齊齐齋斋齒齿齡龄龍龙龜龟","w":{"瓩":"千瓦","呎":"英尺"},"ph":{"著名":"著名","著稱":"著称","著作":"著作","著書":"著书","著述":"著述","著錄":"著录","著者":"著者","原著":"原著","名著":"名著","巨著":"巨著","專著":"专著","論著":"论著","編著":"编著","合著":"合著","譯著":"譯著","顯著":"显著","卓著":"卓著","昭著":"昭著","土著":"土著","所著":"所著","乾隆":"乾隆","乾坤":"乾坤"}}; let tourHansMap = null, tourHansRe = null;
+function tourHans(s) {
+  if (!s) return s;
+  if (!tourHansMap) { const M = tourHansMap = new Map(), P = TOUR_T2S.p; for (let i = 0; i < P.length; i += 2) M.set(P[i], P[i + 1]); for (const o of [TOUR_T2S.w, TOUR_T2S.ph]) for (const [k, v] of Object.entries(o)) M.set(k, v); tourHansRe = new RegExp([...Object.keys(TOUR_T2S.ph), '[\\u3400-\\u9fff]'].join('|'), 'g'); }
+  return String(s).replace(tourHansRe, m => tourHansMap.get(m) ?? m);
+}
+const tourZh = o => { const z = o['zh-Hant'] || o.zh; return !z ? '' : I18N.lang === 'zh-Hans' ? (o['zh-Hans'] || tourHans(z)) : z; };
+const tourTxt = o => !o ? '' : typeof o === 'string' ? o : (o[I18N.lang] || (isZh() ? tourZh(o) : '') || o.en || o['zh-Hant'] || o.zh || '');
+const tourTxtEn = o => !o || typeof o === 'string' ? '' : (o.en || '');       // the English line under a title, where the first line is in another language
+function tourInEn(fn) { const L = I18N.lang, D = I18N.dict; I18N.lang = 'en'; I18N.dict = I18N.en; try { return fn(); } finally { I18N.lang = L; I18N.dict = D; } }   // interface strings, place names and number formats in English for the English caption line
 const tourClock = s => { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ':' + pad2(s % 60); };
 function tourIndex() {
   return TOUR.idxP ||= (async () => {
@@ -3000,7 +3016,25 @@ function tourIndex() {
 async function tourSetOf(p) {   // the researched scripts of a featured destination, or null
   const idx = await tourIndex(), e = idx.places?.[p.id]; if (!e) return null;
   if (!TOUR.sets.has(p.id)) { try { TOUR.sets.set(p.id, globalThis.AERO_TOURS?.[p.id] || await fetchJSON('data/tours/' + e.file, { timeout: 20000 })); } catch { TOUR.sets.set(p.id, null); } }
-  return TOUR.sets.get(p.id);
+  const set = TOUR.sets.get(p.id); if (set) await tourSetLang(p, set, e);
+  return set;
+}
+/* A script translated into the viewer's language is a small file of its own (data/tours/i18n/<language>/<place>.json), fetched once
+   when that language is in use: titles, taglines, the caption lines of every shot, the place's name and the flight note.
+   The index lists the languages a place has; without a translation the film shows its English line only. */
+async function tourSetLang(p, set, e) {
+  const L = I18N.lang; if (L === 'en' || isZh() || !e.langs?.includes(L) || (set.i18n ||= {})[L] !== undefined) return;
+  set.i18n[L] = 0;
+  try {
+    const d = globalThis.AERO_TOURS_I18N?.[L]?.[p.id] || await fetchJSON(`data/tours/i18n/${L}/${e.file}`, { timeout: 20000 });
+    for (const t of set.tours) {
+      const x = d.tours?.[t.id]; if (!x || x.shots?.length !== t.shots.length) continue;
+      if (x.title) t.title[L] = x.title; if (x.tagline && t.tagline) t.tagline[L] = x.tagline;
+      t.shots.forEach((sh, i) => { sh.caps ||= { zh: sh.zh || [], en: sh.en || [] }; sh.caps[L] = x.shots[i]; }); set.i18n[L]++;
+    }
+    if (d.name && !I18N.names[p.id + '|' + L]) I18N.names[p.id + '|' + L] = d.name;
+    if (d.airspace && set.airspace) set.airspace[L] = d.airspace;
+  } catch { }
 }
 function tourMedia(pid, tid, kind) {   // kind 'real': an edition cut from real drone footage, listed next to the recording of the simulated flight
   const it = TOUR.idx?.media?.items?.[pid + '/' + tid]; if (!it) return null; const f = kind === 'real' ? it.real : it[I18N.lang] || (isZh() ? it['zh-Hant'] : null) || it['*'] || it.en || it['zh-Hant'];
@@ -3024,7 +3058,8 @@ function tourPlan(set, tour, p) {
     shots.push(o); t0 += o.dur;
   }
   shots.forEach((s, i) => { const q = shots[i - 1]; s.envCut = !!q && (q.time !== s.time || q.weather !== s.weather); });
-  return { place: p, set, id: tour.id, theme: tour.theme || 'overview', title: tour.title, tagline: tour.tagline, season: tour.season || 'today', shots, dur: t0, auto: !!set.auto, credit: set.credit || null, langs: set.langs || ['zh', 'en'] };
+  return { place: p, set, id: tour.id, theme: tour.theme || 'overview', title: tour.title, tagline: tour.tagline, titleEn: tour.titleEn || tourTxtEn(tour.title), taglineEn: tour.taglineEn || tourTxtEn(tour.tagline), season: tour.season || 'today', shots, dur: t0, auto: !!set.auto,
+    hasEn: shots.some(s => s.caps.en?.length), credit: set.credit || null, langs: set.langs || ['zh', 'en'] };
 }
 const tourGnd = (x, z) => Math.max(DEM.heightAt(x, z), 0);
 function tourTerr(x, z) { const r = SET.buildings ? VEC.roofAt(x, z) : null; return Math.max(DEM.heightAt(x, z), 0.3, r ? r.top : -1e9); }
@@ -3132,8 +3167,12 @@ function tourFrame(dt, dtr) {
   let f = 0; if (i > 0) f = Math.max(f, (s.envCut ? 1 : 0.85) * (1 - since / (s.envCut ? 0.8 : 0.32))); if (nx) f = Math.max(f, (nx.envCut ? 1 : 0.85) * (1 - left / (nx.envCut ? 0.55 : 0.22)));
   if (i === 0) f = Math.max(f, 1 - tt / 1.4); if (!nx) f = Math.max(f, 1 - (plan.dur - tt) / 1.6); R.fade = clamp(f, 0, 1); tourFade(R.fade);
   // captions
-  const lang = tourCapLang(plan), list = lang ? (s.caps[lang] || s.caps['*'] || s.caps.en || []) : [], n = list.length; let cap = '', ca = 0, k = '';
+  const lang = tourCapLang(plan), list = lang ? tourCapList(s, lang) : [], n = list.length; let cap = '', ca = 0, k = '';
   if (n) { const seg = s.dur / n, j = Math.min(n - 1, Math.floor(since / seg)), a = since - j * seg; cap = list[j]; k = i + ':' + j + ':' + lang; ca = clamp(Math.min(a / 0.3, (seg - a - 0.15) / 0.3), 0, 1); if (k !== R.capK && R.playing && a < 1.2) tourSpeak(cap, lang, seg); }
+  // the English line keeps its own timing: in researched films it changes with the first line, in automatic ones it is a second text
+  const lang2 = tourCap2Lang(plan), list2 = lang2 ? tourCapList(s, lang2) : [], n2 = list2.length; let cap2 = '', ca2 = 0, k2 = '';
+  if (n2) { const seg = s.dur / n2, j = Math.min(n2 - 1, Math.floor(since / seg)), a = since - j * seg; cap2 = list2[j]; k2 = i + ':' + j; ca2 = clamp(Math.min(a / 0.3, (seg - a - 0.15) / 0.3), 0, 1); if (!n && k2 !== R.cap2K && R.playing && a < 1.2) tourSpeak(cap2, lang2, seg); }   // nothing in the viewer's language for this view: the narrator reads the English line
+  R.cap2K = k2; R.cap2 = cap2; R.cap2A = ca2;
   R.capK = k; R.cap = cap; R.capA = ca; R.titleA = clamp(Math.min((tt - 0.9) / 0.7, (7.2 - tt) / 0.7), 0, 1); R.credA = clamp(Math.min((tt - (plan.dur - 9)) / 0.8, (plan.dur - 0.5 - tt) / 0.8), 0, 1);
   tourDom(R); if (R.playing) scoreTick(R);
 }
@@ -3153,21 +3192,38 @@ function tourEnded(R) {
   scoreMute(2); tourBar();
   if (TOUR.rec) { tourRecStop(false); if (TOUR.studio) return; }
   const el = $('#tourEnd'), list = R.plan.set.tours || [], j = list.findIndex(x => x.id === R.plan.id), nxt = list.length > 1 ? list[(j + 1) % list.length] : null;
-  el.hidden = false; el.innerHTML = `<button class="btn primary" data-ta="replay">↻ ${esc(t('tour.replay'))}</button>${nxt ? `<button class="btn" data-ta="next">▶ ${esc(t('tour.next'))}: ${esc(tourTxt(nxt.title))}</button>` : ''}<button class="btn" data-ta="exit">✕ ${esc(t('tour.exit'))}</button>`;
+  el.hidden = false; el.innerHTML = `<button class="btn primary" data-ta="replay">↻ ${esc(t('tour.replay'))}</button>${nxt ? `<button class="btn" data-ta="next">▶ ${esc(t('tour.next'))}: ${esc(tourTxt(nxt.title))}</button>` : ''}<button class="btn" data-ta="exit">✕ ${esc(t('tour.exit'))}</button>${tourContact()}`;
   el.onclick = e => { const a = e.target.closest('[data-ta]')?.dataset.ta; if (a === 'replay') { el.hidden = true; tourSeek(0); tourPlay(true); } else if (a === 'next') startTour(R.plan.place, { set: R.plan.set, tour: nxt }); else if (a === 'exit') tourExit(); };
 }
 
+/* the invitation shown when a film ends: the LINE official account, in the viewer's language with English under it */
+function tourContact() { const a = t('contact.line'), b = I18N.lang !== 'en' && I18N.en['contact.line'] !== a ? I18N.en['contact.line'] : ''; return `<a class="tline" href="https://line.me/R/ti/p/%40530pgchc" target="_blank" rel="noopener">${esc(a)}${b ? `<small>${esc(b)}</small>` : ''}</a>`; }
+
 /* ---------- on-screen layer: title, captions, credits, player bar ---------- */
-function tourCapLang(plan) { if (TOUR.cc === 'off') return ''; if (plan.auto) return '*'; if (TOUR.cc === 'zh' || TOUR.cc === 'en') return TOUR.cc; return isZh() ? 'zh' : 'en'; }
+/* Caption lines. CC cycles through: both lines (the viewer's language, English under it) · the first line only · English only · off.
+   A recording made by the Studio batch always carries the first line only; the English layer of the published videos is added afterwards. */
+function tourCapMode() { const m = TOUR.cc; return TOUR.studio ? 'one' : m === 'zh' ? 'one' : ['auto', 'one', 'en', 'off'].includes(m) ? m : 'auto'; }
+function tourOwnTrack(plan) {   // the track in the viewer's language; researched scripts without one fall back to English
+  if (plan.auto) return '*'; const L = I18N.lang; if (L !== 'en' && plan.shots.some(s => s.caps[L]?.length)) return L;
+  return L === 'zh-Hans' ? 'zh-Hans' : isZh() ? 'zh' : 'en';
+}
+function tourCapLang(plan) { const m = tourCapMode(); if (m === 'off') return ''; if (m === 'en') return plan.auto ? (plan.hasEn ? 'en' : '*') : 'en'; return tourOwnTrack(plan); }
+function tourCap2Lang(plan) { if (tourCapMode() !== 'auto' || I18N.lang === 'en') return ''; return tourOwnTrack(plan) !== 'en' && plan.hasEn ? 'en' : ''; }
+function tourCapList(s, key) { const c = s.caps; if (key === 'zh-Hans') return c['zh-Hans'] ||= (c.zh || []).map(tourHans); return c[key] || (key === 'en' ? [] : c['*'] || c.en || []); }
+function tourCapLabel() {
+  const own = isZh() ? '中' : I18N.lang.split('-')[0].toUpperCase(), m = tourCapMode();
+  return m === 'off' ? '✕' : m === 'en' || I18N.lang === 'en' ? 'EN' : m === 'one' ? own : own + '+EN';
+}
 function tourCredits(plan) {
   const L = [t('tour.cr.image'), t('tour.cr.text', { src: plan.credit || t('tour.cr.sources', { n: plan.set.sources?.length || 0 }) }), t('tour.cr.music'), 'AERO Explorer v7 · kuonanhong.github.io/AERO_Explorer'];
-  const air = plan.set.airspace ? tourTxt({ 'zh-Hant': plan.set.airspace.zh, en: plan.set.airspace.en }) : t('tour.c.fly1'); return { head: t('tour.cr.head'), lines: L, air };
+  const a = plan.set.airspace, air = a ? tourTxt({ 'zh-Hant': a.zh, en: a.en, ...(a[I18N.lang] ? { [I18N.lang]: a[I18N.lang] } : {}) }) : t('tour.c.fly1'); return { head: t('tour.cr.head'), lines: L, air };
 }
 function tourOverlay(show) {
-  let el = $('#tour'); if (!el) { el = document.createElement('div'); el.id = 'tour'; el.hidden = true; el.innerHTML = `<div id="tourFade"></div><div id="tourTitle"><small></small><h2></h2><p></p></div><div id="tourCred"></div><div id="tourCap"></div><div id="tourMark"></div><div id="tourMsg" hidden></div><div id="tourEnd" hidden></div><div id="tourBar"></div>`; $('#stage').appendChild(el); }
+  let el = $('#tour'); if (!el) { el = document.createElement('div'); el.id = 'tour'; el.hidden = true; el.innerHTML = `<div id="tourFade"></div><div id="tourTitle"><small></small><h2></h2><p></p><em></em></div><div id="tourCred"></div><div id="tourCap"><span></span><i></i></div><div id="tourMark"></div><div id="tourMsg" hidden></div><div id="tourEnd" hidden></div><div id="tourBar"></div>`; $('#stage').appendChild(el); }
   el.hidden = !show; if (!show) return; const R = TOUR.run, plan = R.plan, cr = tourCredits(plan);
   $('#tourTitle small').textContent = `${TOUR_ICON[plan.theme] || '◎'} ${t('tour.theme.' + plan.theme)} · ${placeName(plan.place)}`; $('#tourTitle h2').textContent = tourTxt(plan.title); $('#tourTitle p').textContent = tourTxt(plan.tagline);
-  $('#tourCred').innerHTML = `<b>${esc(cr.head)}</b>${cr.lines.map(l => `<span>${esc(l)}</span>`).join('')}<i>${esc(cr.air)}</i>`; $('#tourMark').textContent = t('tour.sim'); $('#tourEnd').hidden = true; R.lastCap = null;
+  const te = I18N.lang !== 'en' && plan.titleEn && plan.titleEn !== tourTxt(plan.title) ? plan.titleEn : ''; $('#tourTitle em').textContent = te ? te + (plan.taglineEn ? ' · ' + plan.taglineEn : '') : '';
+  $('#tourCred').innerHTML = `<b>${esc(cr.head)}</b>${cr.lines.map(l => `<span>${esc(l)}</span>`).join('')}<i>${esc(cr.air)}</i>`; $('#tourMark').textContent = t('tour.sim'); $('#tourEnd').hidden = true; R.lastCap = null; R.lastCap2 = null;
   $('#tourBar').innerHTML = `<button data-tb="play" title="Space"></button><button data-tb="prev" title="←">⏮</button><button data-tb="next" title="→">⏭</button><span id="tourTime"></span><input id="tourSeek" type="range" min="0" max="${plan.dur}" step="0.1" value="0" aria-label="${esc(t('tour.title'))}">
     <button data-tb="cc" title="C"></button><button data-tb="voice" title="N"></button><button data-tb="music" title="M"></button><button data-tb="rec" title="R"></button><button data-tb="exit" title="Esc">✕</button>`;
   $('#tourBar').onclick = e => { const a = e.target.closest('[data-tb]')?.dataset.tb; if (a) tourAct(a); }; $('#tourSeek').oninput = e => tourSeek(+e.target.value);
@@ -3175,14 +3231,14 @@ function tourOverlay(show) {
 }
 function tourBar() {
   const R = TOUR.run, b = k => $(`#tourBar [data-tb="${k}"]`); if (!R || !b('play')) return;
-  b('play').innerHTML = svg(R.playing ? 'pause' : 'play'); b('cc').textContent = 'CC ' + ({ auto: '', zh: '中', en: 'EN', off: '✕' }[TOUR.cc]); b('voice').textContent = (TOUR.voice ? '🔊 ' : '🔇 ') + t('tour.voice'); b('music').textContent = (TOUR.music ? '♪ ' : '♪✕ ') + t('tour.music');
+  b('play').innerHTML = svg(R.playing ? 'pause' : 'play'); b('cc').textContent = 'CC ' + tourCapLabel(); b('voice').textContent = (TOUR.voice ? '🔊 ' : '🔇 ') + t('tour.voice'); b('music').textContent = (TOUR.music ? '♪ ' : '♪✕ ') + t('tour.music');
   b('rec').textContent = TOUR.rec ? '■ ' + t('tour.recording') : '⏺ ' + t('tour.record'); b('rec').classList.toggle('on', !!TOUR.rec); b('cc').hidden = !!R.plan.auto && false;
 }
 function tourAct(a) {
   const R = TOUR.run; if (!R) return; const sh = R.plan.shots;
   if (a === 'play') tourPlay(!R.playing); else if (a === 'exit') tourExit();
   else if (a === 'next') tourSeek(sh[Math.min(sh.length - 1, R.i + 1)].t0); else if (a === 'prev') tourSeek(R.t - sh[Math.max(0, R.i)].t0 > 2.5 ? sh[Math.max(0, R.i)].t0 : sh[Math.max(0, R.i - 1)].t0);
-  else if (a === 'cc') { const o = ['auto', 'zh', 'en', 'off']; TOUR.cc = o[(o.indexOf(TOUR.cc) + 1) % o.length]; LS.set('aero7:cc', TOUR.cc); R.capK = ''; }
+  else if (a === 'cc') { const o = I18N.lang === 'en' ? ['auto', 'off'] : R.plan.hasEn && tourOwnTrack(R.plan) !== 'en' ? ['auto', 'one', 'en', 'off'] : ['auto', 'off'], m = tourCapMode(); TOUR.cc = o[(o.indexOf(m) + 1) % o.length]; LS.set('aero7:cc', TOUR.cc); R.capK = ''; R.cap2K = ''; try { speechSynthesis?.cancel(); } catch { } }
   else if (a === 'voice') { TOUR.voice = !TOUR.voice; LS.set('aero7:voice', TOUR.voice ? '1' : '0'); if (!TOUR.voice) try { speechSynthesis?.cancel(); } catch { } }
   else if (a === 'music') { TOUR.music = !TOUR.music; LS.set('aero7:music', TOUR.music ? '1' : '0'); scoreVolume(); }
   else if (a === 'rec') { if (TOUR.rec) tourRecStop(true); else startTour(R.plan.place, { set: R.plan.set, tour: R.plan.set.tours.find(x => x.id === R.plan.id) }, { record: true }); }
@@ -3198,7 +3254,8 @@ function tourBind() {
 }
 function tourFade(a) { const el = $('#tourFade'); if (el) el.style.opacity = a.toFixed(3); }
 function tourDom(R) {
-  const cap = $('#tourCap'); if (R.cap !== R.lastCap) { cap.textContent = R.cap; R.lastCap = R.cap; } cap.style.opacity = (R.cap ? R.capA : 0).toFixed(2);
+  const cap = $('#tourCap'), c1 = cap.firstChild, c2 = cap.lastChild; if (R.cap !== R.lastCap) { c1.textContent = R.cap; R.lastCap = R.cap; } if (R.cap2 !== R.lastCap2) { c2.textContent = R.cap2 || ''; R.lastCap2 = R.cap2; }
+  c1.style.opacity = (R.cap ? R.capA : 0).toFixed(2); c2.style.opacity = (R.cap2 ? R.cap2A : 0).toFixed(2); cap.style.opacity = R.cap || R.cap2 ? 1 : 0;
   $('#tourTitle').style.opacity = R.titleA.toFixed(2); $('#tourCred').style.opacity = R.credA.toFixed(2);
   if (APP.frameN % 6 === 0) { $('#tourTime').textContent = tourClock(R.t) + ' / ' + tourClock(R.plan.dur); const sk = $('#tourSeek'); if (document.activeElement !== sk) sk.value = R.t; if (R.playing) { R.uiT += 0.1; if (R.uiT > 3.5) $('#tour').classList.add('idle'); } }
 }
@@ -3206,7 +3263,7 @@ function tourDom(R) {
 /* ---------- narration in the viewer's own speech engine (never part of a recording) ---------- */
 function tourSpeak(text, lang, slot) {
   const S = globalThis.speechSynthesis; if (!TOUR.voice || TOUR.rec || !S || !globalThis.SpeechSynthesisUtterance || !text) return;
-  try { S.cancel(); const u = new SpeechSynthesisUtterance(text), tag = lang === 'zh' ? 'zh-TW' : lang === 'en' ? 'en-US' : (SPEECH_TAG[I18N.lang] || I18N.lang); u.lang = tag; const zh = /^(zh|ja|ko)/.test(tag);
+  try { S.cancel(); const u = new SpeechSynthesisUtterance(text), tag = lang === 'zh' ? 'zh-TW' : lang === 'zh-Hans' ? 'zh-CN' : lang === 'en' ? 'en-US' : (SPEECH_TAG[lang] || SPEECH_TAG[I18N.lang] || I18N.lang); u.lang = tag; const zh = /^(zh|ja|ko)/.test(tag);
     u.rate = clamp((zh ? text.length / 4.6 : text.length / 15) / Math.max(2, slot - 0.6), 0.95, 1.35); u.volume = 1; const vs = S.getVoices().filter(x => x.lang?.replace('_', '-').toLowerCase().startsWith(tag.toLowerCase())); if (vs.length) u.voice = vs.find(x => x.localService) || vs[0]; S.speak(u); } catch { }
 }
 
@@ -3259,7 +3316,9 @@ function tourPaint(R) {   // compose one frame of the recording on a 2D canvas
   const text = (s, x, y, a, font, align = 'center', col = '#fff') => { g.globalAlpha = a; g.font = font; g.textAlign = align; g.textBaseline = 'middle'; g.lineJoin = 'round'; g.lineWidth = Math.max(2, H / 240); g.strokeStyle = 'rgba(0,0,0,.72)'; g.strokeText(s, x, y); g.fillStyle = col; g.fillText(s, x, y); };
   g.shadowColor = 'rgba(0,0,0,.55)'; g.shadowBlur = H / 90;
   if (R.titleA > 0.01) { const a = R.titleA; text(`${t('tour.theme.' + plan.theme)} · ${placeName(plan.place)}`, W / 2, H * 0.31, a, `600 ${H * 0.03}px ${F}`, 'center', '#f0c879'); g.font = `700 ${H * 0.066}px ${F}`; const ls = tourWrap(g, tourTxt(plan.title), W * 0.86); ls.forEach((l, j) => text(l, W / 2, H * 0.40 + j * H * 0.082, a, `700 ${H * 0.066}px ${F}`)); g.font = `400 ${H * 0.032}px ${F}`; tourWrap(g, tourTxt(plan.tagline), W * 0.8).forEach((l, j) => text(l, W / 2, H * 0.40 + ls.length * H * 0.082 + H * 0.012 + j * H * 0.045, a, `400 ${H * 0.032}px ${F}`)); }
-  if (R.cap && R.capA > 0.01) { g.font = `600 ${H * 0.047}px ${F}`; const ls = tourWrap(g, R.cap, W * 0.86), lh = H * 0.062, y0 = H * 0.905 - (ls.length - 1) * lh; ls.forEach((l, j) => text(l, W / 2, y0 + j * lh, R.capA, `600 ${H * 0.047}px ${F}`)); }
+  const two = !!R.cap2, up = two ? H * 0.045 : 0;   // with an English line, the first line moves up to make room
+  if (R.cap && R.capA > 0.01) { g.font = `600 ${H * 0.047}px ${F}`; const ls = tourWrap(g, R.cap, W * 0.86), lh = H * 0.062, y0 = H * 0.905 - up - (ls.length - 1) * lh; ls.forEach((l, j) => text(l, W / 2, y0 + j * lh, R.capA, `600 ${H * 0.047}px ${F}`)); }
+  if (two && R.cap2A > 0.01) { let em = H * 0.033; g.font = `500 ${em}px ${F}`; const w = g.measureText(R.cap2).width; if (w > W * 0.9) em *= W * 0.9 / w; text(R.cap2, W / 2, H * 0.918, R.cap2A, `500 ${em}px ${F}`); }
   if (R.credA > 0.01) { const cr = rec.cred ||= tourCredits(plan), a = R.credA, x = W * 0.045; let y = H * 0.1; text(cr.head, x, y, a, `700 ${H * 0.03}px ${F}`, 'left', '#f0c879'); y += H * 0.045; g.font = `400 ${H * 0.0235}px ${F}`; for (const l of [...cr.lines, cr.air]) for (const ll of tourWrap(g, l, W * 0.62)) { text(ll, x, y, a, `400 ${H * 0.0235}px ${F}`, 'left'); y += H * 0.034; } }
   g.shadowBlur = 0; text(t('tour.sim'), W * 0.012, H * 0.975, 0.78, `500 ${H * 0.019}px ${F}`, 'left'); text('Esri World Imagery · AWS Terrain Tiles · © OpenStreetMap', W * 0.988, H * 0.975, 0.78, `400 ${H * 0.017}px ${F}`, 'right');
   if (R.fade > 0.003) { g.globalAlpha = R.fade; g.fillStyle = '#000'; g.fillRect(0, 0, W, H); } g.globalAlpha = 1;
@@ -3279,7 +3338,7 @@ function tourRecStart(R, opts) {
   tourBar();
 }
 function tourRecStop(discard) { const rec = TOUR.rec; if (!rec) return; rec.keep = !discard; rec.on = false; try { if (rec.mr.state !== 'inactive') rec.mr.stop(); else { TOUR.rec = null; rec.done?.(null); } } catch { TOUR.rec = null; } }
-function tourFileName(plan, mime) { const safe = s => String(s).replace(/[\\/:*?"<>|\s]+/g, '_').slice(0, 60); return `${safe(plan.place.zh || plan.place.en)}_${safe(plan.id)}_${safe(tourTxt(plan.title))}_${tourCapLang(plan) === 'en' ? 'en' : tourCapLang(plan) === 'zh' ? 'zh-Hant' : I18N.lang}.${mime.startsWith('video/mp4') ? 'mp4' : 'webm'}`; }
+function tourFileName(plan, mime) { const safe = s => String(s).replace(/[\\/:*?"<>|\s]+/g, '_').slice(0, 60), a = tourCapLang(plan), b = tourCap2Lang(plan); return `${safe(plan.place.zh || plan.place.en)}_${safe(plan.id)}_${safe(tourTxt(plan.title))}_${(a === 'en' ? 'en' : a === 'zh' ? 'zh-Hant' : I18N.lang) + (b ? '+en' : '')}.${mime.startsWith('video/mp4') ? 'mp4' : 'webm'}`; }
 async function tourRecSave(rec, blob) {
   if (TOUR.studio) { try { const r = await fetch('/studio/put?name=' + encodeURIComponent(rec.name), { method: 'POST', body: blob }); if (!r.ok) throw new Error(r.status); rec.done?.({ name: rec.name, bytes: blob.size }); } catch (e) { rec.done?.({ error: String(e) }); } return; }
   const a = document.createElement('a'), url = URL.createObjectURL(blob); a.href = url; a.download = rec.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 60000); toast(t('tour.saved', { name: rec.name }), 8000); rec.done?.({ name: rec.name, bytes: blob.size });
@@ -3312,8 +3371,8 @@ function tourChunks(text) {
   }
   return out.filter(s => [...s].length <= (tourIsCJK(s) ? 70 : 190));
 }
-async function tourWiki(p) {   // the article of this place, as sections of plain paragraphs
-  const w = await wikiTitleFor(p).catch(() => null); if (!w || (w.dist != null && w.dist > (p.id.startsWith('unesco') ? 5000 : 900))) return null;
+async function tourWiki(p, lang) {   // the article of this place, as sections of plain paragraphs
+  const w = await wikiTitleFor(p, lang).catch(() => null); if (!w || (w.dist != null && w.dist > (p.id.startsWith('unesco') ? 5000 : 900))) return null;
   const u = `https://${w.wl}.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(w.title)}&prop=text&redirects=1&disableeditsection=1&disabletoc=1&format=json&formatversion=2&origin=*${w.variant ? '&variant=' + w.variant : ''}`;
   const j = await fetchJSON(u, { timeout: 15000 }), html = j.parse?.text; if (!html) return null;
   const doc = new DOMParser().parseFromString(html, 'text/html'), secs = [{ h: '', ps: [] }];
@@ -3325,8 +3384,8 @@ async function tourWiki(p) {   // the article of this place, as sections of plai
   return { title: j.parse.title || w.title, url: `https://${w.wl}.wikipedia.org/wiki/${encodeURIComponent((j.parse.title || w.title).replace(/ /g, '_'))}`, secs: secs.filter(s => s.ps.length), wl: w.wl, variant: w.variant };
 }
 async function tourNearWiki(p, wl, variant) {
-  const u = `https://${wl}.wikipedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${p.lat}|${p.lon}&ggsradius=10000&ggslimit=40&prop=coordinates|description&colimit=40&format=json&formatversion=2&origin=*${variant ? '&variant=' + variant : ''}`;
-  const j = await fetchJSON(u, { timeout: 12000 }); return (j.query?.pages || []).filter(x => x.coordinates?.[0]).map(x => ({ name: x.title, lat: x.coordinates[0].lat, lon: x.coordinates[0].lon, desc: x.description || '', d: haversine(p.lat, p.lon, x.coordinates[0].lat, x.coordinates[0].lon) }));
+  const u = `https://${wl}.wikipedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${p.lat}|${p.lon}&ggsradius=10000&ggslimit=40&prop=coordinates|description${wl === 'en' ? '' : '|langlinks&lllang=en&lllimit=max'}&colimit=40&format=json&formatversion=2&origin=*${variant ? '&variant=' + variant : ''}`;
+  const j = await fetchJSON(u, { timeout: 12000 }); return (j.query?.pages || []).filter(x => x.coordinates?.[0]).map(x => ({ name: x.title, en: x.langlinks?.[0]?.title || (wl === 'en' ? x.title : ''), lat: x.coordinates[0].lat, lon: x.coordinates[0].lon, desc: x.description || '', d: haversine(p.lat, p.lon, x.coordinates[0].lat, x.coordinates[0].lon) }));
 }
 function tourTerrain(R = 3500, N = 40) {   // what the elevation model says about the surroundings of the origin
   let max = { h: -1e9 }, min = { h: 1e9 }, sum = 0, sea = 0; for (let j = 0; j <= N; j++) for (let i = 0; i <= N; i++) { const x = (i / N * 2 - 1) * R, z = (j / N * 2 - 1) * R, h = DEM.heightAt(x, z); sum += h; if (h < 0.3) sea++; if (h > max.h) max = { x, z, h }; if (h < min.h) min = { x, z, h }; }
@@ -3365,52 +3424,66 @@ function tourAutoShots(kind, pois, S, b0) {
   });
   return shots;
 }
-function tourFill(shots, lines, pois) {   // captions onto shots: a place is named when the camera first reaches it, the rest follows in order
-  const q = [...lines], seen = new Set();
+function tourFill(shots, lines, pois, key = '*') {   // captions onto shots: a place is named when the camera first reaches it, the rest follows in order
+  const q = [...lines], seen = new Set(), L = key === 'en' ? 'lineEn' : 'line', M = key === 'en' ? 'moreEn' : 'more';
   for (const s of shots) {
     const caps = []; let left = s.dur - 0.6; const n = pois[s.sub];
-    if (n?.line && !seen.has(s.sub)) { seen.add(s.sub); caps.push(n.line); left -= tourNeed(n.line); if (n.more && tourNeed(n.more) <= left) { caps.push(n.more); left -= tourNeed(n.more); } }
+    if (n?.[L] && !seen.has(s.sub)) { seen.add(s.sub); caps.push(n[L]); left -= tourNeed(n[L]); if (n[M] && tourNeed(n[M]) <= left) { caps.push(n[M]); left -= tourNeed(n[M]); } }
     while (caps.length < 2 && q.length && tourNeed(q[0]) <= left) { const c = q.shift(); caps.push(c); left -= tourNeed(c); }
     if (!caps.length && q.length && tourNeed(q[0]) <= s.dur + 2) caps.push(q.shift());
-    s.caps = { '*': caps };
+    (s.caps ||= {})[key] = caps;
   }
 }
+/* The captions are written twice when the viewer's language is not English: once in that language (its Wikipedia article and the
+   interface strings) for the first line and the narration, once in English (the English article, English strings) for the second line.
+   Facts computed from the scene say the same thing in both; the two articles are separate texts, not translations of each other. */
 async function tourAutoSet(p) {
   const key = p.id + '|' + I18N.lang; if (TOUR_AUTO.has(key)) return TOUR_AUTO.get(key);
-  const [wl, variant] = WIKI_LANG[I18N.lang] || [I18N.lang.split('-')[0]];
-  const [wiki, nearW] = await Promise.all([tourWiki(p).catch(() => null), tourNearWiki(p, wl, variant).catch(() => [])]);
-  const T = tourTerrain(), dirOf = (lat, lon) => { const [x, z] = toLocal(lat, lon); return compassWord(bearingTo(0, 0, x, z)); };
+  const [wl, variant] = WIKI_LANG[I18N.lang] || [I18N.lang.split('-')[0]], two = I18N.lang !== 'en', ownTpl = !two || !!I18N.dict['tour.c.where'];   // ownTpl: the interface has the caption sentences in this language
+  const [wiki0, nearW, wikiE] = await Promise.all([tourWiki(p).catch(() => null), tourNearWiki(p, wl, variant).catch(() => []), two ? tourWiki(p, 'en').catch(() => null) : null]);
+  const wiki = two && wiki0?.wl === 'en' ? null : wiki0, wikiEn = two ? (wikiE || (wiki0?.wl === 'en' ? wiki0 : null)) : null;   // no article in the viewer's language: the English one belongs on the English line
+  const T = tourTerrain();
   // neighbours: Wikipedia places with coordinates first, then the catalogue
-  let near = nearW.filter(n => n.d > 250 && n.d < 9000 && n.name !== wiki?.title && !TOUR_SKIP.test(n.name) && !TOUR_SKIP.test(n.desc)).sort((a, b) => a.d - b.d);
-  const cat = PLACES.filter(q => q !== p).map(q => ({ name: placeName(q), lat: q.lat, lon: q.lon, desc: catName(q.cat), d: haversine(p.lat, p.lon, q.lat, q.lon) })).filter(n => n.d > 250 && n.d < 15000).sort((a, b) => a.d - b.d);
+  let near = nearW.filter(n => n.d > 250 && n.d < 9000 && n.name !== wiki0?.title && !TOUR_SKIP.test(n.name) && !TOUR_SKIP.test(n.desc)).sort((a, b) => a.d - b.d);
+  const cat = PLACES.filter(q => q !== p).map(q => ({ q, name: placeName(q), lat: q.lat, lon: q.lon, desc: catName(q.cat), d: haversine(p.lat, p.lon, q.lat, q.lon) })).filter(n => n.d > 250 && n.d < 15000).sort((a, b) => a.d - b.d);
   const picked = []; for (const n of [...near, ...cat]) { if (picked.length >= 4) break; if (picked.every(m => haversine(m.lat, m.lon, n.lat, n.lon) > 300 && m.name !== n.name)) picked.push(n); }
   const built = ['heritage', 'museum', 'statue', 'bridge', 'warehouse'].includes(p.cat), base = { heritage: 170, museum: 170, statue: 120, bridge: 260, warehouse: 170, park: 380, scenic: 420, lake: 800, forest: 600, mountain: 1300, cave: 380, diving: 500, reef: 600 }[p.cat] || 380;
   const S = built ? base : clamp(Math.max(base, T.relief * 0.8), base, 2200);
-  const pois = { c: { zh: p.zh, en: p.en, lat: p.lat, lon: p.lon, h: built ? 18 : 0 } };
-  if (T.relief > 40 && Math.hypot(T.max.x, T.max.z) > 250) { const [la, lo] = toLatLon(T.max.x, T.max.z); pois.hi = { lat: la, lon: lo, line: t('tour.c.high', { dir: compassWord(bearingTo(0, 0, T.max.x, T.max.z)), dist: fmtDist(Math.hypot(T.max.x, T.max.z)), h: Math.round(T.max.h) }) }; }
-  picked.forEach((n, i) => { pois['n' + i] = { lat: n.lat, lon: n.lon, line: t('tour.c.poi', { dir: dirOf(n.lat, n.lon), dist: fmtDist(n.d), name: n.name }), more: n.desc && n.desc !== n.name ? t('tour.c.poiDesc', { name: n.name, desc: n.desc }) : '' }; });
-  // caption material
-  const st = sunTimesOf(p, APP.sun.date), W = WX, lat = Math.abs(p.lat).toFixed(3) + (p.lat >= 0 ? '°N' : '°S'), lon = Math.abs(p.lon).toFixed(3) + (p.lon >= 0 ? '°E' : '°W');
-  const where = t('tour.c.where', { place: placeName(p), region: placeRegion(p) || '—', lat, lon, h: Math.round(T.here) }), relief = t('tour.c.relief', { r: (3.5).toLocaleString(I18N.lang), max: Math.round(T.max.h), min: Math.round(Math.max(0, T.min.h)), d: Math.round(T.relief) });
-  const sea = T.sea > 0.03 || APP.oceanNear ? t('tour.c.sea') : t('tour.c.inland', { h: Math.round(T.mean) }), sun = t('tour.c.sun', { rise: hhmm(st.rise), set: hhmm(st.set), alt: Math.round(st.noonAlt) });
-  const wx = W.ok ? t('tour.c.wx', { temp: Math.round(W.temp), wind: (W.wind ?? 0).toFixed(1), cloud: Math.round(W.cloud ?? 0), dir: compassWord(W.windDir ?? 0) }) : '', own = isZh() ? p.desc : (p.descEn || '');
-  const secText = re => wiki ? wiki.secs.filter(s => s.h && re.test(s.h)).flatMap(s => s.ps) : [], intro = wiki ? wiki.secs.filter(s => !s.h).flatMap(s => s.ps) : [];
-  const exact = !!wiki && (p.x || [p.zh, p.zhs, p.en, placeName(p)].some(n => n && (n.includes(wiki.title) || wiki.title.includes(n))));   // an article about a neighbour may introduce the area, not stand in for this place's own history
-  const used = new Set(), take = k => { if (!exact) return []; const ps = secText(TOUR_HEAD[k]).filter(x => !used.has(x)); ps.forEach(x => used.add(x)); return ps.flatMap(tourChunks); };
-  const src = wiki ? t('tour.c.src', { title: wiki.title }) : '', end = t('tour.c.end'), L = {};
-  L.history = take('history'); const geo = take('geography'); L.nature = take('nature'); L.culture = take('culture');
-  const rest = exact ? wiki.secs.filter(s => s.h).flatMap(s => s.ps).filter(x => !used.has(x)).flatMap(tourChunks) : [];
-  const lead = wiki && !exact ? [t('tour.c.wikiLead', { title: wiki.title })] : [];
-  L.overview = [where, ...tourChunks(own), ...lead, ...intro.flatMap(tourChunks).slice(0, exact ? 30 : 8), ...rest.slice(0, 6)].slice(0, 22); if (src) L.overview.push(src); L.overview.push(end);
-  L.geography = [where, relief, sea, ...geo.slice(0, 18), sun, wx, t('tour.c.near', { n: cat.filter(n => n.d < 15000).length }), ...(geo.length && src ? [src] : []), end].filter(Boolean);
-  L.flight = [t('tour.c.fly0', { place: placeName(p) }), sun, wx, t('tour.c.flyTop', { h: Math.round(T.max.h), agl: Math.round(Math.max(0, T.max.h - T.here)) }), t('tour.c.fly2'), t('tour.c.fly3'), t('tour.c.fly4'), t('tour.c.fly1'), end].filter(Boolean);
-  L.nearby = picked.length >= 2 ? [t('tour.c.nearLead', { place: placeName(p), n: picked.length }), sun, end].filter(Boolean) : [];
-  const kinds = ['overview', 'geography', ...['history', 'culture', 'nature'].filter(k => L[k].length >= 4), ...(L.nearby.length ? ['nearby'] : []), 'flight'];
+  const pois = { c: { zh: p.zh, en: p.en, lat: p.lat, lon: p.lon, h: built ? 18 : 0 } }, hiOn = T.relief > 40 && Math.hypot(T.max.x, T.max.z) > 250;
+  if (hiOn) { const [la, lo] = toLatLon(T.max.x, T.max.z); pois.hi = { lat: la, lon: lo }; }
+  picked.forEach((n, i) => { pois['n' + i] = { lat: n.lat, lon: n.lon }; });
+  const st = sunTimesOf(p, APP.sun.date), W = WX, nearN = cat.filter(n => n.d < 15000).length;
+  // every caption line in the language the interface is set to at the moment of the call
+  const write = (wk, en) => {
+    const dirOf = (lat, lon) => { const [x, z] = toLocal(lat, lon); return compassWord(bearingTo(0, 0, x, z)); }, tpl = en || ownTpl, tt = (k, v) => tpl ? t(k, v) : '';
+    const lat = Math.abs(p.lat).toFixed(3) + (p.lat >= 0 ? '°N' : '°S'), lon = Math.abs(p.lon).toFixed(3) + (p.lon >= 0 ? '°E' : '°W'), LK = en ? 'lineEn' : 'line', MK = en ? 'moreEn' : 'more';
+    if (hiOn) pois.hi[LK] = tt('tour.c.high', { dir: compassWord(bearingTo(0, 0, T.max.x, T.max.z)), dist: fmtDist(Math.hypot(T.max.x, T.max.z)), h: Math.round(T.max.h) });
+    picked.forEach((n, i) => { const name = en ? (n.q ? placeName(n.q) : n.en || n.name) : n.name, desc = en ? (n.q ? catName(n.q.cat) : '') : n.desc; pois['n' + i][LK] = tt('tour.c.poi', { dir: dirOf(n.lat, n.lon), dist: fmtDist(n.d), name }); pois['n' + i][MK] = desc && desc !== name ? tt('tour.c.poiDesc', { name, desc }) : ''; });
+    const where = tt('tour.c.where', { place: placeName(p), region: placeRegion(p) || '—', lat, lon, h: Math.round(T.here) }), relief = tt('tour.c.relief', { r: (3.5).toLocaleString(I18N.lang), max: Math.round(T.max.h), min: Math.round(Math.max(0, T.min.h)), d: Math.round(T.relief) });
+    const sea = T.sea > 0.03 || APP.oceanNear ? tt('tour.c.sea') : tt('tour.c.inland', { h: Math.round(T.mean) }), sun = tt('tour.c.sun', { rise: hhmm(st.rise), set: hhmm(st.set), alt: Math.round(st.noonAlt) });
+    const wx = W.ok ? tt('tour.c.wx', { temp: Math.round(W.temp), wind: (W.wind ?? 0).toFixed(1), cloud: Math.round(W.cloud ?? 0), dir: compassWord(W.windDir ?? 0) }) : '', own = isZh() ? p.desc : (I18N.lang === 'en' ? p.descEn || '' : '');
+    const secText = re => wk ? wk.secs.filter(s => s.h && re.test(s.h)).flatMap(s => s.ps) : [], intro = wk ? wk.secs.filter(s => !s.h).flatMap(s => s.ps) : [];
+    const exact = !!wk && (p.x || [p.zh, p.zhs, p.en, placeName(p)].some(n => n && (n.includes(wk.title) || wk.title.includes(n))));   // an article about a neighbour may introduce the area, not stand in for this place's own history
+    const used = new Set(), take = k => { if (!exact) return []; const ps = secText(TOUR_HEAD[k]).filter(x => !used.has(x)); ps.forEach(x => used.add(x)); return ps.flatMap(tourChunks); };
+    const src = wk ? tt('tour.c.src', { title: wk.title }) : '', end = tt('tour.c.end'), L = {};
+    L.history = take('history'); const geo = take('geography'); L.nature = take('nature'); L.culture = take('culture');
+    const rest = exact ? wk.secs.filter(s => s.h).flatMap(s => s.ps).filter(x => !used.has(x)).flatMap(tourChunks) : [];
+    const lead = wk && !exact ? [tt('tour.c.wikiLead', { title: wk.title })] : [];
+    L.overview = [where, ...tourChunks(own), ...lead, ...intro.flatMap(tourChunks).slice(0, exact ? 30 : 8), ...rest.slice(0, 6)].filter(Boolean).slice(0, 22); if (src) L.overview.push(src); if (end) L.overview.push(end);
+    L.geography = [where, relief, sea, ...geo.slice(0, 18), sun, wx, tt('tour.c.near', { n: nearN }), ...(geo.length && src ? [src] : []), end].filter(Boolean);
+    L.flight = [tt('tour.c.fly0', { place: placeName(p) }), sun, wx, tt('tour.c.flyTop', { h: Math.round(T.max.h), agl: Math.round(Math.max(0, T.max.h - T.here)) }), tt('tour.c.fly2'), tt('tour.c.fly3'), tt('tour.c.fly4'), tt('tour.c.fly1'), end].filter(Boolean);
+    L.nearby = picked.length >= 2 ? [tt('tour.c.nearLead', { place: placeName(p), n: picked.length }), sun, end].filter(Boolean) : [];
+    const n = {}; for (const k of ['history', 'culture', 'nature']) { n[k] = L[k].length; L[k] = [...L[k].slice(0, 26), ...(src ? [src] : []), ...(end ? [end] : [])]; }
+    return { L, n, title: k => t('tour.auto.' + k, { place: placeName(p) }), tag: k => t('tour.autoTag.' + k) };
+  };
+  const A = write(wiki, false), E = two ? tourInEn(() => { const o = write(wikiEn, true); return { L: o.L, n: o.n, titles: Object.fromEntries(Object.keys(TOUR_SEQ).map(k => [k, [o.title(k), o.tag(k)]])) }; }) : null;
+  const len = k => Math.max(A.n[k], E ? E.n[k] : 0);   // a theme is offered when either language has enough to say
+  const kinds = ['overview', 'geography', ...['history', 'culture', 'nature'].filter(k => len(k) >= 4), ...(picked.length >= 2 ? ['nearby'] : []), 'flight'];
   const tours = kinds.map((k, j) => {
-    const shots = tourAutoShots(k, pois, S, (APP.sunAz || 120) + 25 + j * 40); tourFill(shots, k === 'history' || k === 'culture' || k === 'nature' ? [...L[k].slice(0, 26), ...(src ? [src] : []), end] : L[k], pois);
-    return { id: 'auto-' + k, theme: k, title: t('tour.auto.' + k, { place: placeName(p) }), tagline: t('tour.autoTag.' + k), time: TOUR_LOOK[k][0], weather: TOUR_LOOK[k][1], season: 'today', shots };
+    const shots = tourAutoShots(k, pois, S, (APP.sunAz || 120) + 25 + j * 40); tourFill(shots, A.L[k], pois, '*'); if (E) tourFill(shots, E.L[k], pois, 'en');
+    return { id: 'auto-' + k, theme: k, title: A.title(k), tagline: A.tag(k), titleEn: E ? E.titles[k][0] : '', taglineEn: E ? E.titles[k][1] : '', time: TOUR_LOOK[k][0], weather: TOUR_LOOK[k][1], season: 'today', shots };
   });
-  const set = { auto: true, place: p.id, pois, tours, sources: wiki ? [{ title: wiki.title, url: wiki.url }] : [], credit: wiki ? t('tour.cr.wiki', { title: wiki.title }) : t('tour.cr.computed'), wiki };
+  const cw = wiki || wikiEn, set = { auto: true, place: p.id, pois, tours, sources: [wiki, wikiEn].filter(Boolean).map(w => ({ title: w.title, url: w.url })), credit: cw ? t('tour.cr.wiki', { title: cw.title }) + (wiki && wikiEn ? ' · en: “' + wikiEn.title + '”' : '') : t('tour.cr.computed'), wiki: cw };
   TOUR_AUTO.set(key, set); return set;
 }
 
