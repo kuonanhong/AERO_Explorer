@@ -1985,6 +1985,7 @@ function buildDrawer() {
     <div class="contact"><b data-i18n="contact.head"></b>
       <a class="cline" href="https://line.me/R/ti/p/%40530pgchc" target="_blank" rel="noopener"><span data-i18n="contact.line"></span><small data-i18n-en="contact.line"></small></a>
       <a href="https://kuonanhong.github.io/AERO_Explorer/" target="_blank" rel="noopener"><span data-i18n="contact.aero"></span><small data-i18n-en="contact.aero"></small></a>
+      <a href="https://kuonanhong.github.io/AERO_Explorer/places/" target="_blank" rel="noopener"><span data-i18n="contact.videos"></span><small data-i18n-en="contact.videos"></small></a>
       <a href="https://kuonanhong.github.io/Resilience_Crew_Lab/" target="_blank" rel="noopener"><span data-i18n="contact.rcl"></span><small data-i18n-en="contact.rcl"></small></a></div>
     <p id="pStats" class="mut"></p>`;
   applyI18n(d); d.addEventListener('click', e => { if (e.target.closest('[data-close]')) toggleDrawer(false); });

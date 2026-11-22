@@ -269,6 +269,7 @@ places/mount-fuji.html
 places/mount-kilimanjaro.html
 places/national-chiang-kai-shek-memorial-hall.html
 places/qingshui-cliff.html
+places/sagarmatha-national-park.html
 places/sanxiantai.html
 places/suantou-ecological-park.html
 places/sun-moon-lake.html
