@@ -3001,7 +3001,7 @@ const TOUR_ICON = { history: '◷', culture: '❖', nature: '❦', geography: '�
 const tourEase = u => u * u * (3 - 2 * u);
 /* The researched scripts are written in Traditional Chinese and English. Readers of Simplified Chinese get the Chinese text converted
    with a table that covers every character the scripts use (tools/t2s_map.json; the build reports a character it does not know). */
-const TOUR_T2S = {"p":"並并乾干亙亘亞亚佈布佔占併并來来侶侣係系倉仓個个們们倫伦偉伟側侧偵侦偽伪傑杰傘伞備备傳传債债傷伤傾倾僅仅僑侨價价儀仪億亿兒儿內内兩两凍冻凱凯別别則则剛刚創创劃划劇剧劍剑勁劲動动務务勝胜勞劳勢势匯汇區区協协卻却厲厉參参叢丛呂吕員员問问啟启單单嘗尝嘯啸噴喷噸吨嚮向嚴严國国圍围園园圓圆圖图團团埡垭執执堅坚報报場场塊块塗涂塚冢墾垦壇坛壓压壞坏壩坝壯壮壺壶壽寿夢梦夾夹奧奥奪夺婦妇媽妈學学宮宫實实寧宁寫写寬宽寶宝將将專专尋寻對对導导層层屬属岡冈島岛峽峡崗岗崙仑嶺岭嶼屿嶽岳巒峦巔巅巖岩師师帳帐帶带幣币幹干幾几庫库廂厢廟庙廠厂廢废廣广廳厅張张強强彎弯彥彦後后徑径從从復复徵征愛爱態态慶庆憶忆應应懸悬戰战戲戏戶户捨舍掃扫掛挂採采揚扬換换損损搗捣撈捞撐撑撿捡擁拥擇择擊击擋挡據据擠挤擬拟擴扩擺摆擾扰攔拦攜携攝摄攤摊敘叙敵敌數数斷断於于昇升時时暫暂曆历曠旷曬晒書书會会東东條条棄弃棗枣棧栈棲栖楊杨楨桢業业極极榮荣構构樁桩樂乐樑梁樓楼標标樞枢樣样樹树樺桦橋桥機机橢椭橫横檜桧檢检櫚榈櫟栎櫸榉櫻樱欄栏權权欒栾欖榄歐欧歡欢歲岁歷历歸归殘残殼壳毀毁氈毡氣气氫氢汙污決决沒没沖冲況况涼凉淨净淺浅減减測测湧涌湯汤準准溝沟溫温滅灭滲渗滿满漁渔漢汉漲涨漸渐漿浆潛潜澤泽澱淀濁浊濃浓濕湿濟济濤涛濱滨濺溅濾滤瀕濒灘滩灣湾為为烏乌無无煉炼煙烟熱热燈灯燒烧營营燭烛爭争爾尔牆墙牠它狀状狹狭獅狮獎奖獨独獲获獵猎獸兽獻献獼猕現现瑪玛環环產产畢毕畫画異异當当疊叠發发盞盏盡尽監监盤盘盪荡眾众矽硅砲炮確确碼码磚砖磧碛磯矶礦矿礫砾祿禄禍祸禎祯禦御禮礼稜棱種种稱称積积窪洼筆笔節节範范築筑簡简簽签籃篮籌筹籠笼紀纪約约紅红紋纹納纳紐纽紗纱紙纸級级紛纷紡纺紮扎細细紹绍終终組组結结絕绝給给絨绒統统絲丝經经綠绿綬绶維维網网綿绵緊紧緋绯緒绪線线緣缘編编緩缓緻致縣县縫缝縮缩總总織织繞绕繡绣繩绳繪绘繫系繳缴繼继續续纜缆罰罚羅罗義义翬翚翹翘聖圣聞闻聯联聲声聳耸職职聽听脅胁脈脉腳脚膠胶膽胆臉脸臥卧臨临臺台與与興兴舉举舊旧荊荆莊庄莖茎華华菸烟萊莱萬万葉叶著着葦苇蒐搜蓋盖蓮莲蓴莼蔣蒋蔭荫蕭萧薊蓟薑姜薦荐薩萨薰熏藍蓝藝艺藥药蘆芦蘇苏蘚藓蘭兰處处虛虚號号蝕蚀蝦虾螢萤蟲虫術术衛卫衝冲補补裝装裡里製制複复襲袭見见規规覓觅視视親亲覽览觀观觸触訂订計计訊讯討讨託托記记訝讶訪访設设許许訴诉詞词詢询試试詩诗話话該该認认誕诞語语誦诵說说誰谁課课調调談谈請请論论諮咨諾诺謀谋講讲證证識识議议護护讀读變变讓让豎竖豐丰貓猫貝贝貞贞負负貧贫貨货貫贯責责貴贵買买費费貼贴資资賈贾賓宾賞赏賢贤賣卖質质賴赖賽赛贈赠趕赶跡迹蹟迹蹤踪躍跃車车軌轨軍军軟软軸轴較较載载輕轻輛辆輩辈輪轮輸输轉转轎轿轟轰辦办農农迴回這这連连週周進进遊游運运過过達达違违遙遥遜逊遠远適适遶绕遷迁選选遺遗還还邊边郵邮鄉乡鄰邻釋释釐厘針针釣钓鈔钞鈣钙鉤钩銀银銅铜銳锐銷销鋪铺鋸锯鋼钢錄录錐锥錦锦錫锡錯错鍬锹鍰锾鎮镇鏈链鏡镜鏢镖鏽锈鐘钟鐵铁鑽钻鑿凿長长門门閉闭開开閒闲間间閣阁閩闽閱阅闊阔關关闢辟陰阴陳陈陸陆陽阳隊队階阶際际隨随險险隸隶隻只雙双雜杂雞鸡離离難难雲云電电霧雾靈灵靜静韋韦響响頁页頂顶頃顷項项順顺須须預预領领頭头頸颈顆颗題题額额顏颜類类顧顾顯显風风颱台飄飘飛飞飯饭飲饮飾饰養养餘余館馆餵喂饑饥馬马駁驳駐驻駕驾駛驶駝驼駱骆駿骏騎骑騰腾騾骡驗验驚惊驛驿體体髮发鬆松鬚须鬥斗鬧闹魚鱼魯鲁鮊鲌鮑鲍鮪鲔鮭鲑鯉鲤鯖鲭鯨鲸鯽鲫鰱鲢鰹鲣鰻鳗鱗鳞鳥鸟鳳凤鳴鸣鳶鸢鴕鸵鴝鸲鴨鸭鴴鸻鵑鹃鵰雕鵲鹊鶇鸫鶲鹟鶴鹤鷗鸥鷚鹨鷥鸶鷲鹫鷴鹇鷸鹬鷹鹰鷺鹭鹹咸鹼碱鹽盐麗丽麥麦麼么黃黄點点齊齐齋斋齒齿齡龄龍龙龜龟僕仆喬乔墊垫墜坠墻墙嬰婴寵宠嶇岖拋抛棟栋潰溃爺爷犛牦瓊琼盜盗盧卢禱祷穩稳筍笋糞粪綁绑習习艦舰豔艳貿贸踐践釀酿鈴铃錢钱韓韩願愿馱驮鮮鲜鵝鹅拏拿儲储勵励喚唤嚇吓囓啮婭娅屆届幫帮彌弥惡恶憂忧憑凭災灾犧牺甦苏茲兹蒼苍蟻蚁評评誤误譯译邁迈陣阵隱隐頓顿丟丢亂乱俠侠優优囪囱堊垩嬌娇廁厕廚厨彈弹慮虑憐怜懷怀懺忏戀恋敗败暢畅滾滚獄狱獰狞獺獭禿秃窩窝窯窑篤笃籬篱籲吁綻绽脫脱腦脑臘腊莢荚蘋苹蝸蜗訥讷誌志謝谢豬猪貢贡輝辉邏逻鄧邓釘钉銘铭錨锚鍋锅閃闪閘闸馳驰驅驱驢驴鯊鲨鯰鲶鯷鳀鰩鳐鱷鳄鴉鸦鴞鸮鴿鸽鵡鹉鶯莺鷀鹚鸌鹱鸕鸬鸚鹦龐庞緬缅桿杆緯纬縱纵覺觉艙舱幟帜欽钦吳吴塵尘奮奋捲卷臟脏辭辞醫医鸝鹂","w":{"瓩":"千瓦","呎":"英尺"},"ph":{"著名":"著名","著稱":"著称","著作":"著作","著書":"著书","著述":"著述","著錄":"著录","著者":"著者","原著":"原著","名著":"名著","巨著":"巨著","專著":"专著","論著":"论著","編著":"编著","合著":"合著","譯著":"譯著","顯著":"显著","卓著":"卓著","昭著":"昭著","土著":"土著","所著":"所著","乾隆":"乾隆","乾坤":"乾坤"}}; let tourHansMap = null, tourHansRe = null;
+const TOUR_T2S = {"p":"並并乾干亙亘亞亚佈布佔占併并來来侶侣係系倉仓個个們们倫伦偉伟側侧偵侦偽伪傑杰傘伞備备傳传債债傷伤傾倾僅仅僑侨價价儀仪億亿兒儿內内兩两凍冻凱凯別别則则剛刚創创劃划劇剧劍剑勁劲動动務务勝胜勞劳勢势匯汇區区協协卻却厲厉參参叢丛呂吕員员問问啟启單单嘗尝嘯啸噴喷噸吨嚮向嚴严國国圍围園园圓圆圖图團团埡垭執执堅坚報报場场塊块塗涂塚冢墾垦壇坛壓压壞坏壩坝壯壮壺壶壽寿夢梦夾夹奧奥奪夺婦妇媽妈學学宮宫實实寧宁寫写寬宽寶宝將将專专尋寻對对導导層层屬属岡冈島岛峽峡崗岗崙仑嶺岭嶼屿嶽岳巒峦巔巅巖岩師师帳帐帶带幣币幹干幾几庫库廂厢廟庙廠厂廢废廣广廳厅張张強强彎弯彥彦後后徑径從从復复徵征愛爱態态慶庆憶忆應应懸悬戰战戲戏戶户捨舍掃扫掛挂採采揚扬換换損损搗捣撈捞撐撑撿捡擁拥擇择擊击擋挡據据擠挤擬拟擴扩擺摆擾扰攔拦攜携攝摄攤摊敘叙敵敌數数斷断於于昇升時时暫暂曆历曠旷曬晒書书會会東东條条棄弃棗枣棧栈棲栖楊杨楨桢業业極极榮荣構构樁桩樂乐樑梁樓楼標标樞枢樣样樹树樺桦橋桥機机橢椭橫横檜桧檢检櫚榈櫟栎櫸榉櫻樱欄栏權权欒栾欖榄歐欧歡欢歲岁歷历歸归殘残殼壳毀毁氈毡氣气氫氢汙污決决沒没沖冲況况涼凉淨净淺浅減减測测湧涌湯汤準准溝沟溫温滅灭滲渗滿满漁渔漢汉漲涨漸渐漿浆潛潜澤泽澱淀濁浊濃浓濕湿濟济濤涛濱滨濺溅濾滤瀕濒灘滩灣湾為为烏乌無无煉炼煙烟熱热燈灯燒烧營营燭烛爭争爾尔牆墙牠它狀状狹狭獅狮獎奖獨独獲获獵猎獸兽獻献獼猕現现瑪玛環环產产畢毕畫画異异當当疊叠發发盞盏盡尽監监盤盘盪荡眾众矽硅砲炮確确碼码磚砖磧碛磯矶礦矿礫砾祿禄禍祸禎祯禦御禮礼稜棱種种稱称積积窪洼筆笔節节範范築筑簡简簽签籃篮籌筹籠笼紀纪約约紅红紋纹納纳紐纽紗纱紙纸級级紛纷紡纺紮扎細细紹绍終终組组結结絕绝給给絨绒統统絲丝經经綠绿綬绶維维網网綿绵緊紧緋绯緒绪線线緣缘編编緩缓緻致縣县縫缝縮缩總总織织繞绕繡绣繩绳繪绘繫系繳缴繼继續续纜缆罰罚羅罗義义翬翚翹翘聖圣聞闻聯联聲声聳耸職职聽听脅胁脈脉腳脚膠胶膽胆臉脸臥卧臨临臺台與与興兴舉举舊旧荊荆莊庄莖茎華华菸烟萊莱萬万葉叶著着葦苇蒐搜蓋盖蓮莲蓴莼蔣蒋蔭荫蕭萧薊蓟薑姜薦荐薩萨薰熏藍蓝藝艺藥药蘆芦蘇苏蘚藓蘭兰處处虛虚號号蝕蚀蝦虾螢萤蟲虫術术衛卫衝冲補补裝装裡里製制複复襲袭見见規规覓觅視视親亲覽览觀观觸触訂订計计訊讯討讨託托記记訝讶訪访設设許许訴诉詞词詢询試试詩诗話话該该認认誕诞語语誦诵說说誰谁課课調调談谈請请論论諮咨諾诺謀谋講讲證证識识議议護护讀读變变讓让豎竖豐丰貓猫貝贝貞贞負负貧贫貨货貫贯責责貴贵買买費费貼贴資资賈贾賓宾賞赏賢贤賣卖質质賴赖賽赛贈赠趕赶跡迹蹟迹蹤踪躍跃車车軌轨軍军軟软軸轴較较載载輕轻輛辆輩辈輪轮輸输轉转轎轿轟轰辦办農农迴回這这連连週周進进遊游運运過过達达違违遙遥遜逊遠远適适遶绕遷迁選选遺遗還还邊边郵邮鄉乡鄰邻釋释釐厘針针釣钓鈔钞鈣钙鉤钩銀银銅铜銳锐銷销鋪铺鋸锯鋼钢錄录錐锥錦锦錫锡錯错鍬锹鍰锾鎮镇鏈链鏡镜鏢镖鏽锈鐘钟鐵铁鑽钻鑿凿長长門门閉闭開开閒闲間间閣阁閩闽閱阅闊阔關关闢辟陰阴陳陈陸陆陽阳隊队階阶際际隨随險险隸隶隻只雙双雜杂雞鸡離离難难雲云電电霧雾靈灵靜静韋韦響响頁页頂顶頃顷項项順顺須须預预領领頭头頸颈顆颗題题額额顏颜類类顧顾顯显風风颱台飄飘飛飞飯饭飲饮飾饰養养餘余館馆餵喂饑饥馬马駁驳駐驻駕驾駛驶駝驼駱骆駿骏騎骑騰腾騾骡驗验驚惊驛驿體体髮发鬆松鬚须鬥斗鬧闹魚鱼魯鲁鮊鲌鮑鲍鮪鲔鮭鲑鯉鲤鯖鲭鯨鲸鯽鲫鰱鲢鰹鲣鰻鳗鱗鳞鳥鸟鳳凤鳴鸣鳶鸢鴕鸵鴝鸲鴨鸭鴴鸻鵑鹃鵰雕鵲鹊鶇鸫鶲鹟鶴鹤鷗鸥鷚鹨鷥鸶鷲鹫鷴鹇鷸鹬鷹鹰鷺鹭鹹咸鹼碱鹽盐麗丽麥麦麼么黃黄點点齊齐齋斋齒齿齡龄龍龙龜龟僕仆喬乔墊垫墜坠墻墙嬰婴寵宠嶇岖拋抛棟栋潰溃爺爷犛牦瓊琼盜盗盧卢禱祷穩稳筍笋糞粪綁绑習习艦舰豔艳貿贸踐践釀酿鈴铃錢钱韓韩願愿馱驮鮮鲜鵝鹅拏拿儲储勵励喚唤嚇吓囓啮婭娅屆届幫帮彌弥惡恶憂忧憑凭災灾犧牺甦苏茲兹蒼苍蟻蚁評评誤误譯译邁迈陣阵隱隐頓顿丟丢亂乱俠侠優优囪囱堊垩嬌娇廁厕廚厨彈弹慮虑憐怜懷怀懺忏戀恋敗败暢畅滾滚獄狱獰狞獺獭禿秃窩窝窯窑篤笃籬篱籲吁綻绽脫脱腦脑臘腊莢荚蘋苹蝸蜗訥讷誌志謝谢豬猪貢贡輝辉邏逻鄧邓釘钉銘铭錨锚鍋锅閃闪閘闸馳驰驅驱驢驴鯊鲨鯰鲶鯷鳀鰩鳐鱷鳄鴉鸦鴞鸮鴿鸽鵡鹉鶯莺鷀鹚鸌鹱鸕鸬鸚鹦龐庞緬缅桿杆緯纬縱纵覺觉艙舱幟帜欽钦吳吴塵尘奮奋捲卷臟脏辭辞醫医鸝鹂廈厦燼烬鐸铎鯡鲱","w":{"瓩":"千瓦","呎":"英尺"},"ph":{"著名":"著名","著稱":"著称","著作":"著作","著書":"著书","著述":"著述","著錄":"著录","著者":"著者","原著":"原著","名著":"名著","巨著":"巨著","專著":"专著","論著":"论著","編著":"编著","合著":"合著","譯著":"譯著","顯著":"显著","卓著":"卓著","昭著":"昭著","土著":"土著","所著":"所著","乾隆":"乾隆","乾坤":"乾坤"}}; let tourHansMap = null, tourHansRe = null;
 function tourHans(s) {
   if (!s) return s;
   if (!tourHansMap) { const M = tourHansMap = new Map(), P = TOUR_T2S.p; for (let i = 0; i < P.length; i += 2) M.set(P[i], P[i + 1]); for (const o of [TOUR_T2S.w, TOUR_T2S.ph]) for (const [k, v] of Object.entries(o)) M.set(k, v); tourHansRe = new RegExp([...Object.keys(TOUR_T2S.ph), '[\\u3400-\\u9fff]'].join('|'), 'g'); }
@@ -3191,7 +3191,7 @@ function tourFrame(dt, dtr) {
 }
 function tourApply(R, s, u, dt, cut) {
   if (R.plan.route) return routeApply(R, s, u, dt, cut);
-  const o = tourPose(s, u, R.pose), v = APP.veh, clr = clamp(s.alt * 0.25, 4, 40); let need = -1e9;
+  const o = tourPose(s, u, R.pose), v = APP.veh, clr = s.raw?.clr ?? clamp(s.alt * 0.25, 4, 40); let need = -1e9;   // a drama shot may stand lower (eye height at a monument)
   for (const k of [0, 0.015, 0.03, 0.05]) { const q = k ? tourPose(s, Math.min(1, u + k), R.tmp) : o; need = Math.max(need, tourTerr(q.x, q.z)); }
   const want = Math.max(o.y + s.lift, need + clr); R.y = cut ? want : R.y + (want - R.y) * (1 - Math.exp(-dt * 4)); R.y = Math.max(R.y, tourTerr(o.x, o.z) + clr * 0.5);
   let yaw = o.yaw, pitch = o.pitch;
@@ -3983,7 +3983,8 @@ function dramaLL(set, v) { if (Array.isArray(v)) return { lat: v[0], lon: v[1], 
 /* ---------- start, stop ---------- */
 function dramaStart(plan) {
   const D = plan.drama, set = plan.set; if (D.tz != null) plan.place.tz = D.tz; DRAMA.on = true; DRAMA.plan = plan; DRAMA.built = false; DRAMA.last = -1; DRAMA.fx = null;
-  DRAMA.save = { fish: SET.fisheye, far: camera.far, vis: APP.vis };
+  DRAMA.save = { fish: SET.fisheye, far: camera.far, vis: APP.vis, bld: VEC.radius };
+  if (D.bldR) VEC.radius = D.bldR;   // a wider ring of buildings (a long street canyon)
   DRAMA.grp = new THREE.Group(); scene.add(DRAMA.grp); DRAMA.objs = []; DRAMA.herds = [];
   for (const o of D.objects || []) { const g = DRAMA_BUILD[o.type]?.(o, set); if (g) { DRAMA.grp.add(g.obj); DRAMA.objs.push(g); } }
   if (D.skip?.length) { const S = D.skip.map(s => { const [x, z] = toLocal(s.lat, s.lon); return { x, z, r: s.r || 60 }; }); VEC.skip = (x0, x1, z0, z1) => S.some(s => x1 > s.x - s.r && x0 < s.x + s.r && z1 > s.z - s.r && z0 < s.z + s.r); VEC.reset(); }
@@ -3998,12 +3999,12 @@ function dramaStart(plan) {
 function dramaStop() {
   if (!DRAMA.on) return; DRAMA.on = false;
   if (DRAMA.grp) { scene.remove(DRAMA.grp); DRAMA.grp.traverse(o => { o.geometry?.dispose?.(); }); DRAMA.grp = null; }
-  for (const k of ['sea', 'bliz', 'plume', 'dust']) if (DRAMA[k]) { scene.remove(DRAMA[k]); DRAMA[k].geometry.dispose(); DRAMA[k] = null; }
+  for (const k of ['sea', 'bliz', 'plume', 'dust', 'aurora']) if (DRAMA[k]) { scene.remove(DRAMA[k]); DRAMA[k].geometry.dispose(); DRAMA[k] = null; }
   DRAMA.herds = []; DRAMA.objs = []; DRAMA.water = null;
   if (VEC.skip) { VEC.skip = null; VEC.reset(); }
   TERRAIN_U.uShOn.value = 0; DRAMA.sh = null; DRAMA.shc = null;
   sky?.material.uniforms.uDisc?.value.set(0.99935, 0.99965);
-  const S = DRAMA.save; if (S) { SET.fisheye = S.fish; camera.far = S.far; camera.updateProjectionMatrix(); applyFov(); }
+  const S = DRAMA.save; if (S) { VEC.radius = S.bld ?? VEC.radius; SET.fisheye = S.fish; camera.far = S.far; camera.updateProjectionMatrix(); applyFov(); }
   DRAMA.plan = null; DRAMA.fx = null;
 }
 
@@ -4045,6 +4046,8 @@ function dramaFx(fx, s) {
   // blizzard, spindrift
   if (fx.snow) { dramaBliz(fx.snow, fx.wind); snow.visible = false; } else if (DRAMA.bliz) DRAMA.bliz.visible = false;
   if (fx.plume) dramaPlumeOn(fx.plume, fx.wind); else if (DRAMA.plume) DRAMA.plume.userData.on = false;
+  // northern lights
+  if (fx.aurora) dramaAurora(fx.aurora); else if (DRAMA.aurora) DRAMA.aurora.visible = false;
   // a wide lens for FPV
   const fish = !!s.raw?.fpv && s.raw.fpv.fish !== false; if (SET.fisheye !== fish) { SET.fisheye = fish; applyFov(); }
   dramaGrade();
@@ -4087,6 +4090,7 @@ function dramaSea(o) {
         }` });
     DRAMA.sea = new THREE.Mesh(g, m); DRAMA.sea.frustumCulled = false; DRAMA.sea.renderOrder = 2; scene.add(DRAMA.sea);
   }
+  DRAMA.seaAt = o.at ? { at: o.at, up: o.up ?? 6, done: false } : null;   // a mist sitting a few metres over a lake: its height is read from the terrain
   const U = DRAMA.sea.material.uniforms; U.uTop.value = o.top ?? 600; U.uThick.value = o.thick ?? 160; U.uCover.value = o.cover ?? 0.85; U.uScale.value = o.scale ?? 2400; DRAMA.sea.visible = true;
 }
 
@@ -4104,25 +4108,63 @@ function dramaBliz(k, wind) {
 function dramaWindVec(w) { const dir = (w?.[0] ?? 270) * rad, sp = w?.[1] ?? 18; return new THREE.Vector3(-Math.sin(dir) * sp, 0, Math.cos(dir) * sp); }   // blowing FROM dir
 const DRAMA_PUFF = (() => { let t = null; return () => { if (t) return t; const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d'), gr = g.createRadialGradient(32, 32, 2, 32, 32, 31); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.5, 'rgba(255,255,255,.45)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); t = new THREE.CanvasTexture(c); return t; }; })();
 function dramaPuffs(n, color, blending) {
-  const g = new THREE.BufferGeometry(), P = new Float32Array(n * 3), S = new Float32Array(n), A = new Float32Array(n);
-  g.setAttribute('position', new THREE.BufferAttribute(P, 3)); g.setAttribute('aSize', new THREE.BufferAttribute(S, 1)); g.setAttribute('aAlpha', new THREE.BufferAttribute(A, 1));
-  const m = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, blending: blending || THREE.NormalBlending, uniforms: { uMap: { value: DRAMA_PUFF() }, uCol: { value: new THREE.Color(color) }, uScale: { value: 600 } },
+  const g = new THREE.BufferGeometry(), P = new Float32Array(n * 3), S = new Float32Array(n), A = new Float32Array(n), Lt = new Float32Array(n).fill(1);
+  g.setAttribute('position', new THREE.BufferAttribute(P, 3)); g.setAttribute('aSize', new THREE.BufferAttribute(S, 1)); g.setAttribute('aAlpha', new THREE.BufferAttribute(A, 1)); g.setAttribute('aLit', new THREE.BufferAttribute(Lt, 1));
+  const m = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, blending: blending || THREE.NormalBlending, uniforms: { uMap: { value: DRAMA_PUFF() }, uCol: { value: new THREE.Color(color) }, uShade: { value: new THREE.Color(color) }, uScale: { value: 600 } },
     vertexShader: `#include <common>
       #include <logdepthbuf_pars_vertex>
-      attribute float aSize, aAlpha; uniform float uScale; varying float vA; void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; gl_PointSize = clamp(aSize * uScale / max(1.0, -mv.z), 0.0, 900.0); vA = aAlpha;
+      attribute float aSize, aAlpha, aLit; uniform float uScale; varying float vA, vL; void main(){ vL = aLit; vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; gl_PointSize = clamp(aSize * uScale / max(1.0, -mv.z) * projectionMatrix[1][1] / 2.36, 0.0, 900.0);   // 2.36: the tour lens; a long lens makes puffs bigger, as it should vA = aAlpha;
       #include <logdepthbuf_vertex>
       }`,
     fragmentShader: `#include <common>
       #include <logdepthbuf_pars_fragment>
-      uniform sampler2D uMap; uniform vec3 uCol; varying float vA; void main(){
+      uniform sampler2D uMap; uniform vec3 uCol, uShade; varying float vA, vL; void main(){
       #include <logdepthbuf_fragment>
-      vec4 t = texture2D(uMap, gl_PointCoord); gl_FragColor = vec4(uCol, t.a * vA); }` });
+      vec4 t = texture2D(uMap, gl_PointCoord); gl_FragColor = vec4(mix(uShade, uCol, vL), t.a * vA); }` });
   const o = new THREE.Points(g, m); o.frustumCulled = false; o.userData = { n, life: new Float32Array(n), vel: new Float32Array(n * 3), k: 0 }; return o;
 }
 function dramaPlumeOn(pl, wind) {
   if (!DRAMA.plume) { DRAMA.plume = dramaPuffs(260, '#f6f8fc'); scene.add(DRAMA.plume); }
   const set = DRAMA.plan.set, src = (pl.at || []).map(k => dramaLL(set, k)).filter(Boolean).map(p => { const [x, z] = toLocal(p.lat, p.lon); return { x, z, y: Math.max(p.h, DEM.heightAt(x, z)) }; });
   Object.assign(DRAMA.plume.userData, { on: true, src, rate: pl.rate ?? 40, size: pl.size ?? 160, wind: dramaWindVec(wind) });
+}
+
+/* ---------- northern lights: folded curtains low over the poleward sky, green below and fading to violet above; slow drifting folds and flickering rays.
+   Drawn on a large sphere around the camera (behind the terrain, in front of the stars); a simulation, not a forecast of any real display ---------- */
+function dramaAurora(a) {
+  if (!DRAMA.aurora) {
+    const m = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, fog: false, side: THREE.BackSide, blending: THREE.AdditiveBlending,
+      uniforms: { uK: { value: 1 }, uT: { value: 0 }, uAz: { value: 0 }, uSpan: { value: 120 }, uBase: { value: 8 }, uTall: { value: 1 }, uCol: { value: new THREE.Color('#3dff86') }, uTop: { value: new THREE.Color('#b347c8') } },
+      vertexShader: `#include <common>
+        #include <logdepthbuf_pars_vertex>
+        varying vec3 vD; void main(){ vD = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        #include <logdepthbuf_vertex>
+        }`,
+      fragmentShader: `#include <common>
+        #include <logdepthbuf_pars_fragment>
+        uniform float uK, uT, uAz, uSpan, uBase, uTall; uniform vec3 uCol, uTop; varying vec3 vD;
+        float h1(float x){ return fract(sin(x * 127.1) * 43758.5453); }
+        float n1(float x){ float i = floor(x), f = fract(x); f = f * f * (3.0 - 2.0 * f); return mix(h1(i), h1(i + 1.0), f); }
+        void main(){
+          #include <logdepthbuf_fragment>
+          vec3 d = normalize(vD); float el = degrees(asin(clamp(d.y, -1.0, 1.0))), az = degrees(atan(d.x, -d.z)), da = mod(az - uAz + 540.0, 360.0) - 180.0;
+          float span = 1.0 - smoothstep(uSpan * 0.55, uSpan, abs(da)); vec3 col = vec3(0.0);
+          for (int k = 0; k < 3; k++) { float fk = float(k);
+            float b = uBase + fk * 5.0 + 6.0 * n1(da * 0.025 + uT * 0.035 + fk * 7.3) + 3.0 * sin(da * 0.09 + uT * 0.12 + fk * 2.1) - 2.0 * fk;
+            float up = el - b; float edge = smoothstep(-0.8, 0.5, up);
+            float tall = exp(-max(up, 0.0) / ((8.0 + 7.0 * n1(da * 0.06 + fk * 3.0 + uT * 0.02)) * uTall));
+            float rays = 0.45 + 0.55 * n1(da * 2.6 + uT * 0.5 + fk * 13.0) * (0.6 + 0.4 * n1(da * 0.8 - uT * 0.23 + fk));
+            float fold = 0.55 + 0.45 * sin(da * 0.19 + uT * 0.21 + fk * 2.0 + 2.0 * n1(da * 0.05 + uT * 0.05));
+            float w = fk == 0.0 ? 1.0 : fk == 1.0 ? 0.55 : 0.35;
+            col += mix(uCol, uTop, smoothstep(5.0, 24.0, up)) * edge * tall * rays * fold * w;
+          }
+          col *= uK * span * smoothstep(-1.0, 3.0, el);
+          gl_FragColor = vec4(col, 1.0);
+        }` });
+    DRAMA.aurora = new THREE.Mesh(new THREE.SphereGeometry(150000, 64, 32), m); DRAMA.aurora.frustumCulled = false; DRAMA.aurora.renderOrder = 1; scene.add(DRAMA.aurora);
+  }
+  const U = DRAMA.aurora.material.uniforms; U.uK.value = a.k ?? 1; U.uAz.value = a.az ?? 0; U.uSpan.value = a.span ?? 120; U.uBase.value = a.base ?? 8; U.uTall.value = a.tall ?? 1;
+  if (a.color) U.uCol.value.set(a.color); if (a.top) U.uTop.value.set(a.top); DRAMA.aurora.visible = true;
 }
 
 /* ---------- shadows cast by the terrain: a height field around the place, marched along the sun ray in the terrain shader ---------- */
@@ -4138,6 +4180,7 @@ function dramaShadowBuild() {
 const _dv = new THREE.Vector3();
 function dramaTick(T, dt) {
   const cp = camera.position; dt = Math.min(dt, 0.1);
+  const sa = DRAMA.seaAt; if (sa && !sa.done && DRAMA.sea?.visible && APP.frameN % 15 === 0) { const p = dramaLL(DRAMA.plan.set, sa.at); if (p) { const [x, z] = toLocal(p.lat, p.lon), g = DEM.heightAt(x, z); if (Number.isFinite(g) && g !== 0) { DRAMA.sea.material.uniforms.uTop.value = g + sa.up; sa.done = true; } } }
   if (DRAMA.sea?.visible) { const U = DRAMA.sea.material.uniforms, c = 36000 / 240; DRAMA.sea.position.set(Math.round(cp.x / c) * c, 0, Math.round(cp.z / c) * c); U.uTime.value = T; U.uSun.value.copy(APP.sunDir); U.uSunCol.value.copy(clouds.material.uniforms.uSunCol.value).multiplyScalar(1.15); U.uShade.value.copy(clouds.material.uniforms.uShade.value).multiplyScalar(1.1); }
   if (DRAMA.bliz?.visible) {   // streaks move with the wind and fall; wrap around the camera
     const b = DRAMA.bliz, a = b.geometry.attributes.position.array, W = DRAMA.wind || new THREE.Vector3(12, 0, 0), L = 0.05, n = a.length / 6;
@@ -4156,6 +4199,7 @@ function dramaTick(T, dt) {
     }
     pl.geometry.attributes.position.needsUpdate = pl.geometry.attributes.aSize.needsUpdate = pl.geometry.attributes.aAlpha.needsUpdate = true;
   }
+  if (DRAMA.aurora?.visible) { DRAMA.aurora.position.copy(cp); DRAMA.aurora.material.uniforms.uT.value = T; }
   for (const h of DRAMA.herds) dramaHerdTick(h, T, dt);
   const wa = DRAMA.water; if (wa && wa.userData.level == null && APP.frameN % 15 === 0) { const g = DEM.heightAt(wa.userData.x, wa.userData.z);
     if (Number.isFinite(g) && g !== 0) { const lv = g + wa.userData.up; wa.userData.level = lv; wa.position.y = lv; for (const H of DRAMA.herds) if (H.h.water && H.h.waterLevel == null) H.h.waterLevel = lv; } }
@@ -4213,7 +4257,120 @@ const DRAMA_BUILD = {
       jets.geometry.attributes.position.needsUpdate = jets.geometry.attributes.aSize.needsUpdate = jets.geometry.attributes.aAlpha.needsUpdate = true;
     } };
   },
+  /* standing stones, sea stacks, simple blocks: footprints (metres east and north of lat/lon) raised to a height, slightly tapered and rough on top; plus boxes (lintels, blocks).
+     abs: the base is sea level (sea stacks) instead of the ground at the centre */
+  stones(o) {
+    const g = new THREE.Group(), [x, z] = toLocal(o.lat, o.lon), base = dramaMat(o.color || '#9a968b', o.rough ?? 0.95, 0, { flatShading: true }), col = new THREE.Color();
+    const rnd = (i) => { const v = Math.sin(i * 91.7 + 3.1) * 43758.5453; return v - Math.floor(v); };
+    (o.polys || []).forEach((s, i) => {
+      if (!s.p || s.p.length < 3) return;
+      const sh = new THREE.Shape(s.p.map(([e, n]) => new THREE.Vector2(e, n))), sink = s.sink ?? o.sink ?? 0.6, h = s.h + sink;
+      const geo = new THREE.ExtrudeGeometry(sh, { depth: h, bevelEnabled: false, steps: Math.max(1, Math.round(h / 8)) }).rotateX(-Math.PI / 2);   // shape (east, north) → world (x, -z); depth → up
+      const P = geo.attributes.position; let cx = 0, cz = 0; for (const [e, n] of s.p) { cx += e; cz -= n; } cx /= s.p.length; cz /= s.p.length;
+      const tp = s.taper ?? o.taper ?? 0.12;
+      const wob = s.wob ?? o.wob ?? 0, hv = (a, b, c) => rnd(Math.round(a * 4) * 7.13 + Math.round(b * 4) * 3.71 + Math.round(c * 4) * 1.37 + i);   // rugged sides: a nudge that depends only on the position, so shared corners move together
+      for (let k = 0; k < P.count; k++) { const yy = P.getY(k), t = clamp(yy / h, 0, 1), f = (1 - tp * t + (s.flare ?? 0) * (1 - t) ** 3) * (wob && t > 0.001 && t < 0.999 ? 1 + wob * (hv(P.getX(k), yy, P.getZ(k)) - 0.5) : 1); let px = cx + (P.getX(k) - cx) * f, pz = cz + (P.getZ(k) - cz) * f;
+        let py = yy - sink; if (t > 0.999) py += (rnd(i * 31 + k) - 0.5) * (s.rough ?? Math.min(0.5, s.h * 0.08)); P.setXYZ(k, px, py, pz); }
+      geo.computeVertexNormals();
+      const m = base.clone(); m.color.copy(col.set(s.c || o.color || '#9a968b').offsetHSL(0, 0, (rnd(i) - 0.5) * (o.vary ?? 0.08))); g.add(new THREE.Mesh(geo, m));
+      if (s.y) g.children[g.children.length - 1].position.y = s.y;
+    });
+    for (const b of o.boxes || []) {   // {at: [east, north], y, s: [length, height, width], yaw: bearing of the length, c}
+      const m = new THREE.Mesh(new THREE.BoxGeometry(b.s[0], b.s[1], b.s[2]), b.c ? dramaMat(b.c, 0.95, 0, { flatShading: true }) : base);
+      m.position.set(b.at[0], (b.y || 0) + b.s[1] / 2, -b.at[1]); m.rotation.y = -((b.yaw ?? 90) - 90) * rad; if (b.tilt) m.rotation.z = b.tilt * rad; g.add(m);
+    }
+    g.rotation.y = -(o.heading || 0) * rad; g.position.set(x, o.abs ? 0 : -1e4, z);
+    let done = !!o.abs;
+    return { obj: g, tick() { if (done || APP.frameN % 20) return; const y = DEM.heightAt(x, z); if (Number.isFinite(y) && y !== 0) { g.position.y = Math.max(y, 0) + (o.dy || 0); done = true; } else g.position.y = dramaGround(x, z); } };
+  },
+  /* a pyramid: square base aligned to north (base, today's height h, original height h0 for the slope), the core in courses, an optional cap of casing (top fraction) */
+  pyramid(o) {
+    const g = new THREE.Group(), [x, z] = toLocal(o.lat, o.lon), B = o.base, h0 = o.h0 || o.h, h = o.h, w = (y) => B * (1 - y / h0);
+    const tex = DRAMA_COURSES(), core = dramaMat(o.color || '#c4a77a', 0.97, 0, { map: tex }), cas = dramaMat(o.casing?.color || '#d9c8a3', 0.8, 0);
+    const yc = o.casing ? h * (1 - o.casing.top) : h, f1 = dramaFrustum(w(0), w(yc), yc, 0, core); g.add(f1);
+    const uv = f1.geometry.attributes.uv; for (let k = 0; k < uv.count; k++) uv.setXY(k, uv.getX(k) * 4, uv.getY(k) * yc / 2.2);   // one line every ~2.2 m (a pair of courses)
+    if (o.casing) g.add(dramaFrustum(w(yc), w(h), h - yc, yc, cas));
+    g.rotation.y = -(o.heading || 0) * rad; g.position.set(x, -1e4, z);
+    const half = B / 2 + 12; let done = false;   // just outside the base: the elevation model has the pyramid in it as a smooth mound
+    return { obj: g, tick() { if (done || APP.frameN % 20) return; const s = [[0, 0], [half, half], [half, -half], [-half, half], [-half, -half]].map(([a, b]) => DEM.heightAt(x + a, z + b));
+      if (s.every(v => Number.isFinite(v) && v !== 0)) { g.position.y = Math.min(...s) - 1; done = true; } else g.position.y = dramaGround(x, z); } };
+  },
+  /* Angkor Wat in simple shapes: three rising enclosures with their galleries, the five lotus-bud towers, the long western causeway and the outer wall.
+     Sizes from the published dimensions and the OpenStreetMap outlines; the carvings are not modelled. lat/lon: the central tower */
+  angkor(o) {
+    const g = new THREE.Group(), [x, z] = toLocal(o.lat, o.lon), st = dramaMat('#8a8273', 0.95, 0, { flatShading: true }), dk = dramaMat('#5f5a50', 0.95, 0, { flatShading: true }), lt = dramaMat('#9c9483', 0.95, 0, { flatShading: true });
+    const box = (x0, x1, n0, n1, y0, y1, m = st) => { const b = new THREE.Mesh(new THREE.BoxGeometry(x1 - x0, y1 - y0, n1 - n0), m); b.position.set((x0 + x1) / 2, (y0 + y1) / 2, -(n0 + n1) / 2); g.add(b); return b; };
+    const ring = (x0, x1, n0, n1, y0, y1, wd, roof = true) => {   // a gallery: four sides, with a darker roof
+      box(x0, x1, n0, n0 + wd, y0, y1); box(x0, x1, n1 - wd, n1, y0, y1); box(x0, x0 + wd, n0, n1, y0, y1); box(x1 - wd, x1, n0, n1, y0, y1);
+      if (roof) { const r = 1.6; box(x0 - 0.3, x1 + 0.3, n0 - 0.3, n0 + wd + 0.3, y1, y1 + r, dk); box(x0 - 0.3, x1 + 0.3, n1 - wd - 0.3, n1 + 0.3, y1, y1 + r, dk); box(x0 - 0.3, x0 + wd + 0.3, n0, n1, y1, y1 + r, dk); box(x1 - wd - 0.3, x1 + 0.3, n0, n1, y1, y1 + r, dk); } };
+    const bud = (ex, nn, y0, H, R) => {   // a lotus-bud tower: tiers that swell and narrow to a point
+      const P = [[1, 0], [1, 0.16], [0.9, 0.2], [0.92, 0.3], [0.95, 0.36], [0.84, 0.4], [0.86, 0.48], [0.78, 0.52], [0.76, 0.6], [0.64, 0.64], [0.62, 0.71], [0.48, 0.75], [0.45, 0.82], [0.3, 0.86], [0.26, 0.92], [0.12, 0.96], [0.02, 1]].map(([r, t]) => new THREE.Vector2(r * R, t * H));
+      const m = new THREE.Mesh(new THREE.LatheGeometry(P, 8), lt); m.rotation.y = Math.PI / 8; m.position.set(ex, y0, -nn); g.add(m); };
+    // the outer wall (1,024 × 802 m, 4.5 m) and the western entrance with its three ruined towers
+    const W0 = o.west ?? -470, E0 = W0 + 1024, N0 = 401; ring(W0, E0, -N0, N0, 0, 4.5, 1.6, false);
+    box(W0 - 4, W0 + 6, -118, 118, 0, 7.5); box(W0 - 4.4, W0 + 6.4, -118.4, 118.4, 7.5, 8.8, dk); for (const nn of [0, -26, 26]) bud(W0 + 1, nn, 7.5, nn ? 9 : 14, nn ? 3.6 : 5);
+    // the causeway from the entrance to the temple (350 m, with low balustrades), and across the moat
+    box(W0 + 6, o.c3x0 ?? -114, -4.8, 4.8, 0, 1.6, lt); box(W0 + 6, o.c3x0 ?? -114, -5, -4.6, 1.6, 2.4, dk); box(W0 + 6, o.c3x0 ?? -114, 4.6, 5, 1.6, 2.4, dk);
+    box(W0 - 225, W0 - 4, -6, 6, 0, 1.4, lt);
+    // the third (outer) enclosure: a 4 m terrace, the gallery with corner pavilions, the cross-shaped cloister to the west
+    const X3 = [o.c3x0 ?? -114, o.c3x1 ?? 89], N3 = [o.c3n0 ?? -84, o.c3n1 ?? 86];
+    box(X3[0], X3[1], N3[0], N3[1], 0, 4); ring(X3[0], X3[1], N3[0], N3[1], 4, 9.5, 7);
+    for (const [ex, nn] of [[X3[0], N3[0]], [X3[0], N3[1]], [X3[1], N3[0]], [X3[1], N3[1]]]) { box(ex - 7, ex + 7, nn - 7, nn + 7, 4, 13); bud(ex, nn, 13, 9, 5); }
+    bud(X3[0], 0, 11, 12, 6); box(X3[0] - 8, X3[0] + 8, -12, 12, 4, 11.5);
+    box(-96, -66, -34, 34, 4, 11, st); box(-96.3, -65.7, -34.3, 34.3, 11, 12.6, dk);
+    // the second enclosure: a terrace to 11 m, its gallery
+    const X2 = [o.c2x0 ?? -65, o.c2x1 ?? 50], N2 = [o.c2n0 ?? -45, o.c2n1 ?? 50];
+    box(X2[0], X2[1], N2[0], N2[1], 4, 11); ring(X2[0], X2[1], N2[0], N2[1], 11, 16.5, 5);
+    // the central terrace (Bakan) to 23 m, steps on the west, the inner gallery and the five towers (the central one 65 m above the ground)
+    const C = 25.5; box(-C - 3, C + 3, -C - 3, C + 3, 11, 15); box(-C, C, -C, C, 15, 23); box(-C - 12, -C, -3, 3, 11, 22, lt);
+    ring(-C, C, -C, C, 23, 28.5, 4.5); box(-8, 8, -8, 8, 23, 35);
+    for (const [ex, nn] of [[-C + 2, -C + 2], [-C + 2, C - 2], [C - 2, -C + 2], [C - 2, C - 2]]) { box(ex - 5.5, ex + 5.5, nn - 5.5, nn + 5.5, 23, 31); bud(ex, nn, 31, 24, 5.6); }
+    bud(0, 0, 35, 30, 7.4);
+    g.rotation.y = -(o.heading || 0) * rad; g.position.set(x, -1e4, z); let done = false;
+    return { obj: g, tick() { if (done || APP.frameN % 20) return; const s = [[0, 0], [-120, -90], [-120, 90], [90, -90], [90, 90]].map(([a, b]) => DEM.heightAt(x + a, z + b));
+      if (s.every(v => Number.isFinite(v) && v !== 0)) { g.position.y = Math.min(...s) - 0.3; done = true; } else g.position.y = dramaGround(x, z); } };
+  },
+  /* a waterfall: streams of spray leaving a lip (lat/lon) toward bearing dir and falling drop metres; it hugs the cliff where the terrain stands out
+     beyond a free fall. It takes the colour of the light: in the last low sun it glows orange (Yosemite's "firefall") */
+  fall(o) {
+    const [x, z] = toLocal(o.lat, o.lon), n = o.n || 1600, P = dramaPuffs(n, '#ffffff'), D = P.userData, dir = (o.dir ?? 90) * rad, out = { x: Math.sin(dir), z: -Math.cos(dir) }, side = { x: Math.cos(dir), z: Math.sin(dir) };
+    P.material.uniforms.uScale.value = o.scale || 900; const S = { top: o.top ?? null, prof: null, ok: false }, streams = o.streams || [0], wd = o.width || 6, drop = o.drop || 300;
+    const prep = () => { const g0 = DEM.heightAt(x, z); if (!Number.isFinite(g0) || g0 === 0) return false; const top = S.top ?? g0 + 1, H = [];
+      for (let s = 0; s <= 400; s += 2) H.push(dramaGround(x + out.x * s, z + out.z * s)); const M = H.slice(); for (let i = M.length - 2; i >= 0; i--) M[i] = Math.max(M[i], M[i + 1]);
+      const prof = []; for (let k = 0; k <= Math.ceil(drop / 5) + 30; k++) { const y = top - k * 5; let i = 0; while (i < M.length && M[i] > y - 3) i++; prof.push(i >= M.length ? -1 : i * 2 + 3); }   // -1: the ground never falls away there
+      Object.assign(S, { top, prof, ok: true, lit: new Float32Array(prof.length).fill(1), litT: -1 }); return true; };
+    const sunLit = () => {   // which heights of the fall see the sun: march from each toward the sun over the terrain
+      const d = APP.sunDir, hz = Math.hypot(d.x, d.z) || 1, ux = d.x / hz, uz = d.z / hz, tn = d.y / hz;
+      for (let k = 0; k < S.prof.length; k++) { const y0 = S.top - k * 5, s0 = Math.max(S.prof[k], 0), px = x + out.x * s0, pz = z + out.z * s0; let v = 1;
+        if (APP.sunAlt < -1.5) v = 0; else for (let t = 30; t < 9000; t += t < 600 ? 30 : 120) { if (DEM.heightAt(px + ux * t, pz + uz * t) > y0 + tn * t) { v = 0; break; } }
+        S.lit[k] = S.lit[k] * 0.5 + v * 0.5; } };
+    const profAt = (y) => { const k = clamp((S.top - y) / 5, 0, S.prof.length - 1), i = Math.floor(k), a = S.prof[i], b = S.prof[Math.min(i + 1, S.prof.length - 1)]; return a < 0 || b < 0 ? -1 : lerp(a, b, k - i); };
+    const litAt = (y) => S.lit[clamp(Math.round((S.top - y) / 5), 0, S.lit.length - 1)];
+    const Pos = P.geometry.attributes.position.array, Sz = P.geometry.attributes.aSize.array, Al = P.geometry.attributes.aAlpha.array, c = new THREE.Color();
+    return { obj: P, tick(T, dt) {
+      if (!S.ok && (APP.frameN % 15 || !prep())) return;
+      if (T - S.litT > 1 || T < S.litT) { S.litT = T; sunLit(); }
+      const U = P.material.uniforms, tn = o.tint || [1, 1, 1]; U.uShade.value.copy(WATER_U.uSky.value).multiplyScalar(0.5); c.copy(WATER_U.uSunCol.value).multiplyScalar(o.glow ?? 1.35); c.r *= tn[0]; c.g *= tn[1]; c.b *= tn[2]; c.add(U.uShade.value); U.uCol.value.copy(c);   // shade: skylight from above; lit: the sun's colour
+      const Lt = P.geometry.attributes.aLit.array, chk = APP.frameN & 3;
+      let spawn = (o.rate || n / 30) * dt;
+      for (let i = 0; i < n; i++) {
+        if (D.life[i] <= 0) { if (spawn > 0 && Math.random() < Math.min(1, spawn)) { spawn -= 1; const so = streams[i % streams.length] + (Math.random() - 0.5) * wd;
+            Pos[i * 3] = x + side.x * so + out.x * 1.5; Pos[i * 3 + 1] = S.top; Pos[i * 3 + 2] = z + side.z * so + out.z * 1.5; const v = 1.2 + Math.random() * 1.2; D.vel.set([out.x * v, 0, out.z * v], i * 3); D.life[i] = 1; } else { Al[i] = 0; continue; } }
+        const k = 9.8 / (o.vt || 14); D.vel[i * 3 + 1] += (-9.8 - k * D.vel[i * 3 + 1]) * dt; D.vel[i * 3] *= 1 - 0.3 * dt; D.vel[i * 3 + 2] *= 1 - 0.3 * dt;
+        let px = Pos[i * 3] + D.vel[i * 3] * dt, py = Pos[i * 3 + 1] + D.vel[i * 3 + 1] * dt, pz = Pos[i * 3 + 2] + D.vel[i * 3 + 2] * dt;
+        const s = (px - x) * out.x + (pz - z) * out.z, need = profAt(py); if (need >= 0 && s < need) { px += out.x * (need - s); pz += out.z * (need - s); }
+        Pos[i * 3] = px; Pos[i * 3 + 1] = py; Pos[i * 3 + 2] = pz; const fall = clamp((S.top - py) / drop, 0, 1.2);
+        if (fall >= 1.15 || ((i & 3) === chk && py < dramaGround(px, pz) - 2)) { D.life[i] = 0; Al[i] = 0; continue; }
+        Lt[i] = litAt(py);
+        Sz[i] = (o.size || 7) * (0.6 + 2.2 * fall); Al[i] = (o.alpha ?? 0.42) * (1 - THREE.MathUtils.smoothstep(fall, 0.85, 1.15)) * (0.6 + 0.4 * Math.random());
+      }
+      P.geometry.attributes.position.needsUpdate = P.geometry.attributes.aSize.needsUpdate = P.geometry.attributes.aAlpha.needsUpdate = P.geometry.attributes.aLit.needsUpdate = true;
+    } };
+  },
 };
+const _dc = new THREE.Color();
+const DRAMA_COURSES = (() => { let t = null; return () => { if (t) return t; const c = document.createElement('canvas'); c.width = 16; c.height = 32; const g = c.getContext('2d'); g.fillStyle = '#ffffff'; g.fillRect(0, 0, 16, 32); g.fillStyle = 'rgba(70,55,35,.55)'; g.fillRect(0, 27, 16, 3); g.fillStyle = 'rgba(70,55,35,.25)'; g.fillRect(0, 12, 16, 2);
+  t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t; }; })();
 
 /* ---------- herds: instanced animals along a path, with dust (and spray in a river) ---------- */
 function dramaMerge(parts) {   // [geometry, matrix] → one non-indexed geometry
@@ -4226,6 +4383,7 @@ function dramaAnimal(kind) {   // a simple four-legged body, about life size, fa
   const M = (x, y, z, sx = 1, sy = 1, sz = 1, rx = 0) => new THREE.Matrix4().compose(new THREE.Vector3(x, y, z), new THREE.Quaternion().setFromEuler(new THREE.Euler(rx, 0, 0)), new THREE.Vector3(sx, sy, sz));
   const box = new THREE.BoxGeometry(1, 1, 1), sph = new THREE.SphereGeometry(0.5, 10, 8), parts = [];
   if (kind === 'yak') { parts.push([sph, M(0, 1.25, 0, 1.25, 1.15, 2.3)], [sph, M(0, 1.55, -0.35, 1.0, 0.8, 1.0)], [box, M(0, 1.05, -1.3, 0.5, 0.55, 0.7, 0.5)], [box, M(-0.35, 1.45, -1.35, 0.5, 0.1, 0.1)], [box, M(0.35, 1.45, -1.35, 0.5, 0.1, 0.1)], [box, M(0, 0.62, 0, 1.15, 0.35, 2.0)]); for (const [lx, lz] of [[-0.35, -0.7], [0.35, -0.7], [-0.35, 0.7], [0.35, 0.7]]) parts.push([box, M(lx, 0.4, lz, 0.22, 0.8, 0.22)]); }
+  else if (kind === 'guanaco') { parts.push([sph, M(0, 1.2, 0, 0.72, 0.78, 1.6)], [box, M(0, 1.78, -0.78, 0.2, 1.05, 0.26, -0.22)], [box, M(0, 2.3, -0.98, 0.2, 0.24, 0.48, 0.15)], [box, M(-0.07, 2.47, -0.86, 0.04, 0.16, 0.05)], [box, M(0.07, 2.47, -0.86, 0.04, 0.16, 0.05)], [box, M(0, 1.3, 0.85, 0.12, 0.3, 0.12, 0.6)]); for (const [lx, lz] of [[-0.2, -0.55], [0.2, -0.55], [-0.2, 0.55], [0.2, 0.55]]) parts.push([box, M(lx, 0.45, lz, 0.11, 0.95, 0.11)]); }
   else { const zebra = kind === 'zebra'; parts.push([sph, M(0, 1.2, 0, 0.95, 0.95, 2.0)], [box, M(0, 1.55, -0.95, 0.32, 0.75, 0.38, -0.6)], [box, M(0, 1.6, -1.35, 0.35, 0.36, 0.7, 0.35)]); if (!zebra) parts.push([box, M(-0.25, 1.95, -1.25, 0.45, 0.08, 0.08)], [box, M(0.25, 1.95, -1.25, 0.45, 0.08, 0.08)]); for (const [lx, lz] of [[-0.25, -0.65], [0.25, -0.65], [-0.25, 0.65], [0.25, 0.65]]) parts.push([box, M(lx, 0.45, lz, 0.14, 0.95, 0.14)]); }
   return dramaMerge(parts);
 }
@@ -4234,7 +4392,7 @@ function dramaHerd(h, set) {
   const pts = (h.path || []).map(k => dramaLL(set, k)).filter(Boolean).map(p => { const [x, z] = toLocal(p.lat, p.lon); return { x, z }; }); if (pts.length < 2) return null;
   const poly = [{ x: pts[0].x, z: pts[0].z, l: 0 }]; for (let i = 1; i < pts.length; i++) poly.push({ x: pts[i].x, z: pts[i].z, l: poly[i - 1].l + Math.hypot(pts[i].x - pts[i - 1].x, pts[i].z - pts[i - 1].z) });
   const kinds = h.kind === 'mixed' ? ['wildebeest', 'wildebeest', 'wildebeest', 'zebra'] : [h.kind], n = h.n || 300, meshes = new THREE.Group(), each = [];
-  const mats = { yak: dramaMat('#2b2420', 0.95, 0), wildebeest: dramaMat('#4a4540', 0.9, 0), zebra: dramaMat('#ffffff', 0.85, 0, { map: DRAMA_STRIPES() }) };
+  const mats = { guanaco: dramaMat('#a26a3a', 0.92, 0), yak: dramaMat('#2b2420', 0.95, 0), wildebeest: dramaMat('#4a4540', 0.9, 0), zebra: dramaMat('#ffffff', 0.85, 0, { map: DRAMA_STRIPES() }) };
   const byKind = {}; for (let i = 0; i < n; i++) { const k = kinds[i % kinds.length]; (byKind[k] ||= []).push(i); }
   for (const [k, ids] of Object.entries(byKind)) { const im = new THREE.InstancedMesh(dramaAnimal(k), mats[k], ids.length); im.frustumCulled = false; im.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     if (k === 'yak') { const col = new THREE.Color(); ids.forEach((_, j) => im.setColorAt(j, col.setHSL(0.07, 0.25, 0.1 + 0.25 * ((j * 37 % 11) / 11) + ((j % 9) === 0 ? 0.55 : 0)))); }
