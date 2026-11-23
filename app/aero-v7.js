@@ -72,7 +72,7 @@ function moonIllum(date) {
   const ang = Math.atan2(Math.cos(s.dec) * Math.sin(s.ra - m.ra), Math.sin(s.dec) * Math.cos(m.dec) - Math.cos(s.dec) * Math.sin(m.dec) * Math.cos(s.ra - m.ra));
   return { fraction: (1 + Math.cos(inc)) / 2, phase: 0.5 + 0.5 * inc * (ang < 0 ? -1 : 1) / Math.PI };
 }
-const tzFor = p => p.cc === 'TW' ? 8 : Math.round(p.lon / 15);
+const tzFor = p => p.tz != null ? p.tz : p.cc === 'TW' ? 8 : Math.round(p.lon / 15);
 function localToDate(p, date, min) { const [y, mo, d] = date.split('-').map(Number); return new Date(Date.UTC(y, mo - 1, d) + (min - tzFor(p) * 60) * 6e4); }
 function nowAt(p) { const t = new Date(Date.now() + tzFor(p) * 36e5); return { date: t.toISOString().slice(0, 10), min: t.getUTCHours() * 60 + t.getUTCMinutes() }; }
 const ymdUTC = t => t.toISOString().slice(0, 10);
@@ -253,18 +253,19 @@ const TERRAIN_U = {
   uSun: { value: new THREE.Vector3(0, 1, 0) }, uRelief: { value: 0.55 }, uTint: { value: new THREE.Color(1, 1, 1) },
   uSeason: { value: new THREE.Vector4(0, 0, 0, 0) },      // x: autumn colour, y: winter dormancy, z: spring freshness, w: summer lushness
   uSnow: { value: new THREE.Vector2(9000, 0) },           // x: snow line (m), y: amount
-  uWet: { value: 0 }, uWaterLevel: { value: -1e4 }, uUnder: { value: 0 }, uTime: { value: 0 },
+  uCurv: { value: 0 }, uWet: { value: 0 }, uWaterLevel: { value: -1e4 }, uUnder: { value: 0 }, uTime: { value: 0 },
   uCloud: { value: new THREE.Vector4(0, 2600, 1, 1500) },    // moving cloud shadows: cover, noise scale, sharpness, cloud base (m)
   uCloudOff: { value: new THREE.Vector2() }, uCloudShade: { value: 0 },
+  uShTex: { value: null }, uShRect: { value: new THREE.Vector4(0, 0, 1, 0) }, uShOn: { value: 0 },
   uLamp: { value: new THREE.Vector4(0, -1e4, 0, 30) }, uLampDir: { value: new THREE.Vector4(0, 0, -1, 0.8) }, uLampI: { value: 0 },   // headlight / ROV floodlight on the terrain
 };
 function terrainMaterial(tex) {
   const m = new THREE.MeshBasicMaterial({ map: tex });
   m.onBeforeCompile = sh => {
     Object.assign(sh.uniforms, TERRAIN_U);
-    sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vTN; varying vec3 vTW;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvTN = normal; vTW = position;');
+    sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vTN; varying vec3 vTW; uniform float uCurv;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvTN = normal; vTW = position; transformed.y -= uCurv * dot(position.xz - cameraPosition.xz, position.xz - cameraPosition.xz);');
     sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>
-      varying vec3 vTN; varying vec3 vTW; uniform vec3 uSun; uniform float uRelief; uniform vec3 uTint; uniform vec4 uSeason; uniform vec2 uSnow; uniform float uWet, uWaterLevel, uUnder, uTime; uniform vec4 uCloud; uniform vec2 uCloudOff; uniform float uCloudShade; uniform vec4 uLamp, uLampDir; uniform float uLampI;
+      varying vec3 vTN; varying vec3 vTW; uniform vec3 uSun; uniform float uRelief; uniform vec3 uTint; uniform vec4 uSeason; uniform vec2 uSnow; uniform float uWet, uWaterLevel, uUnder, uTime; uniform vec4 uCloud; uniform vec2 uCloudOff; uniform float uCloudShade; uniform vec4 uLamp, uLampDir; uniform float uLampI; uniform sampler2D uShTex; uniform vec4 uShRect; uniform float uShOn;
       float th(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
       float tn(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f); return mix(mix(th(i), th(i + vec2(1,0)), f.x), mix(th(i + vec2(0,1)), th(i + vec2(1,1)), f.x), f.y); }
       float cfbm(vec2 p){ float s = 0.0, a = 0.5; for (int i = 0; i < 5; i++) { s += a * tn(p); p *= 2.03; a *= 0.5; } return s; }`)
@@ -295,6 +296,10 @@ function terrainMaterial(tex) {
       float ndl = dot(normalize(vTN), uSun);
       float sunUp = max(uSun.y, 0.08);
       float shade = clamp(0.35 + 0.65 * max(ndl, 0.0) / max(sunUp, 0.35), 0.25, 1.35);
+      if (uShOn > 0.5 && uSun.y > 0.0) { float occ = 0.0; vec3 p0 = vTW + vec3(0.0, 3.0, 0.0); float stp = uShRect.z / 512.0;
+        for (int i = 1; i <= 56; i++) { float d = stp * float(i) * (1.0 + float(i) * 0.08); vec3 q = p0 + uSun * d; vec2 uv = (q.xz - uShRect.xy) / uShRect.z;
+          if (uv.x < 0.0 || uv.y < 0.0 || uv.x > 1.0 || uv.y > 1.0 || q.y > uShRect.w) break; float hh = texture2D(uShTex, uv).r; occ = max(occ, clamp((hh - q.y) / (d * 0.03 + 4.0), 0.0, 1.0)); if (occ >= 1.0) break; }
+        shade *= 1.0 - 0.66 * occ; }
       diffuseColor.rgb *= mix(1.0, shade, uRelief) * uTint;
       if (uCloudShade > 0.0 && uSun.y > 0.05) {             // the same cloud field as the sky deck, projected along the sun
         vec2 cp = vTW.xz + uSun.xz / uSun.y * max(uCloud.w - vTW.y, 0.0);
@@ -306,7 +311,7 @@ function terrainMaterial(tex) {
         float sp = smoothstep(uLampDir.w, mix(uLampDir.w, 1.0, 0.35), dot(LL / ld, uLampDir.xyz)), fall = clamp(1.0 - ld / uLamp.w, 0.0, 1.0);
         diffuseColor.rgb += aeroAlbedo * vec3(1.0, 0.96, 0.88) * uLampI * sp * fall * fall; }`);
   };
-  m.customProgramCacheKey = () => 'aero-terrain-v6';
+  m.customProgramCacheKey = () => 'aero-terrain-v7';
   return m;
 }
 const TEX_LOADER = new THREE.TextureLoader().setCrossOrigin('anonymous');
@@ -523,7 +528,7 @@ const VEC = {
         const rings = poly.map(r => r.map(p => toXZ(bl.extent, p))); const outer = rings[0];
         let base = 1e9, minX = 1e9, maxX = -1e9, minZ = 1e9, maxZ = -1e9;
         for (const [x, z] of outer) { base = Math.min(base, DEM.heightAt(x, z)); minX = Math.min(minX, x); maxX = Math.max(maxX, x); minZ = Math.min(minZ, z); maxZ = Math.max(maxZ, z); }
-        if (maxX - minX > 600 || maxZ - minZ > 600) continue;
+        if (maxX - minX > 600 || maxZ - minZ > 600 || (VEC.skip && VEC.skip(minX, maxX, minZ, maxZ))) continue;
         base -= 0.6; const y0 = base + mh, y1 = base + h + 0.6;
         const seed = Math.abs(Math.round(minX * 7 + maxZ * 13)) % 997;
         const wall = col.set(h > 45 ? '#a9b8c4' : WALL_TINTS[seed % WALL_TINTS.length]).clone(), roof = col.set(ROOF_TINTS[seed % ROOF_TINTS.length]).clone();
@@ -771,15 +776,15 @@ async function fetchWeather(lat, lon) {
 function makeSky() {
   const mat = new THREE.ShaderMaterial({
     uniforms: { uSun: { value: new THREE.Vector3(0, 1, 0) }, uMoon: { value: new THREE.Vector3(0, -1, 0) }, uZen: { value: new THREE.Color() }, uHor: { value: new THREE.Color() }, uSunCol: { value: new THREE.Color() },
-      uStars: { value: 0 }, uCloud: { value: 0 }, uMoonLit: { value: 0 }, uFlash: { value: 0 }, uHdr: { value: 1 } },
+      uStars: { value: 0 }, uCloud: { value: 0 }, uMoonLit: { value: 0 }, uFlash: { value: 0 }, uHdr: { value: 1 }, uDisc: { value: new THREE.Vector2(0.99935, 0.99965) } },
     vertexShader: 'varying vec3 vD; void main(){ vD = normalize(position); vec4 p = projectionMatrix * modelViewMatrix * vec4(position,1.0); gl_Position = p.xyww; }',
-    fragmentShader: `uniform vec3 uSun,uMoon,uZen,uHor,uSunCol; uniform float uStars,uCloud,uMoonLit,uFlash,uHdr; varying vec3 vD;
+    fragmentShader: `uniform vec3 uSun,uMoon,uZen,uHor,uSunCol; uniform float uStars,uCloud,uMoonLit,uFlash,uHdr; uniform vec2 uDisc; varying vec3 vD;
       float hash(vec3 p){ return fract(sin(dot(p, vec3(12.9898,78.233,37.719)))*43758.5453); }
       void main(){ vec3 d = normalize(vD); float h = d.y;
         vec3 c = mix(uHor, uZen, pow(clamp(h,0.0,1.0), 0.42));
         float sd = max(dot(d, uSun), 0.0), md = max(dot(d, uMoon), 0.0), clear = 1.0 - 0.85 * uCloud;
         c += uSunCol * (pow(sd, 5.0) * 0.22 + pow(sd, 60.0) * 0.5) * (1.0 - 0.6*uCloud);
-        c += uSunCol * smoothstep(0.99935, 0.99965, sd) * mix(1.0, 18.0, uHdr) * clear;          // sun disc (HDR)
+        c += uSunCol * smoothstep(uDisc.x, uDisc.y, sd) * mix(1.0, 18.0, uHdr) * clear;          // sun disc (HDR)
         float moonA = uMoon.y > -0.05 ? 1.0 : 0.0;
         c += vec3(0.82,0.86,1.0) * smoothstep(0.99955, 0.9998, md) * mix(1.0, 3.0, uHdr) * (0.25 + 0.75*uMoonLit) * clear * moonA;  // moon disc
         c += vec3(0.5,0.58,0.8) * pow(md, 40.0) * 0.18 * uMoonLit * clear * moonA;                 // moon halo
@@ -806,19 +811,19 @@ function setWaves(hs, dirFrom, tp) {
 function waveHeight(x, z, t, scale = 1) { let h = 0; for (const c of WAVES.comps) h += c.a * scale * Math.sin(c.k * (c.dx * x + c.dz * z) - c.w * t + c.ph); return h; }
 let WATER_U = null;
 function makeWaterMaterial(displace) {
-  if (!WATER_U) WATER_U = { uTime: { value: 0 }, uW: { value: [0, 0, 0, 0].map(() => new THREE.Vector4(1, 0, .1, 1)) }, uA: { value: [0, 0, 0, 0].map(() => new THREE.Vector2(0, 0)) }, uSun: { value: new THREE.Vector3(0, 1, 0) }, uSunCol: { value: new THREE.Color() }, uSky: { value: new THREE.Color() }, uHor: { value: new THREE.Color() }, uDeep: { value: new THREE.Color('#0b3550') }, uLight: { value: 1 }, uRipple: { value: 1 }, uRain: { value: 0 } };
+  if (!WATER_U) WATER_U = { uCurv: { value: 0 }, uTime: { value: 0 }, uW: { value: [0, 0, 0, 0].map(() => new THREE.Vector4(1, 0, .1, 1)) }, uA: { value: [0, 0, 0, 0].map(() => new THREE.Vector2(0, 0)) }, uSun: { value: new THREE.Vector3(0, 1, 0) }, uSunCol: { value: new THREE.Color() }, uSky: { value: new THREE.Color() }, uHor: { value: new THREE.Color() }, uDeep: { value: new THREE.Color('#0b3550') }, uLight: { value: 1 }, uRipple: { value: 1 }, uRain: { value: 0 } };
   return new THREE.ShaderMaterial({
     uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, {}]), fog: true, side: THREE.DoubleSide,
     vertexShader: `#include <common>
       #include <fog_pars_vertex>
       #include <logdepthbuf_pars_vertex>
-      uniform float uTime; uniform vec4 uW[4]; uniform vec2 uA[4]; varying vec3 vW; varying vec3 vN;
+      uniform float uTime, uCurv; uniform vec4 uW[4]; uniform vec2 uA[4]; varying vec3 vW; varying vec3 vN;
       void main(){ vec3 p = (modelMatrix * vec4(position,1.0)).xyz; vec3 n = vec3(0.0,1.0,0.0);
         ${displace ? `float fade = clamp(1.0 - length(p.xz - cameraPosition.xz) / 1400.0, 0.0, 1.0);
         for (int i=0;i<4;i++){ float th = uW[i].z * dot(uW[i].xy, p.xz) - uW[i].w * uTime + uA[i].y; float a = uA[i].x * fade;
           p.y += a * sin(th); p.x -= a * 0.6 * uW[i].x * cos(th); p.z -= a * 0.6 * uW[i].y * cos(th);
           n.x -= a * uW[i].z * uW[i].x * cos(th); n.z -= a * uW[i].z * uW[i].y * cos(th); }` : ''}
-        vW = p; vN = normalize(n); vec4 mvPosition = viewMatrix * vec4(p,1.0); gl_Position = projectionMatrix * mvPosition;
+        p.y -= uCurv * dot(p.xz - cameraPosition.xz, p.xz - cameraPosition.xz); vW = p; vN = normalize(n); vec4 mvPosition = viewMatrix * vec4(p,1.0); gl_Position = projectionMatrix * mvPosition;
         #include <logdepthbuf_vertex>
         #include <fog_vertex>
       }`,
@@ -833,7 +838,7 @@ function makeWaterMaterial(displace) {
         float r0 = n2(q + uTime*0.6) + 0.5*n2(q*2.3 - uTime*0.9);
         float rx = n2(q + vec2(e,0.0) + uTime*0.6) + 0.5*n2((q+vec2(e,0.0))*2.3 - uTime*0.9);
         float rz = n2(q + vec2(0.0,e) + uTime*0.6) + 0.5*n2((q+vec2(0.0,e))*2.3 - uTime*0.9);
-        vec3 n = normalize(vN + vec3((r0-rx), 0.0, (r0-rz)) * (0.9 * uRipple + 1.4 * uRain));
+        float aa = clamp(1.0 - length(fwidth(q)) * 1.2, 0.0, 1.0); vec3 n = normalize(vN + vec3((r0-rx), 0.0, (r0-rz)) * (0.9 * uRipple + 1.4 * uRain) * aa);
         vec3 v = normalize(cameraPosition - vW);
         bool below = cameraPosition.y < vW.y - 0.05;
         if (below) { n = -n; }
@@ -855,19 +860,19 @@ function bindWater(m) { Object.assign(m.uniforms, WATER_U); return m; }
 /* ---- cloud deck: cumulus (puffy, drifting with the real wind) or stratus (flat, low) ---- */
 function makeClouds(scaleM = 2600) {
   const mat = new THREE.ShaderMaterial({
-    uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, { uTime: { value: 0 }, uCover: { value: .3 }, uWind: { value: new THREE.Vector2() }, uSunCol: { value: new THREE.Color() }, uShade: { value: new THREE.Color() }, uSun: { value: new THREE.Vector3() }, uScale: { value: scaleM }, uSharp: { value: 1 }, uFlash: { value: 0 }, uAlpha: { value: 0.92 } }]),
+    uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, { uCurv: { value: 0 }, uEdge: { value: 38000 }, uTime: { value: 0 }, uCover: { value: .3 }, uWind: { value: new THREE.Vector2() }, uSunCol: { value: new THREE.Color() }, uShade: { value: new THREE.Color() }, uSun: { value: new THREE.Vector3() }, uScale: { value: scaleM }, uSharp: { value: 1 }, uFlash: { value: 0 }, uAlpha: { value: 0.92 } }]),
     fog: true, transparent: true, depthWrite: false, side: THREE.DoubleSide,
     vertexShader: `#include <common>
       #include <fog_pars_vertex>
       #include <logdepthbuf_pars_vertex>
-      varying vec3 vW; void main(){ vec4 w = modelMatrix * vec4(position,1.0); vW = w.xyz; vec4 mvPosition = viewMatrix * w; gl_Position = projectionMatrix * mvPosition;
+      uniform float uCurv; varying vec3 vW; void main(){ vec4 w = modelMatrix * vec4(position,1.0); vW = w.xyz; w.y -= uCurv * dot(w.xz - cameraPosition.xz, w.xz - cameraPosition.xz); vec4 mvPosition = viewMatrix * w; gl_Position = projectionMatrix * mvPosition;
       #include <logdepthbuf_vertex>
       #include <fog_vertex>
       }`,
     fragmentShader: `#include <common>
       #include <fog_pars_fragment>
       #include <logdepthbuf_pars_fragment>
-      uniform float uTime, uCover, uScale, uSharp, uFlash, uAlpha; uniform vec2 uWind; uniform vec3 uSunCol, uShade, uSun; varying vec3 vW;
+      uniform float uTime, uCover, uScale, uSharp, uFlash, uAlpha, uEdge; uniform vec2 uWind; uniform vec3 uSunCol, uShade, uSun; varying vec3 vW;
       float h2(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
       float vn(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.0-2.0*f); return mix(mix(h2(i),h2(i+vec2(1,0)),f.x),mix(h2(i+vec2(0,1)),h2(i+vec2(1,1)),f.x),f.y); }
       float fbm(vec2 p){ float s=0.0, a=0.5; for(int i=0;i<5;i++){ s+=a*vn(p); p*=2.03; a*=0.5; } return s; }
@@ -878,7 +883,7 @@ function makeClouds(scaleM = 2600) {
         float d = uCover >= 0.99 ? 1.0 : smoothstep(1.0 - uCover - w * 0.4, 1.0 - uCover + w, n);
         float thick = fbm(p * 1.7 + 3.1);
         float lit = clamp(0.5 + 0.55 * (thick - 0.35) * uSharp + 0.25 * uSun.y - 0.25 * (1.0 - uSharp) * uCover, 0.0, 1.0);
-        float edge = clamp(1.0 - length(vW.xz - cameraPosition.xz) / 38000.0, 0.0, 1.0);
+        float edge = clamp(1.0 - length(vW.xz - cameraPosition.xz) / uEdge, 0.0, 1.0);
         vec3 col = mix(uShade, uSunCol, lit) + vec3(0.8,0.85,1.0) * uFlash * 1.5;
         gl_FragColor = vec4(col, d * uAlpha * edge);
         #include <colorspace_fragment>
@@ -1416,8 +1421,8 @@ function resize() {
 /* horizontal field of view (the setting) -> vertical camera FOV; the fisheye lens renders wider and bends it in post */
 function applyFov() {
   if (!camera) return; const fish = SET.fisheye && POST.enabled, base = (APP.cam === 'fpv' ? SET.fov + 5 : SET.fov) / APP.zoom;
-  const h = clamp(fish ? Math.min(150, base + 30) : base, 20, 150) * rad, a = camera.aspect || 1;
-  camera.fov = clamp(2 * Math.atan(Math.tan(h / 2) / a) * deg, 18, 118); camera.updateProjectionMatrix();
+  const h = clamp(fish ? Math.min(150, base + 30) : base, 3, 150) * rad, a = camera.aspect || 1;
+  camera.fov = clamp(2 * Math.atan(Math.tan(h / 2) / a) * deg, 1.7, 118); camera.updateProjectionMatrix();
   POST.set({ uFish: fish ? 1 : 0, uTanMax: Math.tan(Math.min(h, 2.6) / 2) });
 }
 
@@ -2583,7 +2588,7 @@ let LOADSEQ = 0;
 async function loadPlace(p, kind = 'drone', opts = {}) {
   if (!p) return; if (TOUR.on) tourExit(true); const seq = ++LOADSEQ, say = m => { $('#loadMsg').textContent = m; };
   APP.state = 'loading'; APP.place = p; APP.paused = true; APP.started = false; $('#loading').hidden = false; $('#startOverlay').hidden = true;
-  LS.set('aero6:last', JSON.stringify({ id: p.id, v: kind }));
+  if (!p.route) LS.set('aero6:last', JSON.stringify({ id: p.id, v: kind }));
   if (!opts.keepHash) try { history.replaceState(null, '', '#' + encodeURIComponent(p.id) + '/' + kind); } catch { }
   try {
     initRenderer(); const Q = QUALITY[APP.quality];
@@ -2721,6 +2726,7 @@ addEventListener('hashchange', async () => {
   const [hid, hv, h3] = decodeURIComponent(location.hash.slice(1)).split('/');
   if (hid === 'crew') { if (hv && globalThis.AERO_CREW && hv !== CREW.id) startCrew(hv); return; }
   if (hid === 'mission' && hv) { await loadMissions(); const d = MISSIONS.defs.find(x => x.id === hv); if (d) startAeroAt(d, MTIER[h3] ? h3 : 'beginner'); return; }
+  if (hid === 'route') { if (hv && !(TOUR.on && TOUR.run?.plan.route?.id === hv && TOUR.run.plan.view === (h3 || 'window'))) startRoute(hv, h3 || 'window'); return; }
   if (hid?.startsWith('wd-') && !PLACE_BY_ID.get(hid)) await loadCatalogueX();
   if (hv === 'tour') { const tp = PLACE_BY_ID.get(hid); if (tp && !(TOUR.on && TOUR.run?.plan.place === tp && TOUR.run.plan.id === h3)) startTour(tp, h3 || ''); return; }
   if (TOUR.on) tourExit(true);
@@ -2734,6 +2740,8 @@ async function boot() {
   $('#startBtn').onclick = () => togglePause();
   $('#startHelp').onclick = () => toggleHelp(true);
   if ($('#startTour')) $('#startTour').onclick = () => { AUDIO.start(); showStory(); };
+  if ($('#startRoutes')) $('#startRoutes').onclick = () => { AUDIO.start(); showRoutes(); };
+  if ($('#startDrama')) $('#startDrama').onclick = () => { AUDIO.start(); showDrama(); };
   APP.quality = SET.quality === 'auto' ? autoQuality() : SET.quality;
   $('#attrib').textContent = t('attr.line');
   requestAnimationFrame(frame);
@@ -2747,6 +2755,7 @@ async function boot() {
   await loadPlace(p, kind);
   tourIndex(); setTimeout(loadCatalogueX, 1200);
   if (hv === 'tour' && PLACE_BY_ID.get(hid) === p) startTour(p, h3 || '', { autoplay: false });
+  if (hid === 'route' && hv) startRoute(hv, h3 || 'window', { autoplay: false });
   if (globalThis.AERO_PWA && 'serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => { });
 }
 
@@ -2992,7 +3001,7 @@ const TOUR_ICON = { history: '◷', culture: '❖', nature: '❦', geography: '�
 const tourEase = u => u * u * (3 - 2 * u);
 /* The researched scripts are written in Traditional Chinese and English. Readers of Simplified Chinese get the Chinese text converted
    with a table that covers every character the scripts use (tools/t2s_map.json; the build reports a character it does not know). */
-const TOUR_T2S = {"p":"並并乾干亙亘亞亚佈布佔占併并來来侶侣係系倉仓個个們们倫伦偉伟側侧偵侦偽伪傑杰傘伞備备傳传債债傷伤傾倾僅仅僑侨價价儀仪億亿兒儿內内兩两凍冻凱凯別别則则剛刚創创劃划劇剧劍剑勁劲動动務务勝胜勞劳勢势匯汇區区協协卻却厲厉參参叢丛呂吕員员問问啟启單单嘗尝嘯啸噴喷噸吨嚮向嚴严國国圍围園园圓圆圖图團团埡垭執执堅坚報报場场塊块塗涂塚冢墾垦壇坛壓压壞坏壩坝壯壮壺壶壽寿夢梦夾夹奧奥奪夺婦妇媽妈學学宮宫實实寧宁寫写寬宽寶宝將将專专尋寻對对導导層层屬属岡冈島岛峽峡崗岗崙仑嶺岭嶼屿嶽岳巒峦巔巅巖岩師师帳帐帶带幣币幹干幾几庫库廂厢廟庙廠厂廢废廣广廳厅張张強强彎弯彥彦後后徑径從从復复徵征愛爱態态慶庆憶忆應应懸悬戰战戲戏戶户捨舍掃扫掛挂採采揚扬換换損损搗捣撈捞撐撑撿捡擁拥擇择擊击擋挡據据擠挤擬拟擴扩擺摆擾扰攔拦攜携攝摄攤摊敘叙敵敌數数斷断於于昇升時时暫暂曆历曠旷曬晒書书會会東东條条棄弃棗枣棧栈棲栖楊杨楨桢業业極极榮荣構构樁桩樂乐樑梁樓楼標标樞枢樣样樹树樺桦橋桥機机橢椭橫横檜桧檢检櫚榈櫟栎櫸榉櫻樱欄栏權权欒栾欖榄歐欧歡欢歲岁歷历歸归殘残殼壳毀毁氈毡氣气氫氢汙污決决沒没沖冲況况涼凉淨净淺浅減减測测湧涌湯汤準准溝沟溫温滅灭滲渗滿满漁渔漢汉漲涨漸渐漿浆潛潜澤泽澱淀濁浊濃浓濕湿濟济濤涛濱滨濺溅濾滤瀕濒灘滩灣湾為为烏乌無无煉炼煙烟熱热燈灯燒烧營营燭烛爭争爾尔牆墙牠它狀状狹狭獅狮獎奖獨独獲获獵猎獸兽獻献獼猕現现瑪玛環环產产畢毕畫画異异當当疊叠發发盞盏盡尽監监盤盘盪荡眾众矽硅砲炮確确碼码磚砖磧碛磯矶礦矿礫砾祿禄禍祸禎祯禦御禮礼稜棱種种稱称積积窪洼筆笔節节範范築筑簡简簽签籃篮籌筹籠笼紀纪約约紅红紋纹納纳紐纽紗纱紙纸級级紛纷紡纺紮扎細细紹绍終终組组結结絕绝給给絨绒統统絲丝經经綠绿綬绶維维網网綿绵緊紧緋绯緒绪線线緣缘編编緩缓緻致縣县縫缝縮缩總总織织繞绕繡绣繩绳繪绘繫系繳缴繼继續续纜缆罰罚羅罗義义翬翚翹翘聖圣聞闻聯联聲声聳耸職职聽听脅胁脈脉腳脚膠胶膽胆臉脸臥卧臨临臺台與与興兴舉举舊旧荊荆莊庄莖茎華华菸烟萊莱萬万葉叶著着葦苇蒐搜蓋盖蓮莲蓴莼蔣蒋蔭荫蕭萧薊蓟薑姜薦荐薩萨薰熏藍蓝藝艺藥药蘆芦蘇苏蘚藓蘭兰處处虛虚號号蝕蚀蝦虾螢萤蟲虫術术衛卫衝冲補补裝装裡里製制複复襲袭見见規规覓觅視视親亲覽览觀观觸触訂订計计訊讯討讨託托記记訝讶訪访設设許许訴诉詞词詢询試试詩诗話话該该認认誕诞語语誦诵說说誰谁課课調调談谈請请論论諮咨諾诺謀谋講讲證证識识議议護护讀读變变讓让豎竖豐丰貓猫貝贝貞贞負负貧贫貨货貫贯責责貴贵買买費费貼贴資资賈贾賓宾賞赏賢贤賣卖質质賴赖賽赛贈赠趕赶跡迹蹟迹蹤踪躍跃車车軌轨軍军軟软軸轴較较載载輕轻輛辆輩辈輪轮輸输轉转轎轿轟轰辦办農农迴回這这連连週周進进遊游運运過过達达違违遙遥遜逊遠远適适遶绕遷迁選选遺遗還还邊边郵邮鄉乡鄰邻釋释釐厘針针釣钓鈔钞鈣钙鉤钩銀银銅铜銳锐銷销鋪铺鋸锯鋼钢錄录錐锥錦锦錫锡錯错鍬锹鍰锾鎮镇鏈链鏡镜鏢镖鏽锈鐘钟鐵铁鑽钻鑿凿長长門门閉闭開开閒闲間间閣阁閩闽閱阅闊阔關关闢辟陰阴陳陈陸陆陽阳隊队階阶際际隨随險险隸隶隻只雙双雜杂雞鸡離离難难雲云電电霧雾靈灵靜静韋韦響响頁页頂顶頃顷項项順顺須须預预領领頭头頸颈顆颗題题額额顏颜類类顧顾顯显風风颱台飄飘飛飞飯饭飲饮飾饰養养餘余館馆餵喂饑饥馬马駁驳駐驻駕驾駛驶駝驼駱骆駿骏騎骑騰腾騾骡驗验驚惊驛驿體体髮发鬆松鬚须鬥斗鬧闹魚鱼魯鲁鮊鲌鮑鲍鮪鲔鮭鲑鯉鲤鯖鲭鯨鲸鯽鲫鰱鲢鰹鲣鰻鳗鱗鳞鳥鸟鳳凤鳴鸣鳶鸢鴕鸵鴝鸲鴨鸭鴴鸻鵑鹃鵰雕鵲鹊鶇鸫鶲鹟鶴鹤鷗鸥鷚鹨鷥鸶鷲鹫鷴鹇鷸鹬鷹鹰鷺鹭鹹咸鹼碱鹽盐麗丽麥麦麼么黃黄點点齊齐齋斋齒齿齡龄龍龙龜龟僕仆喬乔墊垫墜坠墻墙嬰婴寵宠嶇岖拋抛棟栋潰溃爺爷犛牦瓊琼盜盗盧卢禱祷穩稳筍笋糞粪綁绑習习艦舰豔艳貿贸踐践釀酿鈴铃錢钱韓韩願愿馱驮鮮鲜鵝鹅拏拿儲储勵励喚唤嚇吓囓啮婭娅屆届幫帮彌弥惡恶憂忧憑凭災灾犧牺甦苏茲兹蒼苍蟻蚁評评誤误譯译邁迈陣阵隱隐頓顿丟丢亂乱俠侠優优囪囱堊垩嬌娇廁厕廚厨彈弹慮虑憐怜懷怀懺忏戀恋敗败暢畅滾滚獄狱獰狞獺獭禿秃窩窝窯窑篤笃籬篱籲吁綻绽脫脱腦脑臘腊莢荚蘋苹蝸蜗訥讷誌志謝谢豬猪貢贡輝辉邏逻鄧邓釘钉銘铭錨锚鍋锅閃闪閘闸馳驰驅驱驢驴鯊鲨鯰鲶鯷鳀鰩鳐鱷鳄鴉鸦鴞鸮鴿鸽鵡鹉鶯莺鷀鹚鸌鹱鸕鸬鸚鹦龐庞","w":{"瓩":"千瓦","呎":"英尺"},"ph":{"著名":"著名","著稱":"著称","著作":"著作","著書":"著书","著述":"著述","著錄":"著录","著者":"著者","原著":"原著","名著":"名著","巨著":"巨著","專著":"专著","論著":"论著","編著":"编著","合著":"合著","譯著":"譯著","顯著":"显著","卓著":"卓著","昭著":"昭著","土著":"土著","所著":"所著","乾隆":"乾隆","乾坤":"乾坤"}}; let tourHansMap = null, tourHansRe = null;
+const TOUR_T2S = {"p":"並并乾干亙亘亞亚佈布佔占併并來来侶侣係系倉仓個个們们倫伦偉伟側侧偵侦偽伪傑杰傘伞備备傳传債债傷伤傾倾僅仅僑侨價价儀仪億亿兒儿內内兩两凍冻凱凯別别則则剛刚創创劃划劇剧劍剑勁劲動动務务勝胜勞劳勢势匯汇區区協协卻却厲厉參参叢丛呂吕員员問问啟启單单嘗尝嘯啸噴喷噸吨嚮向嚴严國国圍围園园圓圆圖图團团埡垭執执堅坚報报場场塊块塗涂塚冢墾垦壇坛壓压壞坏壩坝壯壮壺壶壽寿夢梦夾夹奧奥奪夺婦妇媽妈學学宮宫實实寧宁寫写寬宽寶宝將将專专尋寻對对導导層层屬属岡冈島岛峽峡崗岗崙仑嶺岭嶼屿嶽岳巒峦巔巅巖岩師师帳帐帶带幣币幹干幾几庫库廂厢廟庙廠厂廢废廣广廳厅張张強强彎弯彥彦後后徑径從从復复徵征愛爱態态慶庆憶忆應应懸悬戰战戲戏戶户捨舍掃扫掛挂採采揚扬換换損损搗捣撈捞撐撑撿捡擁拥擇择擊击擋挡據据擠挤擬拟擴扩擺摆擾扰攔拦攜携攝摄攤摊敘叙敵敌數数斷断於于昇升時时暫暂曆历曠旷曬晒書书會会東东條条棄弃棗枣棧栈棲栖楊杨楨桢業业極极榮荣構构樁桩樂乐樑梁樓楼標标樞枢樣样樹树樺桦橋桥機机橢椭橫横檜桧檢检櫚榈櫟栎櫸榉櫻樱欄栏權权欒栾欖榄歐欧歡欢歲岁歷历歸归殘残殼壳毀毁氈毡氣气氫氢汙污決决沒没沖冲況况涼凉淨净淺浅減减測测湧涌湯汤準准溝沟溫温滅灭滲渗滿满漁渔漢汉漲涨漸渐漿浆潛潜澤泽澱淀濁浊濃浓濕湿濟济濤涛濱滨濺溅濾滤瀕濒灘滩灣湾為为烏乌無无煉炼煙烟熱热燈灯燒烧營营燭烛爭争爾尔牆墙牠它狀状狹狭獅狮獎奖獨独獲获獵猎獸兽獻献獼猕現现瑪玛環环產产畢毕畫画異异當当疊叠發发盞盏盡尽監监盤盘盪荡眾众矽硅砲炮確确碼码磚砖磧碛磯矶礦矿礫砾祿禄禍祸禎祯禦御禮礼稜棱種种稱称積积窪洼筆笔節节範范築筑簡简簽签籃篮籌筹籠笼紀纪約约紅红紋纹納纳紐纽紗纱紙纸級级紛纷紡纺紮扎細细紹绍終终組组結结絕绝給给絨绒統统絲丝經经綠绿綬绶維维網网綿绵緊紧緋绯緒绪線线緣缘編编緩缓緻致縣县縫缝縮缩總总織织繞绕繡绣繩绳繪绘繫系繳缴繼继續续纜缆罰罚羅罗義义翬翚翹翘聖圣聞闻聯联聲声聳耸職职聽听脅胁脈脉腳脚膠胶膽胆臉脸臥卧臨临臺台與与興兴舉举舊旧荊荆莊庄莖茎華华菸烟萊莱萬万葉叶著着葦苇蒐搜蓋盖蓮莲蓴莼蔣蒋蔭荫蕭萧薊蓟薑姜薦荐薩萨薰熏藍蓝藝艺藥药蘆芦蘇苏蘚藓蘭兰處处虛虚號号蝕蚀蝦虾螢萤蟲虫術术衛卫衝冲補补裝装裡里製制複复襲袭見见規规覓觅視视親亲覽览觀观觸触訂订計计訊讯討讨託托記记訝讶訪访設设許许訴诉詞词詢询試试詩诗話话該该認认誕诞語语誦诵說说誰谁課课調调談谈請请論论諮咨諾诺謀谋講讲證证識识議议護护讀读變变讓让豎竖豐丰貓猫貝贝貞贞負负貧贫貨货貫贯責责貴贵買买費费貼贴資资賈贾賓宾賞赏賢贤賣卖質质賴赖賽赛贈赠趕赶跡迹蹟迹蹤踪躍跃車车軌轨軍军軟软軸轴較较載载輕轻輛辆輩辈輪轮輸输轉转轎轿轟轰辦办農农迴回這这連连週周進进遊游運运過过達达違违遙遥遜逊遠远適适遶绕遷迁選选遺遗還还邊边郵邮鄉乡鄰邻釋释釐厘針针釣钓鈔钞鈣钙鉤钩銀银銅铜銳锐銷销鋪铺鋸锯鋼钢錄录錐锥錦锦錫锡錯错鍬锹鍰锾鎮镇鏈链鏡镜鏢镖鏽锈鐘钟鐵铁鑽钻鑿凿長长門门閉闭開开閒闲間间閣阁閩闽閱阅闊阔關关闢辟陰阴陳陈陸陆陽阳隊队階阶際际隨随險险隸隶隻只雙双雜杂雞鸡離离難难雲云電电霧雾靈灵靜静韋韦響响頁页頂顶頃顷項项順顺須须預预領领頭头頸颈顆颗題题額额顏颜類类顧顾顯显風风颱台飄飘飛飞飯饭飲饮飾饰養养餘余館馆餵喂饑饥馬马駁驳駐驻駕驾駛驶駝驼駱骆駿骏騎骑騰腾騾骡驗验驚惊驛驿體体髮发鬆松鬚须鬥斗鬧闹魚鱼魯鲁鮊鲌鮑鲍鮪鲔鮭鲑鯉鲤鯖鲭鯨鲸鯽鲫鰱鲢鰹鲣鰻鳗鱗鳞鳥鸟鳳凤鳴鸣鳶鸢鴕鸵鴝鸲鴨鸭鴴鸻鵑鹃鵰雕鵲鹊鶇鸫鶲鹟鶴鹤鷗鸥鷚鹨鷥鸶鷲鹫鷴鹇鷸鹬鷹鹰鷺鹭鹹咸鹼碱鹽盐麗丽麥麦麼么黃黄點点齊齐齋斋齒齿齡龄龍龙龜龟僕仆喬乔墊垫墜坠墻墙嬰婴寵宠嶇岖拋抛棟栋潰溃爺爷犛牦瓊琼盜盗盧卢禱祷穩稳筍笋糞粪綁绑習习艦舰豔艳貿贸踐践釀酿鈴铃錢钱韓韩願愿馱驮鮮鲜鵝鹅拏拿儲储勵励喚唤嚇吓囓啮婭娅屆届幫帮彌弥惡恶憂忧憑凭災灾犧牺甦苏茲兹蒼苍蟻蚁評评誤误譯译邁迈陣阵隱隐頓顿丟丢亂乱俠侠優优囪囱堊垩嬌娇廁厕廚厨彈弹慮虑憐怜懷怀懺忏戀恋敗败暢畅滾滚獄狱獰狞獺獭禿秃窩窝窯窑篤笃籬篱籲吁綻绽脫脱腦脑臘腊莢荚蘋苹蝸蜗訥讷誌志謝谢豬猪貢贡輝辉邏逻鄧邓釘钉銘铭錨锚鍋锅閃闪閘闸馳驰驅驱驢驴鯊鲨鯰鲶鯷鳀鰩鳐鱷鳄鴉鸦鴞鸮鴿鸽鵡鹉鶯莺鷀鹚鸌鹱鸕鸬鸚鹦龐庞緬缅桿杆緯纬縱纵覺觉艙舱幟帜欽钦吳吴塵尘奮奋捲卷臟脏辭辞醫医鸝鹂","w":{"瓩":"千瓦","呎":"英尺"},"ph":{"著名":"著名","著稱":"著称","著作":"著作","著書":"著书","著述":"著述","著錄":"著录","著者":"著者","原著":"原著","名著":"名著","巨著":"巨著","專著":"专著","論著":"论著","編著":"编著","合著":"合著","譯著":"譯著","顯著":"显著","卓著":"卓著","昭著":"昭著","土著":"土著","所著":"所著","乾隆":"乾隆","乾坤":"乾坤"}}; let tourHansMap = null, tourHansRe = null;
 function tourHans(s) {
   if (!s) return s;
   if (!tourHansMap) { const M = tourHansMap = new Map(), P = TOUR_T2S.p; for (let i = 0; i < P.length; i += 2) M.set(P[i], P[i + 1]); for (const o of [TOUR_T2S.w, TOUR_T2S.ph]) for (const [k, v] of Object.entries(o)) M.set(k, v); tourHansRe = new RegExp([...Object.keys(TOUR_T2S.ph), '[\\u3400-\\u9fff]'].join('|'), 'g'); }
@@ -3044,13 +3053,14 @@ function tourMedia(pid, tid, kind) {   // kind 'real': an edition cut from real 
 
 /* ---------- script -> flight plan in local metres ---------- */
 function tourPlan(set, tour, p) {
+  if (tour.route) return routePlan(set, tour, p);
   const pois = {}; for (const [k, v] of Object.entries(set.pois || {})) { const [x, z] = toLocal(v.lat, v.lon); pois[k] = { k, x, z, h: v.h || 0, zh: v.zh, en: v.en, lat: v.lat, lon: v.lon }; }
   const here = { k: '_c', x: 0, z: 0, h: 0 }, P = k => pois[k] || here; let t0 = 0; const shots = [];
   for (const s of tour.shots) {
     const A = P(s.at), B = s.to ? P(s.to) : null, path = s.path ? s.path.map(P) : null, alt = Math.max(3, +s.alt || 120);
     const o = { t0, dur: +s.dur, move: s.move, A, B, path, alt, alt0: s.alt0 != null ? Math.max(2, +s.alt0) : null, dist: s.dist != null ? Math.max(8, +s.dist) : Math.max(60, alt * 1.6), dist0: s.dist0 != null ? Math.max(6, +s.dist0) : null,
       from: s.from != null ? +s.from : 180, arc: s.arc != null ? +s.arc : null, pitch: s.pitch != null ? clamp(+s.pitch, -90, 25) : null, time: s.time || tour.time || 'morning', weather: s.weather || tour.weather || 'few',
-      caps: s.caps || { zh: s.zh || [], en: s.en || [] }, lift: 0, prep: false };
+      caps: s.caps || { zh: s.zh || [], en: s.en || [] }, lift: 0, prep: false, raw: s };
     if (o.move === 'reveal') { o.alt0 ??= Math.max(8, alt * 0.15); o.dist0 ??= Math.max(30, o.dist * 0.22); o.arc ??= 12; }
     if (o.move === 'push') o.dist0 ??= o.dist * 2.6; if (o.move === 'pull') o.dist0 ??= Math.max(20, o.dist / 2.6);
     if (o.move === 'rise') o.alt0 ??= Math.max(6, alt * 0.22); if (o.move === 'descend') o.alt0 ??= alt * 3;
@@ -3058,9 +3068,10 @@ function tourPlan(set, tour, p) {
     if ((o.move === 'flyover' && !B) || (o.move === 'follow' && !(path?.length > 1))) o.move = 'orbit', o.arc ??= 60;
     shots.push(o); t0 += o.dur;
   }
-  shots.forEach((s, i) => { const q = shots[i - 1]; s.envCut = !!q && (q.time !== s.time || q.weather !== s.weather); });
+  const drama = tour.theme === 'drama' && set.drama ? set.drama : null;
+  shots.forEach((s, i) => { const q = shots[i - 1]; s.envCut = drama ? !!s.raw.dip : !!q && (q.time !== s.time || q.weather !== s.weather); if (drama && s.raw.fpv) s.move = 'orbit'; });
   return { place: p, set, id: tour.id, theme: tour.theme || 'overview', title: tour.title, tagline: tour.tagline, titleEn: tour.titleEn || tourTxtEn(tour.title), taglineEn: tour.taglineEn || tourTxtEn(tour.tagline), season: tour.season || 'today', shots, dur: t0, auto: !!set.auto,
-    hasEn: shots.some(s => s.caps.en?.length), credit: set.credit || null, langs: set.langs || ['zh', 'en'] };
+    hasEn: shots.some(s => s.caps.en?.length), credit: set.credit || null, langs: set.langs || ['zh', 'en'], drama };
 }
 const tourGnd = (x, z) => Math.max(DEM.heightAt(x, z), 0);
 function tourTerr(x, z) { const r = SET.buildings ? VEC.roofAt(x, z) : null; return Math.max(DEM.heightAt(x, z), 0.3, r ? r.top : -1e9); }
@@ -3104,6 +3115,7 @@ const tourBusy = () => TERRAIN.queue.size + TERRAIN.active + [...VEC.tiles.value
 
 /* ---------- environment for the film: light, weather, season (the viewer's own settings come back afterwards) ---------- */
 function tourEnv(time, weather, season) {
+  const w = dramaWhen(time); if (w) { if (season && SET.season !== season) SET.season = season; if (weather && SET.wxMode !== weather) { SET.wxMode = weather; applyWeather(); } APP.sun.date = w.date; APP.sun.min = w.min; APP.live = false; applyTime(); return; }
   let redo = false; if (season && SET.season !== season) { SET.season = season; redo = true; }
   if (weather && SET.wxMode !== weather) { SET.wxMode = weather; applyWeather(); }
   if (time && (SET.timeMode !== time || redo)) setTimePreset(time); else if (redo) setTimePreset(SET.timeMode);
@@ -3119,26 +3131,26 @@ async function startTour(p, ref, opts = {}) {
   else { const id = String(ref || ''); if (!id.startsWith('auto-')) { set = await tourSetOf(p); tour = set?.tours.find(x => x.id === id) || (id ? null : set?.tours[0]); } if (!tour) { tourOverlayMsg(t('tour.autoWait')); set = await tourAutoSet(p).catch(() => null); tour = set?.tours.find(x => x.id === id) || set?.tours[0]; tourOverlayMsg(''); } }
   if (!tour) { toast(t('tour.none')); return; }
   AUDIO.start(); tourBind();
-  const plan = tourPlan(set, tour, p), v = APP.veh;
+  const plan = tourPlan(set, tour, p), v = APP.veh; if (plan.route) routeStart(plan); if (plan.drama) dramaStart(plan);
   const R = TOUR.run = { plan, t: 0, playing: false, i: -1, cap: '', capK: '', y: 0, cut: true, ended: false, uiT: 0, ready: false, rec: !!opts.record, from: clamp(+opts.from || 0, 0, plan.dur - 5), pose: {}, tmp: {},
     saved: { time: SET.timeMode, season: SET.season, wx: SET.wxMode, fish: SET.fisheye, zoom: APP.zoom, cam: APP.cam, pos: v.pos.clone(), heading: v.heading, paused: APP.paused, started: APP.started, sunMin: APP.sun.min, sunDate: APP.sun.date, live: APP.live } };
-  TOUR.on = true; document.body.dataset.tour = plan.theme; APP.paused = true; SET.fisheye = false; APP.cam = 'chase'; APP.zoom = SET.fov / TOUR_FOV; applyFov(); $('#startOverlay').hidden = true;
-  try { history.replaceState(null, '', '#' + encodeURIComponent(p.id) + '/tour/' + encodeURIComponent(plan.id)); } catch { }
+  TOUR.on = true; document.body.dataset.tour = plan.theme; APP.paused = true; SET.fisheye = false; APP.cam = 'chase'; APP.zoom = SET.fov / (plan.route ? ROUTE_FOV[plan.view][plan.route.mode] : TOUR_FOV); applyFov(); $('#startOverlay').hidden = true;
+  try { history.replaceState(null, '', plan.route ? '#route/' + encodeURIComponent(plan.route.id) + '/' + plan.view : '#' + encodeURIComponent(p.id) + '/tour/' + encodeURIComponent(plan.id)); } catch { }
   tourOverlay(true); tourSay('prep', 0);
   SET.season = plan.season; tourEnv(plan.shots[0].time, plan.shots[0].weather, null); setTimePreset(plan.shots[0].time);
   // terrain heights for every subject of the film, then the first view (and, for a recording, every view once so the tiles are cached)
   const pts = new Map(); for (const s of plan.shots) for (const q of [s.A, s.B, ...(s.path || [])]) if (q) pts.set(q.k, q);
   await Promise.race([Promise.all([...pts.values()].flatMap(q => [DEM.prefetch(q.x, q.z, DEM_MAX_Z, 1), DEM.prefetch(q.x, q.z, 12, 1)])), sleep(9000)]);
   if (TOUR.run !== R) return;
-  R.warm = { list: (opts.prewarm ?? !!opts.record) ? plan.shots.flatMap((s, i) => [[i, 0], [i, 0.5], [i, 1]]) : [[0, 0], [0, 0.5]], k: 0, t0: performance.now(), since: performance.now(), auto: opts.autoplay !== false };
+  R.warm = { list: (opts.prewarm ?? !!opts.record) ? (plan.warmList || plan.shots.flatMap((s, i) => [[i, 0], [i, 0.5], [i, 1]])) : [[0, 0], [0, 0.5]], k: 0, t0: performance.now(), since: performance.now(), auto: opts.autoplay !== false };
   if (opts.record) tourRecStart(R, opts);
 }
 function tourExit(silent) {
-  const R = TOUR.run; if (!R) return; tourRecStop(true); TOUR.on = false; TOUR.run = null; delete document.body.dataset.tour; tourOverlay(false); scoreStop(); try { speechSynthesis?.cancel(); } catch { }
+  const R = TOUR.run; if (!R) return; tourRecStop(true); TOUR.on = false; TOUR.run = null; if (R.plan.route) routeStop(); if (R.plan.drama) { dramaStop(); dramaDom(R); } delete document.body.dataset.tour; tourOverlay(false); scoreStop(); try { speechSynthesis?.cancel(); } catch { }
   const s = R.saved, v = APP.veh; SET.fisheye = s.fish; APP.zoom = s.zoom; APP.cam = s.cam; SET.season = s.season; SET.wxMode = s.wx; applyWeather(); setTimePreset(s.time);
   if (s.time === 'custom' || s.live) { APP.sun.min = s.sunMin; APP.sun.date = s.sunDate; APP.live = s.live; applyTime(); }
   if (v) { v.pos.copy(s.pos); v.heading = s.heading; } camSmooth.init = false; APP.paused = true; APP.started = false; $('#startOverlay').hidden = false; applyFov(); updateDock(); syncSettings();
-  try { history.replaceState(null, '', '#' + encodeURIComponent(APP.place.id) + '/' + APP.kind); } catch { }
+  if (!R.plan.route) try { history.replaceState(null, '', '#' + encodeURIComponent(APP.place.id) + '/' + APP.kind); } catch { }
   if (!silent && TOUR.studio) tourStudioNext();
 }
 function tourPlay(on) { const R = TOUR.run; if (!R || !R.ready) return; if (R.ended && on) { tourSeek(0); } R.playing = on; if (on) { AUDIO.start(); scoreSeek(R); try { speechSynthesis?.resume(); } catch { } } else { scoreMute(); try { speechSynthesis?.pause(); } catch { } } R.uiT = 0; tourBar(); }
@@ -3163,10 +3175,10 @@ function tourFrame(dt, dtr) {
   if (i !== R.i) { R.i = i; R.cut = true; if (!s.prep) tourPrepShot(s); tourEnv(s.time, s.weather, null); }
   tourApply(R, s, u, dt, R.cut); R.cut = false;
   // the next view loads behind the current one, so the cut lands on a finished picture
-  if (nx && left < 6 && APP.frameN % 3 === 0) { if (!nx.prep && left < 5.5) tourPrepShot(nx); tourPose(nx, 0, R.tmp); const y = Math.max(R.tmp.y + nx.lift, tourTerr(R.tmp.x, R.tmp.z) + 4); tourWarm({ x: R.tmp.x, y, z: R.tmp.z }); if (APP.frameN % 30 === 0) { DEM.prefetch(R.tmp.x, R.tmp.z, DEM_MAX_Z, 1); if (left < 3.5) VEC.update(R.tmp.look ? R.tmp.tx : R.tmp.x, R.tmp.look ? R.tmp.tz : R.tmp.z, 0); } }
+  if (nx && !plan.route && left < 6 && APP.frameN % 3 === 0) { if (!nx.prep && left < 5.5) tourPrepShot(nx); tourPose(nx, 0, R.tmp); const y = Math.max(R.tmp.y + nx.lift, tourTerr(R.tmp.x, R.tmp.z) + 4); tourWarm({ x: R.tmp.x, y, z: R.tmp.z }); if (APP.frameN % 30 === 0) { DEM.prefetch(R.tmp.x, R.tmp.z, DEM_MAX_Z, 1); if (left < 3.5) VEC.update(R.tmp.look ? R.tmp.tx : R.tmp.x, R.tmp.look ? R.tmp.tz : R.tmp.z, 0); } }
   // dip to black over cuts, in at the start and out at the end
-  let f = 0; if (i > 0) f = Math.max(f, (s.envCut ? 1 : 0.85) * (1 - since / (s.envCut ? 0.8 : 0.32))); if (nx) f = Math.max(f, (nx.envCut ? 1 : 0.85) * (1 - left / (nx.envCut ? 0.55 : 0.22)));
-  if (i === 0) f = Math.max(f, 1 - tt / 1.4); if (!nx) f = Math.max(f, 1 - (plan.dur - tt) / 1.6); R.fade = clamp(f, 0, 1); tourFade(R.fade);
+  let f = 0; if (i > 0 && (!plan.route || s.dip)) f = Math.max(f, (s.envCut ? 1 : 0.85) * (1 - since / (s.envCut ? 0.8 : 0.32))); if (nx && (!plan.route || nx.dip)) f = Math.max(f, (nx.envCut ? 1 : 0.85) * (1 - left / (nx.envCut ? 0.55 : 0.22)));
+  if (i === 0) f = Math.max(f, 1 - tt / 1.4); if (!nx) f = Math.max(f, 1 - (plan.dur - tt) / 1.6); if (plan.route) f = Math.max(f, R.rfade || 0); R.fade = clamp(f, 0, 1); tourFade(R.fade);
   // captions
   const lang = tourCapLang(plan), list = lang ? tourCapList(s, lang) : [], n = list.length; let cap = '', ca = 0, k = '';
   if (n) { const seg = s.dur / n, j = Math.min(n - 1, Math.floor(since / seg)), a = since - j * seg; cap = list[j]; k = i + ':' + j + ':' + lang; ca = clamp(Math.min(a / 0.3, (seg - a - 0.15) / 0.3), 0, 1); if (k !== R.capK && R.playing && a < 1.2) tourSpeak(cap, lang, seg); }
@@ -3175,9 +3187,10 @@ function tourFrame(dt, dtr) {
   if (n2) { const seg = s.dur / n2, j = Math.min(n2 - 1, Math.floor(since / seg)), a = since - j * seg; cap2 = list2[j]; k2 = i + ':' + j; ca2 = clamp(Math.min(a / 0.3, (seg - a - 0.15) / 0.3), 0, 1); if (!n && k2 !== R.cap2K && R.playing && a < 1.2) tourSpeak(cap2, lang2, seg); }   // nothing in the viewer's language for this view: the narrator reads the English line
   R.cap2K = k2; R.cap2 = cap2; R.cap2A = ca2;
   R.capK = k; R.cap = cap; R.capA = ca; R.titleA = clamp(Math.min((tt - 0.9) / 0.7, (7.2 - tt) / 0.7), 0, 1); R.credA = clamp(Math.min((tt - (plan.dur - 9)) / 0.8, (plan.dur - 0.5 - tt) / 0.8), 0, 1);
-  tourDom(R); if (R.playing) scoreTick(R);
+  tourDom(R); if (plan.drama) dramaDom(R); if (R.playing) scoreTick(R);
 }
 function tourApply(R, s, u, dt, cut) {
+  if (R.plan.route) return routeApply(R, s, u, dt, cut);
   const o = tourPose(s, u, R.pose), v = APP.veh, clr = clamp(s.alt * 0.25, 4, 40); let need = -1e9;
   for (const k of [0, 0.015, 0.03, 0.05]) { const q = k ? tourPose(s, Math.min(1, u + k), R.tmp) : o; need = Math.max(need, tourTerr(q.x, q.z)); }
   const want = Math.max(o.y + s.lift, need + clr); R.y = cut ? want : R.y + (want - R.y) * (1 - Math.exp(-dt * 4)); R.y = Math.max(R.y, tourTerr(o.x, o.z) + clr * 0.5);
@@ -3188,11 +3201,12 @@ function tourApply(R, s, u, dt, cut) {
   let fx = o.tx, fz = o.tz; if (!o.look) { const d = clamp((R.y - tourGnd(o.x, o.z)) / Math.tan(Math.max(8, -pitch) * rad), 0, 1500); fx = o.x + Math.sin(yaw * rad) * d; fz = o.z - Math.cos(yaw * rad) * d; }
   v.pos.set(fx, tourGnd(fx, fz) + 0.5, fz); if (APP.model) APP.model.visible = false; if (blob) blob.visible = false;
   if (APP.frameN % 20 === 0) DEM.prefetch(o.x, o.z, DEM_MAX_Z, 1);
+  if (R.plan.drama) dramaApply(R, s, u, dt, cut);
 }
 function tourEnded(R) {
   scoreMute(2); tourBar();
   if (TOUR.rec) { tourRecStop(false); if (TOUR.studio) return; }
-  const el = $('#tourEnd'), list = R.plan.set.tours || [], j = list.findIndex(x => x.id === R.plan.id), nxt = list.length > 1 ? list[(j + 1) % list.length] : null;
+  const el = $('#tourEnd'), list = R.plan.route ? routeTours(R.plan) : R.plan.set.tours || [], j = list.findIndex(x => x.id === R.plan.id), nxt = list.length > 1 ? list[(j + 1) % list.length] : null;
   el.hidden = false; el.innerHTML = `<button class="btn primary" data-ta="replay">↻ ${esc(t('tour.replay'))}</button>${nxt ? `<button class="btn" data-ta="next">▶ ${esc(t('tour.next'))}: ${esc(tourTxt(nxt.title))}</button>` : ''}<button class="btn" data-ta="exit">✕ ${esc(t('tour.exit'))}</button>${tourContact()}`;
   el.onclick = e => { const a = e.target.closest('[data-ta]')?.dataset.ta; if (a === 'replay') { el.hidden = true; tourSeek(0); tourPlay(true); } else if (a === 'next') startTour(R.plan.place, { set: R.plan.set, tour: nxt }); else if (a === 'exit') tourExit(); };
 }
@@ -3217,12 +3231,12 @@ function tourCapLabel() {
 }
 function tourCredits(plan) {
   const L = [t('tour.cr.image'), t('tour.cr.text', { src: plan.credit || t('tour.cr.sources', { n: plan.set.sources?.length || 0 }) }), t('tour.cr.music'), 'AERO Explorer v7 · kuonanhong.github.io/AERO_Explorer'];
-  const a = plan.set.airspace, air = a ? tourTxt({ 'zh-Hant': a.zh, en: a.en, ...(a[I18N.lang] ? { [I18N.lang]: a[I18N.lang] } : {}) }) : t('tour.c.fly1'); return { head: t('tour.cr.head'), lines: L, air };
+  const a = plan.route ? plan.route.note : plan.set.airspace, air = a ? tourTxt({ 'zh-Hant': a.zh, en: a.en, ...(a[I18N.lang] ? { [I18N.lang]: a[I18N.lang] } : {}) }) : t('tour.c.fly1'); return { head: t('tour.cr.head'), lines: L, air };
 }
 function tourOverlay(show) {
   let el = $('#tour'); if (!el) { el = document.createElement('div'); el.id = 'tour'; el.hidden = true; el.innerHTML = `<div id="tourFade"></div><div id="tourTitle"><small></small><h2></h2><p></p><em></em></div><div id="tourCred"></div><div id="tourCap"><span></span><i></i></div><div id="tourMark"></div><div id="tourMsg" hidden></div><div id="tourEnd" hidden></div><div id="tourBar"></div>`; $('#stage').appendChild(el); }
   el.hidden = !show; if (!show) return; const R = TOUR.run, plan = R.plan, cr = tourCredits(plan);
-  $('#tourTitle small').textContent = `${TOUR_ICON[plan.theme] || '◎'} ${t('tour.theme.' + plan.theme)} · ${placeName(plan.place)}`; $('#tourTitle h2').textContent = tourTxt(plan.title); $('#tourTitle p').textContent = tourTxt(plan.tagline);
+  $('#tourTitle small').textContent = tourKicker(plan, true); $('#tourTitle h2').textContent = tourTxt(plan.title); $('#tourTitle p').textContent = tourTxt(plan.tagline);
   const te = I18N.lang !== 'en' && plan.titleEn && plan.titleEn !== tourTxt(plan.title) ? plan.titleEn : ''; $('#tourTitle em').textContent = te ? te + (plan.taglineEn ? ' · ' + plan.taglineEn : '') : '';
   $('#tourCred').innerHTML = `<b>${esc(cr.head)}</b>${cr.lines.map(l => `<span>${esc(l)}</span>`).join('')}<i>${esc(cr.air)}</i>`; $('#tourMark').textContent = t('tour.sim'); $('#tourEnd').hidden = true; R.lastCap = null; R.lastCap2 = null;
   $('#tourBar').innerHTML = `<button data-tb="play" title="Space"></button><button data-tb="prev" title="←">⏮</button><button data-tb="next" title="→">⏭</button><span id="tourTime"></span><input id="tourSeek" type="range" min="0" max="${plan.dur}" step="0.1" value="0" aria-label="${esc(t('tour.title'))}">
@@ -3242,7 +3256,7 @@ function tourAct(a) {
   else if (a === 'cc') { const o = I18N.lang === 'en' ? ['auto', 'off'] : R.plan.hasEn && tourOwnTrack(R.plan) !== 'en' ? ['auto', 'one', 'en', 'off'] : ['auto', 'off'], m = tourCapMode(); TOUR.cc = o[(o.indexOf(m) + 1) % o.length]; LS.set('aero7:cc', TOUR.cc); R.capK = ''; R.cap2K = ''; try { speechSynthesis?.cancel(); } catch { } }
   else if (a === 'voice') { TOUR.voice = !TOUR.voice; LS.set('aero7:voice', TOUR.voice ? '1' : '0'); if (!TOUR.voice) try { speechSynthesis?.cancel(); } catch { } }
   else if (a === 'music') { TOUR.music = !TOUR.music; LS.set('aero7:music', TOUR.music ? '1' : '0'); scoreVolume(); }
-  else if (a === 'rec') { if (TOUR.rec) tourRecStop(true); else startTour(R.plan.place, { set: R.plan.set, tour: R.plan.set.tours.find(x => x.id === R.plan.id) }, { record: true }); }
+  else if (a === 'rec') { if (TOUR.rec) tourRecStop(true); else startTour(R.plan.place, { set: R.plan.set, tour: R.plan.route ? { id: R.plan.id, route: true, view: R.plan.view } : R.plan.set.tours.find(x => x.id === R.plan.id) }, { record: true }); }
   tourBar();
 }
 function tourKey(e) {
@@ -3314,9 +3328,11 @@ function tourWrap(g, text, maxW) {
 function tourPaint(R) {   // compose one frame of the recording on a 2D canvas
   const rec = TOUR.rec, g = rec.g, W = rec.w, H = rec.h, src = renderer.domElement, sw = src.width, sh = src.height, k = Math.max(W / sw, H / sh), plan = R.plan, F = '"Noto Sans TC","PingFang TC","Microsoft JhengHei","Noto Sans",system-ui,sans-serif';
   g.globalAlpha = 1; g.drawImage(src, (sw - W / k) / 2, (sh - H / k) / 2, W / k, H / k, 0, 0, W, H);
+  if (plan.route) routePaint(g, W, H, R);
+  if (plan.drama) dramaPaint(g, W, H, R, F);
   const text = (s, x, y, a, font, align = 'center', col = '#fff') => { g.globalAlpha = a; g.font = font; g.textAlign = align; g.textBaseline = 'middle'; g.lineJoin = 'round'; g.lineWidth = Math.max(2, H / 240); g.strokeStyle = 'rgba(0,0,0,.72)'; g.strokeText(s, x, y); g.fillStyle = col; g.fillText(s, x, y); };
   g.shadowColor = 'rgba(0,0,0,.55)'; g.shadowBlur = H / 90;
-  if (R.titleA > 0.01) { const a = R.titleA; text(`${t('tour.theme.' + plan.theme)} · ${placeName(plan.place)}`, W / 2, H * 0.31, a, `600 ${H * 0.03}px ${F}`, 'center', '#f0c879'); g.font = `700 ${H * 0.066}px ${F}`; const ls = tourWrap(g, tourTxt(plan.title), W * 0.86); ls.forEach((l, j) => text(l, W / 2, H * 0.40 + j * H * 0.082, a, `700 ${H * 0.066}px ${F}`)); g.font = `400 ${H * 0.032}px ${F}`; tourWrap(g, tourTxt(plan.tagline), W * 0.8).forEach((l, j) => text(l, W / 2, H * 0.40 + ls.length * H * 0.082 + H * 0.012 + j * H * 0.045, a, `400 ${H * 0.032}px ${F}`)); }
+  if (R.titleA > 0.01) { const a = R.titleA; text(tourKicker(plan), W / 2, H * 0.31, a, `600 ${H * 0.03}px ${F}`, 'center', '#f0c879'); g.font = `700 ${H * 0.066}px ${F}`; const ls = tourWrap(g, tourTxt(plan.title), W * 0.86); ls.forEach((l, j) => text(l, W / 2, H * 0.40 + j * H * 0.082, a, `700 ${H * 0.066}px ${F}`)); g.font = `400 ${H * 0.032}px ${F}`; tourWrap(g, tourTxt(plan.tagline), W * 0.8).forEach((l, j) => text(l, W / 2, H * 0.40 + ls.length * H * 0.082 + H * 0.012 + j * H * 0.045, a, `400 ${H * 0.032}px ${F}`)); }
   const two = !!R.cap2, up = two ? H * 0.045 : 0;   // with an English line, the first line moves up to make room
   if (R.cap && R.capA > 0.01) { g.font = `600 ${H * 0.047}px ${F}`; const ls = tourWrap(g, R.cap, W * 0.86), lh = H * 0.062, y0 = H * 0.905 - up - (ls.length - 1) * lh; ls.forEach((l, j) => text(l, W / 2, y0 + j * lh, R.capA, `600 ${H * 0.047}px ${F}`)); }
   if (two && R.cap2A > 0.01) { let em = H * 0.033; g.font = `500 ${em}px ${F}`; const w = g.measureText(R.cap2).width; if (w > W * 0.9) em *= W * 0.9 / w; text(R.cap2, W / 2, H * 0.918, R.cap2A, `500 ${em}px ${F}`); }
@@ -3542,11 +3558,749 @@ async function tourStudioNext() {
   try {
     await S.post('/studio/log', { level: 'info', msg: `start ${S.k + 1}/${S.jobs.length} ${job.place} ${job.tour} ${job.lang}` });
     if (job.lang && job.lang !== I18N.lang) await setLang(job.lang); TOUR.cc = 'auto'; TOUR.voice = false;
+    const ropts = { record: true, w: job.w || S.opts.w, h: job.h || S.opts.h, bps: job.bps || S.opts.bps, fps: S.opts.fps, from: S.opts.from, prewarm: S.opts.prewarm !== false, name: job.name, done: async res => { await S.post('/studio/done', { job, result: res }); if (TOUR.on) tourExit(true); setTimeout(tourStudioNext, 800); } };
+    if (job.route) { await startRoute(job.route, job.view || job.tour, ropts); if (!TOUR.on) throw new Error('route did not start'); return; }
     if (!PLACE_BY_ID.get(job.place) && job.place.startsWith('wd-')) await loadCatalogueX();
     const p = PLACE_BY_ID.get(job.place); if (!p) throw new Error('unknown place ' + job.place);
     await startTour(p, job.tour, { record: true, w: job.w || S.opts.w, h: job.h || S.opts.h, bps: job.bps || S.opts.bps, fps: S.opts.fps, from: S.opts.from, prewarm: S.opts.prewarm !== false, name: job.name, done: async res => { await S.post('/studio/done', { job, result: res }); if (TOUR.on) tourExit(true); setTimeout(tourStudioNext, 800); } });
     if (!TOUR.on) throw new Error('tour did not start');
   } catch (e) { await S.post('/studio/done', { job, result: { error: String(e.message || e) } }); if (TOUR.on) tourExit(true); setTimeout(tourStudioNext, 800); }
+}
+
+/* ======================= v7 · route films: five-minute time-lapse journeys by air, sea, rail and road ======================= */
+/* A route is a real journey (an airport pair, a ferry crossing, a railway line, a scenic road) played as a time-lapse over the real
+   terrain and satellite imagery, seen through a cabin window or from a camera flying alongside. The script (data/routes/<id>.json,
+   made by tools/routelib.py) holds everything the film shows: the path, the film-time → distance and real-time tables, the height
+   profile of a flight, the places seen on the way with their side and distance, the caption windows and the trip log. The player
+   only interpolates those tables, so the recording, the subtitle files and the published CSV/KML logs agree to the second.
+   Long routes use a terrain corridor (root tiles along the whole way) and the earth's curvature in the terrain, water and cloud
+   shaders, so the horizon drops away as it does from a cruising airliner. A route plays through the guided-tour player (captions,
+   score, recorder, Studio batch), with its own camera, vehicle, window frame, instruments, map and log. */
+const ROUTE = { idx: null, idxP: null, sets: new Map(), grp: null, veh: null, save: null, mini: null, k: 1 / (2 * 6371000 * 1.15) };
+const ROUTE_ICON = { air: '✈', sea: '⛴', rail: '🚆', road: '🚗' };
+const ROUTE_VIEWS = ['window', 'chase'];
+const ROUTE_FOV = { window: { air: 60, sea: 66, rail: 64, road: 70 }, chase: { air: 62, sea: 62, rail: 62, road: 64 } };
+SCORE_SET.route = { root: 50, chords: [[0, 4, 7, 11], [5, 9, 12, 16], [-3, 0, 4, 7], [7, 11, 14, 17]], scale: [0, 2, 4, 7, 9, 11] };
+TOUR_ICON.route = '✈';
+
+/* ---------- data ---------- */
+function routeIndex() {
+  return ROUTE.idxP ||= (async () => { try { ROUTE.idx = globalThis.AERO_ROUTES_INDEX || await fetchJSON('data/routes/index.json', { timeout: 15000 }); } catch { ROUTE.idx = { routes: {} }; } await tourIndex(); return ROUTE.idx; })();
+}
+async function routeSetOf(id) {
+  const idx = await routeIndex(), e = idx.routes?.[id]; if (!e) return null;
+  if (!ROUTE.sets.has(id)) { try { ROUTE.sets.set(id, globalThis.AERO_ROUTES?.[id] || await fetchJSON('data/routes/' + e.file, { timeout: 20000 })); } catch { ROUTE.sets.set(id, null); } }
+  const set = ROUTE.sets.get(id); if (set) { routePrep(set); await routeSetLang(set, e); } return set;
+}
+/* a route translated into the viewer's language (data/routes/i18n/<language>/<id>.json): name, tagline, captions, place names, log */
+async function routeSetLang(set, e) {
+  const L = I18N.lang; if (L === 'en' || isZh() || !e.langs?.includes(L) || (set.i18n ||= {})[L] !== undefined) return;
+  set.i18n[L] = 0;
+  try {
+    const d = globalThis.AERO_ROUTES_I18N?.[L]?.[set.id] || await fetchJSON(`data/routes/i18n/${L}/${e.file}`, { timeout: 20000 });
+    if (d.name) set.name[L] = d.name; if (d.tagline) set.tagline[L] = d.tagline;
+    if (d.shots?.length === set.shots.length) set.shots.forEach((s, i) => { s.caps[L] = d.shots[i]; });
+    for (const [k, v] of Object.entries(d.pois || {})) if (set.pois[k]) { set.pois[k][L] = v.name; set.pois[k].label[L] = v.label || v.name; }
+    if (d.log?.length === set.log.length) set.log.forEach((x, i) => { x[L] = d.log[i]; });
+    for (const k of ['from', 'to']) if (d[k]) { set[k][L] = d[k].name; set[k].city[L] = d[k].city; }
+    if (d.note) set.note[L] = d.note; set.i18n[L] = 1;
+  } catch { }
+}
+/* once per script: cumulative distances of the path, caption lists in the shape the tour player reads */
+function routePrep(set) {
+  if (set._prep) return; set._prep = true; const P = set.path, n = P.length / 2, pd = new Float64Array(n); for (let i = 1; i < n; i++) pd[i] = pd[i - 1] + haversine(P[2 * i - 2], P[2 * i - 1], P[2 * i], P[2 * i + 1]); set.pd = pd;
+  for (const s of set.shots) s.caps = { zh: s.zh, en: s.en };
+  for (const k of ['from', 'to']) set[k].city ||= { zh: set[k].zh, en: set[k].en };
+  set.name.zh = set.name['zh-Hant']; set.tagline.zh = set.tagline['zh-Hant'];
+}
+const routeName = o => !o ? '' : I18N.lang === 'zh-Hans' ? tourHans(o.zh || o['zh-Hant'] || '') : isZh() ? (o.zh || o['zh-Hant'] || '') : (o[I18N.lang] || o.en || '');
+const routeNameEn = o => !o ? '' : o.en || '';
+
+/* ---------- tables ---------- */
+function routeTrk(set, t, o = {}) {   // film time → distance along the way, real trip seconds, ground speed, height (air), phase
+  const T = set.trk, k = clamp(t / set.step, 0, T.d.length - 1), i = Math.min(T.d.length - 2, Math.floor(k)), f = k - i, L = (a) => a[i] + (a[i + 1] - a[i]) * f;
+  o.d = L(T.d); const dt = T.tt[i + 1] - T.tt[i]; o.tt = dt > 1800 ? T.tt[i] + (f > 0.5 ? dt : 0) : L(T.tt); o.gs = L(T.gs); o.alt = T.alt ? L(T.alt) : null; o.ph = T.ph[Math.round(k)] || 'G'; return o;
+}
+function routeAt(set, d, o = {}) {    // distance along the way → local x, z (and lat, lon)
+  const pd = set.pd, n = pd.length, P = set.path; d = clamp(d, 0, pd[n - 1]); let lo = 0, hi = n - 1; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (pd[m] <= d) lo = m; else hi = m; }
+  const f = (d - pd[lo]) / Math.max(1e-6, pd[hi] - pd[lo]); o.lat = P[2 * lo] + (P[2 * hi] - P[2 * lo]) * f; o.lon = P[2 * lo + 1] + (P[2 * hi + 1] - P[2 * lo + 1]) * f;
+  const X = set.lx, Z = set.lz; o.x = X[lo] + (X[hi] - X[lo]) * f; o.z = Z[lo] + (Z[hi] - Z[lo]) * f; return o;
+}
+const _ra = {}, _rb = {};
+function routeHeading(set, d, w) { routeAt(set, d - w, _ra); routeAt(set, d + w, _rb); return bearingTo(_ra.x, _ra.z, _rb.x, _rb.z); }
+const routeIn = (list, d) => { for (const [a, b] of list || []) if (d >= a && d <= b) return [a, b]; return null; };
+/* height of a train, car or ship at distance d: the ground (smoothed), straight through tunnels and over bridges, the water for ships */
+function routeGround(set, d) {
+  if (set.mode === 'sea') { if (set.water !== 'river') return 0.25; let m = 1e9; for (const k of [-60, 0, 60]) { routeAt(set, d + k, _ra); m = Math.min(m, DEM.heightAt(_ra.x, _ra.z)); } return Math.max(0.25, m) + 0.2; }
+  const span = routeIn(set.tun, d) || routeIn(set.brg, d);
+  const h = q => { let s = 0; for (const k of [-18, 0, 18]) { routeAt(set, q + k, _ra); s += Math.max(DEM.heightAt(_ra.x, _ra.z), 0.3); } return s / 3; };
+  if (span) { const a = h(span[0] - 25), b = h(span[1] + 25), f = (d - span[0]) / Math.max(1, span[1] - span[0]); return a + (b - a) * f; }
+  return h(d);
+}
+/* local time at an IANA zone, as HH:MM */
+const ROUTE_FMT = new Map();
+function routeClock(ms, tz) { let f = ROUTE_FMT.get(tz); if (!f) { try { f = new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }); } catch { f = null; } ROUTE_FMT.set(tz, f); } return f ? f.format(ms) : ''; }
+const routeHM = s => { s = Math.max(0, Math.round(s / 60)); return Math.floor(s / 60) + ':' + pad2(s % 60); };
+
+/* ---------- start / stop ---------- */
+async function startRoute(id, view = 'window', opts = {}) {
+  if (!ROUTE_VIEWS.includes(view)) view = 'window';
+  const set = await routeSetOf(id); if (!set) { toast(t('route.none')); return; }
+  const b = set.bbox, p = { id: 'route-' + id, route: id, lat: (b[0] + b[2]) / 2, lon: (b[1] + b[3]) / 2, zh: set.name['zh-Hant'], en: set.name.en, zhs: tourHans(set.name['zh-Hant']), cc: set.countries[0], tz: 0, cat: 'route', desc: '' };
+  const prev = TOUR.run?.plan.route === set ? TOUR.run.plan.place : null;
+  return startTour(prev || p, { set, tour: { id: view, route: true, view } }, opts);
+}
+function routeLocal(set) { const n = set.pd.length; set.lx = new Float64Array(n); set.lz = new Float64Array(n); for (let i = 0; i < n; i++) { const [x, z] = toLocal(set.path[2 * i], set.path[2 * i + 1]); set.lx[i] = x; set.lz[i] = z; } }
+function routePlan(set, tour, p) {
+  const view = tour.view || tour.id; routeLocal(set);
+  const shots = set.shots.map((s, i) => { const q = routeTrk(set, s.t0 + s.dur / 2); routeAt(set, q.d, _ra); return { t0: s.t0, dur: s.dur, move: 'route', A: { k: 'r' + i, x: _ra.x, z: _ra.z, h: 0 }, B: null, path: null, alt: 120, dist: 0, from: 0, arc: 0, pitch: null, time: 'morning', weather: set.weather || 'few', caps: s.caps, lift: 0, prep: true, envCut: !!s.dip, dip: !!s.dip, poi: s.poi || null }; });
+  // which window a passenger looks out of: the side of the coming place (a short dip to black when it changes)
+  const sides = [{ t: 0, s: set.side || 'L' }]; let cur = sides[0].s;
+  if (view === 'window') for (let i = 0; i < set.shots.length; i++) { const s = set.shots[i], po = s.poi && set.pois[s.poi]; if (!po || po.side === 'B' || po.side === cur) continue; const prevEnd = i > 0 ? set.shots[i - 1].t0 : 0; const at = Math.max(prevEnd + 0.5, s.t0 - 3.5); if (at > sides[sides.length - 1].t + 6) { sides.push({ t: at, s: po.side }); cur = po.side; } }
+  // pre-roll before recording: every few seconds where the camera is low and the imagery must be sharp, sparser at cruise
+  const warmList = []; for (let t = 0.5; t < set.film; ) { const q = routeTrk(set, t), i = Math.max(0, shots.findIndex(s => t >= s.t0 && t < s.t0 + s.dur)), s = shots[i];
+    warmList.push([i, clamp((t - s.t0) / s.dur, 0, 1)]); t += set.mode !== 'air' ? 6 : q.alt < 4500 ? 2.5 : 14; }
+  return { place: p, set, id: view, theme: 'route', route: set, view, sides, warmList, title: set.name, tagline: set.tagline, titleEn: set.name.en, taglineEn: set.tagline.en, season: set.season || 'today', shots, dur: set.film, auto: false, hasEn: true, credit: null, langs: ['zh', 'en'] };
+}
+/* the scene a route needs: terrain along the whole way, a curved earth, a wide sea and cloud deck, the vehicle */
+function routeStart(plan) {
+  const set = plan.route; routeLocal(set);
+  const S = ROUTE.save = { far: camera.far, near: camera.near, maxZ: TERRAIN.maxZ, ring: oceanFar.geometry, cloudGeo: clouds.geometry, edge: clouds.material.uniforms.uEdge?.value, ocean: APP.oceanNear, place: { lat: APP.place.lat, lon: APP.place.lon } };
+  camera.far = 900000; camera.near = plan.view === 'window' && set.mode === 'air' ? 0.3 : 0.5; camera.updateProjectionMatrix();
+  TERRAIN.maxZ = Math.min(S.maxZ, set.mode === 'air' ? 17 : 17);
+  routeRoots(set);
+  TERRAIN_U.uCurv.value = ROUTE.k; if (WATER_U) WATER_U.uCurv.value = ROUTE.k; clouds.material.uniforms.uCurv.value = ROUTE.k;
+  oceanFar.geometry = new THREE.RingGeometry(1350, 700000, 128, 90).rotateX(-Math.PI / 2);
+  clouds.geometry = new THREE.PlaneGeometry(700000, 700000, 120, 120).rotateX(-Math.PI / 2); clouds.material.uniforms.uEdge.value = set.mode === 'air' ? 260000 : 60000;
+  if (set.mode === 'air') clouds.material.uniforms.uScale.value = 7000;
+  APP.oceanNear = set.mode === 'air' || set.water === 'sea' || APP.oceanNear;
+  VEC.enabled = set.mode !== 'air'; ROUTE.grp ||= new THREE.Group(); ROUTE.grp.clear(); scene.add(ROUTE.grp); ROUTE.veh = routeVehicle(set); ROUTE.grp.add(ROUTE.veh.g); if (set.mode === 'air' && plan.view === 'window') ROUTE.veh.parts.body.visible = false;
+  ROUTE.mini = null; routeMini(set);
+  plan.hud = {}; plan.az = null; plan.lean = 0;
+}
+function routeStop() {
+  const S = ROUTE.save; if (!S) return; ROUTE.save = null;
+  camera.far = S.far; camera.near = S.near; camera.updateProjectionMatrix(); TERRAIN.maxZ = S.maxZ;
+  TERRAIN_U.uCurv.value = 0; if (WATER_U) WATER_U.uCurv.value = 0; clouds.material.uniforms.uCurv.value = 0; clouds.material.uniforms.uEdge.value = S.edge ?? 38000;
+  VEC.enabled = true; oceanFar.geometry.dispose(); oceanFar.geometry = S.ring; clouds.geometry.dispose(); clouds.geometry = S.cloudGeo; APP.oceanNear = S.ocean;
+  if (ROUTE.grp) { scene.remove(ROUTE.grp); ROUTE.grp.traverse(o => { o.geometry?.dispose?.(); }); ROUTE.grp.clear(); }
+  ROUTE.veh = null; Object.assign(APP.place, S.place); TERRAIN.init(9); applyWeather();
+  const c = $('#routeHud'); if (c) c.getContext('2d').clearRect(0, 0, c.width, c.height);
+}
+/* root tiles of the terrain: every tile within reach of the way (a few hundred kilometres for a flight, tens for the ground) */
+function routeRoots(set) {
+  const L = set.dist_m, lat = (set.bbox[0] + set.bbox[2]) / 2, eq = 40075016 * Math.cos(lat * rad), reach = set.mode === 'air' ? 260000 : Math.min(60000, Math.max(15000, L * 0.4));
+  let z = clamp(Math.floor(Math.log2(eq / Math.max(reach * 0.8, L / 5))), 5, 11); const want = new Map();
+  const add = (x, zz) => { const [gx, gy] = localToTile(x, zz, z); const r = Math.ceil(reach / (tileSize(z) * GEO.k)); const cx = Math.floor(gx), cy = Math.floor(gy); for (let j = -r; j <= r; j++) for (let i = -r; i <= r; i++) { const tx = cx + i, ty = cy + j, b = tileBounds(z, tx, ty), dx = Math.max(b.X0 - x, 0, x - b.X1), dz = Math.max(b.Z0 - zz, 0, zz - b.Z1); if (Math.hypot(dx, dz) <= reach && ty >= 0 && ty < 2 ** z) want.set(tx + '/' + ty, [tx, ty]); } };
+  for (let d = 0; d <= L; d += Math.max(2000, reach / 3)) { routeAt(set, d, _ra); add(_ra.x, _ra.z); } routeAt(set, L, _ra); add(_ra.x, _ra.z);
+  while (want.size > 120 && z > 5) { z--; want.clear(); for (let d = 0; d <= L; d += Math.max(2000, reach / 3)) { routeAt(set, d, _ra); add(_ra.x, _ra.z); } }
+  TERRAIN.dispose(); TERRAIN.roots = [];
+  const n2 = 2 ** z; for (const [x, y] of want.values()) { if (x < 0 || x >= n2) continue; const n = new TNode(z, x, y, null); n.root = true; TERRAIN.roots.push(n); TERRAIN.request(n); }
+  ROUTE.rootZ = z;
+}
+
+/* ---------- one frame: vehicle, camera, light, the things around ---------- */
+const _rq = {}, _rv = new THREE.Vector3();
+function routeApply(R, s, u, dt, cut) {
+  const plan = R.plan, set = plan.route, t = clamp(s.t0 + u * s.dur, 0, plan.dur), q = routeTrk(set, t, _rq), V = ROUTE.veh, mode = set.mode, view = plan.view, H = plan.hud;
+  routeAt(set, q.d, _ra); const x = _ra.x, z = _ra.z, lat = _ra.lat, lon = _ra.lon;
+  const hw = mode === 'air' ? 1800 : mode === 'sea' ? 90 : 22; let hd = routeHeading(set, q.d, hw); const gnd = Math.max(DEM.heightAt(x, z), 0);
+  if (cut || R.rh == null) R.rh = hd; else { let dh = ((hd - R.rh + 540) % 360) - 180; R.rh = (R.rh + dh * (1 - Math.exp(-dt * (mode === 'air' ? 2.5 : 8))) + 360) % 360; } hd = R.rh;
+  // height, pitch and bank
+  let y, pitch = 0, roll = 0;
+  if (mode === 'air') {
+    const near = q.ph === 'T' || q.ph === 'L'; y = Math.max(q.alt, gnd + (near ? 12 : 250));
+    const q2 = routeTrk(set, Math.min(plan.dur, t + 1), _rb); const climb = (q2.alt - q.alt) / Math.max(1, q2.d - q.d); pitch = Math.atan(climb) * deg + (q.ph === 'R' ? 2.2 : q.ph === 'D' || q.ph === 'A' ? 0.6 : 3.5);
+    const t2 = Math.min(plan.dur, t + 2), qa = routeTrk(set, t2, {}); const h2 = routeHeading(set, qa.d, hw), dtt = Math.max(1, qa.tt - q.tt), w = (((h2 - hd + 540) % 360) - 180) * rad / dtt;
+    const bank = Math.atan(q.gs * w / 9.81) * deg; R.rroll = cut || R.rroll == null ? bank : R.rroll + (bank - R.rroll) * (1 - Math.exp(-dt * 1.5)); roll = clamp(R.rroll, -27, 27);
+  } else {
+    y = routeGround(set, q.d); routeAt(set, q.d + 15, _rb); const y2 = routeGround(set, q.d + 15); pitch = mode === 'sea' ? 0 : Math.atan2(y2 - y, 15) * deg;
+  }
+  const tunnel = mode !== 'air' && mode !== 'sea' && !!routeIn(set.tun, q.d);
+  // vehicle model
+  if (V) routePlace(V, set, q.d, y, hd, pitch, roll, view, t);
+  // camera
+  let side = 'L'; for (const sd of plan.sides) if (t >= sd.t) side = sd.s; else break;
+  let fade = 0; for (const sd of plan.sides) { if (!sd.t) continue; const a = Math.abs(t - sd.t); if (a < 0.7) fade = Math.max(fade, 1 - a / 0.7); } R.rfade = fade;
+  const po = s.poi ? set.pois[s.poi] : null, fv = (h) => [Math.sin(h * rad), -Math.cos(h * rad)], [fx, fz] = fv(hd), rx = -fz, rz = fx;   // forward, right
+  let cx, cy, cz, yaw, cpitch, croll = 0;
+  if (view === 'window') {
+    const sg = side === 'R' ? 1 : -1, off = mode === 'air' ? (set.vehicle === 'turboprop' ? [1.75, 0.25, -1.2] : [2.4, 0.95, -6.5]) : mode === 'rail' ? [1.55, 2.4, 0] : mode === 'road' ? [0.85, 1.25, 0.2] : V ? [V.half + 0.6, V.deck, 0] : [3, 8, 0];
+    cx = x + rx * off[0] * sg + fx * off[2]; cz = z + rz * off[0] * sg + fz * off[2]; cy = y + off[1];
+    let want = 0; if (po && po.side === side) { const [px, pz] = toLocal(po.lat, po.lon), rel = (((bearingTo(cx, cz, px, pz) - (hd + 90 * sg)) + 540) % 360) - 180; want = clamp(rel, -32, 32); }
+    plan.lean = cut ? want : plan.lean + (want - plan.lean) * (1 - Math.exp(-dt * 0.8));
+    yaw = hd + 90 * sg + plan.lean + (mode === 'road' ? -18 * sg : mode === 'air' && set.vehicle === 'jet' ? -14 * sg : 0);
+    const agl = cy - gnd; cpitch = mode === 'air' ? -clamp(4 + agl / 1300, 4, 13) : mode === 'sea' ? -6 : -2.5;
+    if (mode === 'air') croll = roll * sg * 0.9;
+  } else {
+    const D = mode === 'air' ? (set.vehicle === 'turboprop' ? 95 : 135) : mode === 'sea' ? (V ? V.len * 2.6 : 200) : mode === 'rail' ? 150 : 46;
+    let A = 205, E = mode === 'air' ? 9 : mode === 'rail' ? 16 : mode === 'road' ? 17 : 14;
+    if (po && po.side !== 'B') { const [px, pz] = toLocal(po.lat, po.lon), rel = (((bearingTo(x, z, px, pz) - hd) + 540) % 360) - 180; A = rel + 180; }
+    else A = 200 + 25 * Math.sin(t / 23);
+    if (cut || plan.az == null) plan.az = A; else { const dA = (((A - plan.az) + 540) % 360) - 180; plan.az = plan.az + dA * (1 - Math.exp(-dt * 0.45)); }
+    const a = (hd + plan.az) * rad, ce = Math.cos(E * rad); cx = x + Math.sin(a) * D * ce; cz = z - Math.cos(a) * D * ce; cy = y + Math.sin(E * rad) * D + (mode === 'air' ? 0 : 3);
+    cy = Math.max(cy, Math.max(DEM.heightAt(cx, cz), 0) + (mode === 'air' ? 60 : 12));
+    const lx = x + fx * D * 0.12, lz = z + fz * D * 0.12, ly = y + (mode === 'air' ? 0 : 3); yaw = bearingTo(cx, cz, lx, lz); cpitch = Math.atan2(ly - cy, Math.hypot(lx - cx, lz - cz)) * deg;
+  }
+  camera.position.set(cx, cy, cz); camera.rotation.set(clamp(cpitch, -89, 30) * rad, -yaw * rad, -croll * rad, 'YXZ');
+  // what loads: elevation and buildings around the vehicle, imagery ahead
+  const v = APP.veh; v.pos.set(x, y, z); if (APP.model) APP.model.visible = false; if (blob) blob.visible = false;
+  if (R.playing && APP.frameN % 15 === 7) for (const ah of [5, 10]) { const qa = routeTrk(set, Math.min(plan.dur, t + ah), {}); routeAt(set, qa.d, _rb); const ga = Math.max(DEM.heightAt(_rb.x, _rb.z), 0); tourWarm({ x: _rb.x, y: mode === 'air' ? Math.max(qa.alt, ga + 120) : ga + 30, z: _rb.z }); }
+  if (APP.frameN % 12 === 0 || cut) { const ahead = routeTrk(set, Math.min(plan.dur, t + 4), {}); routeAt(set, ahead.d, _rb); DEM.prefetch(_rb.x, _rb.z, mode === 'air' ? 11 : DEM_MAX_Z, 1); DEM.prefetch(x, z, mode === 'air' ? 12 : DEM_MAX_Z, 1); }
+  // sky: the sun over the current position at the real time of the trip, haze that thins with height
+  const ms = Date.parse(set.depart_utc) + q.tt * 1000;
+  if (APP.frameN % 10 === 0 || cut) { const dd = new Date(ms); APP.place.lat = lat; APP.place.lon = lon; APP.sun.date = dd.toISOString().slice(0, 10); APP.sun.min = dd.getUTCHours() * 60 + dd.getUTCMinutes() + dd.getUTCSeconds() / 60; APP.live = false; applyTime(); }
+  APP.vis = mode === 'air' ? clamp(28000 + (cy - gnd) * 22, 28000, 260000) : 60000;
+  if (mode === 'air' && APP.W) { const cb = APP.cloudBase; clouds.visible = (APP.W.cloud ?? 0) > 3; clouds.position.y = cb; }
+  // instruments
+  Object.assign(H, { t, d: q.d, tt: q.tt, gs: q.gs, alt: mode === 'air' ? y : y, agl: y - gnd, hd, lat, lon, ph: q.ph, ms, side, tunnel, view });
+  if (!TOUR.studio && APP.frameN % 2 === 0) routeDom(R);
+}
+
+/* ---------- the vehicles (simple shapes, no livery of any real operator) ---------- */
+function routeMat(c, r = 0.55, m = 0.15) { return new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m, side: THREE.DoubleSide }); }
+function routeBox(g, mat, w, h, l, x = 0, y = 0, z = 0) { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, l), mat); m.position.set(x, y, z); g.add(m); return m; }
+function routeWing(mat, root, tip, span, sweep, thick, dihedral) {   // a tapered, swept wing in the x–z plane, root at x = 0, leading edge towards -z
+  const s = new THREE.Shape(); const tl = Math.tan(sweep * rad) * span; s.moveTo(0, -root / 2); s.lineTo(span, -root / 2 + tl); s.lineTo(span, -root / 2 + tl + tip); s.lineTo(0, root / 2); s.lineTo(0, -root / 2);
+  const g = new THREE.ExtrudeGeometry(s, { depth: thick, bevelEnabled: false }); g.rotateX(Math.PI / 2); g.translate(0, thick / 2, 0); const m = new THREE.Mesh(g, mat); m.rotation.z = dihedral * rad; return m;
+}
+function routeVehicle(set) {
+  const g = new THREE.Group(), type = set.vehicle, V = { g, type, parts: {}, len: 40, half: 2, deck: 3, cars: [] };
+  const white = routeMat('#eef1f4', 0.4, 0.2), grey = routeMat('#9aa3ad', 0.45, 0.5), dark = routeMat('#20262c', 0.6, 0.1), blue = routeMat('#24508a', 0.5, 0.2), glass = routeMat('#1d2730', 0.15, 0.6);
+  if (type === 'jet' || type === 'turboprop') {
+    const jet = type === 'jet', L = jet ? 44 : 27, R = jet ? 2.0 : 1.35, body = new THREE.Group(); V.len = L;
+    const fus = new THREE.Mesh(new THREE.CylinderGeometry(R, R, L * 0.72, 28, 1), white); fus.rotation.x = Math.PI / 2; body.add(fus);
+    const nose = new THREE.Mesh(new THREE.SphereGeometry(R, 28, 16, 0, Math.PI * 2, 0, Math.PI / 2), white); nose.rotation.x = -Math.PI / 2; nose.scale.set(1, 1.7, 1); nose.position.z = -L * 0.36; body.add(nose);
+    const tail = new THREE.Mesh(new THREE.ConeGeometry(R, L * 0.2, 28, 1), white); tail.rotation.x = Math.PI / 2; tail.position.set(0, R * 0.3, L * 0.46); tail.scale.set(1, 1, 1); body.add(tail);
+    for (const sg of [-1, 1]) routeBox(body, blue, 0.05, 0.22, L * 0.66, sg * R * 0.99, -R * 0.12, 0.6);
+    const winL = routeBox(body, glass, 0.06, 0.32, L * 0.6, -R * 0.985, R * 0.28, 0), winR = routeBox(body, glass, 0.06, 0.32, L * 0.6, R * 0.985, R * 0.28, 0);
+    const ck = routeBox(body, glass, R * 1.2, 0.5, 0.9, 0, R * 0.55, -L * 0.36 - R * 0.6); ck.rotation.x = -0.5;
+    const fin = routeWing(blue, jet ? 7 : 5, jet ? 2.6 : 2.2, jet ? 8 : 6, jet ? 38 : 28, 0.35, 0); fin.rotation.set(0, 0, Math.PI / 2); fin.position.set(0, R * 0.8, L * 0.38); body.add(fin);
+    for (const sg of [-1, 1]) { const st = routeWing(grey, jet ? 4 : 3, jet ? 1.6 : 1.2, jet ? 6.2 : 4.5, jet ? 30 : 8, 0.25, 6); st.scale.x = sg; st.position.set(0, R * (jet ? 0.45 : 1.9), L * 0.43); body.add(st); }
+    g.add(body); V.parts.body = body;
+    const wings = new THREE.Group(); for (const sg of [-1, 1]) {
+      const wingMat = jet ? routeMat('#c9d0d8', 0.42, 0.35) : grey, w = routeWing(wingMat, jet ? 6.6 : 2.4, jet ? 1.6 : 1.5, jet ? 16.5 : 13.5, jet ? 25 : 2, jet ? 0.3 : 0.4, jet ? 5.5 : -1.5); w.scale.x = sg; w.position.set(sg * R * 0.6, jet ? -R * 0.55 : R * 0.95, jet ? -1.5 : -3.0); wings.add(w);
+      if (jet) { const wl = routeWing(blue, 1.3, 0.5, 2.1, 38, 0.12, 0); wl.rotation.z = Math.PI / 2; wl.position.set(16.5, 0.12, -3.3 + Math.tan(25 * rad) * 16.5 + 0.2); w.add(wl);   // winglet at the tip
+        const eng = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 1.1, 4.4, 28, 1, true), routeMat('#dfe3e8', 0.35, 0.3)); eng.rotation.x = Math.PI / 2; eng.position.set(sg * 5.8, -R * 0.55 - 1.4, -4.2); wings.add(eng);
+        const fan = new THREE.Mesh(new THREE.CircleGeometry(1.06, 28), dark); fan.position.set(sg * 5.8, -R * 0.55 - 1.4, -6.35); fan.rotation.y = Math.PI; wings.add(fan); routeBox(wings, grey, 0.3, 1.0, 2.6, sg * 5.8, -R * 0.55 - 0.6, -3.4); }
+      else { const nac = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.5, 4.2, 16, 1), white); nac.rotation.x = Math.PI / 2; nac.position.set(sg * 4.1, R * 0.75, -3.6); wings.add(nac); const prop = new THREE.Mesh(new THREE.CircleGeometry(1.95, 32), new THREE.MeshBasicMaterial({ color: '#3a3f45', transparent: true, opacity: 0.28, depthWrite: false, side: THREE.DoubleSide })); prop.position.set(sg * 4.1, R * 0.75, -5.75); wings.add(prop); }
+    }
+    g.add(wings); V.parts.wings = wings; V.half = R; V.deck = 0.3;
+  } else if (type === 'train') {
+    const n = 8, cl = 20, w = 3.0, h = 3.7; V.len = n * cl; V.half = w / 2; V.deck = 2.4;
+    for (let i = 0; i < n; i++) { const c = new THREE.Group(); routeBox(c, white, w, h, cl - 0.6, 0, h / 2 + 0.5, 0); routeBox(c, glass, w + 0.04, 0.9, cl - 2.4, 0, h * 0.62 + 0.5, 0); routeBox(c, blue, w + 0.05, 0.35, cl - 0.8, 0, 1.1, 0); routeBox(c, dark, w * 0.8, 0.5, cl - 3, 0, 0.3, 0);
+      if (i === 0) { const nose = routeBox(c, white, w, h * 0.8, 3, 0, h * 0.42 + 0.5, -cl / 2 - 1.1); nose.rotation.x = 0.35; routeBox(c, glass, w * 0.9, 1.0, 0.2, 0, h * 0.7 + 0.5, -cl / 2 - 0.25); }
+      g.add(c); V.cars.push(c); }
+  } else if (type === 'car') {
+    V.len = 4.7; V.half = 0.9; V.deck = 1.2; const c = new THREE.Group(), red = routeMat('#a3242a', 0.35, 0.4);
+    routeBox(c, red, 1.82, 0.7, 4.7, 0, 0.62, 0); const cab = routeBox(c, glass, 1.62, 0.55, 2.5, 0, 1.22, 0.15); cab.scale.set(1, 1, 1); routeBox(c, red, 1.66, 0.08, 2.2, 0, 1.52, 0.2);
+    for (const [sx, sz] of [[-0.85, -1.45], [0.85, -1.45], [-0.85, 1.45], [0.85, 1.45]]) { const wh = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.24, 16), dark); wh.rotation.z = Math.PI / 2; wh.position.set(sx, 0.34, sz); c.add(wh); }
+    g.add(c); V.cars.push(c);
+  } else {   // ships: a car ferry, a river cruise ship, a sightseeing boat
+    const L = type === 'ferry' ? 96 : type === 'rivership' ? 72 : 38, W = type === 'ferry' ? 17 : type === 'rivership' ? 13 : 10, decks = type === 'rivership' ? 4 : type === 'ferry' ? 3 : 2; V.len = L; V.half = W / 2; V.deck = type === 'boat' ? 5.5 : 9;
+    const hull = new THREE.Group(), s = new THREE.Shape(); s.moveTo(-W / 2, L / 2); s.lineTo(W / 2, L / 2); s.lineTo(W / 2, -L * 0.3); s.quadraticCurveTo(W * 0.42, -L * 0.47, 0, -L / 2); s.quadraticCurveTo(-W * 0.42, -L * 0.47, -W / 2, -L * 0.3); s.lineTo(-W / 2, L / 2);
+    const hg = new THREE.ExtrudeGeometry(s, { depth: 4.2, bevelEnabled: false }); hg.rotateX(Math.PI / 2); hg.translate(0, 3.0, 0); hull.add(new THREE.Mesh(hg, type === 'ferry' ? routeMat('#1f3f6e', 0.6, 0.2) : white));
+    routeBox(hull, routeMat('#7d1f22', 0.7, 0.1), W * 0.98, 1.2, L * 0.7, 0, -1.0, 0.05 * L);
+    for (let k = 0; k < decks; k++) { const dl = L * (0.78 - k * 0.12), dw = W * (0.94 - k * 0.06); routeBox(hull, white, dw, 2.5, dl, 0, 3.0 + 1.25 + k * 2.6, L * 0.06); routeBox(hull, glass, dw + 0.05, 0.9, dl * 0.92, 0, 3.0 + 1.5 + k * 2.6, L * 0.06); }
+    if (type !== 'boat') routeBox(hull, routeMat('#c9a227', 0.5, 0.2), 2.2, 4.5, 3.2, 0, 3 + decks * 2.6 + 2.2, L * 0.18);
+    g.add(hull); V.cars.push(hull); V.wake = new THREE.Mesh(new THREE.PlaneGeometry(W * 2.2, L * 3).rotateX(-Math.PI / 2).translate(0, 0.06, L * 2), new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.22, depthWrite: false })); g.add(V.wake);
+  }
+  g.traverse(o => { if (o.isMesh) o.frustumCulled = false; });
+  return V;
+}
+const _rp = {};
+function routePlace(V, set, d, y, hd, pitch, roll, view, t) {
+  const g = V.g, type = V.type, air = type === 'jet' || type === 'turboprop';
+  if (air) {
+    routeAt(set, d, _rp); g.position.set(_rp.x, y, _rp.z); g.rotation.set(pitch * rad, -hd * rad, -roll * rad, 'YXZ'); g.visible = true;
+    V.parts.body.visible = view !== 'window'; V.parts.wings.visible = true;
+  } else if (type === 'train') {
+    g.position.set(0, 0, 0); g.rotation.set(0, 0, 0); g.visible = view !== 'window';
+    V.cars.forEach((c, i) => { const di = d - i * 20 - 10; routeAt(set, di, _rp); const h = routeHeading(set, di, 10), cx = _rp.x, cz = _rp.z, yy = routeIn(set.tun, di) || routeIn(set.brg, di) ? routeGround(set, di) : Math.max(routeGround(set, di), DEM.heightAt(cx, cz)); c.position.set(cx, yy + 0.3, cz); c.rotation.set(0, -h * rad, 0, 'YXZ'); c.visible = !routeIn(set.tun, di); });
+  } else {
+    routeAt(set, d, _rp); g.position.set(_rp.x, y + (type === 'car' ? 0.05 : -1.2), _rp.z); g.rotation.set(type === 'car' ? pitch * rad : 0, -hd * rad, 0, 'YXZ'); g.visible = view !== 'window';
+    if (V.wake) V.wake.material.opacity = 0.18 + 0.06 * Math.sin(t * 3);
+  }
+}
+
+/* ---------- the map in the corner: satellite tiles at a scale that holds the whole way ---------- */
+function routeMini(set) {
+  const b = set.bbox, cLat = (b[0] + b[2]) / 2, cLon = (b[1] + b[3]) / 2, span = Math.max(b[2] - b[0], (b[3] - b[1]) * Math.cos(cLat * rad), 0.02) * 1.25;
+  const z = clamp(Math.floor(Math.log2(360 / span * 512 / 256 / 2.2)), 3, 15), M = ROUTE.mini = { z, img: null, ready: false, px: null };
+  const mx = lon => (lon + 180) / 360 * 256 * 2 ** z, my = lat => (1 - Math.log(Math.tan(Math.PI / 4 + clamp(lat, -85, 85) * rad / 2)) / Math.PI) / 2 * 256 * 2 ** z;
+  const cx = mx(cLon), cy = my(cLat), S = 512, x0 = cx - S / 2, y0 = cy - S / 2; M.px = (lat, lon) => [(mx(lon) - x0) / S, (my(lat) - y0) / S];
+  const cv = document.createElement('canvas'); cv.width = cv.height = S; const g = cv.getContext('2d'); g.fillStyle = '#16324a'; g.fillRect(0, 0, S, S); M.img = cv; let left = 0;
+  for (let ty = Math.floor(y0 / 256); ty <= Math.floor((y0 + S) / 256); ty++) for (let tx = Math.floor(x0 / 256); tx <= Math.floor((x0 + S) / 256); tx++) {
+    if (ty < 0 || ty >= 2 ** z) continue; left++; const im = new Image(); im.crossOrigin = 'anonymous'; const n = 2 ** z;
+    im.onload = () => { try { g.drawImage(im, tx * 256 - x0, ty * 256 - y0); } catch { } if (--left === 0) M.ready = true; }; im.onerror = () => { if (--left === 0) M.ready = true; }; im.src = IMG_URL(z, ((tx % n) + n) % n, ty);
+  }
+  const P = set.path; M.pts = []; for (let i = 0; i < P.length; i += 2) M.pts.push(M.px(P[i], P[i + 1]));
+}
+
+/* ---------- drawing: window frame, place markers, instruments, log, map (on the recording and on the screen) ---------- */
+function routeDom(R) {
+  let c = $('#routeHud'); const tour = $('#tour'); if (!tour) return;
+  if (!c) { c = document.createElement('canvas'); c.id = 'routeHud'; tour.insertBefore(c, $('#tourTitle')); }
+  const w = tour.clientWidth, h = tour.clientHeight, k = Math.min(2, devicePixelRatio || 1); if (c.width !== Math.round(w * k) || c.height !== Math.round(h * k)) { c.width = Math.round(w * k); c.height = Math.round(h * k); }
+  const g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, c.width, c.height); routePaint(g, c.width, c.height, R, true);
+}
+const routeLab = k => { const a = t(k), e = I18N.en[k]; return I18N.lang !== 'en' && e && e !== a ? a + ' ' + e : a; };
+function routePaint(g, W, H, R, dom) {
+  const plan = R.plan, set = plan?.route, Hd = plan?.hud; if (!set || Hd?.t == null) return;
+  const F = '"Noto Sans TC","PingFang TC","Microsoft JhengHei","Noto Sans",system-ui,sans-serif', mode = set.mode, win = plan.view === 'window';
+  g.save(); g.globalAlpha = 1; g.shadowBlur = 0;
+  // the window: the cabin wall around an opening
+  let clip = null;
+  if (win) clip = routeFrame(g, W, H, set, Hd);
+  if (Hd.tunnel && win) { g.fillStyle = 'rgba(6,7,9,.86)'; g.fillRect(0, 0, W, H); const k = (Hd.d / 9) % 1; g.fillStyle = 'rgba(255,210,140,.5)'; g.fillRect(W * (1 - k) - W * 0.05, H * 0.28, W * 0.04, H * 0.02); }
+  // markers on the places in view
+  g.save(); if (clip) { g.beginPath(); clip(); g.clip(); }
+  const labs = [];
+  for (const [k, p] of Object.entries(set.pois)) {
+    const dt = Math.abs(Hd.t - p.t), cur = plan.shots.find(s => s.poi === k && Hd.t >= s.t0 && Hd.t < s.t0 + s.dur); if (dt > 26 && !cur) continue;
+    const [px, pz] = toLocal(p.lat, p.lon), ground = Math.max(DEM.heightAt(px, pz), 0), py = Math.max(p.h || 0, ground) + 8, dd = Math.hypot(px - camera.position.x, pz - camera.position.z);
+    _rv.set(px, py - ROUTE.k * dd * dd, pz).project(camera); if (_rv.z > 1 || Math.abs(_rv.x) > 1.05 || Math.abs(_rv.y) > 1.05) continue;
+    const sx = (_rv.x + 1) / 2 * W, sy = (1 - _rv.y) / 2 * H, a = clamp(1.25 - dt / 22, 0, 1) * (cur ? 1 : 0.85); if (a < 0.02) continue;
+    const km = Math.hypot(dd, camera.position.y - py) / 1000, nm = routeName(p.label), en = I18N.lang !== 'en' ? routeNameEn(p.label) : '';
+    const line2 = [p.h > 50 ? Math.round(p.h).toLocaleString() + ' m' : '', km >= 1 ? km.toFixed(km < 10 ? 1 : 0) + ' km' : Math.round(km * 1000) + ' m'].filter(Boolean).join(' · ');
+    labs.push({ sx, sy, a, lines: [nm + (en && en !== nm ? '  ' + en : ''), line2], pri: (cur ? 0 : 1000) + dt });
+  }
+  // the label of the place being told about first; a label that would cover another one moves up above it
+  labs.sort((x, y) => x.pri - y.pri); const boxes = [], lh = H * 0.03;
+  for (const L of labs) {
+    g.font = `700 ${H * 0.026}px ${F}`; const w = Math.max(g.measureText(L.lines[0]).width, H * 0.1) + H * 0.02, hh = lh * 2 + H * 0.008;
+    let top = L.sy - H * 0.075 - lh - H * 0.026;
+    for (let n = 0; n < 6; n++) { const hit = boxes.find(b => Math.abs(b.x - L.sx) * 2 < b.w + w && top < b.y + b.h && top + hh > b.y); if (!hit) break; top = hit.y - hh - H * 0.006; }
+    boxes.push({ x: L.sx, y: top, w, h: hh }); const yy = top + H * 0.026, base = top + hh;
+    g.globalAlpha = L.a; g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = Math.max(1.5, H / 420); g.beginPath(); g.moveTo(L.sx, L.sy); g.lineTo(L.sx, Math.min(L.sy - H * 0.02, base)); g.stroke();
+    g.fillStyle = '#f0c879'; g.beginPath(); g.arc(L.sx, L.sy, H * 0.0065, 0, Math.PI * 2); g.fill();
+    g.textAlign = 'center'; g.textBaseline = 'bottom'; g.lineJoin = 'round'; g.lineWidth = H / 260; g.strokeStyle = 'rgba(0,0,0,.75)';
+    L.lines.forEach((l, i) => { g.font = `${i ? 500 : 700} ${H * (i ? 0.02 : 0.026)}px ${F}`; g.strokeText(l, L.sx, yy + i * lh); g.fillStyle = i ? '#e8eef3' : '#fff'; g.fillText(l, L.sx, yy + i * lh); });
+  }
+  g.restore(); g.globalAlpha = 1;
+  // instruments, log and map (they give way to the credits and the LINE code at the end)
+  const ka = 1 - clamp(R.credA || 0, 0, 1);
+  if (ka > 0.01) { g.globalAlpha = ka; routeInstruments(g, W, H, set, Hd, F, win); routeLogPanel(g, W, H, set, Hd, F, win); routeMap(g, W, H, set, Hd, win); }
+  g.restore();
+}
+/* cabin window (rounded opening in a light wall with a half-drawn shade), train and car windows, a ship's rail */
+function routeFrame(g, W, H, set, Hd) {
+  const mode = set.mode; let clip;
+  if (mode === 'air') {
+    const x0 = W * 0.1, x1 = W * 0.9, y0 = H * 0.05, y1 = H * 0.93, r = H * 0.3;
+    clip = () => g.roundRect(x0, y0, x1 - x0, y1 - y0, r);
+    g.save(); g.beginPath(); g.rect(0, 0, W, H); clip(); const gr = g.createLinearGradient(0, 0, W, 0); gr.addColorStop(0, '#c9c5bd'); gr.addColorStop(0.5, '#dedad2'); gr.addColorStop(1, '#c4c0b8'); g.fillStyle = gr; g.fill('evenodd');
+    g.lineWidth = H * 0.028; g.strokeStyle = '#b5b0a7'; g.beginPath(); g.roundRect(x0 - H * 0.012, y0 - H * 0.012, x1 - x0 + H * 0.024, y1 - y0 + H * 0.024, r + H * 0.012); g.stroke();
+    g.lineWidth = H * 0.008; g.strokeStyle = 'rgba(40,40,40,.35)'; g.beginPath(); clip(); g.stroke();
+    g.beginPath(); clip(); g.clip(); const sh = g.createLinearGradient(0, y0, 0, y0 + H * 0.09); sh.addColorStop(0, '#e9e6df'); sh.addColorStop(1, '#d7d3cb'); g.fillStyle = sh; g.fillRect(x0, y0, x1 - x0, H * 0.085); g.fillStyle = 'rgba(0,0,0,.18)'; g.fillRect(x0, y0 + H * 0.085, x1 - x0, H * 0.006);
+    const rf = g.createLinearGradient(x0, y0, x1, y1); rf.addColorStop(0, 'rgba(255,255,255,.07)'); rf.addColorStop(0.45, 'rgba(255,255,255,0)'); rf.addColorStop(1, 'rgba(255,255,255,.05)'); g.fillStyle = rf; g.fillRect(x0, y0, x1 - x0, y1 - y0); g.restore();
+  } else if (mode === 'rail' || mode === 'road') {
+    const x0 = W * 0.05, x1 = W * 0.95, y0 = H * (mode === 'rail' ? 0.08 : 0.1), y1 = H * (mode === 'rail' ? 0.86 : 0.8), r = H * 0.06;
+    clip = () => g.roundRect(x0, y0, x1 - x0, y1 - y0, r);
+    g.save(); g.beginPath(); g.rect(0, 0, W, H); clip(); g.fillStyle = mode === 'rail' ? '#3b4148' : '#262a2f'; g.fill('evenodd'); g.lineWidth = H * 0.012; g.strokeStyle = 'rgba(160,168,176,.55)'; g.beginPath(); clip(); g.stroke();
+    g.restore();
+  } else {
+    g.save(); g.strokeStyle = 'rgba(235,238,240,.92)'; g.lineWidth = H * 0.01; for (const yy of [0.86, 0.93]) { g.beginPath(); g.moveTo(0, H * yy); g.lineTo(W, H * yy); g.stroke(); }
+    g.lineWidth = H * 0.008; for (let x = W * 0.06; x < W; x += W * 0.16) { g.beginPath(); g.moveTo(x, H * 0.86); g.lineTo(x, H); g.stroke(); } g.restore();
+  }
+  return clip;
+}
+function routePanel(g, x, y, w, h, r) { g.fillStyle = 'rgba(8,14,20,.58)'; g.beginPath(); g.roundRect(x, y, w, h, r); g.fill(); g.strokeStyle = 'rgba(240,200,121,.45)'; g.lineWidth = Math.max(1, h / 160); g.stroke(); }
+function routeInstruments(g, W, H, set, Hd, F, win) {
+  const mode = set.mode, x = W * (win && mode === 'air' ? 0.125 : 0.02), y = H * (win && mode === 'air' ? 0.13 : 0.03), fs = H * 0.0205, lh = fs * 1.42, rows = [];
+  const kt = Hd.gs * 1.943844, kmh = Hd.gs * 3.6, ft = Hd.alt * 3.28084, utc = new Date(Hd.ms).toISOString().slice(11, 16), f = set.from, to = set.to;
+  rows.push([`${ROUTE_ICON[mode]} ${routeName(f.city)} ${f.code} → ${routeName(to.city)} ${to.code}`, '#f0c879', 700]);
+  const lt = routeClock(Hd.ms, f.tz), lt2 = routeClock(Hd.ms, to.tz); rows.push([`UTC ${utc} · ${routeName(f.city)} ${lt}` + (to.tz !== f.tz ? ` · ${routeName(to.city)} ${lt2}` : ''), '#fff', 500]);
+  if (mode === 'air') {
+    rows.push([`${routeLab('route.hud.alt')} ${Math.round(ft / 10) * 10 >= 1000 ? (Math.round(ft / 10) * 10).toLocaleString('en') : Math.round(ft)} ft · ${Math.round(Hd.alt).toLocaleString('en')} m`, '#fff', 600]);
+    rows.push([`${routeLab('route.hud.gs')} ${Math.round(kt)} kt · ${Math.round(kmh)} km/h   ${routeLab('route.hud.hdg')} ${String(Math.round(Hd.hd) % 360).padStart(3, '0')}°`, '#fff', 500]);
+    const oat = Hd.alt < 11000 ? 15 - 6.5 * Hd.alt / 1000 : -56.5; rows.push([`${routeLab('route.hud.oat')} ${Math.round(oat)} °C (ISA)   ${routeLab('route.hud.phase')} ${routeLab('route.ph.' + Hd.ph)}`, '#dfe7ee', 500]);
+  } else {
+    const sp = mode === 'sea' ? `${kt.toFixed(1)} kn · ${Math.round(kmh)} km/h` : `${Math.round(kmh)} km/h`;
+    rows.push([`${routeLab('route.hud.speed')} ${sp}   ${routeLab('route.hud.hdg')} ${String(Math.round(Hd.hd) % 360).padStart(3, '0')}°`, '#fff', 600]);
+    rows.push([`${routeLab('route.hud.elev')} ${Math.round(Hd.alt)} m` + (Hd.tunnel ? `   ${routeLab('route.hud.tunnel')}` : ''), '#dfe7ee', 500]);
+    const nx = (set.stops || []).find(s => s.d > Hd.d + 200); if (nx) rows.push([`${routeLab('route.hud.next')} ${routeName(nx)} ${((nx.d - Hd.d) / 1000).toFixed(1)} km`, '#dfe7ee', 500]);
+  }
+  const la = Math.abs(Hd.lat).toFixed(3) + '°' + (Hd.lat >= 0 ? 'N' : 'S'), lo = Math.abs(Hd.lon).toFixed(3) + '°' + (Hd.lon >= 0 ? 'E' : 'W');
+  rows.push([`${la} ${lo}   ${routeLab('route.hud.done')} ${Math.round(Hd.d / 1000).toLocaleString('en')} / ${Math.round(set.dist_m / 1000).toLocaleString('en')} km`, '#dfe7ee', 500]);
+  const left = Math.max(0, set.trip_s - Hd.tt); rows.push([`${routeLab('route.hud.elapsed')} ${routeHM(Hd.tt)}   ${routeLab('route.hud.left')} ${routeHM(left)}`, '#dfe7ee', 500]);
+  g.font = `600 ${fs}px ${F}`; let w = 0; for (const [s, c, wt] of rows) { g.font = `${wt} ${fs}px ${F}`; w = Math.max(w, g.measureText(s).width); }
+  routePanel(g, x, y, w + fs * 1.4, rows.length * lh + fs * 0.8, fs * 0.6);
+  g.textAlign = 'left'; g.textBaseline = 'top'; rows.forEach(([s, c, wt], i) => { g.font = `${wt} ${fs}px ${F}`; g.fillStyle = c; g.fillText(s, x + fs * 0.7, y + fs * 0.5 + i * lh); });
+  routeInstruments.bottom = y + rows.length * lh + fs * 0.8;
+}
+function routeLogPanel(g, W, H, set, Hd, F, win) {
+  const done = set.log.filter(e => e.t <= Hd.t + 0.01); if (!done.length) return; const list = done.slice(-3), fs = H * 0.0182, lh = fs * 1.45, x = W * (win && set.mode === 'air' ? 0.125 : 0.02), y = routeInstruments.bottom + H * 0.012;
+  const tz = set.mode === 'air' ? set.from.tz : set.from.tz, rows = list.map(e => `${routeClock(Date.parse(set.depart_utc) + e.tt * 1000, tz)}  ${routeName(e) || e.en}`);
+  g.font = `500 ${fs}px ${F}`; const w = Math.max(...rows.map(r => g.measureText(r).width), g.measureText(t('route.log')).width) + fs * 1.4;
+  routePanel(g, x, y, w, (rows.length + 1) * lh + fs * 0.6, fs * 0.6); g.textAlign = 'left'; g.textBaseline = 'top';
+  g.font = `700 ${fs}px ${F}`; g.fillStyle = '#f0c879'; g.fillText(routeLab('route.log'), x + fs * 0.7, y + fs * 0.35);
+  rows.forEach((r, i) => { const fresh = i === rows.length - 1 && Hd.t - list[i].t < 6; g.font = `${fresh ? 600 : 500} ${fs}px ${F}`; g.fillStyle = fresh ? '#fff' : 'rgba(230,236,240,.82)'; g.fillText(r, x + fs * 0.7, y + fs * 0.35 + (i + 1) * lh); });
+}
+function routeMap(g, W, H, set, Hd, win) {
+  const M = ROUTE.mini; if (!M?.img) return; const S = H * 0.24, x = W - S - W * (win && set.mode === 'air' ? 0.115 : 0.02), y = H * (win && set.mode === 'air' ? 0.13 : 0.03);
+  g.save(); g.beginPath(); g.roundRect(x, y, S, S, S * 0.06); g.clip(); g.drawImage(M.img, x, y, S, S); g.fillStyle = 'rgba(0,0,0,.18)'; g.fillRect(x, y, S, S);
+  const P = M.pts, n = P.length, k = set.pd[set.pd.length - 1], tot = Hd.d; g.lineJoin = 'round'; g.lineCap = 'round';
+  g.strokeStyle = 'rgba(255,255,255,.55)'; g.lineWidth = Math.max(1.2, S / 140); g.setLineDash([S * 0.02, S * 0.016]); g.beginPath(); P.forEach(([a, b], i) => i ? g.lineTo(x + a * S, y + b * S) : g.moveTo(x + a * S, y + b * S)); g.stroke(); g.setLineDash([]);
+  g.strokeStyle = '#f0c879'; g.lineWidth = Math.max(2, S / 70); g.beginPath(); let last = null; for (let i = 0; i < n; i++) { if (set.pd[i] > tot) break; const [a, b] = P[i]; i ? g.lineTo(x + a * S, y + b * S) : g.moveTo(x + a * S, y + b * S); last = i; }
+  const [ca, cb] = M.px(Hd.lat, Hd.lon); if (last != null) g.lineTo(x + ca * S, y + cb * S); g.stroke();
+  for (const p of Object.values(set.pois)) { const [a, b] = M.px(p.lat, p.lon); g.fillStyle = p.t <= Hd.t ? '#f0c879' : 'rgba(255,255,255,.8)'; g.beginPath(); g.arc(x + a * S, y + b * S, S * 0.012, 0, Math.PI * 2); g.fill(); }
+  g.translate(x + ca * S, y + cb * S); g.rotate(Hd.hd * rad); g.fillStyle = '#fff'; g.strokeStyle = '#000'; g.lineWidth = S / 160; g.beginPath(); g.moveTo(0, -S * 0.04); g.lineTo(S * 0.026, S * 0.03); g.lineTo(0, S * 0.016); g.lineTo(-S * 0.026, S * 0.03); g.closePath(); g.fill(); g.stroke();
+  g.restore(); g.strokeStyle = 'rgba(240,200,121,.55)'; g.lineWidth = Math.max(1, S / 200); g.beginPath(); g.roundRect(x, y, S, S, S * 0.06); g.stroke();
+}
+
+/* ---------- the list of routes (start screen button and #route/<id>/<view>) ---------- */
+async function showRoutes() {
+  const card = openCard('routes'); card.innerHTML = `<header><h3>${esc(t('route.title'))}</h3><button class="x" data-close aria-label="${esc(t('btn.close'))}">×</button></header><p class="mut">${esc(t('route.lead'))}</p><div id="rtList">${esc(t('story.loading'))}</div>`;
+  const idx = await routeIndex(), list = Object.entries(idx.routes || {}), media = TOUR.idx?.media?.items || {};
+  const conts = ['asia', 'europe', 'north-america', 'south-america', 'africa', 'oceania', 'antarctica'];
+  const html = conts.map(c => { const rs = list.filter(([, e]) => e.continent === c).sort((a, b) => a[1].num - b[1].num); if (!rs.length) return '';
+    return `<h4>${esc(t('route.cont.' + c))}</h4>` + rs.map(([id, e]) => { const m = v => media['route-' + id + '/' + v]; const yt = v => { const it = m(v); const f = it && (it[I18N.lang] || (isZh() ? it['zh-Hant'] : null) || it['*'] || it.en || it['zh-Hant']); return f && /^[\w-]{11}$/.test(f) ? `<a class="btn sm" href="https://www.youtube.com/watch?v=${esc(f)}" target="_blank" rel="noopener">▶ YouTube</a>` : ''; };
+      return `<div class="trow"><i>${ROUTE_ICON[e.mode] || '✈'}</i><div><b>${esc(routeName(e.name))}</b><span>${esc(routeName(e.tagline))}</span></div><div class="tbtns">${ROUTE_VIEWS.map(v => `<button class="btn sm" data-route="${esc(id)}" data-view="${v}">${esc(t('route.view.' + v))}</button>${yt(v)}`).join('')}</div></div>`; }).join(''); }).join('');
+  $('#rtList').innerHTML = html || `<p class="mut">${esc(t('route.none'))}</p>`;
+  $('#rtList').onclick = e => { const b = e.target.closest('[data-route]'); if (!b) return; card.hidden = true; AUDIO.start(); startRoute(b.dataset.route, b.dataset.view); };
+}
+
+/* ---------- hooks used by the tour player ---------- */
+function tourKicker(plan, icon) {   // the small line above a film's title
+  if (plan.route) return `${icon ? (ROUTE_ICON[plan.route.mode] || '✈') + ' ' : ''}${t('route.mode.' + plan.route.mode)} · ${t('route.view.' + plan.view)}`;
+  return `${icon ? (TOUR_ICON[plan.theme] || '◎') + ' ' : ''}${t('tour.theme.' + plan.theme)} · ${placeName(plan.place)}`;
+}
+function routeTours(plan) { return ROUTE_VIEWS.map(v => ({ id: v, route: true, view: v, title: { 'zh-Hant': I18N.dict?.['route.view.' + v] || v, en: I18N.en?.['route.view.' + v] || v, [I18N.lang]: t('route.view.' + v) } })); }
+
+/* ---------- 光影戲劇 Light & drama films: the real sun at an exact date and time, sea of clouds, blizzard and spindrift,
+   shadows cast by the terrain, landmarks built from shapes, herds on the move, FPV flight ----------
+   A drama film is a researched tour (theme 'drama') whose shots may also carry:
+     time "YYYY-MM-DD HH:MM" (and time1 "HH:MM": the sun moves during the shot), fx {...} (weather, clouds, light), fpv {...} (a racing-drone line)
+   and whose place file carries drama {...}: objects, herds, shadow box, a banner that stays on screen (for example a no-fly zone notice). */
+const DRAMA = { on: false, plan: null, grp: null, sea: null, bliz: null, plume: null, dust: null, herds: [], objs: [], sh: null, fx: null, save: null, built: false, last: -1 };
+SCORE_SET.drama = { root: 45, chords: [[0, 3, 7, 12], [-4, 0, 3, 8], [-2, 2, 5, 10], [-5, -1, 2, 7]], scale: [0, 2, 3, 7, 8] };
+TOUR_ICON.drama = '☀';
+const DRAMA_RE = /^(\d{4}-\d\d-\d\d) (\d\d):(\d\d)$/;
+function dramaWhen(s) { const m = DRAMA_RE.exec(s || ''); return m ? { date: m[1], min: +m[2] * 60 + +m[3] } : null; }
+function dramaLL(set, v) { if (Array.isArray(v)) return { lat: v[0], lon: v[1], h: v[2] || 0 }; const p = set.pois?.[v]; return p ? { lat: p.lat, lon: p.lon, h: p.elev || 0 } : null; }   // h: height above sea level (a POI's own h is the subject's height above the ground)
+
+/* ---------- start, stop ---------- */
+function dramaStart(plan) {
+  const D = plan.drama, set = plan.set; if (D.tz != null) plan.place.tz = D.tz; DRAMA.on = true; DRAMA.plan = plan; DRAMA.built = false; DRAMA.last = -1; DRAMA.fx = null;
+  DRAMA.save = { fish: SET.fisheye, far: camera.far, vis: APP.vis };
+  DRAMA.grp = new THREE.Group(); scene.add(DRAMA.grp); DRAMA.objs = []; DRAMA.herds = [];
+  for (const o of D.objects || []) { const g = DRAMA_BUILD[o.type]?.(o, set); if (g) { DRAMA.grp.add(g.obj); DRAMA.objs.push(g); } }
+  if (D.skip?.length) { const S = D.skip.map(s => { const [x, z] = toLocal(s.lat, s.lon); return { x, z, r: s.r || 60 }; }); VEC.skip = (x0, x1, z0, z1) => S.some(s => x1 > s.x - s.r && x0 < s.x + s.r && z1 > s.z - s.r && z0 < s.z + s.r); VEC.reset(); }
+  for (const h of D.herds || []) { const hd = dramaHerd(h, set); if (hd) { DRAMA.herds.push(hd); DRAMA.grp.add(hd.mesh); } }
+  if (D.water) { const w = D.water, c = dramaLL(set, w.at); if (c) { const [x, z] = toLocal(c.lat, c.lon), r = w.r || 600;
+      const geo = w.len ? new THREE.PlaneGeometry(w.wid || 50, w.len, 1, 8).rotateX(-Math.PI / 2) : new THREE.CircleGeometry(r, 64).rotateX(-Math.PI / 2);   // a strip along the river (bearing dir) or a disc
+      const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: w.color || '#6e5b3e', roughness: 0.35, metalness: 0.05, transparent: true, opacity: 0.92 }));
+      if (w.len) m.rotation.y = -(w.dir || 0) * rad; m.position.set(x, -1e4, z); m.userData = { x, z, up: w.up ?? 0.6, level: null }; DRAMA.water = m; DRAMA.grp.add(m); } }
+  if (D.shadow) { const c = dramaLL(set, D.shadow.at) || set.center && { lat: set.center[0], lon: set.center[1] }; const [x, z] = toLocal(c.lat, c.lon); DRAMA.shc = { x, z, size: D.shadow.size || 24000 }; DEM.prefetch(x, z, 11, 2); }
+  camera.far = Math.max(camera.far, 400000); camera.updateProjectionMatrix();
+}
+function dramaStop() {
+  if (!DRAMA.on) return; DRAMA.on = false;
+  if (DRAMA.grp) { scene.remove(DRAMA.grp); DRAMA.grp.traverse(o => { o.geometry?.dispose?.(); }); DRAMA.grp = null; }
+  for (const k of ['sea', 'bliz', 'plume', 'dust']) if (DRAMA[k]) { scene.remove(DRAMA[k]); DRAMA[k].geometry.dispose(); DRAMA[k] = null; }
+  DRAMA.herds = []; DRAMA.objs = []; DRAMA.water = null;
+  if (VEC.skip) { VEC.skip = null; VEC.reset(); }
+  TERRAIN_U.uShOn.value = 0; DRAMA.sh = null; DRAMA.shc = null;
+  sky?.material.uniforms.uDisc?.value.set(0.99935, 0.99965);
+  const S = DRAMA.save; if (S) { SET.fisheye = S.fish; camera.far = S.far; camera.updateProjectionMatrix(); applyFov(); }
+  DRAMA.plan = null; DRAMA.fx = null;
+}
+
+/* ---------- one frame ---------- */
+function dramaApply(R, s, u, dt, cut) {
+  const plan = R.plan, raw = s.raw || {}, set = plan.set;
+  // the sun: an exact date and time, moving through the shot when it has an end time
+  const w0 = dramaWhen(s.time); let moved = false;
+  if (w0 && raw.time1) { const w1 = dramaWhen(raw.time1) || { date: w0.date, min: +raw.time1.slice(0, 2) * 60 + +raw.time1.slice(3, 5) }; const m = lerp(w0.min, w1.min, u);
+    if (cut || Math.abs(m - APP.sun.min) > 0.04 && APP.frameN % 2 === 0) { APP.sun.date = w0.date; APP.sun.min = m; APP.live = false; applyTime(); moved = true; } }
+  if (cut || R.i !== DRAMA.last) { DRAMA.last = R.i; dramaFx(raw.fx || plan.drama.fx || {}, s); } else if (moved) dramaGrade();
+  // lens: a long lens (fov in degrees, or [from, to] for a slow zoom) or the FPV's wide one
+  const fv = Array.isArray(raw.fov) ? lerp(raw.fov[0], raw.fov[1], tourEase(u)) : raw.fov || 0, z = fv ? SET.fov / fv : SET.fov / TOUR_FOV;
+  if (Math.abs(z - APP.zoom) > 1e-3) { APP.zoom = z; applyFov(); }
+  const disc = raw.disc ?? (fv && fv < 40 ? 0.3 : 0), dv = sky?.material.uniforms.uDisc?.value;   // through a long lens the sun is drawn at its true size (0.27° radius, a little more for the glow)
+  if (dv) { if (disc) dv.set(Math.cos((disc + 0.05) * rad), Math.cos(disc * rad)); else dv.set(0.99935, 0.99965); }
+  // FPV: a low, fast, banking line with a wide lens
+  if (raw.fpv) dramaFpv(R, s, u, dt, cut);
+  const F = DRAMA.fx || {};
+  if (F.vis) APP.vis = F.vis;
+  if (!DRAMA.built && R.ready && !R.warm) { DRAMA.built = true; if (DRAMA.shc) dramaShadowBuild(); }
+  if (DRAMA.sh) TERRAIN_U.uShOn.value = F.shadow === false ? 0 : 1;
+  const T = R.t; dramaTick(T, dt);
+}
+function dramaGrade() {   // a stronger golden hour than the viewer's settings: the films are about light
+  const F = DRAMA.fx || {}, g = F.grade || {}; if (!POST.enabled) return;
+  const golden = clamp(1 - Math.abs(APP.sunAlt - 3) / 10, 0, 1), U = POST.grade?.uniforms; if (!U) return;
+  const warm = (g.warm ?? 0.6) * golden, t = U.uTint.value;
+  POST.set({ uTint: [t.x + 0.08 * warm, t.y + 0.01 * warm, t.z - 0.1 * warm], uSat: U.uSat.value * (g.sat ?? 1.12), uContrast: U.uContrast.value * (g.contrast ?? 1.06), uExposure: U.uExposure.value * (g.exposure ?? 1) });
+}
+
+/* ---------- weather and light for a shot ---------- */
+function dramaFx(fx, s) {
+  DRAMA.fx = fx;
+  // ordinary clouds: base, cover, kind
+  if (fx.cloud) { const c = fx.cloud, cu = clouds.material.uniforms; if (c.base != null) { APP.cloudBase = c.base; clouds.position.y = c.base; TERRAIN_U.uCloud.value.w = c.base; } if (c.cover != null) { cu.uCover.value = c.cover; TERRAIN_U.uCloud.value.x = c.cover; clouds.visible = c.cover > 0.03; } if (c.kind) { const sharp = c.kind === 'cumulus' ? 1 : c.kind === 'mixed' ? 0.55 : 0.12; cu.uSharp.value = sharp; TERRAIN_U.uCloud.value.z = sharp; } }
+  // sea of clouds
+  if (fx.sea) dramaSea(fx.sea); else if (DRAMA.sea) DRAMA.sea.visible = false;
+  // blizzard, spindrift
+  if (fx.snow) { dramaBliz(fx.snow, fx.wind); snow.visible = false; } else if (DRAMA.bliz) DRAMA.bliz.visible = false;
+  if (fx.plume) dramaPlumeOn(fx.plume, fx.wind); else if (DRAMA.plume) DRAMA.plume.userData.on = false;
+  // a wide lens for FPV
+  const fish = !!s.raw?.fpv && s.raw.fpv.fish !== false; if (SET.fisheye !== fish) { SET.fisheye = fish; applyFov(); }
+  dramaGrade();
+}
+
+/* ---------- sea of clouds: a lit, billowing deck the camera can fly over, with peaks and towers standing out of it ---------- */
+function dramaSea(o) {
+  if (!DRAMA.sea) {
+    const N = 240, S = 36000, g = new THREE.PlaneGeometry(S, S, N, N).rotateX(-Math.PI / 2);
+    const m = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, fog: true, side: THREE.DoubleSide,
+      uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, { uTop: { value: 600 }, uThick: { value: 160 }, uCover: { value: 0.85 }, uScale: { value: 2400 }, uTime: { value: 0 }, uSun: { value: new THREE.Vector3(0, 1, 0) }, uSunCol: { value: new THREE.Color(1, 1, 1) }, uShade: { value: new THREE.Color(0.6, 0.65, 0.75) }, uEdge: { value: 15000 } }]),
+      vertexShader: `#include <common>
+        #include <fog_pars_vertex>
+        #include <logdepthbuf_pars_vertex>
+        uniform float uTop, uThick, uScale, uTime, uCover; varying vec3 vW; varying float vD;
+        float h2(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
+        float vn(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.0-2.0*f); return mix(mix(h2(i),h2(i+vec2(1,0)),f.x),mix(h2(i+vec2(0,1)),h2(i+vec2(1,1)),f.x),f.y); }
+        float fbm(vec2 p){ float s=0.0, a=0.5; for(int i=0;i<5;i++){ s+=a*vn(p); p*=2.07; a*=0.5; } return s; }
+        void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vec2 q = w.xz / uScale + vec2(uTime * 0.004, uTime * 0.0015);
+          float n = fbm(q), d = smoothstep(1.0 - uCover - 0.12, 1.0 - uCover + 0.18, n); vD = d;
+          w.y = uTop - uThick + uThick * (0.35 + 0.65 * d) * (0.6 + 0.8 * fbm(q * 3.1 + 7.0));
+          vW = w.xyz; vec4 mvPosition = viewMatrix * w; gl_Position = projectionMatrix * mvPosition;
+          #include <logdepthbuf_vertex>
+          #include <fog_vertex>
+        }`,
+      fragmentShader: `#include <common>
+        #include <fog_pars_fragment>
+        #include <logdepthbuf_pars_fragment>
+        uniform vec3 uSun, uSunCol, uShade; uniform float uEdge, uTop, uThick; varying vec3 vW; varying float vD;
+        void main(){
+          #include <logdepthbuf_fragment>
+          vec3 n = normalize(cross(dFdx(vW), dFdy(vW))); if (n.y < 0.0) n = -n;
+          float lam = clamp(dot(n, normalize(uSun)) * 0.6 + 0.4, 0.0, 1.0), top = clamp((vW.y - (uTop - uThick)) / uThick, 0.0, 1.0);
+          vec3 v = normalize(cameraPosition - vW); float back = pow(clamp(dot(-v, normalize(uSun)), 0.0, 1.0), 6.0);
+          vec3 col = mix(uShade, uSunCol, lam * (0.45 + 0.55 * top)) + uSunCol * back * 0.35 * top;
+          float a = smoothstep(0.05, 0.35, vD) * clamp(1.0 - length(vW.xz - cameraPosition.xz) / uEdge, 0.0, 1.0);
+          gl_FragColor = vec4(col, a);
+          #include <colorspace_fragment>
+          #include <fog_fragment>
+        }` });
+    DRAMA.sea = new THREE.Mesh(g, m); DRAMA.sea.frustumCulled = false; DRAMA.sea.renderOrder = 2; scene.add(DRAMA.sea);
+  }
+  const U = DRAMA.sea.material.uniforms; U.uTop.value = o.top ?? 600; U.uThick.value = o.thick ?? 160; U.uCover.value = o.cover ?? 0.85; U.uScale.value = o.scale ?? 2400; DRAMA.sea.visible = true;
+}
+
+/* ---------- blizzard: wind-driven snow streaks around the camera; spindrift blowing off the summit ---------- */
+function dramaBliz(k, wind) {
+  if (!DRAMA.bliz) {
+    const n = 9000, p = new Float32Array(n * 6), g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(p, 3));
+    for (let i = 0; i < n; i++) { const x = (Math.random() - 0.5) * 160, y = Math.random() * 80 - 25, z = (Math.random() - 0.5) * 160; p.set([x, y, z, x, y, z], i * 6); }
+    DRAMA.bliz = new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: '#f4f8ff', transparent: true, opacity: 0.55, depthWrite: false, fog: false })); DRAMA.bliz.frustumCulled = false; scene.add(DRAMA.bliz);
+  }
+  DRAMA.bliz.visible = true; DRAMA.bliz.userData.k = clamp(k, 0, 1); DRAMA.bliz.material.opacity = 0.25 + 0.45 * clamp(k, 0, 1);
+  DRAMA.bliz.geometry.setDrawRange(0, Math.round(2 * 9000 * clamp(0.2 + k, 0, 1)));
+  DRAMA.wind = dramaWindVec(wind);
+}
+function dramaWindVec(w) { const dir = (w?.[0] ?? 270) * rad, sp = w?.[1] ?? 18; return new THREE.Vector3(-Math.sin(dir) * sp, 0, Math.cos(dir) * sp); }   // blowing FROM dir
+const DRAMA_PUFF = (() => { let t = null; return () => { if (t) return t; const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d'), gr = g.createRadialGradient(32, 32, 2, 32, 32, 31); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.5, 'rgba(255,255,255,.45)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); t = new THREE.CanvasTexture(c); return t; }; })();
+function dramaPuffs(n, color, blending) {
+  const g = new THREE.BufferGeometry(), P = new Float32Array(n * 3), S = new Float32Array(n), A = new Float32Array(n);
+  g.setAttribute('position', new THREE.BufferAttribute(P, 3)); g.setAttribute('aSize', new THREE.BufferAttribute(S, 1)); g.setAttribute('aAlpha', new THREE.BufferAttribute(A, 1));
+  const m = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, blending: blending || THREE.NormalBlending, uniforms: { uMap: { value: DRAMA_PUFF() }, uCol: { value: new THREE.Color(color) }, uScale: { value: 600 } },
+    vertexShader: `#include <common>
+      #include <logdepthbuf_pars_vertex>
+      attribute float aSize, aAlpha; uniform float uScale; varying float vA; void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; gl_PointSize = clamp(aSize * uScale / max(1.0, -mv.z), 0.0, 900.0); vA = aAlpha;
+      #include <logdepthbuf_vertex>
+      }`,
+    fragmentShader: `#include <common>
+      #include <logdepthbuf_pars_fragment>
+      uniform sampler2D uMap; uniform vec3 uCol; varying float vA; void main(){
+      #include <logdepthbuf_fragment>
+      vec4 t = texture2D(uMap, gl_PointCoord); gl_FragColor = vec4(uCol, t.a * vA); }` });
+  const o = new THREE.Points(g, m); o.frustumCulled = false; o.userData = { n, life: new Float32Array(n), vel: new Float32Array(n * 3), k: 0 }; return o;
+}
+function dramaPlumeOn(pl, wind) {
+  if (!DRAMA.plume) { DRAMA.plume = dramaPuffs(260, '#f6f8fc'); scene.add(DRAMA.plume); }
+  const set = DRAMA.plan.set, src = (pl.at || []).map(k => dramaLL(set, k)).filter(Boolean).map(p => { const [x, z] = toLocal(p.lat, p.lon); return { x, z, y: Math.max(p.h, DEM.heightAt(x, z)) }; });
+  Object.assign(DRAMA.plume.userData, { on: true, src, rate: pl.rate ?? 40, size: pl.size ?? 160, wind: dramaWindVec(wind) });
+}
+
+/* ---------- shadows cast by the terrain: a height field around the place, marched along the sun ray in the terrain shader ---------- */
+function dramaShadowBuild() {
+  const C = DRAMA.shc, N = 512, S = C.size, x0 = C.x - S / 2, z0 = C.z - S / 2, a = new Float32Array(N * N); let mx = -1e9;
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) { const h = Math.max(DEM.heightAt(x0 + (i + 0.5) * S / N, z0 + (j + 0.5) * S / N), 0); a[j * N + i] = h; if (h > mx) mx = h; }
+  const hf = new Uint16Array(N * N); for (let k = 0; k < hf.length; k++) hf[k] = THREE.DataUtils.toHalfFloat(a[k]);   // half floats filter linearly everywhere
+  const tex = new THREE.DataTexture(hf, N, N, THREE.RedFormat, THREE.HalfFloatType); tex.magFilter = tex.minFilter = THREE.LinearFilter; tex.needsUpdate = true;
+  DRAMA.sh?.dispose?.(); DRAMA.sh = tex; TERRAIN_U.uShTex.value = tex; TERRAIN_U.uShRect.value.set(x0, z0, S, mx + 5);
+}
+
+/* ---------- particles, herds, objects: once per frame ---------- */
+const _dv = new THREE.Vector3();
+function dramaTick(T, dt) {
+  const cp = camera.position; dt = Math.min(dt, 0.1);
+  if (DRAMA.sea?.visible) { const U = DRAMA.sea.material.uniforms, c = 36000 / 240; DRAMA.sea.position.set(Math.round(cp.x / c) * c, 0, Math.round(cp.z / c) * c); U.uTime.value = T; U.uSun.value.copy(APP.sunDir); U.uSunCol.value.copy(clouds.material.uniforms.uSunCol.value).multiplyScalar(1.15); U.uShade.value.copy(clouds.material.uniforms.uShade.value).multiplyScalar(1.1); }
+  if (DRAMA.bliz?.visible) {   // streaks move with the wind and fall; wrap around the camera
+    const b = DRAMA.bliz, a = b.geometry.attributes.position.array, W = DRAMA.wind || new THREE.Vector3(12, 0, 0), L = 0.05, n = a.length / 6;
+    b.position.copy(cp); for (let i = 0; i < n; i++) { const o = i * 6; let x = a[o] + (W.x + Math.sin(i) * 2) * dt, y = a[o + 1] - (2.2 + (i % 5) * 0.6) * dt, z = a[o + 2] + (W.z + Math.cos(i) * 2) * dt;
+      if (x > 80) x -= 160; else if (x < -80) x += 160; if (z > 80) z -= 160; else if (z < -80) z += 160; if (y < -25) y += 80;
+      a[o] = x; a[o + 1] = y; a[o + 2] = z; a[o + 3] = x - W.x * L; a[o + 4] = y + 0.12; a[o + 5] = z - W.z * L; }
+    b.geometry.attributes.position.needsUpdate = true;
+  }
+  const pl = DRAMA.plume; if (pl) {   // spindrift: puffs leave the ridge, stream downwind, grow and fade
+    const D = pl.userData, P = pl.geometry.attributes.position.array, S = pl.geometry.attributes.aSize.array, A = pl.geometry.attributes.aAlpha.array;
+    let spawn = D.on && D.src.length ? D.rate * dt : 0;
+    for (let i = 0; i < D.n; i++) {
+      if (D.life[i] <= 0) { if (spawn >= 1 || (spawn > 0 && Math.random() < spawn)) { spawn -= 1; const s = D.src[Math.floor(Math.random() * D.src.length)]; P[i * 3] = s.x + (Math.random() - 0.5) * 120; P[i * 3 + 1] = s.y - Math.random() * 60; P[i * 3 + 2] = s.z + (Math.random() - 0.5) * 120; D.life[i] = 1; const v = D.wind; D.vel.set([v.x * (0.8 + Math.random() * 0.5), 2 + Math.random() * 3, v.z * (0.8 + Math.random() * 0.5)], i * 3); } else { A[i] = 0; continue; } }
+      D.life[i] -= dt / 9; const l = Math.max(D.life[i], 0); P[i * 3] += D.vel[i * 3] * dt; P[i * 3 + 1] += D.vel[i * 3 + 1] * dt; P[i * 3 + 2] += D.vel[i * 3 + 2] * dt;
+      S[i] = D.size * (0.4 + 1.8 * (1 - l)); A[i] = 0.5 * Math.sin(Math.PI * l) ** 0.8;
+    }
+    pl.geometry.attributes.position.needsUpdate = pl.geometry.attributes.aSize.needsUpdate = pl.geometry.attributes.aAlpha.needsUpdate = true;
+  }
+  for (const h of DRAMA.herds) dramaHerdTick(h, T, dt);
+  const wa = DRAMA.water; if (wa && wa.userData.level == null && APP.frameN % 15 === 0) { const g = DEM.heightAt(wa.userData.x, wa.userData.z);
+    if (Number.isFinite(g) && g !== 0) { const lv = g + wa.userData.up; wa.userData.level = lv; wa.position.y = lv; for (const H of DRAMA.herds) if (H.h.water && H.h.waterLevel == null) H.h.waterLevel = lv; } }
+  for (const o of DRAMA.objs) o.tick?.(T, dt);
+}
+
+/* ---------- landmarks from simple shapes (no textures or likenesses copied from anyone) ---------- */
+function dramaMat(c, r = 0.5, m = 0.1, more = {}) { return new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m, ...more }); }
+function dramaFrustum(w0, w1, h, y, mat, sides = 4) {   // a square frustum (bottom width w0, top width w1) standing at height y
+  const g = new THREE.CylinderGeometry(w1 / Math.SQRT2, w0 / Math.SQRT2, h, sides, 1); g.rotateY(Math.PI / 4); const m = new THREE.Mesh(g, mat); m.position.y = y + h / 2; return m;
+}
+function dramaGround(x, z) { return Math.max(DEM.heightAt(x, z), 0); }
+const DRAMA_BUILD = {
+  /* Taipei 101: podium, a tapering base, eight flared eight-floor segments, the top and the spire (508 m) */
+  taipei101(o) {
+    const g = new THREE.Group(), [x, z] = toLocal(o.lat, o.lon), glass = dramaMat('#6b9c9e', 0.28, 0.35), frame = dramaMat('#9fb3b5', 0.4, 0.6), podium = dramaMat('#8f9a9c', 0.6, 0.2);
+    const pod = new THREE.Mesh(new THREE.BoxGeometry(150, 60, 110), podium); pod.position.set(-20, 30, 55); g.add(pod);
+    g.add(dramaFrustum(62, 50, 101, 0, glass));                                  // base, to about the 26th floor
+    for (let i = 0; i < 8; i++) { const y = 101 + i * 35.5; g.add(dramaFrustum(46, 56, 34, y, glass)); const band = dramaFrustum(57, 57, 1.5, y + 34, frame); g.add(band); }
+    g.add(dramaFrustum(40, 30, 50, 101 + 8 * 35.5, glass));                     // floors 91–101
+    const sp = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 3.2, 60, 12), frame); sp.position.y = 449 + 30; g.add(sp);
+    g.rotation.y = -(o.heading || 0) * rad;
+    return { obj: g, tick() { if (APP.frameN % 30 === 0) g.position.set(x, dramaGround(x, z) - 1, z); } };
+  },
+  /* Danjiang Bridge: one pylon of two leaning legs that meet near the top with a slot between them, a fan of stays on each side, a long deck */
+  danjiang(o) {
+    const g = new THREE.Group(), [x, z] = toLocal(o.lat, o.lon), white = dramaMat('#e8e9e6', 0.55, 0.05), deckM = dramaMat('#c9ccc8', 0.7, 0.05), cableM = new THREE.LineBasicMaterial({ color: '#f3f3f0', transparent: true, opacity: 0.85 });
+    const H = 211, Y0 = 28, back = o.back || 175, main = o.main || 450, axis = (o.axis ?? 13);
+    // deck: along the bridge axis (local -z = towards Tamsui after rotation), 44 m wide, widening round the pylon
+    const deckLen = back + main + 300, deck = new THREE.Mesh(new THREE.BoxGeometry(44, 4, deckLen), deckM); deck.position.set(0, Y0 - 2, (main - back) / 2 + 0); g.add(deck);
+    const deckW = new THREE.Mesh(new THREE.BoxGeometry(71, 4, 120), deckM); deckW.position.set(0, Y0 - 2, 0); g.add(deckW);
+    // the pylon: two legs (towards Bali and towards Tamsui) as tapered, curved blades meeting at 175 m; the slot between them runs across the bridge
+    const leg = (sg) => { const pts = []; for (let i = 0; i <= 24; i++) { const f = i / 24, y = f * 178, half = 4.5 * (1 - f) + 0.6, c = sg * (18 * (1 - f) ** 1.2 + half * (f > 0.98 ? 0 : 1)); pts.push([y, c, 12 - 6 * f]); } return pts; };
+    for (const sg of [-1, 1]) { const P = leg(sg); for (let i = 0; i < P.length - 1; i++) { const [y0, c0, w0] = P[i], [y1, c1, w1] = P[i + 1]; const h = y1 - y0, seg = new THREE.Mesh(new THREE.BoxGeometry(w0, h + 0.5, 8.5 * (1 - y0 / 210) + 2.5), white); seg.position.set(0, y0 + h / 2, (c0 + c1) / 2); seg.rotation.x = Math.atan2(c1 - c0, h); g.add(seg); } }
+    const top = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 4.2, H - 175, 10), white); top.position.y = 175 + (H - 175) / 2; top.scale.set(1, 1, 1.4); g.add(top);
+    // stays: two inclined planes from the mast above the slot (178–208 m) to both edges of the deck; 47 per plane (94 in all)
+    const pos = []; const anchor = (zz, side) => [side * 19, Y0 + 1, zz];
+    for (const side of [-1, 1]) { for (let i = 0; i < 30; i++) { const f = i / 29, zz = 40 + f * (main - 15), ty = 178 + 30 * f; pos.push(0, ty, 2, ...anchor(zz, side)); } for (let i = 0; i < 17; i++) { const f = i / 16, zz = -(30 + f * (back - 10)), ty = 178 + 30 * f; pos.push(0, ty, -2, ...anchor(zz, side)); } }
+    const cg = new THREE.BufferGeometry(); cg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.add(new THREE.LineSegments(cg, cableM));
+    // the deck runs along the axis (axis = bearing from Bali to Tamsui): local +z must point towards Bali (bearing axis + 180, the long main span).
+    // A bearing b is the world direction (sin b, 0, -cos b) and a turn θ about y sends +z to (sin θ, 0, cos θ), so θ = 180° - b = -axis.
+    g.rotation.y = -axis * rad; g.position.set(x, 0, z);
+    return { obj: g };
+  },
+  /* a round fountain basin with jets (the statue on the real fountain is not reproduced) */
+  fountain(o) {
+    const g = new THREE.Group(), [x, z] = toLocal(o.lat, o.lon), r = o.r || 14, stone = dramaMat('#b8b2a6', 0.8, 0), water = dramaMat('#5d8fa3', 0.15, 0.3);
+    const rim = new THREE.Mesh(new THREE.CylinderGeometry(r, r + 0.6, 1.0, 40), stone); rim.position.y = 0.5; g.add(rim); const w = new THREE.Mesh(new THREE.CylinderGeometry(r - 0.6, r - 0.6, 0.1, 40), water); w.position.y = 0.95; g.add(w);
+    const jets = dramaPuffs(160, '#eef6ff'); jets.material.uniforms.uScale.value = 260; g.add(jets);
+    return { obj: g, tick(T, dt) {
+      if (APP.frameN % 30 === 0) g.position.set(x, dramaGround(x, z), z);
+      const D = jets.userData, P = jets.geometry.attributes.position.array, S = jets.geometry.attributes.aSize.array, A = jets.geometry.attributes.aAlpha.array;
+      for (let i = 0; i < D.n; i++) { if (D.life[i] <= 0) { const a = Math.random() * Math.PI * 2, rr = Math.random() * r * 0.5; P.set([Math.cos(a) * rr, 1, Math.sin(a) * rr], i * 3); D.vel.set([Math.cos(a) * 0.6, 6 + Math.random() * 3, Math.sin(a) * 0.6], i * 3); D.life[i] = 1; }
+        D.life[i] -= dt / 1.6; D.vel[i * 3 + 1] -= 9.8 * dt; P[i * 3] += D.vel[i * 3] * dt; P[i * 3 + 1] = Math.max(1, P[i * 3 + 1] + D.vel[i * 3 + 1] * dt); P[i * 3 + 2] += D.vel[i * 3 + 2] * dt; S[i] = 1.2; A[i] = 0.55 * Math.max(D.life[i], 0); }
+      jets.geometry.attributes.position.needsUpdate = jets.geometry.attributes.aSize.needsUpdate = jets.geometry.attributes.aAlpha.needsUpdate = true;
+    } };
+  },
+};
+
+/* ---------- herds: instanced animals along a path, with dust (and spray in a river) ---------- */
+function dramaMerge(parts) {   // [geometry, matrix] → one non-indexed geometry
+  const P = [], N = [], U = []; const m3 = new THREE.Matrix3();
+  for (const [g0, M] of parts) { const g = g0.index ? g0.toNonIndexed() : g0; const p = g.attributes.position, n = g.attributes.normal, uv = g.attributes.uv; m3.getNormalMatrix(M); const v = new THREE.Vector3();
+    for (let i = 0; i < p.count; i++) { v.fromBufferAttribute(p, i).applyMatrix4(M); P.push(v.x, v.y, v.z); v.fromBufferAttribute(n, i).applyMatrix3(m3).normalize(); N.push(v.x, v.y, v.z); U.push(uv ? uv.getX(i) : 0, uv ? uv.getY(i) : 0); } }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); g.setAttribute('normal', new THREE.Float32BufferAttribute(N, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(U, 2)); return g;
+}
+function dramaAnimal(kind) {   // a simple four-legged body, about life size, facing -z
+  const M = (x, y, z, sx = 1, sy = 1, sz = 1, rx = 0) => new THREE.Matrix4().compose(new THREE.Vector3(x, y, z), new THREE.Quaternion().setFromEuler(new THREE.Euler(rx, 0, 0)), new THREE.Vector3(sx, sy, sz));
+  const box = new THREE.BoxGeometry(1, 1, 1), sph = new THREE.SphereGeometry(0.5, 10, 8), parts = [];
+  if (kind === 'yak') { parts.push([sph, M(0, 1.25, 0, 1.25, 1.15, 2.3)], [sph, M(0, 1.55, -0.35, 1.0, 0.8, 1.0)], [box, M(0, 1.05, -1.3, 0.5, 0.55, 0.7, 0.5)], [box, M(-0.35, 1.45, -1.35, 0.5, 0.1, 0.1)], [box, M(0.35, 1.45, -1.35, 0.5, 0.1, 0.1)], [box, M(0, 0.62, 0, 1.15, 0.35, 2.0)]); for (const [lx, lz] of [[-0.35, -0.7], [0.35, -0.7], [-0.35, 0.7], [0.35, 0.7]]) parts.push([box, M(lx, 0.4, lz, 0.22, 0.8, 0.22)]); }
+  else { const zebra = kind === 'zebra'; parts.push([sph, M(0, 1.2, 0, 0.95, 0.95, 2.0)], [box, M(0, 1.55, -0.95, 0.32, 0.75, 0.38, -0.6)], [box, M(0, 1.6, -1.35, 0.35, 0.36, 0.7, 0.35)]); if (!zebra) parts.push([box, M(-0.25, 1.95, -1.25, 0.45, 0.08, 0.08)], [box, M(0.25, 1.95, -1.25, 0.45, 0.08, 0.08)]); for (const [lx, lz] of [[-0.25, -0.65], [0.25, -0.65], [-0.25, 0.65], [0.25, 0.65]]) parts.push([box, M(lx, 0.45, lz, 0.14, 0.95, 0.14)]); }
+  return dramaMerge(parts);
+}
+const DRAMA_STRIPES = (() => { let t = null; return () => { if (t) return t; const c = document.createElement('canvas'); c.width = 64; c.height = 8; const g = c.getContext('2d'); g.fillStyle = '#efeee9'; g.fillRect(0, 0, 64, 8); g.fillStyle = '#1b1b1b'; for (let i = 0; i < 8; i++) g.fillRect(i * 8 + 1, 0, 4, 8); t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; }; })();
+function dramaHerd(h, set) {
+  const pts = (h.path || []).map(k => dramaLL(set, k)).filter(Boolean).map(p => { const [x, z] = toLocal(p.lat, p.lon); return { x, z }; }); if (pts.length < 2) return null;
+  const poly = [{ x: pts[0].x, z: pts[0].z, l: 0 }]; for (let i = 1; i < pts.length; i++) poly.push({ x: pts[i].x, z: pts[i].z, l: poly[i - 1].l + Math.hypot(pts[i].x - pts[i - 1].x, pts[i].z - pts[i - 1].z) });
+  const kinds = h.kind === 'mixed' ? ['wildebeest', 'wildebeest', 'wildebeest', 'zebra'] : [h.kind], n = h.n || 300, meshes = new THREE.Group(), each = [];
+  const mats = { yak: dramaMat('#2b2420', 0.95, 0), wildebeest: dramaMat('#4a4540', 0.9, 0), zebra: dramaMat('#ffffff', 0.85, 0, { map: DRAMA_STRIPES() }) };
+  const byKind = {}; for (let i = 0; i < n; i++) { const k = kinds[i % kinds.length]; (byKind[k] ||= []).push(i); }
+  for (const [k, ids] of Object.entries(byKind)) { const im = new THREE.InstancedMesh(dramaAnimal(k), mats[k], ids.length); im.frustumCulled = false; im.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    if (k === 'yak') { const col = new THREE.Color(); ids.forEach((_, j) => im.setColorAt(j, col.setHSL(0.07, 0.25, 0.1 + 0.25 * ((j * 37 % 11) / 11) + ((j % 9) === 0 ? 0.55 : 0)))); }
+    meshes.add(im); each.push({ im, ids }); }
+  const rnd = (i, s) => { const x = Math.sin(i * 12.9898 + s * 78.233) * 43758.5453; return x - Math.floor(x); };
+  const A = Array.from({ length: n }, (_, i) => ({ lon: rnd(i, 1) * (h.depth || 160), lat: (rnd(i, 2) - 0.5) * (h.spread || 70), ph: rnd(i, 3) * 6.28, sp: 0.9 + 0.2 * rnd(i, 4), sc: 0.9 + 0.2 * rnd(i, 5) }));
+  const dust = h.dust !== false ? dramaPuffs(320, h.water ? '#f2f2ee' : '#b59a72') : null; if (dust) { dust.material.uniforms.uScale.value = 700; scene.add(dust); DRAMA.dust = dust; }
+  return { h, poly, L: poly[poly.length - 1].l, mesh: meshes, each, A, dust, m: new THREE.Matrix4(), q: new THREE.Quaternion(), e: new THREE.Euler(0, 0, 0, 'YXZ'), v: new THREE.Vector3(), s: new THREE.Vector3() };
+}
+function dramaAlong(poly, l) { const L = poly[poly.length - 1].l; if (l < 0) { const a = poly[0], b = poly[1], d = Math.max(1e-6, b.l); return { x: a.x + (b.x - a.x) / d * l, z: a.z + (b.z - a.z) / d * l, hd: bearingTo(a.x, a.z, b.x, b.z) }; } l = Math.min(l, L); let i = 1; while (i < poly.length - 1 && poly[i].l < l) i++; const a = poly[i - 1], b = poly[i], u = (l - a.l) / Math.max(1e-6, b.l - a.l); return { x: lerp(a.x, b.x, u), z: lerp(a.z, b.z, u), hd: bearingTo(a.x, a.z, b.x, b.z) }; }
+function dramaHerdTick(H, T, dt) {
+  const h = H.h, run = clamp((T - (h.t0 ?? 0)) / Math.max(1, (h.t1 ?? 300) - (h.t0 ?? 0)), 0, 1), head = (h.from ?? 0) + run * ((h.to ?? H.L) - (h.from ?? 0)), moving = T > (h.t0 ?? 0) && T < (h.t1 ?? 300);
+  const water = h.water && h.waterLevel != null ? h.waterLevel : null; let wet = 0;
+  for (const { im, ids } of H.each) { ids.forEach((i, j) => { const a = H.A[i], l = head - a.lon, p = dramaAlong(H.poly, l), rx = Math.cos(p.hd * rad), rz = Math.sin(p.hd * rad);
+      const x = p.x + rx * a.lat + Math.sin(T * 0.3 + a.ph) * 1.2, z = p.z + rz * a.lat + Math.cos(T * 0.27 + a.ph) * 1.2; let y = dramaGround(x, z); let swim = false;
+      if (water != null && y < water) { y = water - 0.75; swim = true; wet++; }
+      const gait = moving ? Math.sin(T * 9 * a.sp + a.ph) : 0; H.e.set(gait * 0.05, -p.hd * rad, swim ? 0 : gait * 0.03); H.q.setFromEuler(H.e);
+      H.v.set(x, y + (moving && !swim ? Math.abs(gait) * 0.12 : 0), z); H.s.setScalar(a.sc); H.m.compose(H.v, H.q, H.s); im.setMatrixAt(j, H.m); });
+    im.instanceMatrix.needsUpdate = true; }
+  const D = H.dust; if (!D) return; const U = D.userData, P = D.geometry.attributes.position.array, S = D.geometry.attributes.aSize.array, Al = D.geometry.attributes.aAlpha.array;
+  let spawn = moving ? (h.dustRate ?? 60) * dt * (h.water ? Math.min(1, wet / 40) : 1) : 0;
+  for (let i = 0; i < U.n; i++) {
+    if (U.life[i] <= 0) { if (spawn > 0 && Math.random() < Math.min(1, spawn)) { spawn -= 1; const a = H.A[Math.floor(Math.random() * H.A.length)], p = dramaAlong(H.poly, head - a.lon), rx = Math.cos(p.hd * rad), rz = Math.sin(p.hd * rad), x = p.x + rx * a.lat, z = p.z + rz * a.lat;
+        P.set([x, (water != null ? water : dramaGround(x, z)) + 0.5, z], i * 3); U.vel.set([(Math.random() - 0.5) * 2, h.water ? 2.5 : 1.2, (Math.random() - 0.5) * 2], i * 3); U.life[i] = 1; } else { Al[i] = 0; continue; } }
+    U.life[i] -= dt / (h.water ? 1.2 : 6); const l = Math.max(U.life[i], 0); P[i * 3] += U.vel[i * 3] * dt; P[i * 3 + 1] += U.vel[i * 3 + 1] * dt; P[i * 3 + 2] += U.vel[i * 3 + 2] * dt;
+    S[i] = (h.water ? 4 : 14) * (0.5 + 1.6 * (1 - l)); Al[i] = (h.water ? 0.55 : 0.32) * Math.sin(Math.PI * l);
+  }
+  D.geometry.attributes.position.needsUpdate = D.geometry.attributes.aSize.needsUpdate = D.geometry.attributes.aAlpha.needsUpdate = true;
+}
+
+/* ---------- FPV: a line through points with heights above the ground, flown at an even speed, banking into the turns ---------- */
+function dramaFpv(R, s, u, dt, cut) {
+  const f = s.raw.fpv, set = R.plan.set;
+  if (!s.fpvPts) { s.fpvPts = f.path.map(([k, agl]) => { const p = dramaLL(set, k); const [x, z] = toLocal(p.lat, p.lon); return { x, z, agl: agl ?? 20 }; }); }
+  const P = s.fpvPts, n = P.length, cr = (a, b, c, d, t) => 0.5 * ((2 * b) + (-a + c) * t + (2 * a - 5 * b + 4 * c - d) * t * t + (-a + 3 * b - 3 * c + d) * t * t * t);
+  const at = (v) => { const g = clamp(v, 0, 0.9999) * (n - 1), i = Math.floor(g), t = g - i, a = P[Math.max(0, i - 1)], b = P[i], c = P[Math.min(n - 1, i + 1)], d = P[Math.min(n - 1, i + 2)]; const x = cr(a.x, b.x, c.x, d.x, t), z = cr(a.z, b.z, c.z, d.z, t); return { x, z, y: dramaGround(x, z) + cr(a.agl, b.agl, c.agl, d.agl, t) }; };
+  const p = at(u), q = at(u + 0.004), r2 = at(u + 0.012);
+  const yaw = bearingTo(p.x, p.z, q.x, q.z), yaw2 = bearingTo(q.x, q.z, r2.x, r2.z), turn = ((yaw2 - yaw + 540) % 360) - 180;
+  const roll = clamp(turn * (f.bank ?? 6), -55, 55); R.fpvRoll = cut || R.fpvRoll == null ? roll : R.fpvRoll + (roll - R.fpvRoll) * (1 - Math.exp(-dt * 3));
+  const pitch = Math.atan2(q.y - p.y, Math.max(0.1, Math.hypot(q.x - p.x, q.z - p.z))) * deg - (f.tilt ?? 8);
+  // keep clear of the trees (they grow wherever the imagery is dark green): low only over water, else at least minAgl; the height eases between the two
+  const g0 = dramaGround(p.x, p.z), wet = VEC.waterAt?.(p.x, p.z), want = wet ? p.y : Math.max(p.y, g0 + (f.minAgl ?? 22));
+  R.fpvY = cut || R.fpvY == null ? want : R.fpvY + (want - R.fpvY) * (1 - Math.exp(-dt * 2.2));
+  const y = Math.max(R.fpvY, tourTerr(p.x, p.z) + 3);
+  camera.position.set(p.x, y, p.z); camera.rotation.set(clamp(pitch, -80, 30) * rad, -yaw * rad, -R.fpvRoll * rad, 'YXZ');
+}
+
+/* ---------- a notice that stays on screen for the whole film (for example: this is a no-fly zone, the picture is simulated) ---------- */
+function dramaBanner(plan) { const b = plan.drama?.banner; if (!b) return ''; return isZh() ? b.zh : b[I18N.lang] || b.en; }
+function dramaPaint(g, W, H, R, F) {
+  const s = dramaBanner(R.plan); if (!s) return; g.save(); g.shadowBlur = 0; g.font = `700 ${H * 0.027}px ${F}`; const w = g.measureText(s).width + H * 0.05, x = W / 2 - w / 2, y = H * 0.035;
+  g.globalAlpha = 0.86; g.fillStyle = '#b3261e'; g.beginPath(); g.roundRect ? g.roundRect(x, y, w, H * 0.05, H * 0.012) : g.rect(x, y, w, H * 0.05); g.fill();
+  g.globalAlpha = 1; g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(s, W / 2, y + H * 0.026); g.restore();
+}
+function dramaDom(R) { let el = $('#dramaBanner'); const s = DRAMA.on ? dramaBanner(R.plan) : ''; if (!s) { if (el) el.hidden = true; return; } if (!el) { el = document.createElement('div'); el.id = 'dramaBanner'; $('#stage').appendChild(el); } el.hidden = false; if (el.textContent !== s) el.textContent = s; }
+
+/* ---------- the list of drama films (start screen) ---------- */
+async function showDrama() {
+  const card = openCard('drama'); card.innerHTML = `<header><h3>${esc(t('drama.title'))}</h3><button class="x" data-close aria-label="${esc(t('btn.close'))}">×</button></header><p class="mut">${esc(t('drama.lead'))}</p><div id="drList">${esc(t('story.loading'))}</div>`;
+  const idx = await tourIndex(), media = idx?.media?.items || {};
+  const rows = Object.entries(idx?.places || {}).filter(([, e]) => e.tours?.some(x => x.theme === 'drama')).sort((a, b) => (a[1].num ?? 99) - (b[1].num ?? 99));
+  const html = rows.map(([pid, e]) => { const tr = e.tours.find(x => x.theme === 'drama'), it = media[pid + '/' + tr.id], f = it && (it[I18N.lang] || (isZh() ? it['zh-Hant'] : null) || it['*'] || it.en || it['zh-Hant']);
+    const yt = f && /^[\w-]{11}$/.test(f) ? `<a class="btn sm" href="https://www.youtube.com/watch?v=${f}" target="_blank" rel="noopener">YouTube</a>` : '';
+    return `<div class="trow"><i>☀</i><div><b>${esc(tourTxt(tr.title))}</b><span>${esc(tourTxt(tr.tagline || {}))}</span></div><div class="tbtns"><button class="btn sm" data-pid="${esc(pid)}" data-tid="${esc(tr.id)}">▶</button>${yt}</div></div>`; }).join('');
+  $('#drList').innerHTML = html || `<p class="mut">${esc(t('drama.none'))}</p>`;
+  $('#drList').onclick = e => { const b = e.target.closest('[data-pid]'); if (!b) return; const p = PLACE_BY_ID.get(b.dataset.pid); if (!p) return; card.hidden = true; AUDIO.start(); startTour(p, b.dataset.tid); };
 }
 
 /* ======================= v7 · destinations sheet for a catalogue of 20,000+ places ======================= */
@@ -3564,5 +4318,5 @@ function renderResults() {
   $('#results').innerHTML = list.slice(0, 150).map(p => `<button class="res" data-id="${esc(p.id)}"><b>${esc(placeName(p))}</b><span>${esc(placeLine(p))}${o ? ' · ' + esc(fmtDist(haversine(o.lat, o.lon, p.lat, p.lon))) : ''}</span></button>`).join('') || `<p class="mut">${esc(t('menu.none'))}</p>`;
 }
 
-window.__AERO = { TOUR, CATX, SCORE, startTour, tourExit, tourPlay, tourSeek, tourAutoSet, tourSetOf, tourPlan, tourPose, tourChunks, loadCatalogueX, catxAdd, PLACES, PLACE_BY_ID, APP, SET, TERRAIN, VEC, DEM, ENV, MIS, AM, WX, WAVES, GEO, POST, TREES, BUOYS, I18N, MISSIONS, TUT, loadPlace, spawn, setTimePreset, applyWeather, startAeroAt, t, camSmooth, refineSunTime, updateAeroMission, aeroMissionAction, updateCamera, readInput, loadMissions, CREW, startCrew, crewScore, amP };
+window.__AERO = { get camera() { return camera; }, get scene() { return scene; }, THREE, DRAMA, dramaWhen, ROUTE, startRoute, routeSetOf, routeIndex, routeTrk, routeAt, routePlan, TOUR, CATX, SCORE, startTour, tourExit, tourPlay, tourSeek, tourAutoSet, tourSetOf, tourPlan, tourPose, tourChunks, loadCatalogueX, catxAdd, PLACES, PLACE_BY_ID, APP, SET, TERRAIN, VEC, DEM, ENV, MIS, AM, WX, WAVES, GEO, POST, TREES, BUOYS, I18N, MISSIONS, TUT, loadPlace, spawn, setTimePreset, applyWeather, startAeroAt, t, camSmooth, refineSunTime, updateAeroMission, aeroMissionAction, updateCamera, readInput, loadMissions, CREW, startCrew, crewScore, amP };
 boot();

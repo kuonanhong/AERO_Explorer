@@ -195,6 +195,9 @@ body[data-studio] #tourBar,body[data-studio] #tourEnd{display:none!important}
 .tbtns{display:flex;gap:5px;flex:none}
 #tvid video,#tvid iframe{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:10px;background:#000;margin:4px 0 8px}
 #catSeg{max-height:74px;overflow:auto}
+#routeHud{inset:0;width:100%;height:100%;pointer-events:none}
+#dramaBanner{position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:6;background:rgba(179,38,30,.88);color:#fff;font-weight:700;padding:6px 14px;border-radius:9px;font-size:14px;pointer-events:none;max-width:92%;text-align:center}
+#card[data-kind=routes] .trow .tbtns{flex-wrap:wrap;justify-content:flex-end;max-width:52%}
 </style>
 </head>
 <body data-controls="keys">
@@ -209,7 +212,7 @@ body[data-studio] #tourBar,body[data-studio] #tourEnd{display:none!important}
     <div id="hudInst"></div>
     <div id="warn" hidden></div>
     <div id="toast" hidden></div>
-    <div id="startOverlay" class="glass" hidden><div id="startPlace"></div><div id="startHint"></div><div class="row"><button id="startBtn" class="btn primary big" type="button"><span data-i18n="btn.start"></span> <kbd>Space</kbd></button><button id="startHelp" class="btn sm" type="button"><span data-i18n="btn.help"></span> <kbd>H</kbd></button><button id="startTour" class="btn sm" type="button">▶ <span data-i18n="tour.startBtn"></span> <kbd>B</kbd></button><a id="learningEntry" class="btn sm" href="learning/index.html" target="_blank" rel="noopener">教材與應用 · Learn ↗</a></div><a id="startLine" href="https://line.me/R/ti/p/%40530pgchc" target="_blank" rel="noopener"><span data-i18n="contact.line"></span><small data-i18n-en="contact.line"></small></a><a id="startVideos" href="https://kuonanhong.github.io/AERO_Explorer/places/" target="_blank" rel="noopener"><span data-i18n="contact.videos"></span><small data-i18n-en="contact.videos"></small></a></div>
+    <div id="startOverlay" class="glass" hidden><div id="startPlace"></div><div id="startHint"></div><div class="row"><button id="startBtn" class="btn primary big" type="button"><span data-i18n="btn.start"></span> <kbd>Space</kbd></button><button id="startHelp" class="btn sm" type="button"><span data-i18n="btn.help"></span> <kbd>H</kbd></button><button id="startTour" class="btn sm" type="button">▶ <span data-i18n="tour.startBtn"></span> <kbd>B</kbd></button><button id="startRoutes" class="btn sm" type="button">✈ <span data-i18n="route.startBtn"></span></button><button id="startDrama" class="btn sm" type="button">☀ <span data-i18n="drama.startBtn"></span></button><a id="learningEntry" class="btn sm" href="learning/index.html" target="_blank" rel="noopener">教材與應用 · Learn ↗</a></div><a id="startLine" href="https://line.me/R/ti/p/%40530pgchc" target="_blank" rel="noopener"><span data-i18n="contact.line"></span><small data-i18n-en="contact.line"></small></a><a id="startVideos" href="https://kuonanhong.github.io/AERO_Explorer/places/" target="_blank" rel="noopener"><span data-i18n="contact.videos"></span><small data-i18n-en="contact.videos"></small></a></div>
     <section id="card" hidden></section>
     <section id="help" hidden></section>
     <aside id="drawer" hidden></aside>

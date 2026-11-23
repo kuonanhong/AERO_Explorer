@@ -20,7 +20,8 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 HERE = os.path.dirname(os.path.abspath(__file__)); V7 = os.path.dirname(HERE)
 OUT = os.path.join(V7, 'tours_out'); WORK = os.path.join(HERE, 'work')
-STATE = {'jobs': [], 'opts': {}, 'done': threading.Event(), 'results': [], 'last': time.time(), 'log': None}
+STATE = {'jobs': [], 'opts': {}, 'done': threading.Event(), 'results': [], 'last': time.time(), 'log': None, 'skip': set(), 'total': 0}
+HANG = int(os.environ.get('AERO_STUDIO_HANG') or 300)   # seconds of silence from the page before the browser is restarted
 
 
 def say(*a):
@@ -85,7 +86,7 @@ class Handler(SimpleHTTPRequestHandler):
             if data.get('all'): STATE['done'].set(); return self._json({'ok': True})
             job, res = data.get('job') or {}, data.get('result') or {}; STATE['results'].append({'job': job, 'result': res})
             if res.get('error') or not res.get('name'): say(f"  ✗ {job.get('name')}: {res.get('error') or 'nothing recorded'}")
-            else: say(f"  ✓ {res['name']}  {res.get('bytes', 0) / 1e6:.0f} MB   ({len(STATE['results'])}/{len(STATE['jobs'])})")
+            else: say(f"  ✓ {res['name']}  {res.get('bytes', 0) / 1e6:.0f} MB   ({sum(1 for r in STATE['results'] if r['result'].get('name') and not r['result'].get('error'))}/{STATE['total']})")
             json.dump(STATE['results'], open(os.path.join(OUT, 'studio-status.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
             return self._json({'ok': True})
         return self._json({'ok': False}, 404)
@@ -116,6 +117,17 @@ def make_jobs(args):
             for lang in langs:
                 base = f"{k:02d}_{slug(name.get('en') or pid)}__{t['id']}__{lang}"
                 jobs.append({'place': pid, 'tour': t['id'], 'lang': lang, 'name': base, 'title': (t['title'].get('zh-Hant') or t['title'].get('en') or ''), 'k': k})
+    # route films (data/routes): two views each, R01_<name>__window__zh-Hant …
+    ridx = os.path.join(V7, 'data', 'routes', 'index.json')
+    if not args.no_routes and os.path.exists(ridx):
+        for rid, e in sorted(json.load(open(ridx, encoding='utf-8')).get('routes', {}).items(), key=lambda kv: kv[1]['num']):
+            name = e.get('name', {}); label = f"{name.get('zh-Hant', '')} {name.get('en', '')} route {rid} R{e['num']:02d}"
+            if args.only and args.only.lower() not in label.lower(): continue
+            for view in ('window', 'chase'):
+                if args.tour and args.tour != view: continue
+                for lang in langs:
+                    base = f"R{e['num']:02d}_{slug(name.get('en') or rid)}__{view}__{lang}"
+                    jobs.append({'route': rid, 'view': view, 'place': 'route-' + rid, 'tour': view, 'lang': lang, 'name': base, 'title': name.get('zh-Hant') or name.get('en') or '', 'k': 100 + e['num']})
     return jobs
 
 
@@ -162,6 +174,7 @@ def main():
     ap.add_argument('--quality', default='high', choices=['low', 'mid', 'high']); ap.add_argument('--from', dest='start', type=float, default=0, help=argparse.SUPPRESS)
     ap.add_argument('--chrome', default=''); ap.add_argument('--no-browser', action='store_true'); ap.add_argument('--no-prewarm', action='store_true', help=argparse.SUPPRESS)
     ap.add_argument('--limit', type=int, default=0, help='record at most this many tours in this run (0 = all that are left)')
+    ap.add_argument('--no-routes', action='store_true', help='leave out the route films (data/routes)')
     args = ap.parse_args()
     if not os.path.exists(os.path.join(V7, 'index.html')): sys.exit('✗ run this from the studio/ folder inside the AERO Explorer v7 package')
     os.makedirs(OUT, exist_ok=True); os.makedirs(WORK, exist_ok=True); STATE['log'] = open(os.path.join(OUT, 'studio-log.txt'), 'a', encoding='utf-8')
@@ -175,7 +188,7 @@ def main():
         say(f'{len(allj)} tour(s), {len(todo)} to record (about {len(todo) * 6.5 / 60:.1f} h)');
         if not args.list and allj: finish(args, allj)
         return
-    STATE['jobs'] = todo; STATE['opts'] = {'w': w, 'h': h, 'bps': int(args.mbps * 1e6), 'fps': args.fps, 'quality': args.quality, 'from': args.start, 'prewarm': not args.no_prewarm}
+    STATE['jobs'] = todo; STATE['total'] = len(todo); STATE['opts'] = {'w': w, 'h': h, 'bps': int(args.mbps * 1e6), 'fps': args.fps, 'quality': args.quality, 'from': args.start, 'prewarm': not args.no_prewarm}
     try: srv = ThreadingHTTPServer(('127.0.0.1', args.port), Handler)
     except OSError as e: sys.exit(f'✗ port {args.port} is busy ({e}); try --port 8778')
     threading.Thread(target=srv.serve_forever, daemon=True).start()
@@ -187,31 +200,51 @@ def main():
         except KeyboardInterrupt: return
     say(f'AERO Studio: {len(todo)} tour(s) to record, {w}x{h} at {args.mbps:g} Mbit/s — about {len(todo) * 6.5 / 60:.1f} hours. Output: {OUT}')
     if len(todo) < left: say(f'(--limit {args.limit}: {left - len(todo)} more tour(s) are left for the next run)')
-    url += f'?studio=1&lang={urllib.parse.quote(todo[0]["lang"])}'; chrome = args.chrome or find_chrome(); proc = None
-    if chrome and not args.no_browser:
-        prof = os.path.join(WORK, 'chrome-profile'); os.makedirs(prof, exist_ok=True)
-        cmd = [chrome, f'--app={url}', f'--user-data-dir={prof}', f'--window-size={w},{h + 40}', '--window-position=40,40', '--autoplay-policy=no-user-gesture-required', '--disable-background-timer-throttling',
+    url += '?studio=1&lang='; chrome = args.chrome or find_chrome(); proc = None
+    prof = os.path.join(WORK, 'chrome-profile')
+    def launch(lang):
+        os.makedirs(prof, exist_ok=True)
+        cmd = [chrome, f'--app={url}{urllib.parse.quote(lang)}', f'--user-data-dir={prof}', f'--window-size={w},{h + 40}', '--window-position=40,40', '--autoplay-policy=no-user-gesture-required', '--disable-background-timer-throttling',
                '--disable-renderer-backgrounding', '--disable-backgrounding-occluded-windows', '--disable-features=CalculateNativeWinOcclusion,MacWebContentsOcclusion,IntensiveWakeUpThrottling',
                '--disable-background-media-suspend', '--force-device-scale-factor=1', '--no-first-run',
                '--no-default-browser-check', '--disable-session-crashed-bubble', '--hide-crash-restore-bubble']
-        say('Opening', os.path.basename(chrome), '— keep that window open and visible; do not minimise it.')
-        proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        pr = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         if sys.platform == 'darwin' and shutil.which('caffeinate'):          # keep the display and the computer awake while the window is open
-            try: subprocess.Popen(['caffeinate', '-dims', '-w', str(proc.pid)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            try: subprocess.Popen(['caffeinate', '-dims', '-w', str(pr.pid)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             except Exception: pass
+        return pr
+    def close(pr):
+        if pr and pr.poll() is None:
+            try:
+                pr.terminate(); pr.wait(15)
+            except Exception:
+                try: pr.kill()
+                except Exception: pass
+    if chrome and not args.no_browser:
+        say('Opening', os.path.basename(chrome), '— keep that window open and visible; do not minimise it.')
+        proc = launch(todo[0]['lang'])
         say('A line of progress appears here every 15 seconds. The first video is ready after about 7 minutes.')
-    else: say(f'Chrome was not found. Open this address in Chrome or Edge and click once inside the page:\n  {url}')
+    else: say(f'Chrome was not found. Open this address in Chrome or Edge and click once inside the page:\n  {url}{urllib.parse.quote(todo[0]["lang"])}')
+    tries = {}
     try:
         while not STATE['done'].wait(5):
             if proc and proc.poll() is not None: say('The browser window was closed; stopping.'); break
-            if time.time() - STATE['last'] > 600: say('No sign of life from the page for 10 minutes; stopping. Run the same command again to continue.'); break
+            quiet = time.time() - STATE['last']
+            if proc and quiet > HANG:   # the page reports every 15 s: this long a silence means it has stopped (crashed tab, stuck graphics); start the browser again
+                left = [j for j in STATE['jobs'] if not recorded(j['name']) and j['name'] not in STATE['skip']]
+                if left:
+                    n = left[0]['name']; tries[n] = tries.get(n, 0) + 1
+                    if tries[n] >= 2: STATE['skip'].add(n); say(f'  ✗ {n}: the page stopped twice on this film; it is left for the next run'); left = left[1:]
+                if not left: break
+                say(f'The page has said nothing for {quiet / 60:.0f} minutes; restarting the browser and going on with {left[0]["name"]}')
+                close(proc); STATE['jobs'] = left; STATE['last'] = time.time(); proc = launch(left[0]['lang']); continue
+            if quiet > 600: say('No sign of life from the page for 10 minutes; stopping. Run the same command again to continue.'); break
     except KeyboardInterrupt: say('\nStopped. Run the same command again to continue with the remaining tours.')
-    if proc and proc.poll() is None:
-        try: proc.terminate()
-        except Exception: pass
+    close(proc)
     srv.shutdown(); finish(args, allj)
     bad = [r for r in STATE['results'] if r['result'].get('error') or not r['result'].get('name')]
     if bad: say(f'{len(bad)} tour(s) failed; run the command again to retry them.')
+    if STATE['skip']: say(f"{len(STATE['skip'])} film(s) were left out after the page stopped twice on them; run the command again to retry them.")
 
 
 if __name__ == '__main__': main()
