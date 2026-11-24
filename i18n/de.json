@@ -428,5 +428,14 @@
  "drama.title": "Licht & Drama: Sonnenaufgang, Sonnenuntergang, Sturm und Herden",
  "drama.lead": "Fünfminütige Filme mit starkem Licht und bewegter Natur über echtem Gelände und Satellitenbildern: goldene Gipfel, ein Sonnenuntergang durch einen Brückenpylon, Wolkenmeere, Schneestürme und ziehende Herden. Alle Bilder sind simuliert.",
  "drama.none": "Noch keine Licht-&-Drama-Filme.",
- "tour.theme.drama": "Licht & Drama"
+ "tour.theme.drama": "Licht & Drama",
+ "tour.theme.estate": "Wohnbau-Rundflüge",
+ "tour.theme.sports": "Spielanalyse",
+ "cat.building": "Gebäude",
+ "cat.stadium": "Stadion",
+ "tour.theme.works-overview": "Überblick",
+ "tour.theme.works-structure": "Bauweise und Technik",
+ "tour.theme.works-build": "Die Entstehung",
+ "tour.theme.works-impact": "Nutzen und Wirkung",
+ "cat.infrastructure": "Infrastruktur"
 }

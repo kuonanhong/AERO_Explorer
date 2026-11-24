@@ -343,5 +343,14 @@
  "drama.title": "Lys og drama: soloppgang, solnedgang, storm og flokker",
  "drama.lead": "Filmer på fem minutter med sterkt lys og levende natur over ekte terreng og satellittbilder: gylne tinder, en solnedgang gjennom et brotårn, skyhav, snøstormer og vandrende flokker. Alle bildene er simulerte.",
  "drama.none": "Ingen lys- og dramafilmer ennå.",
- "tour.theme.drama": "Lys og drama"
+ "tour.theme.drama": "Lys og drama",
+ "tour.theme.estate": "Boligprosjekter fra lufta",
+ "tour.theme.sports": "Kampanalyse",
+ "cat.building": "Bygning",
+ "cat.stadium": "Stadion",
+ "tour.theme.works-overview": "Oversikt",
+ "tour.theme.works-structure": "Konstruksjon og teknikk",
+ "tour.theme.works-build": "Slik ble det bygget",
+ "tour.theme.works-impact": "Bruk og betydning",
+ "cat.infrastructure": "Infrastruktur"
 }

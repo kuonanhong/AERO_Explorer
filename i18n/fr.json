@@ -428,5 +428,14 @@
  "drama.title": "Lumière et drame : lever, coucher, tempête et troupeaux",
  "drama.lead": "Des films de cinq minutes de lumière intense et de nature en mouvement, au-dessus du relief réel et d’images satellite : sommets dorés, coucher de soleil à travers la tour d’un pont, mers de nuages, blizzards et troupeaux. Toutes les images sont simulées.",
  "drama.none": "Aucun film « lumière et drame » pour l’instant.",
- "tour.theme.drama": "Lumière et drame"
+ "tour.theme.drama": "Lumière et drame",
+ "tour.theme.estate": "Visites résidentielles",
+ "tour.theme.sports": "Analyse de matchs",
+ "cat.building": "Bâtiment",
+ "cat.stadium": "Stade",
+ "tour.theme.works-overview": "Présentation de l'ouvrage",
+ "tour.theme.works-structure": "Structure et technique",
+ "tour.theme.works-build": "La construction",
+ "tour.theme.works-impact": "Usage et impact",
+ "cat.infrastructure": "Infrastructure"
 }

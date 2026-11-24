@@ -343,5 +343,14 @@
  "drama.title": "Liwanag at drama: pagsikat, paglubog, bagyo at kawan",
  "drama.lead": "Limang-minutong pelikula ng matinding liwanag at kalikasang gumagalaw, sa ibabaw ng tunay na lupain at mga larawang satellite: gintong tuktok, paglubog ng araw sa tore ng tulay, dagat ng ulap, bagyong niyebe at mga kawang lumilipat. Simulasyon ang lahat ng larawan.",
  "drama.none": "Wala pang pelikula ng liwanag at drama.",
- "tour.theme.drama": "Liwanag at drama"
+ "tour.theme.drama": "Liwanag at drama",
+ "tour.theme.estate": "Paglilibot sa mga tirahan",
+ "tour.theme.sports": "Pagsusuri ng laban",
+ "cat.building": "Gusali",
+ "cat.stadium": "Istadyum",
+ "tour.theme.works-overview": "Pangkalahatang-ideya ng proyekto",
+ "tour.theme.works-structure": "Istruktura at teknolohiya",
+ "tour.theme.works-build": "Paano ito itinayo",
+ "tour.theme.works-impact": "Gamit at epekto",
+ "cat.infrastructure": "Imprastruktura"
 }

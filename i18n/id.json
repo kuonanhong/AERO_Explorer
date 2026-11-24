@@ -343,5 +343,14 @@
  "drama.title": "Cahaya & drama: matahari terbit, terbenam, badai, dan kawanan",
  "drama.lead": "Film lima menit tentang cahaya kuat dan alam yang bergerak, di atas medan nyata dan citra satelit: puncak keemasan, matahari terbenam menembus menara jembatan, lautan awan, badai salju, dan kawanan yang bermigrasi. Semua gambar adalah simulasi.",
  "drama.none": "Belum ada film cahaya & drama.",
- "tour.theme.drama": "Cahaya & drama"
+ "tour.theme.drama": "Cahaya & drama",
+ "tour.theme.estate": "Tur proyek hunian",
+ "tour.theme.sports": "Analisis pertandingan",
+ "cat.building": "Bangunan",
+ "cat.stadium": "Stadion",
+ "tour.theme.works-overview": "Gambaran proyek",
+ "tour.theme.works-structure": "Struktur dan teknologi",
+ "tour.theme.works-build": "Proses pembangunan",
+ "tour.theme.works-impact": "Fungsi dan dampak",
+ "cat.infrastructure": "Infrastruktur"
 }

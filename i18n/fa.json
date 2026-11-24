@@ -343,5 +343,14 @@
  "drama.title": "نور و درام: طلوع، غروب، طوفان و گله‌ها",
  "drama.lead": "فیلم‌های پنج‌دقیقه‌ای از نور قوی و طبیعت در حرکت، بر فراز عوارض واقعی زمین و تصاویر ماهواره‌ای: قله‌های طلایی، غروب از میان برج یک پل، دریای ابر، کولاک و گله‌های مهاجر. همهٔ تصاویر شبیه‌سازی است.",
  "drama.none": "هنوز فیلم نور و درامی وجود ندارد.",
- "tour.theme.drama": "نور و درام"
+ "tour.theme.drama": "نور و درام",
+ "tour.theme.estate": "گشت هوایی پروژه‌های مسکونی",
+ "tour.theme.sports": "تحلیل مسابقه",
+ "cat.building": "ساختمان",
+ "cat.stadium": "ورزشگاه",
+ "tour.theme.works-overview": "نمای کلی پروژه",
+ "tour.theme.works-structure": "سازه و فناوری",
+ "tour.theme.works-build": "چگونه ساخته شد",
+ "tour.theme.works-impact": "کاربرد و اثر",
+ "cat.infrastructure": "زیرساخت"
 }

@@ -428,5 +428,14 @@
  "drama.title": "Light & drama: sunrise, sunset, storm and herds",
  "drama.lead": "Five-minute films of strong light and moving nature, flown over real terrain and satellite imagery: golden peaks, a sunset through a bridge tower, seas of clouds, blizzards and herds on the move. Every picture is simulated.",
  "drama.none": "No light & drama films yet.",
- "tour.theme.drama": "Light & drama"
+ "tour.theme.drama": "Light & drama",
+ "tour.theme.estate": "Residence tours",
+ "tour.theme.sports": "Match analysis",
+ "cat.building": "Building",
+ "cat.stadium": "Stadium",
+ "tour.theme.works-overview": "Project overview",
+ "tour.theme.works-structure": "Structure & technology",
+ "tour.theme.works-build": "How it was built",
+ "tour.theme.works-impact": "Use & impact",
+ "cat.infrastructure": "Infrastructure"
 }

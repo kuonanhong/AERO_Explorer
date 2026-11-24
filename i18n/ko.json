@@ -428,5 +428,14 @@
  "drama.title": "빛과 그림자의 드라마: 일출, 일몰, 폭풍과 동물 떼",
  "drama.lead": "실제 지형과 위성 영상 위를 나는 5분 영상: 금빛 봉우리, 다리 탑 사이로 지는 해, 운해, 눈보라, 이동하는 동물 떼. 모든 장면은 시뮬레이션입니다.",
  "drama.none": "아직 빛과 그림자의 드라마 영상이 없습니다.",
- "tour.theme.drama": "빛과 그림자의 드라마"
+ "tour.theme.drama": "빛과 그림자의 드라마",
+ "tour.theme.estate": "주거 단지 항공 투어",
+ "tour.theme.sports": "명경기 항공 분석",
+ "cat.building": "건축",
+ "cat.stadium": "경기장",
+ "tour.theme.works-overview": "공사 개요",
+ "tour.theme.works-structure": "구조와 기술",
+ "tour.theme.works-build": "건설 과정",
+ "tour.theme.works-impact": "역할과 영향",
+ "cat.infrastructure": "공공 인프라"
 }

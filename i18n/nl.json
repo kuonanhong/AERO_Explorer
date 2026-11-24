@@ -343,5 +343,14 @@
  "drama.title": "Licht & drama: zonsopkomst, zonsondergang, storm en kuddes",
  "drama.lead": "Films van vijf minuten met sterk licht en bewegende natuur, boven echt terrein en satellietbeelden: gouden toppen, een zonsondergang door een brugpijler, wolkenzeeën, sneeuwstormen en trekkende kuddes. Alle beelden zijn gesimuleerd.",
  "drama.none": "Nog geen licht-&-dramafilms.",
- "tour.theme.drama": "Licht & drama"
+ "tour.theme.drama": "Licht & drama",
+ "tour.theme.estate": "Woonprojecten van boven",
+ "tour.theme.sports": "Wedstrijdanalyse",
+ "cat.building": "Gebouw",
+ "cat.stadium": "Stadion",
+ "tour.theme.works-overview": "Overzicht van het project",
+ "tour.theme.works-structure": "Constructie en techniek",
+ "tour.theme.works-build": "Hoe het werd gebouwd",
+ "tour.theme.works-impact": "Gebruik en impact",
+ "cat.infrastructure": "Infrastructuur"
 }

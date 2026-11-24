@@ -343,5 +343,14 @@
  "drama.title": "Světlo a drama: východ, západ, bouře a stáda",
  "drama.lead": "Pětiminutové filmy o silném světle a živé přírodě nad skutečným terénem a satelitními snímky: zlaté vrcholy, západ slunce skrz pylon mostu, moře mraků, vánice a stáda. Všechny záběry jsou simulované.",
  "drama.none": "Zatím žádné filmy Světlo a drama.",
- "tour.theme.drama": "Světlo a drama"
+ "tour.theme.drama": "Světlo a drama",
+ "tour.theme.estate": "Obytné soubory z výšky",
+ "tour.theme.sports": "Rozbor zápasů",
+ "cat.building": "Budova",
+ "cat.stadium": "Stadion",
+ "tour.theme.works-overview": "Přehled stavby",
+ "tour.theme.works-structure": "Konstrukce a technika",
+ "tour.theme.works-build": "Jak se stavělo",
+ "tour.theme.works-impact": "Využití a dopad",
+ "cat.infrastructure": "Infrastruktura"
 }

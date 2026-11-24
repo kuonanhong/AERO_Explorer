@@ -343,5 +343,14 @@
  "drama.title": "אור ודרמה: זריחה, שקיעה, סערה ועדרים",
  "drama.lead": "סרטים בני חמש דקות על אור חזק וטבע בתנועה, מעל פני שטח אמיתיים ותצלומי לוויין: פסגות מוזהבות, שקיעה דרך מגדל של גשר, ים של עננים, סופות שלגים ועדרים נודדים. כל התמונות מדומות.",
  "drama.none": "עדיין אין סרטי אור ודרמה.",
- "tour.theme.drama": "אור ודרמה"
+ "tour.theme.drama": "אור ודרמה",
+ "tour.theme.estate": "סיורי מגורים מהאוויר",
+ "tour.theme.sports": "ניתוח משחקים",
+ "cat.building": "בניין",
+ "cat.stadium": "אצטדיון",
+ "tour.theme.works-overview": "סקירת הפרויקט",
+ "tour.theme.works-structure": "מבנה וטכנולוגיה",
+ "tour.theme.works-build": "איך זה נבנה",
+ "tour.theme.works-impact": "שימוש והשפעה",
+ "cat.infrastructure": "תשתיות"
 }

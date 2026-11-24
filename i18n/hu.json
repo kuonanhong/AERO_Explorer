@@ -343,5 +343,14 @@
  "drama.title": "Fény és dráma: napkelte, naplemente, vihar és csordák",
  "drama.lead": "Ötperces filmek erős fényről és mozgó természetről valódi domborzat és műholdképek felett: arany csúcsok, naplemente egy hídpilonon át, felhőtengerek, hóviharok és vándorló csordák. Minden kép szimuláció.",
  "drama.none": "Még nincsenek Fény és dráma filmek.",
- "tour.theme.drama": "Fény és dráma"
+ "tour.theme.drama": "Fény és dráma",
+ "tour.theme.estate": "Lakóépületek madártávlatból",
+ "tour.theme.sports": "Mérkőzéselemzés",
+ "cat.building": "Épület",
+ "cat.stadium": "Stadion",
+ "tour.theme.works-overview": "Áttekintés",
+ "tour.theme.works-structure": "Szerkezet és technika",
+ "tour.theme.works-build": "Hogyan épült",
+ "tour.theme.works-impact": "Szerep és hatás",
+ "cat.infrastructure": "Infrastruktúra"
 }

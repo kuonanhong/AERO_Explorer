@@ -343,5 +343,14 @@
  "drama.title": "Lumină și dramă: răsărit, apus, furtună și turme",
  "drama.lead": "Filme de cinci minute cu lumină puternică și natură în mișcare, deasupra reliefului real și a imaginilor din satelit: piscuri aurii, un apus prin pilonul unui pod, mări de nori, viscole și turme. Toate imaginile sunt simulate.",
  "drama.none": "Încă nu există filme Lumină și dramă.",
- "tour.theme.drama": "Lumină și dramă"
+ "tour.theme.drama": "Lumină și dramă",
+ "tour.theme.estate": "Ansambluri rezidențiale de sus",
+ "tour.theme.sports": "Analiza meciurilor",
+ "cat.building": "Clădire",
+ "cat.stadium": "Stadion",
+ "tour.theme.works-overview": "Prezentare generală",
+ "tour.theme.works-structure": "Structură și tehnică",
+ "tour.theme.works-build": "Cum a fost construit",
+ "tour.theme.works-impact": "Rol și impact",
+ "cat.infrastructure": "Infrastructură"
 }

@@ -343,5 +343,14 @@
  "drama.title": "Valo ja draama: auringonnousu, -lasku, myrsky ja laumat",
  "drama.lead": "Viiden minuutin elokuvia voimakkaasta valosta ja elävästä luonnosta todellisen maaston ja satelliittikuvien yllä: kultaiset huiput, auringonlasku sillan pylonin läpi, pilvimeret, lumimyrskyt ja vaeltavat laumat. Kaikki kuvat ovat simulaatiota.",
  "drama.none": "Valo ja draama -elokuvia ei vielä ole.",
- "tour.theme.drama": "Valo ja draama"
+ "tour.theme.drama": "Valo ja draama",
+ "tour.theme.estate": "Asuinkohteet ilmasta",
+ "tour.theme.sports": "Otteluanalyysi",
+ "cat.building": "Rakennus",
+ "cat.stadium": "Stadion",
+ "tour.theme.works-overview": "Hankkeen yleiskuva",
+ "tour.theme.works-structure": "Rakenne ja tekniikka",
+ "tour.theme.works-build": "Näin se rakennettiin",
+ "tour.theme.works-impact": "Käyttö ja vaikutus",
+ "cat.infrastructure": "Infrastruktuuri"
 }

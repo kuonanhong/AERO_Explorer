@@ -343,5 +343,14 @@
  "drama.title": "Mwanga na drama: macheo, machweo, dhoruba na makundi",
  "drama.lead": "Filamu za dakika tano za mwanga mkali na asili inayosonga, juu ya ardhi halisi na picha za setilaiti: vilele vya dhahabu, machweo kupitia mnara wa daraja, bahari ya mawingu, dhoruba za theluji na makundi yanayohama. Picha zote ni za kuigwa.",
  "drama.none": "Bado hakuna filamu za mwanga na drama.",
- "tour.theme.drama": "Mwanga na drama"
+ "tour.theme.drama": "Mwanga na drama",
+ "tour.theme.estate": "Ziara za miradi ya makazi",
+ "tour.theme.sports": "Uchambuzi wa mechi",
+ "cat.building": "Jengo",
+ "cat.stadium": "Uwanja",
+ "tour.theme.works-overview": "Muhtasari wa mradi",
+ "tour.theme.works-structure": "Muundo na teknolojia",
+ "tour.theme.works-build": "Jinsi ulivyojengwa",
+ "tour.theme.works-impact": "Matumizi na athari",
+ "cat.infrastructure": "Miundombinu"
 }

@@ -343,5 +343,14 @@
  "drama.title": "Işık ve dram: gün doğumu, gün batımı, fırtına ve sürüler",
  "drama.lead": "Gerçek arazi ve uydu görüntüleri üzerinde uçan beş dakikalık filmler: altın tepeler, bir köprü kulesinden geçen gün batımı, bulut denizleri, tipiler ve göç eden sürüler. Tüm görüntüler simülasyondur.",
  "drama.none": "Henüz Işık ve dram filmi yok.",
- "tour.theme.drama": "Işık ve dram"
+ "tour.theme.drama": "Işık ve dram",
+ "tour.theme.estate": "Konut projeleri turu",
+ "tour.theme.sports": "Maç analizi",
+ "cat.building": "Bina",
+ "cat.stadium": "Stadyum",
+ "tour.theme.works-overview": "Projeye genel bakış",
+ "tour.theme.works-structure": "Yapı ve teknik",
+ "tour.theme.works-build": "Nasıl inşa edildi",
+ "tour.theme.works-impact": "Kullanım ve etki",
+ "cat.infrastructure": "Altyapı"
 }

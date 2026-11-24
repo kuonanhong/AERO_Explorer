@@ -343,5 +343,14 @@
  "drama.title": "Ljus och drama: soluppgång, solnedgång, storm och hjordar",
  "drama.lead": "Femminutersfilmer om starkt ljus och levande natur över verklig terräng och satellitbilder: gyllene toppar, en solnedgång genom ett brotorn, molnhav, snöstormar och vandrande hjordar. Alla bilder är simulerade.",
  "drama.none": "Inga ljus- och dramafilmer ännu.",
- "tour.theme.drama": "Ljus och drama"
+ "tour.theme.drama": "Ljus och drama",
+ "tour.theme.estate": "Bostadsprojekt från ovan",
+ "tour.theme.sports": "Matchanalys",
+ "cat.building": "Byggnad",
+ "cat.stadium": "Arena",
+ "tour.theme.works-overview": "Översikt",
+ "tour.theme.works-structure": "Konstruktion och teknik",
+ "tour.theme.works-build": "Så byggdes det",
+ "tour.theme.works-impact": "Användning och påverkan",
+ "cat.infrastructure": "Infrastruktur"
 }

@@ -343,5 +343,14 @@
  "drama.title": "Luce e dramma: alba, tramonto, tempesta e mandrie",
  "drama.lead": "Film di cinque minuti di luce intensa e natura in movimento, sopra rilievi reali e immagini satellitari: vette dorate, un tramonto attraverso la torre di un ponte, mari di nuvole, bufere e mandrie. Tutte le immagini sono simulate.",
  "drama.none": "Ancora nessun film di luce e dramma.",
- "tour.theme.drama": "Luce e dramma"
+ "tour.theme.drama": "Luce e dramma",
+ "tour.theme.estate": "Tour residenziali",
+ "tour.theme.sports": "Analisi delle partite",
+ "cat.building": "Edificio",
+ "cat.stadium": "Stadio",
+ "tour.theme.works-overview": "Panoramica dell'opera",
+ "tour.theme.works-structure": "Struttura e tecnica",
+ "tour.theme.works-build": "Come è stata costruita",
+ "tour.theme.works-impact": "Uso e impatto",
+ "cat.infrastructure": "Infrastruttura"
 }

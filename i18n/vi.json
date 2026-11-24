@@ -343,5 +343,14 @@
  "drama.title": "Ánh sáng và kịch tính: bình minh, hoàng hôn, bão tuyết và đàn thú",
  "drama.lead": "Những phim năm phút về ánh sáng mạnh và thiên nhiên chuyển động, bay trên địa hình thật và ảnh vệ tinh: đỉnh núi vàng rực, hoàng hôn xuyên qua tháp cầu, biển mây, bão tuyết và đàn thú di cư. Mọi hình ảnh đều là mô phỏng.",
  "drama.none": "Chưa có phim ánh sáng và kịch tính nào.",
- "tour.theme.drama": "Ánh sáng và kịch tính"
+ "tour.theme.drama": "Ánh sáng và kịch tính",
+ "tour.theme.estate": "Tham quan dự án nhà ở từ trên cao",
+ "tour.theme.sports": "Phân tích trận đấu",
+ "cat.building": "Tòa nhà",
+ "cat.stadium": "Sân vận động",
+ "tour.theme.works-overview": "Tổng quan công trình",
+ "tour.theme.works-structure": "Kết cấu và kỹ thuật",
+ "tour.theme.works-build": "Quá trình xây dựng",
+ "tour.theme.works-impact": "Công năng và tác động",
+ "cat.infrastructure": "Hạ tầng"
 }

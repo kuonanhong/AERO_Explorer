@@ -343,5 +343,14 @@
  "drama.title": "আলো ও নাটক: সূর্যোদয়, সূর্যাস্ত, ঝড় ও পশুর দল",
  "drama.lead": "বাস্তব ভূপ্রকৃতি ও উপগ্রহ চিত্রের ওপর পাঁচ মিনিটের ছবি: সোনালি চূড়া, সেতুর টাওয়ারের ফাঁক দিয়ে সূর্যাস্ত, মেঘের সমুদ্র, তুষারঝড় আর চলমান পশুর দল। সব দৃশ্যই সিমুলেশন।",
  "drama.none": "এখনো আলো ও নাটকের কোনো ছবি নেই।",
- "tour.theme.drama": "আলো ও নাটক"
+ "tour.theme.drama": "আলো ও নাটক",
+ "tour.theme.estate": "আবাসন প্রকল্পের আকাশ ভ্রমণ",
+ "tour.theme.sports": "ম্যাচ বিশ্লেষণ",
+ "cat.building": "ভবন",
+ "cat.stadium": "স্টেডিয়াম",
+ "tour.theme.works-overview": "প্রকল্পের পরিচিতি",
+ "tour.theme.works-structure": "কাঠামো ও প্রযুক্তি",
+ "tour.theme.works-build": "কীভাবে তৈরি হলো",
+ "tour.theme.works-impact": "ব্যবহার ও প্রভাব",
+ "cat.infrastructure": "অবকাঠামো"
 }

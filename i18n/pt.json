@@ -343,5 +343,14 @@
  "drama.title": "Luz e drama: nascer do sol, pôr do sol, tempestade e manadas",
  "drama.lead": "Filmes de cinco minutos de luz intensa e natureza em movimento, sobre relevo real e imagens de satélite: picos dourados, um pôr do sol através da torre de uma ponte, mares de nuvens, nevascas e manadas. Todas as imagens são simuladas.",
  "drama.none": "Ainda não há filmes de luz e drama.",
- "tour.theme.drama": "Luz e drama"
+ "tour.theme.drama": "Luz e drama",
+ "tour.theme.estate": "Tours residenciais",
+ "tour.theme.sports": "Análise de partidas",
+ "cat.building": "Edifício",
+ "cat.stadium": "Estádio",
+ "tour.theme.works-overview": "Visão geral da obra",
+ "tour.theme.works-structure": "Estrutura e técnica",
+ "tour.theme.works-build": "Como foi construída",
+ "tour.theme.works-impact": "Uso e impacto",
+ "cat.infrastructure": "Infraestrutura"
 }

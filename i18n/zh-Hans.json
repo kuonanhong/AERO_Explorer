@@ -428,5 +428,14 @@
  "drama.title": "光影戏剧：日出、日落、风雪与兽群",
  "drama.lead": "在真实地形与卫星影像上飞行的五分钟影片：金色山巅、穿过桥塔的夕阳、云海、暴风雪与奔腾的兽群。画面全部是电脑拟真。",
  "drama.none": "还没有光影戏剧影片。",
- "tour.theme.drama": "光影戏剧"
+ "tour.theme.drama": "光影戏剧",
+ "tour.theme.estate": "楼盘航拍导览",
+ "tour.theme.sports": "赛事航拍解析",
+ "cat.building": "建筑",
+ "cat.stadium": "体育场",
+ "tour.theme.works-overview": "工程概要",
+ "tour.theme.works-structure": "结构与技术",
+ "tour.theme.works-build": "施工历程",
+ "tour.theme.works-impact": "功能与影响",
+ "cat.infrastructure": "公共工程"
 }

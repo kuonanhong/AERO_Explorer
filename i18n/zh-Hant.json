@@ -428,5 +428,14 @@
  "drama.title": "光影戲劇：日出、日落、風雪與獸群",
  "drama.lead": "在真實地形與衛星影像上飛行的五分鐘影片：金色山巔、穿過橋塔的夕陽、雲海、暴風雪與奔騰的獸群。畫面全部是電腦擬真。",
  "drama.none": "還沒有光影戲劇影片。",
- "tour.theme.drama": "光影戲劇"
+ "tour.theme.drama": "光影戲劇",
+ "tour.theme.estate": "建案空拍導覽",
+ "tour.theme.sports": "賽事空拍解析",
+ "cat.building": "建築",
+ "cat.stadium": "體育場",
+ "tour.theme.works-overview": "工程概要",
+ "tour.theme.works-structure": "結構與技術",
+ "tour.theme.works-build": "施工歷程",
+ "tour.theme.works-impact": "功能與影響",
+ "cat.infrastructure": "公共工程"
 }

@@ -343,5 +343,14 @@
  "drama.title": "Światło i dramat: wschód, zachód, burza i stada",
  "drama.lead": "Pięciominutowe filmy o mocnym świetle i żywej przyrodzie nad prawdziwym terenem i zdjęciami satelitarnymi: złote szczyty, zachód słońca przez pylon mostu, morza chmur, zamiecie i stada. Wszystkie obrazy są symulowane.",
  "drama.none": "Nie ma jeszcze filmów „Światło i dramat”.",
- "tour.theme.drama": "Światło i dramat"
+ "tour.theme.drama": "Światło i dramat",
+ "tour.theme.estate": "Osiedla z lotu ptaka",
+ "tour.theme.sports": "Analiza meczów",
+ "cat.building": "Budynek",
+ "cat.stadium": "Stadion",
+ "tour.theme.works-overview": "Przegląd inwestycji",
+ "tour.theme.works-structure": "Konstrukcja i technika",
+ "tour.theme.works-build": "Jak to zbudowano",
+ "tour.theme.works-impact": "Rola i wpływ",
+ "cat.infrastructure": "Infrastruktura"
 }

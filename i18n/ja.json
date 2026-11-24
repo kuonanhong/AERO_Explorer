@@ -428,5 +428,14 @@
  "drama.title": "光と影のドラマ：日の出、日没、嵐と群れ",
  "drama.lead": "実際の地形と衛星画像の上を飛ぶ5分間の映像。金色に染まる山頂、橋の塔を抜ける夕日、雲海、吹雪、移動する動物の群れ。映像はすべてシミュレーションです。",
  "drama.none": "光と影のドラマはまだありません。",
- "tour.theme.drama": "光と影のドラマ"
+ "tour.theme.drama": "光と影のドラマ",
+ "tour.theme.estate": "住宅プロジェクト空撮ガイド",
+ "tour.theme.sports": "名勝負の空撮解説",
+ "cat.building": "建築",
+ "cat.stadium": "スタジアム",
+ "tour.theme.works-overview": "工事の概要",
+ "tour.theme.works-structure": "構造と技術",
+ "tour.theme.works-build": "建設の歩み",
+ "tour.theme.works-impact": "役割と影響",
+ "cat.infrastructure": "公共インフラ"
 }

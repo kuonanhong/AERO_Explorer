@@ -428,5 +428,14 @@
  "drama.title": "Luz y drama: amanecer, atardecer, tormenta y manadas",
  "drama.lead": "Películas de cinco minutos de luz intensa y naturaleza en movimiento, sobre relieve real e imágenes de satélite: cumbres doradas, un atardecer a través de la torre de un puente, mares de nubes, ventiscas y manadas. Todas las imágenes son simuladas.",
  "drama.none": "Todavía no hay películas de luz y drama.",
- "tour.theme.drama": "Luz y drama"
+ "tour.theme.drama": "Luz y drama",
+ "tour.theme.estate": "Recorridos residenciales",
+ "tour.theme.sports": "Análisis de partidos",
+ "cat.building": "Edificio",
+ "cat.stadium": "Estadio",
+ "tour.theme.works-overview": "Visión general de la obra",
+ "tour.theme.works-structure": "Estructura y técnica",
+ "tour.theme.works-build": "Cómo se construyó",
+ "tour.theme.works-impact": "Uso e impacto",
+ "cat.infrastructure": "Infraestructura"
 }
