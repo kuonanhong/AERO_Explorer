@@ -3167,7 +3167,7 @@ function tourSeek(tt) { const R = TOUR.run; if (!R || R.rec && TOUR.rec) return;
    takes over from where the drone is, like a car's driver assist: the film goes on from the point of its flight nearest to the drone
    (ahead in the film, not back), and the drone curves from its own position and speed onto that flight over a few seconds, with no
    cut and no jump. Never in a recording. */
-const TOUR_TAKE = new Set(['KeyW', 'KeyS', 'KeyA', 'KeyD', 'ArrowUp', 'ArrowDown', 'KeyQ', 'KeyE', 'PageUp', 'PageDown']), TOUR_FLY = new Set([...TOUR_TAKE, 'ArrowLeft', 'ArrowRight']), TOUR_IDLE = 3000;
+const TOUR_TAKE = new Set(['KeyW', 'KeyS', 'KeyA', 'KeyD', 'ArrowUp', 'ArrowDown', 'KeyQ', 'KeyE', 'PageUp', 'PageDown']), TOUR_FLY = new Set([...TOUR_TAKE, 'ArrowLeft', 'ArrowRight']), TOUR_IDLE = 3000, TOUR_FIRST = 8000;
 const tourShotAt = (R, t) => R.plan.shots.find(x => t >= x.t0 && t < x.t0 + x.dur) || R.plan.shots[R.plan.shots.length - 1];
 function tourVel(R, t, out) {   // the film camera's velocity (m/s) at film time t, from its shot's own path
   out.x = out.y = out.z = 0; const s = tourShotAt(R, t); if (!s || !(s.dur > 0)) return out;
@@ -3203,9 +3203,10 @@ function tourGiveBack(R) {
 }
 function tourManualFrame(R) {   // returns true while the viewer still flies
   const m = R.manual, now = performance.now(), L = STICK.L, Rs = STICK.R, gp = gamepad();
-  if (KEYS.size || PADKEYS.size || Math.hypot(L.x, L.y, Rs.x, Rs.y) > 0.04 || gp?.axes?.some(a => Math.abs(a) > 0.2)) m.last = now;
-  if (now - m.last > TOUR_IDLE) { tourGiveBack(R); return false; }
-  const left = Math.ceil((TOUR_IDLE - (now - m.last)) / 1000), b = $('#tourBar [data-tb="take"]'); if (b) { const tx = now - m.last > 600 ? (isZh() ? `↩ 自動駕駛 ${left}…` : `↩ Autopilot in ${left}…`) : (isZh() ? '↩ 回到導覽' : '↩ Back to film'); if (b.textContent !== tx) b.textContent = tx; }
+  if (KEYS.size || PADKEYS.size || Math.hypot(L.x, L.y, Rs.x, Rs.y) > 0.04 || gp?.axes?.some(a => Math.abs(a) > 0.2)) { m.last = now; m.moved = true; }
+  const idle = m.moved ? TOUR_IDLE : TOUR_FIRST;   // before the first touch of a stick (or key) the viewer gets longer: a thumb has to travel from the button to a stick
+  if (now - m.last > idle) { tourGiveBack(R); return false; }
+  const left = Math.ceil((idle - (now - m.last)) / 1000), b = $('#tourBar [data-tb="take"]'); if (b) { const tx = now - m.last > 600 ? (isZh() ? `↩ 自動駕駛 ${left}…` : `↩ Autopilot in ${left}…`) : (isZh() ? '↩ 回到導覽' : '↩ Back to film'); if (b.textContent !== tx) b.textContent = tx; }
   R.cap = ''; R.cap2 = ''; R.titleA = 0; R.credA = 0; tourDom(R); if (!TOUR.studio && APP.frameN % 2 === 0) thudDom(R); return true;
 }
 function tourJoinBlend(R) {   // the drone's position and speed at hand-back flow into the film's moving camera (cubic Hermite), its view turns with it
@@ -3310,10 +3311,11 @@ function tourOverlay(show) {
 }
 function tourBar() {
   const R = TOUR.run, b = k => $(`#tourBar [data-tb="${k}"]`); if (!R || !b('play')) return;
-  b('play').innerHTML = svg(R.playing ? 'pause' : 'play'); b('cc').textContent = 'CC ' + tourCapLabel(); b('voice').textContent = (TOUR.voice ? '🔊 ' : '🔇 ') + t('tour.voice'); b('music').textContent = (TOUR.music ? '♪ ' : '♪✕ ') + t('tour.music'); if (b('hud')) b('hud').textContent = thudLabel();
+  b('play').innerHTML = svg(R.playing ? 'pause' : 'play'); const lab = (k, ic, w) => { const h = esc(ic) + '<span class="tbw">' + esc(w) + '</span>'; if (b(k).innerHTML !== h) b(k).innerHTML = h; };   // the word folds away on a narrow screen
+  lab('cc', 'CC', ' ' + tourCapLabel()); lab('voice', TOUR.voice ? '🔊' : '🔇', ' ' + t('tour.voice')); lab('music', TOUR.music ? '♪' : '♪✕', ' ' + t('tour.music')); if (b('hud')) lab('hud', THUD.mode === 'off' ? '○' : '◉', ' ' + thudWord());
   if (b('yt')) { const m = R.plan.route ? tourMedia('route-' + R.plan.route.id, R.plan.view) : tourMedia(R.plan.place?.id, R.plan.id); b('yt').hidden = !m?.yt || !!TOUR.rec; if (m?.yt) { b('yt').href = 'https://www.youtube.com/watch?v=' + m.yt; b('yt').title = isZh() ? '在 YouTube 看這部影片' : 'Watch this film on YouTube'; } }
   if (b('take')) { b('take').textContent = R.manual ? (isZh() ? '↩ 回到導覽' : '↩ Back to film') : (isZh() ? '🕹 接手飛行' : '🕹 Fly it'); b('take').hidden = !!R.plan.route || !!TOUR.rec; b('take').classList.toggle('on', !!R.manual); }
-  b('rec').textContent = TOUR.rec ? '■ ' + t('tour.recording') : '⏺ ' + t('tour.record'); b('rec').classList.toggle('on', !!TOUR.rec); b('cc').hidden = !!R.plan.auto && false;
+  lab('rec', TOUR.rec ? '■' : '⏺', ' ' + (TOUR.rec ? t('tour.recording') : t('tour.record'))); b('rec').classList.toggle('on', !!TOUR.rec); b('cc').hidden = !!R.plan.auto && false;
 }
 function tourAct(a) {
   const R = TOUR.run; if (!R) return; const sh = R.plan.shots;
@@ -5373,7 +5375,7 @@ function thudPaint(g, W, H, R, dom) {
   const plan = R.plan; if (plan.route || !plan.place) return; if (dom && !THUD.on) return; const mini = !dom || THUD.mode === 'mini';
   const Hd = R.hud || thudPrep(R); if (!Hd.ready) return;
   const a = clamp(1 - Math.max(R.titleA || 0, R.credA || 0) * 1.15, 0, 1) * (1 - (R.fade || 0) * 0.6); if (a < 0.02) return;
-  const U = dom ? Math.min(H, W * 0.5625) : H, pad = U * 0.022, zh = isZh() || !dom, en = I18N.lang !== 'en';   // the recording is Chinese with English below
+  const U = dom ? (W < H ? W * 1.15 : Math.min(H * 1.35, W * 0.5625)) : H, pad = U * 0.022, zh = isZh() || !dom, en = I18N.lang !== 'en';   // the recording is Chinese with English below
   const cam = camera.position, [lat, lon] = toLatLon(cam.x, cam.z), gnd = Math.max(DEM.heightAt(cam.x, cam.z), 0), agl = Math.max(0, cam.y - gnd), hdg = ((-camera.rotation.y * deg) % 360 + 360) % 360;
   const now = R.t; Hd.spd = R.manual ? (APP.veh?.vel?.length() || 0) : thudSpeed(R);   // flown by the viewer: the drone's own speed
   let depth = 0; const sv = () => { g.save(); depth++; }, rs = () => { if (depth > 0) { g.restore(); depth--; } };
@@ -5560,7 +5562,8 @@ function thudDom(R) {
   }
 }
 function thudToggle() { THUD.mode = THUD_MODES[(THUD_MODES.indexOf(THUD.mode) + 1) % THUD_MODES.length]; LS.set('aero7:thud', THUD.mode); const R = TOUR.run; if (R) thudDom(R); }
-const thudLabel = () => (THUD.mode === 'off' ? '○ ' : '◉ ') + (isZh() ? '儀表：' + { mini: '精簡', full: '完整', off: '關' }[THUD.mode] : 'Gauges: ' + { mini: 'compact', full: 'full', off: 'off' }[THUD.mode]);
+const thudLabel = () => (THUD.mode === 'off' ? '○ ' : '◉ ') + thudWord();
+const thudWord = () => isZh() ? '儀表：' + { mini: '精簡', full: '完整', off: '關' }[THUD.mode] : 'Gauges: ' + { mini: 'compact', full: 'full', off: 'off' }[THUD.mode];
 
 window.__AERO = { get camera() { return camera; }, get scene() { return scene; }, get TERRAIN_U() { return TERRAIN_U; }, THREE, DRAMA, dramaWhen, ROUTE, startRoute, routeSetOf, routeIndex, routeTrk, routeAt, routePlan, TOUR, CATX, SCORE, THUD, thudPaint, tourPaint, startTour, tourExit, tourPlay, tourSeek, tourAutoSet, tourSetOf, tourPlan, tourPose, tourChunks, loadCatalogueX, catxAdd, PLACES, PLACE_BY_ID, APP, SET, TERRAIN, VEC, DEM, ENV, MIS, AM, WX, WAVES, GEO, POST, TREES, BUOYS, I18N, MISSIONS, TUT, loadPlace, spawn, setTimePreset, applyWeather, startAeroAt, t, camSmooth, refineSunTime, updateAeroMission, aeroMissionAction, updateCamera, readInput, loadMissions, CREW, startCrew, crewScore, amP };
 boot();

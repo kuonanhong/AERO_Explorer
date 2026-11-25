@@ -159,7 +159,7 @@ body[data-crew] #mission{display:none}
 @media (max-height:560px) and (orientation:landscape){#crewMentor{top:48px;width:min(360px,42vw);max-height:calc(100% - 175px);font-size:12px}#crewMentor .cmRole{display:none}body:has(#startOverlay:not([hidden])) #crewMentor{max-height:108px}}
 
 /* ---- v7: guided tours ---- */
-body[data-tour] #dock,body[data-tour] #hudPlace,body[data-tour] #tape,body[data-tour] #hudEnv,body[data-tour] #mini,body[data-tour] #mission,body[data-tour] #hudInst,body[data-tour] #warn,body[data-tour] #startOverlay,body[data-tour] #attrib,body[data-tour] #crewMentor,body[data-tour] #toast{display:none!important}body[data-tour][data-tour-manual] #dock{display:flex!important}body[data-tour-manual] #ctrls{visibility:hidden!important}body[data-tour-manual] #tourCap,body[data-tour-manual] #tourTitle,body[data-tour-manual] #tourCred{opacity:0!important}#tourBar [data-tb=take].on{background:#ff3b30;color:#fff}
+body[data-tour] #dock,body[data-tour] #hudPlace,body[data-tour] #tape,body[data-tour] #hudEnv,body[data-tour] #mini,body[data-tour] #mission,body[data-tour] #hudInst,body[data-tour] #warn,body[data-tour] #startOverlay,body[data-tour] #attrib,body[data-tour] #crewMentor,body[data-tour] #toast{display:none!important}body[data-tour][data-tour-manual] #dock{display:flex!important}body[data-tour-manual] #ctrls{display:none!important}body[data-tour][data-tour-manual] #dock{justify-content:space-between}body[data-tour-manual] #tourCap,body[data-tour-manual] #tourTitle,body[data-tour-manual] #tourCred{opacity:0!important}#tourBar [data-tb=take].on{background:#ff3b30;color:#fff}
 #tour{position:absolute;inset:0;z-index:20;pointer-events:none;color:#fff}
 #tour>*{position:absolute}
 #tourFade{inset:0;background:#000;opacity:0}
@@ -187,6 +187,10 @@ body[data-tour] #dock,body[data-tour] #hudPlace,body[data-tour] #tape,body[data-
 #tourBar button:hover{border-color:var(--brass)}#tourBar button svg{width:18px;height:18px}#tourBar button.on{background:#b3261e;border-color:#b3261e;color:#fff}
 #tourSeek{flex:1;min-width:50px;accent-color:var(--brass)}#tourTime{font-variant-numeric:tabular-nums;font-size:12px;white-space:nowrap;padding:0 4px}
 @media (max-width:760px){#tourBar button[data-tb=prev],#tourBar button[data-tb=next]{display:none}#tourBar{gap:4px;padding:5px}#tourBar button{padding:0 6px;font-size:11.5px}#tourCap{bottom:max(11%,62px)}}
+@media (max-width:600px){#tourBar{flex-wrap:wrap;justify-content:center;row-gap:6px;bottom:max(10px,env(safe-area-inset-bottom))}#tourSeek{flex:1 1 calc(100% - 150px)}#tourBar .tbw,#tourBar [data-tb=rec]{display:none}#tourCap{bottom:calc(100px + env(safe-area-inset-bottom));font-size:clamp(15px,5vw,24px)}}
+@media (max-height:560px) and (orientation:landscape){body[data-tour-manual] #tourBar{width:calc(100% - 270px)}body[data-tour-manual] #tourBar .tbw,body[data-tour-manual] #tourBar [data-tb=rec]{display:none}}
+@media (orientation:portrait) and (max-width:760px){body[data-tour][data-tour-manual] #dock{--dock:140px}}
+body[data-tour-manual] #tourMark{display:none}
 body[data-studio] #tourBar,body[data-studio] #tourEnd{display:none!important}
 #stTours h4 small{font-weight:400;margin-inline-start:6px}
 .trow{display:flex;align-items:center;gap:8px;padding:7px 8px;border:1px solid var(--line);border-radius:10px;margin:5px 0;background:rgba(255,255,255,.04)}

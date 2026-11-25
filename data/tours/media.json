@@ -661,6 +661,161 @@
    "zh-Hant": "HTOyd_kDPXs",
    "en": "HTOyd_kDPXs",
    "at": "2026-11-26T12:00:00Z"
+  },
+  "unesco-86/culture": {
+   "zh-Hant": "g5NjjW8Lrn8",
+   "en": "g5NjjW8Lrn8",
+   "at": "2026-11-26T12:00:00Z"
+  },
+  "unesco-86/nature": {
+   "zh-Hant": "EbEEwJgr-7Y",
+   "en": "EbEEwJgr-7Y",
+   "at": "2026-11-26T12:00:00Z"
+  },
+  "unesco-86/geography": {
+   "zh-Hant": "SFl77BoA5Rw",
+   "en": "SFl77BoA5Rw",
+   "at": "2026-11-26T12:00:00Z"
+  },
+  "unesco-483/history": {
+   "zh-Hant": "wBiclL932wM",
+   "en": "wBiclL932wM",
+   "at": "2026-11-26T12:00:00Z"
+  },
+  "unesco-483/culture": {
+   "zh-Hant": "VRcKR7UJ6-A",
+   "en": "VRcKR7UJ6-A",
+   "at": "2026-11-26T12:00:00Z"
+  },
+  "unesco-483/nature": {
+   "zh-Hant": "ZuOAE29Ppac",
+   "en": "ZuOAE29Ppac",
+   "at": "2026-11-26T12:00:00Z"
+  },
+  "unesco-483/geography": {
+   "zh-Hant": "JKYoTrlt31E",
+   "en": "JKYoTrlt31E",
+   "at": "2026-11-26T12:00:00Z"
+  },
+  "unesco-715/history": {
+   "zh-Hant": "oueVafYle1Y",
+   "en": "oueVafYle1Y",
+   "at": "2026-11-26T12:00:00Z"
+  },
+  "unesco-715/culture": {
+   "zh-Hant": "cwBR050-vy4",
+   "en": "cwBR050-vy4",
+   "at": "2026-11-26T12:00:00Z"
+  },
+  "unesco-715/nature": {
+   "zh-Hant": "DINirCmMMq0",
+   "en": "DINirCmMMq0",
+   "at": "2026-11-26T12:00:00Z"
+  },
+  "unesco-715/geography": {
+   "zh-Hant": "x12y08yi3dU",
+   "en": "x12y08yi3dU",
+   "at": "2026-11-26T12:00:00Z"
+  },
+  "tw-345040000g_000012/history": {
+   "zh-Hant": "M5ig0rfyAOQ",
+   "en": "M5ig0rfyAOQ",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-345040000g_000012/culture": {
+   "zh-Hant": "aLd_B57dZlA",
+   "en": "aLd_B57dZlA",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-345040000g_000012/nature": {
+   "zh-Hant": "32RrJxKeAeE",
+   "en": "32RrJxKeAeE",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-345040000g_000012/geography": {
+   "zh-Hant": "SZCF-wG99vE",
+   "en": "SZCF-wG99vE",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-x-yushan-national-park/history": {
+   "zh-Hant": "CQw3BsKCLWw",
+   "en": "CQw3BsKCLWw",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-x-yushan-national-park/culture": {
+   "zh-Hant": "FFW5hvaRJyg",
+   "en": "FFW5hvaRJyg",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-x-yushan-national-park/nature": {
+   "zh-Hant": "-Pd_N28ZSSQ",
+   "en": "-Pd_N28ZSSQ",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-x-yushan-national-park/geography": {
+   "zh-Hant": "yMj7Y3UIbNA",
+   "en": "yMj7Y3UIbNA",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-x-kenting-national-park/history": {
+   "zh-Hant": "8AT1tGi_2rw",
+   "en": "8AT1tGi_2rw",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-x-kenting-national-park/culture": {
+   "zh-Hant": "_BmesY9Vyeg",
+   "en": "_BmesY9Vyeg",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-x-kenting-national-park/nature": {
+   "zh-Hant": "IpxoJ3FrCgM",
+   "en": "IpxoJ3FrCgM",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-x-kenting-national-park/geography": {
+   "zh-Hant": "B6iiJE3n1WI",
+   "en": "B6iiJE3n1WI",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-x-penghu-basalt/history": {
+   "zh-Hant": "aChxOuRv_BM",
+   "en": "aChxOuRv_BM",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-x-penghu-basalt/culture": {
+   "zh-Hant": "4qjz-AfvDKo",
+   "en": "4qjz-AfvDKo",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-x-penghu-basalt/nature": {
+   "zh-Hant": "EByweLdVPs4",
+   "en": "EByweLdVPs4",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-x-penghu-basalt/geography": {
+   "zh-Hant": "wQiYbMKsAcA",
+   "en": "wQiYbMKsAcA",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-379000000a_000189/history": {
+   "zh-Hant": "emwYfTnuSLo",
+   "en": "emwYfTnuSLo",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-379000000a_000189/culture": {
+   "zh-Hant": "zaaGhefnu2U",
+   "en": "zaaGhefnu2U",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-379000000a_000189/nature": {
+   "zh-Hant": "swRJPuXYJP0",
+   "en": "swRJPuXYJP0",
+   "at": "2026-11-27T12:00:00Z"
+  },
+  "tw-379000000a_000189/geography": {
+   "zh-Hant": "-qBu1vCG3ys",
+   "en": "-qBu1vCG3ys",
+   "at": "2026-11-27T12:00:00Z"
   }
  }
 }
