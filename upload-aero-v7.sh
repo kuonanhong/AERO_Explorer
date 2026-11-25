@@ -181,8 +181,12 @@ publish_site() {
   : > "$changes"; : > "$big"
   ( cd "$SITE" && find . -type f ! -path './.git/*' ! -name '.DS_Store' ! -name 'Thumbs.db' ! -name '*.part' ! -name '*.tmp' ! -path './studio/work/*' ! -path './tours_out/*' ! -name 'media-local.json' ! -name '.aero-v7-files.txt' ! -name '*.pyc' ! -path '*/__pycache__/*' \
       \( ! -path './models/*' -o -name 'README.md' -o -name 'model-manifest.json' \) | sed 's|^\./||' | LC_ALL=C sort ) > "$list"
+  # films held back from publishing (AERO_HOLD_DIR, made by the video package's _tools/upload_hold.py): their places are left off the
+  # published copy: files in skip.txt are not sent, and the index files there replace the site's own
+  local hold="${AERO_HOLD_DIR:-}"
+  if [ -n "$hold" ] && [ -s "$hold/skip.txt" ]; then grep -vxF -f "$hold/skip.txt" "$list" > "$list.h" || true; mv "$list.h" "$list"; fi
   while IFS= read -r f; do
-    local s="$SITE/$f" d="$dest/$f" sz; sz="$(filesize "$s")"
+    local s="$SITE/$f" d="$dest/$f" sz; [ -n "$hold" ] && [ -f "$hold/$f" ] && s="$hold/$f"; sz="$(filesize "$s")"
     if [ "$sz" -gt 99000000 ]; then printf '%s\t%s\n' "$f" "$sz" >> "$big"; continue; fi
     if [ "$f" = config.js ] && [ -f "$d" ] && ! grep -q 'AERO Explorer v6' "$d"; then
       # the site already has its own settings (e.g. AERO v5.1 keys used by the classic pages): keep them, only follow your aiModelBase
@@ -215,7 +219,8 @@ publish_site() {
   # send in parts of about $AERO_BATCH_MB MB (default 20): each part is committed and pushed on its own
   while IFS="$tab" read -r k f sz; do
     case "$k" in
-      A|M) mkdir -p "$(dirname "$dest/$f")"; cp -p "$SITE/$f" "$dest/$f"; git -C "$WORKDIR" add -- "$TARGET/$f"; acc=$((acc + sz)) ;;
+      A|M) local src="$SITE/$f"; [ -n "$hold" ] && [ -f "$hold/$f" ] && src="$hold/$f"
+           mkdir -p "$(dirname "$dest/$f")"; cp -p "$src" "$dest/$f"; git -C "$WORKDIR" add -- "$TARGET/$f"; acc=$((acc + sz)) ;;
       C) local lb; lb="$(sed -n "s/.*aiModelBase: *'\([^']*\)'.*/\1/p" "$SITE/$f" | awk 'NR==1')"
          sed -i.bak "s|aiModelBase: *'[^']*'|aiModelBase: '$lb'|" "$dest/$f" && rm -f "$dest/$f.bak"; git -C "$WORKDIR" add -- "$TARGET/$f" ;;
       D) git -C "$WORKDIR" rm -q --ignore-unmatch -- "$TARGET/$f" ;;

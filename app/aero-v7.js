@@ -1708,7 +1708,7 @@ const KEYS = new Set(), PADKEYS = new Map(), SM = {};
 const typing = el => !!el?.closest?.('input,textarea,select,[contenteditable]') && el.offsetParent !== null;
 addEventListener('keydown', e => {
   if (typing(e.target)) { if (e.code === 'Escape') { e.target.blur(); closeOverlays(); } return; }
-  if (TOUR.on) { if (!e.repeat) tourKey(e); if (!e.metaKey && !e.ctrlKey && !e.altKey) e.preventDefault(); return; }
+  if (TOUR.on) { if (!e.repeat) tourKey(e); if (!e.metaKey && !e.ctrlKey && !e.altKey) e.preventDefault(); if (!TOUR.run?.manual || !TOUR_FLY.has(e.code)) return; }
   KEYS.add(e.code);
   if (APP.state === 'sim' && !e.repeat) hotkey(e);
   if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.code) && APP.state === 'sim') e.preventDefault();
@@ -3002,7 +3002,7 @@ const TOUR_ICON = { history: '◷', culture: '❖', nature: '❦', geography: '�
 const tourEase = u => u * u * (3 - 2 * u);
 /* The researched scripts are written in Traditional Chinese and English. Readers of Simplified Chinese get the Chinese text converted
    with a table that covers every character the scripts use (tools/t2s_map.json; the build reports a character it does not know). */
-const TOUR_T2S = {"p":"並并乾干亙亘亞亚佈布佔占併并來来侶侣係系倉仓個个們们倫伦偉伟側侧偵侦偽伪傑杰傘伞備备傳传債债傷伤傾倾僅仅僑侨價价儀仪億亿兒儿內内兩两凍冻凱凯別别則则剛刚創创劃划劇剧劍剑勁劲動动務务勝胜勞劳勢势匯汇區区協协卻却厲厉參参叢丛呂吕員员問问啟启單单嘗尝嘯啸噴喷噸吨嚮向嚴严國国圍围園园圓圆圖图團团埡垭執执堅坚報报場场塊块塗涂塚冢墾垦壇坛壓压壞坏壩坝壯壮壺壶壽寿夢梦夾夹奧奥奪夺婦妇媽妈學学宮宫實实寧宁寫写寬宽寶宝將将專专尋寻對对導导層层屬属岡冈島岛峽峡崗岗崙仑嶺岭嶼屿嶽岳巒峦巔巅巖岩師师帳帐帶带幣币幹干幾几庫库廂厢廟庙廠厂廢废廣广廳厅張张強强彎弯彥彦後后徑径從从復复徵征愛爱態态慶庆憶忆應应懸悬戰战戲戏戶户捨舍掃扫掛挂採采揚扬換换損损搗捣撈捞撐撑撿捡擁拥擇择擊击擋挡據据擠挤擬拟擴扩擺摆擾扰攔拦攜携攝摄攤摊敘叙敵敌數数斷断於于昇升時时暫暂曆历曠旷曬晒書书會会東东條条棄弃棗枣棧栈棲栖楊杨楨桢業业極极榮荣構构樁桩樂乐樑梁樓楼標标樞枢樣样樹树樺桦橋桥機机橢椭橫横檜桧檢检櫚榈櫟栎櫸榉櫻樱欄栏權权欒栾欖榄歐欧歡欢歲岁歷历歸归殘残殼壳毀毁氈毡氣气氫氢汙污決决沒没沖冲況况涼凉淨净淺浅減减測测湧涌湯汤準准溝沟溫温滅灭滲渗滿满漁渔漢汉漲涨漸渐漿浆潛潜澤泽澱淀濁浊濃浓濕湿濟济濤涛濱滨濺溅濾滤瀕濒灘滩灣湾為为烏乌無无煉炼煙烟熱热燈灯燒烧營营燭烛爭争爾尔牆墙牠它狀状狹狭獅狮獎奖獨独獲获獵猎獸兽獻献獼猕現现瑪玛環环產产畢毕畫画異异當当疊叠發发盞盏盡尽監监盤盘盪荡眾众矽硅砲炮確确碼码磚砖磧碛磯矶礦矿礫砾祿禄禍祸禎祯禦御禮礼稜棱種种稱称積积窪洼筆笔節节範范築筑簡简簽签籃篮籌筹籠笼紀纪約约紅红紋纹納纳紐纽紗纱紙纸級级紛纷紡纺紮扎細细紹绍終终組组結结絕绝給给絨绒統统絲丝經经綠绿綬绶維维網网綿绵緊紧緋绯緒绪線线緣缘編编緩缓緻致縣县縫缝縮缩總总織织繞绕繡绣繩绳繪绘繫系繳缴繼继續续纜缆罰罚羅罗義义翬翚翹翘聖圣聞闻聯联聲声聳耸職职聽听脅胁脈脉腳脚膠胶膽胆臉脸臥卧臨临臺台與与興兴舉举舊旧荊荆莊庄莖茎華华菸烟萊莱萬万葉叶著着葦苇蒐搜蓋盖蓮莲蓴莼蔣蒋蔭荫蕭萧薊蓟薑姜薦荐薩萨薰熏藍蓝藝艺藥药蘆芦蘇苏蘚藓蘭兰處处虛虚號号蝕蚀蝦虾螢萤蟲虫術术衛卫衝冲補补裝装裡里製制複复襲袭見见規规覓觅視视親亲覽览觀观觸触訂订計计訊讯討讨託托記记訝讶訪访設设許许訴诉詞词詢询試试詩诗話话該该認认誕诞語语誦诵說说誰谁課课調调談谈請请論论諮咨諾诺謀谋講讲證证識识議议護护讀读變变讓让豎竖豐丰貓猫貝贝貞贞負负貧贫貨货貫贯責责貴贵買买費费貼贴資资賈贾賓宾賞赏賢贤賣卖質质賴赖賽赛贈赠趕赶跡迹蹟迹蹤踪躍跃車车軌轨軍军軟软軸轴較较載载輕轻輛辆輩辈輪轮輸输轉转轎轿轟轰辦办農农迴回這这連连週周進进遊游運运過过達达違违遙遥遜逊遠远適适遶绕遷迁選选遺遗還还邊边郵邮鄉乡鄰邻釋释釐厘針针釣钓鈔钞鈣钙鉤钩銀银銅铜銳锐銷销鋪铺鋸锯鋼钢錄录錐锥錦锦錫锡錯错鍬锹鍰锾鎮镇鏈链鏡镜鏢镖鏽锈鐘钟鐵铁鑽钻鑿凿長长門门閉闭開开閒闲間间閣阁閩闽閱阅闊阔關关闢辟陰阴陳陈陸陆陽阳隊队階阶際际隨随險险隸隶隻只雙双雜杂雞鸡離离難难雲云電电霧雾靈灵靜静韋韦響响頁页頂顶頃顷項项順顺須须預预領领頭头頸颈顆颗題题額额顏颜類类顧顾顯显風风颱台飄飘飛飞飯饭飲饮飾饰養养餘余館馆餵喂饑饥馬马駁驳駐驻駕驾駛驶駝驼駱骆駿骏騎骑騰腾騾骡驗验驚惊驛驿體体髮发鬆松鬚须鬥斗鬧闹魚鱼魯鲁鮊鲌鮑鲍鮪鲔鮭鲑鯉鲤鯖鲭鯨鲸鯽鲫鰱鲢鰹鲣鰻鳗鱗鳞鳥鸟鳳凤鳴鸣鳶鸢鴕鸵鴝鸲鴨鸭鴴鸻鵑鹃鵰雕鵲鹊鶇鸫鶲鹟鶴鹤鷗鸥鷚鹨鷥鸶鷲鹫鷴鹇鷸鹬鷹鹰鷺鹭鹹咸鹼碱鹽盐麗丽麥麦麼么黃黄點点齊齐齋斋齒齿齡龄龍龙龜龟僕仆喬乔墊垫墜坠墻墙嬰婴寵宠嶇岖拋抛棟栋潰溃爺爷犛牦瓊琼盜盗盧卢禱祷穩稳筍笋糞粪綁绑習习艦舰豔艳貿贸踐践釀酿鈴铃錢钱韓韩願愿馱驮鮮鲜鵝鹅拏拿儲储勵励喚唤嚇吓囓啮婭娅屆届幫帮彌弥惡恶憂忧憑凭災灾犧牺甦苏茲兹蒼苍蟻蚁評评誤误譯译邁迈陣阵隱隐頓顿丟丢亂乱俠侠優优囪囱堊垩嬌娇廁厕廚厨彈弹慮虑憐怜懷怀懺忏戀恋敗败暢畅滾滚獄狱獰狞獺獭禿秃窩窝窯窑篤笃籬篱籲吁綻绽脫脱腦脑臘腊莢荚蘋苹蝸蜗訥讷誌志謝谢豬猪貢贡輝辉邏逻鄧邓釘钉銘铭錨锚鍋锅閃闪閘闸馳驰驅驱驢驴鯊鲨鯰鲶鯷鳀鰩鳐鱷鳄鴉鸦鴞鸮鴿鸽鵡鹉鶯莺鷀鹚鸌鹱鸕鸬鸚鹦龐庞緬缅桿杆緯纬縱纵覺觉艙舱幟帜欽钦吳吴塵尘奮奋捲卷臟脏辭辞醫医鸝鹂廈厦燼烬鐸铎鯡鲱搖摇鉛铅塢坞婁娄灑洒獷犷碩硕競竞購购遞递鑄铸壘垒憲宪搶抢槍枪殺杀盃杯績绩贏赢鋒锋揮挥擲掷綜综擔担礎础頻频夠够檔档檳槟洩泄澆浇箏筝粵粤緞缎艱艰釬钎鍵键鎬镐韌韧鱘鲟","w":{"瓩":"千瓦","呎":"英尺"},"ph":{"著名":"著名","著稱":"著称","著作":"著作","著書":"著书","著述":"著述","著錄":"著录","著者":"著者","原著":"原著","名著":"名著","巨著":"巨著","專著":"专著","論著":"论著","編著":"编著","合著":"合著","譯著":"譯著","顯著":"显著","卓著":"卓著","昭著":"昭著","土著":"土著","所著":"所著","乾隆":"乾隆","乾坤":"乾坤"}}; let tourHansMap = null, tourHansRe = null;
+const TOUR_T2S = {"p":"並并乾干亙亘亞亚佈布佔占併并來来侶侣係系倉仓個个們们倫伦偉伟側侧偵侦偽伪傑杰傘伞備备傳传債债傷伤傾倾僅仅僑侨價价儀仪億亿兒儿內内兩两凍冻凱凯別别則则剛刚創创劃划劇剧劍剑勁劲動动務务勝胜勞劳勢势匯汇區区協协卻却厲厉參参叢丛呂吕員员問问啟启單单嘗尝嘯啸噴喷噸吨嚮向嚴严國国圍围園园圓圆圖图團团埡垭執执堅坚報报場场塊块塗涂塚冢墾垦壇坛壓压壞坏壩坝壯壮壺壶壽寿夢梦夾夹奧奥奪夺婦妇媽妈學学宮宫實实寧宁寫写寬宽寶宝將将專专尋寻對对導导層层屬属岡冈島岛峽峡崗岗崙仑嶺岭嶼屿嶽岳巒峦巔巅巖岩師师帳帐帶带幣币幹干幾几庫库廂厢廟庙廠厂廢废廣广廳厅張张強强彎弯彥彦後后徑径從从復复徵征愛爱態态慶庆憶忆應应懸悬戰战戲戏戶户捨舍掃扫掛挂採采揚扬換换損损搗捣撈捞撐撑撿捡擁拥擇择擊击擋挡據据擠挤擬拟擴扩擺摆擾扰攔拦攜携攝摄攤摊敘叙敵敌數数斷断於于昇升時时暫暂曆历曠旷曬晒書书會会東东條条棄弃棗枣棧栈棲栖楊杨楨桢業业極极榮荣構构樁桩樂乐樑梁樓楼標标樞枢樣样樹树樺桦橋桥機机橢椭橫横檜桧檢检櫚榈櫟栎櫸榉櫻樱欄栏權权欒栾欖榄歐欧歡欢歲岁歷历歸归殘残殼壳毀毁氈毡氣气氫氢汙污決决沒没沖冲況况涼凉淨净淺浅減减測测湧涌湯汤準准溝沟溫温滅灭滲渗滿满漁渔漢汉漲涨漸渐漿浆潛潜澤泽澱淀濁浊濃浓濕湿濟济濤涛濱滨濺溅濾滤瀕濒灘滩灣湾為为烏乌無无煉炼煙烟熱热燈灯燒烧營营燭烛爭争爾尔牆墙牠它狀状狹狭獅狮獎奖獨独獲获獵猎獸兽獻献獼猕現现瑪玛環环產产畢毕畫画異异當当疊叠發发盞盏盡尽監监盤盘盪荡眾众矽硅砲炮確确碼码磚砖磧碛磯矶礦矿礫砾祿禄禍祸禎祯禦御禮礼稜棱種种稱称積积窪洼筆笔節节範范築筑簡简簽签籃篮籌筹籠笼紀纪約约紅红紋纹納纳紐纽紗纱紙纸級级紛纷紡纺紮扎細细紹绍終终組组結结絕绝給给絨绒統统絲丝經经綠绿綬绶維维網网綿绵緊紧緋绯緒绪線线緣缘編编緩缓緻致縣县縫缝縮缩總总織织繞绕繡绣繩绳繪绘繫系繳缴繼继續续纜缆罰罚羅罗義义翬翚翹翘聖圣聞闻聯联聲声聳耸職职聽听脅胁脈脉腳脚膠胶膽胆臉脸臥卧臨临臺台與与興兴舉举舊旧荊荆莊庄莖茎華华菸烟萊莱萬万葉叶著着葦苇蒐搜蓋盖蓮莲蓴莼蔣蒋蔭荫蕭萧薊蓟薑姜薦荐薩萨薰熏藍蓝藝艺藥药蘆芦蘇苏蘚藓蘭兰處处虛虚號号蝕蚀蝦虾螢萤蟲虫術术衛卫衝冲補补裝装裡里製制複复襲袭見见規规覓觅視视親亲覽览觀观觸触訂订計计訊讯討讨託托記记訝讶訪访設设許许訴诉詞词詢询試试詩诗話话該该認认誕诞語语誦诵說说誰谁課课調调談谈請请論论諮咨諾诺謀谋講讲證证識识議议護护讀读變变讓让豎竖豐丰貓猫貝贝貞贞負负貧贫貨货貫贯責责貴贵買买費费貼贴資资賈贾賓宾賞赏賢贤賣卖質质賴赖賽赛贈赠趕赶跡迹蹟迹蹤踪躍跃車车軌轨軍军軟软軸轴較较載载輕轻輛辆輩辈輪轮輸输轉转轎轿轟轰辦办農农迴回這这連连週周進进遊游運运過过達达違违遙遥遜逊遠远適适遶绕遷迁選选遺遗還还邊边郵邮鄉乡鄰邻釋释釐厘針针釣钓鈔钞鈣钙鉤钩銀银銅铜銳锐銷销鋪铺鋸锯鋼钢錄录錐锥錦锦錫锡錯错鍬锹鍰锾鎮镇鏈链鏡镜鏢镖鏽锈鐘钟鐵铁鑽钻鑿凿長长門门閉闭開开閒闲間间閣阁閩闽閱阅闊阔關关闢辟陰阴陳陈陸陆陽阳隊队階阶際际隨随險险隸隶隻只雙双雜杂雞鸡離离難难雲云電电霧雾靈灵靜静韋韦響响頁页頂顶頃顷項项順顺須须預预領领頭头頸颈顆颗題题額额顏颜類类顧顾顯显風风颱台飄飘飛飞飯饭飲饮飾饰養养餘余館馆餵喂饑饥馬马駁驳駐驻駕驾駛驶駝驼駱骆駿骏騎骑騰腾騾骡驗验驚惊驛驿體体髮发鬆松鬚须鬥斗鬧闹魚鱼魯鲁鮊鲌鮑鲍鮪鲔鮭鲑鯉鲤鯖鲭鯨鲸鯽鲫鰱鲢鰹鲣鰻鳗鱗鳞鳥鸟鳳凤鳴鸣鳶鸢鴕鸵鴝鸲鴨鸭鴴鸻鵑鹃鵰雕鵲鹊鶇鸫鶲鹟鶴鹤鷗鸥鷚鹨鷥鸶鷲鹫鷴鹇鷸鹬鷹鹰鷺鹭鹹咸鹼碱鹽盐麗丽麥麦麼么黃黄點点齊齐齋斋齒齿齡龄龍龙龜龟僕仆喬乔墊垫墜坠墻墙嬰婴寵宠嶇岖拋抛棟栋潰溃爺爷犛牦瓊琼盜盗盧卢禱祷穩稳筍笋糞粪綁绑習习艦舰豔艳貿贸踐践釀酿鈴铃錢钱韓韩願愿馱驮鮮鲜鵝鹅拏拿儲储勵励喚唤嚇吓囓啮婭娅屆届幫帮彌弥惡恶憂忧憑凭災灾犧牺甦苏茲兹蒼苍蟻蚁評评誤误譯译邁迈陣阵隱隐頓顿丟丢亂乱俠侠優优囪囱堊垩嬌娇廁厕廚厨彈弹慮虑憐怜懷怀懺忏戀恋敗败暢畅滾滚獄狱獰狞獺獭禿秃窩窝窯窑篤笃籬篱籲吁綻绽脫脱腦脑臘腊莢荚蘋苹蝸蜗訥讷誌志謝谢豬猪貢贡輝辉邏逻鄧邓釘钉銘铭錨锚鍋锅閃闪閘闸馳驰驅驱驢驴鯊鲨鯰鲶鯷鳀鰩鳐鱷鳄鴉鸦鴞鸮鴿鸽鵡鹉鶯莺鷀鹚鸌鹱鸕鸬鸚鹦龐庞緬缅桿杆緯纬縱纵覺觉艙舱幟帜欽钦吳吴塵尘奮奋捲卷臟脏辭辞醫医鸝鹂廈厦燼烬鐸铎鯡鲱搖摇鉛铅塢坞婁娄灑洒獷犷碩硕競竞購购遞递鑄铸壘垒憲宪搶抢槍枪殺杀盃杯績绩贏赢鋒锋揮挥擲掷綜综擔担礎础頻频夠够檔档檳槟洩泄澆浇箏筝粵粤緞缎艱艰釬钎鍵键鎬镐韌韧鱘鲟撲扑劉刘吶呐嵐岚恆恒揹背撫抚朧胧櫃柜溼湿獁犸籤签菓果蔥葱藪薮財财轄辖鄒邹鄭郑鋤锄鋰锂錠锭鑲镶鑾銮颳刮髏髅龕龛","w":{"瓩":"千瓦","呎":"英尺"},"ph":{"著名":"著名","著稱":"著称","著作":"著作","著書":"著书","著述":"著述","著錄":"著录","著者":"著者","原著":"原著","名著":"名著","巨著":"巨著","專著":"专著","論著":"论著","編著":"编著","合著":"合著","譯著":"譯著","顯著":"显著","卓著":"卓著","昭著":"昭著","土著":"土著","所著":"所著","乾隆":"乾隆","乾坤":"乾坤"}}; let tourHansMap = null, tourHansRe = null;
 function tourHans(s) {
   if (!s) return s;
   if (!tourHansMap) { const M = tourHansMap = new Map(), P = TOUR_T2S.p; for (let i = 0; i < P.length; i += 2) M.set(P[i], P[i + 1]); for (const o of [TOUR_T2S.w, TOUR_T2S.ph]) for (const [k, v] of Object.entries(o)) M.set(k, v); tourHansRe = new RegExp([...Object.keys(TOUR_T2S.ph), '[\\u3400-\\u9fff]'].join('|'), 'g'); }
@@ -3048,7 +3048,7 @@ async function tourSetLang(p, set, e) {
   } catch { }
 }
 function tourMedia(pid, tid, kind) {   // kind 'real': an edition cut from real drone footage, listed next to the recording of the simulated flight
-  const it = TOUR.idx?.media?.items?.[pid + '/' + tid]; if (!it) return null; const f = kind === 'real' ? it.real : it[I18N.lang] || (isZh() ? it['zh-Hant'] : null) || it['*'] || it.en || it['zh-Hant'];
+  const it = TOUR.idx?.media?.items?.[pid + '/' + tid]; if (!it || it.at && Date.parse(it.at) > Date.now()) return null; /* at: scheduled on YouTube, public from then on */ const f = kind === 'real' ? it.real : it[I18N.lang] || (isZh() ? it['zh-Hant'] : null) || it['*'] || it.en || it['zh-Hant'];
   return !f ? null : /^[\w-]{11}$/.test(f) ? { yt: f } : { src: f };
 }
 
@@ -3086,6 +3086,8 @@ function tourAlong(s, f, o) { const pts = s.poly, l = clamp(f, 0, 1) * s.polyL; 
 const _tp = { x: 0, z: 0 }, _tq = { x: 0, z: 0 };
 /* camera position (x, y, z), the bearing it looks along and its tilt for shot s at progress u (0…1) */
 function tourPose(s, u, o) {
+  const cam = s.raw?.cam, P0 = s.raw?.play, cf = cam && P0 && DRAMA.cams?.[P0.id];   // a match film's camera that follows the play (86_sports.js sportCam)
+  if (cf) { const t = lerp(P0.t[0], P0.t[1], P0.ease ? tourEase(u) : u); cf(t, cam, u, o); o.look = true; o.yaw = null; o.pitch = null; return o; }
   let A = s.A; const P = s.raw?.play, ch = s.raw?.chase != null && P && DRAMA.chase?.[P.id];   // a chase shot: the subject is a marker of the play, moving with it (chase: seconds to look ahead)
   if (ch) { const t = lerp(P.t[0], P.t[1], P.ease ? tourEase(u) : u), f = ch(t + (typeof s.raw.chase === 'number' ? s.raw.chase : 0)); if (f) A = { k: A.k, x: f.x, z: f.z, h: 2 };
     if (f && s.raw.chaseRel) { const f2 = ch(t + 0.4), f0 = ch(t - 0.4); if (Math.hypot(f2.x - f0.x, f2.z - f0.z) > 0.5) s = Object.assign(Object.create(s), { from: s.from + bearingTo(f0.x, f0.z, f2.x, f2.z) }); } }   // chaseRel: `from` is measured from the marker's direction of travel
@@ -3105,7 +3107,7 @@ function tourSight(x, y, z, tx, ty, tz, soft) {   // is the line from the camera
   for (let i = 1; i < 14; i++) { const f = i / 14; if (DEM.heightAt(lerp(x, tx, f), lerp(z, tz, f)) > lerp(y, ty, f) - (soft ? 2 * (1 - f) : 2)) return false; } return true;
 }
 function tourPrepShot(s) {   // once per shot, when its terrain heights are known: raise the camera if a ridge would hide the subject
-  s.prep = true; s.lift = 0; if (!['orbit', 'reveal', 'push', 'pull', 'track', 'rise', 'descend'].includes(s.move)) return;
+  s.prep = true; s.lift = 0; if (s.raw?.cam || !['orbit', 'reveal', 'push', 'pull', 'track', 'rise', 'descend'].includes(s.move)) return;
   const o = {}; for (const lift of [0, 15, 35, 70, 120, 200, 320, 500, 800]) { let ok = true; for (const u of [0.15, 0.5, 1]) { tourPose(s, u, o); if (!tourSight(o.x, Math.max(o.y + lift, tourTerr(o.x, o.z) + 4), o.z, o.tx, o.ty, o.tz, !!s.raw?.play)) { ok = false; break; } } if (ok) { s.lift = lift; return; } }
   s.lift = 800;
 }
@@ -3150,15 +3152,70 @@ async function startTour(p, ref, opts = {}) {
   if (opts.record) tourRecStart(R, opts);
 }
 function tourExit(silent) {
-  const R = TOUR.run; if (!R) return; tourRecStop(true); TOUR.on = false; TOUR.run = null; if (R.plan.route) routeStop(); if (R.plan.drama) { dramaStop(); dramaDom(R); } delete document.body.dataset.tour; tourOverlay(false); scoreStop(); try { speechSynthesis?.cancel(); } catch { }
+  const R = TOUR.run; if (!R) return; if (R.manual) { R.manual = null; delete document.body.dataset.tourManual; for (const k of TOUR_FLY) KEYS.delete(k); } tourRecStop(true); TOUR.on = false; TOUR.run = null; if (R.plan.route) routeStop(); if (R.plan.drama) { dramaStop(); dramaDom(R); } delete document.body.dataset.tour; tourOverlay(false); scoreStop(); try { speechSynthesis?.cancel(); } catch { }
   const s = R.saved, v = APP.veh; SET.fisheye = s.fish; APP.zoom = s.zoom; APP.cam = s.cam; SET.season = s.season; SET.wxMode = s.wx; applyWeather(); setTimePreset(s.time);
   if (s.time === 'custom' || s.live) { APP.sun.min = s.sunMin; APP.sun.date = s.sunDate; APP.live = s.live; applyTime(); }
   if (v) { v.pos.copy(s.pos); v.heading = s.heading; } camSmooth.init = false; APP.paused = true; APP.started = false; $('#startOverlay').hidden = false; applyFov(); updateDock(); syncSettings();
   if (!R.plan.route) try { history.replaceState(null, '', '#' + encodeURIComponent(APP.place.id) + '/' + APP.kind); } catch { }
   if (!silent && TOUR.studio) tourStudioNext();
 }
-function tourPlay(on) { const R = TOUR.run; if (!R || !R.ready) return; if (R.ended && on) { tourSeek(0); } R.playing = on; if (on) { AUDIO.start(); scoreSeek(R); try { speechSynthesis?.resume(); } catch { } } else { scoreMute(); try { speechSynthesis?.pause(); } catch { } } R.uiT = 0; tourBar(); }
-function tourSeek(tt) { const R = TOUR.run; if (!R || R.rec && TOUR.rec) return; R.t = clamp(tt, 0, R.plan.dur - 0.05); R.i = -1; R.ended = false; R.capK = ''; $('#tourEnd').hidden = true; try { speechSynthesis?.cancel(); } catch { } if (R.playing) scoreSeek(R); }
+function tourPlay(on) { const R = TOUR.run; if (!R || !R.ready) return; if (R.manual) { if (on) R.manual.play = true; tourGiveBack(R); return; } if (R.ended && on) { tourSeek(0); } R.playing = on; if (on) { AUDIO.start(); scoreSeek(R); try { speechSynthesis?.resume(); } catch { } } else { scoreMute(); try { speechSynthesis?.pause(); } catch { } } R.uiT = 0; tourBar(); }
+function tourSeek(tt) { const R = TOUR.run; if (!R || R.rec && TOUR.rec) return; if (R.manual) tourGiveBack(R); R.join = null; R.t = clamp(tt, 0, R.plan.dur - 0.05); R.i = -1; R.ended = false; R.capK = ''; $('#tourEnd').hidden = true; try { speechSynthesis?.cancel(); } catch { } if (R.playing) scoreSeek(R); }
+/* ---------- take the controls during a film, and hand them back ----------
+   W A S D, ↑ ↓ (and Q E, Page Up/Down), the touch sticks or the 🕹 button hand the drone to the viewer where the camera is, moving the
+   way the camera was moving (as fast as the drone can); the film waits. Three seconds without touching anything (or ↩), the autopilot
+   takes over from where the drone is, like a car's driver assist: the film goes on from the point of its flight nearest to the drone
+   (ahead in the film, not back), and the drone curves from its own position and speed onto that flight over a few seconds, with no
+   cut and no jump. Never in a recording. */
+const TOUR_TAKE = new Set(['KeyW', 'KeyS', 'KeyA', 'KeyD', 'ArrowUp', 'ArrowDown', 'KeyQ', 'KeyE', 'PageUp', 'PageDown']), TOUR_FLY = new Set([...TOUR_TAKE, 'ArrowLeft', 'ArrowRight']), TOUR_IDLE = 3000;
+const tourShotAt = (R, t) => R.plan.shots.find(x => t >= x.t0 && t < x.t0 + x.dur) || R.plan.shots[R.plan.shots.length - 1];
+function tourVel(R, t, out) {   // the film camera's velocity (m/s) at film time t, from its shot's own path
+  out.x = out.y = out.z = 0; const s = tourShotAt(R, t); if (!s || !(s.dur > 0)) return out;
+  const u = clamp((t - s.t0) / s.dur, 0, 1), du = Math.min(0.3 / s.dur, 0.05), u0 = Math.max(0, u - du), u1 = Math.min(1, u + du); if (u1 - u0 < 1e-6) return out;
+  try { const a = tourPose(s, u0, THUD.pa), ax = a.x, ay = a.y, az = a.z, b = tourPose(s, u1, THUD.pb), k = 1 / ((u1 - u0) * s.dur); out.x = (b.x - ax) * k; out.y = (b.y - ay) * k; out.z = (b.z - az) * k; } catch { }
+  if (![out.x, out.y, out.z].every(Number.isFinite)) out.x = out.y = out.z = 0; return out;
+}
+function tourResumeAt(R, p) {   // the film time whose camera is nearest the drone, from the time the viewer took over onwards
+  const plan = R.plan, o = {}; let best = R.t, bs = Infinity;
+  for (const s of plan.shots) {
+    if (s.t0 + s.dur < R.t - 0.5 || s.raw?.play) continue; const n = Math.max(4, Math.ceil(s.dur));
+    for (let k = 0; k <= n; k++) { const t = s.t0 + s.dur * k / n; if (t < R.t - 0.5 || t > plan.dur - 6) continue; try { tourPose(s, k / n, o); } catch { continue; }
+      const d = Math.hypot(o.x - p.x, (o.y + (s.lift || 0)) - p.y, o.z - p.z) + Math.max(0, t - R.t) * 3; if (d < bs) { bs = d; best = t; } }
+  }
+  return best;
+}
+function tourTake(R) {
+  if (!R || R.manual || !R.ready || R.warm || TOUR.studio || TOUR.rec || R.plan.route) return false; const v = APP.veh; if (!v || v.kind !== 'drone') return false;
+  R.manual = { last: performance.now(), play: R.playing && !R.ended, cam: APP.cam }; R.join = null; R.playing = false; try { speechSynthesis?.cancel(); } catch { }
+  const fv = tourVel(R, R.t, {}), P = DRONE_MODES[v.mode] || DRONE_MODES.N, hs = Math.hypot(fv.x, fv.z), kh = hs > P.vmax ? P.vmax / hs : 1;
+  v.pos.copy(camera.position); v.vel.set(fv.x * kh, clamp(fv.y, -P.vdn, P.vup), fv.z * kh); v.heading = camera.rotation.y; v.gimbal = clamp(camera.rotation.x, -1.5, 0.3); v.landed = false; v.crashed = false; v.battery = Math.max(v.battery || 0, 0.6); v.pitch = v.roll = 0;
+  APP.look.yaw = APP.look.pitch = 0; APP.cam = 'fpv'; APP.paused = false; APP.autoTakeoff = false; camSmooth.init = false;
+  document.body.dataset.tourManual = '1'; tourFade(0); tourBar(); toast(isZh() ? '你在駕駛：放手 3 秒，自動駕駛從這裡接回導覽（或按 ↩）' : 'You are flying: hands off for 3 s and the autopilot takes it from here (or press ↩)', 3500); return true;
+}
+function tourGiveBack(R) {
+  if (!R?.manual) return; const m = R.manual; R.manual = null; for (const k of TOUR_FLY) KEYS.delete(k);
+  const p0 = camera.position.clone(), v = APP.veh, v0 = v?.vel ? v.vel.clone() : new THREE.Vector3(), t1 = tourResumeAt(R, p0), s1 = tourShotAt(R, t1);
+  const q = tourPose(s1, clamp((t1 - s1.t0) / s1.dur, 0, 1), {}), d = Math.hypot(q.x - p0.x, q.y + (s1.lift || 0) - p0.y, q.z - p0.z), fv = tourVel(R, t1, {});
+  const T = Math.min(clamp(d / Math.max(12, Math.hypot(fv.x, fv.y, fv.z), Math.hypot(v0.x, v0.y, v0.z)) * 1.6, 2.5, 12), Math.max(1.5, s1.t0 + s1.dur - t1 - 0.3));   // a few seconds (longer when the drone is far off), done before the shot's cut
+  R.t = t1; R.join = { t0: performance.now(), T, p0, v0, q0: camera.quaternion.clone(), vt: {} };
+  APP.cam = m.cam; APP.paused = true; delete document.body.dataset.tourManual; R.i = -1; R.capK = ''; R.cap2K = '';
+  if (m.play) tourPlay(true); tourBar();
+}
+function tourManualFrame(R) {   // returns true while the viewer still flies
+  const m = R.manual, now = performance.now(), L = STICK.L, Rs = STICK.R, gp = gamepad();
+  if (KEYS.size || PADKEYS.size || Math.hypot(L.x, L.y, Rs.x, Rs.y) > 0.04 || gp?.axes?.some(a => Math.abs(a) > 0.2)) m.last = now;
+  if (now - m.last > TOUR_IDLE) { tourGiveBack(R); return false; }
+  const left = Math.ceil((TOUR_IDLE - (now - m.last)) / 1000), b = $('#tourBar [data-tb="take"]'); if (b) { const tx = now - m.last > 600 ? (isZh() ? `↩ 自動駕駛 ${left}…` : `↩ Autopilot in ${left}…`) : (isZh() ? '↩ 回到導覽' : '↩ Back to film'); if (b.textContent !== tx) b.textContent = tx; }
+  R.cap = ''; R.cap2 = ''; R.titleA = 0; R.credA = 0; tourDom(R); if (!TOUR.studio && APP.frameN % 2 === 0) thudDom(R); return true;
+}
+function tourJoinBlend(R) {   // the drone's position and speed at hand-back flow into the film's moving camera (cubic Hermite), its view turns with it
+  const J = R.join, s = clamp((performance.now() - J.t0) / (J.T * 1000), 0, 1);
+  if (s >= 1) { R.join = null; return; }
+  const p1 = camera.position.clone(), q1 = camera.quaternion.clone(), v1 = tourVel(R, R.t, J.vt), T = J.T, s2 = s * s, s3 = s2 * s;
+  const h00 = 2 * s3 - 3 * s2 + 1, h10 = s3 - 2 * s2 + s, h01 = -2 * s3 + 3 * s2, h11 = s3 - s2;
+  const x = h00 * J.p0.x + h10 * T * J.v0.x + h01 * p1.x + h11 * T * v1.x, y = h00 * J.p0.y + h10 * T * J.v0.y + h01 * p1.y + h11 * T * v1.y, z = h00 * J.p0.z + h10 * T * J.v0.z + h01 * p1.z + h11 * T * v1.z;
+  camera.position.set(x, Math.max(y, tourTerr(x, z) + 6), z); const e = s * s * (3 - 2 * s); camera.quaternion.slerpQuaternions(J.q0, q1, e);
+}
 function tourOverlayMsg(msg) { const el = $('#loadMsg'); if (!el) return; $('#loading').hidden = !msg; el.textContent = msg; }
 function tourSay(kind, pct) { const el = $('#tourMsg'); if (!el) return; el.hidden = !kind; if (kind) el.textContent = kind === 'prep' ? t('tour.prep', { p: Math.round(pct) }) : kind; }
 
@@ -3173,16 +3230,17 @@ function tourFrame(dt, dtr) {
     if (W.k >= W.list.length) { const auto = W.auto; R.warm = null; R.i = -1; R.ready = true; R.cut = true; R.t = R.from; tourSay(''); const s0 = plan.shots[0]; tourEnv(s0.time, s0.weather, null); if (auto) tourPlay(true); else { tourBar(); tourReadyPanel(); } if (TOUR.rec && TOUR.rec.wait) TOUR.rec.wait(); }
     return;
   }
+  if (R.manual && tourManualFrame(R)) return;   // the viewer is flying: the film waits where it was
   if (R.playing) { R.t += Math.min(dtr, 0.5); if (R.t >= plan.dur) { R.t = plan.dur; R.playing = false; R.ended = true; tourEnded(R); } }
   const tt = Math.min(R.t, plan.dur - 1e-3); let i = R.i; if (i < 0 || tt < plan.shots[i].t0 || tt >= plan.shots[i].t0 + plan.shots[i].dur) { i = plan.shots.findIndex(s => tt >= s.t0 && tt < s.t0 + s.dur); if (i < 0) i = plan.shots.length - 1; }
   const s = plan.shots[i], nx = plan.shots[i + 1], u = clamp((tt - s.t0) / s.dur, 0, 1), since = tt - s.t0, left = s.t0 + s.dur - tt;
   if (i !== R.i) { R.i = i; R.cut = true; if (!s.prep) tourPrepShot(s); tourEnv(s.time, s.weather, null); }
-  tourApply(R, s, u, dt, R.cut); R.cut = false;
+  tourApply(R, s, u, dt, R.cut); R.cut = false; if (R.join) tourJoinBlend(R);
   // the next view loads behind the current one, so the cut lands on a finished picture
   if (nx && !plan.route && left < 6 && APP.frameN % 3 === 0) { if (!nx.prep && left < 5.5) tourPrepShot(nx); tourPose(nx, 0, R.tmp); const y = Math.max(R.tmp.y + nx.lift, tourTerr(R.tmp.x, R.tmp.z) + 4); tourWarm({ x: R.tmp.x, y, z: R.tmp.z }); if (APP.frameN % 30 === 0) { DEM.prefetch(R.tmp.x, R.tmp.z, DEM_MAX_Z, 1); if (left < 3.5) VEC.update(R.tmp.look ? R.tmp.tx : R.tmp.x, R.tmp.look ? R.tmp.tz : R.tmp.z, 0); } }
   // dip to black over cuts, in at the start and out at the end
   let f = 0; if (i > 0 && (!plan.route || s.dip)) f = Math.max(f, (s.envCut ? 1 : 0.85) * (1 - since / (s.envCut ? 0.8 : 0.32))); if (nx && (!plan.route || nx.dip)) f = Math.max(f, (nx.envCut ? 1 : 0.85) * (1 - left / (nx.envCut ? 0.55 : 0.22)));
-  if (i === 0) f = Math.max(f, 1 - tt / 1.4); if (!nx) f = Math.max(f, 1 - (plan.dur - tt) / 1.6); if (plan.route) f = Math.max(f, R.rfade || 0); R.fade = clamp(f, 0, 1); tourFade(R.fade);
+  if (i === 0) f = Math.max(f, 1 - tt / 1.4); if (!nx) f = Math.max(f, 1 - (plan.dur - tt) / 1.6); if (plan.route) f = Math.max(f, R.rfade || 0); if (R.join) f = 0; R.fade = clamp(f, 0, 1); tourFade(R.fade);
   // captions
   const lang = tourCapLang(plan), list = lang ? tourCapList(s, lang) : [], n = list.length; let cap = '', ca = 0, k = '';
   if (n) { const seg = s.dur / n, j = Math.min(n - 1, Math.floor(since / seg)), a = since - j * seg; cap = list[j]; k = i + ':' + j + ':' + lang; ca = clamp(Math.min(a / 0.3, (seg - a - 0.15) / 0.3), 0, 1); if (k !== R.capK && R.playing && a < 1.2) tourSpeak(cap, lang, seg); }
@@ -3192,14 +3250,16 @@ function tourFrame(dt, dtr) {
   R.cap2K = k2; R.cap2 = cap2; R.cap2A = ca2;
   R.capK = k; R.cap = cap; R.capA = ca; R.titleA = clamp(Math.min((tt - 0.9) / 0.7, (7.2 - tt) / 0.7), 0, 1); R.credA = clamp(Math.min((tt - (plan.dur - 9)) / 0.8, (plan.dur - 0.5 - tt) / 0.8), 0, 1);
   tourDom(R); if (plan.drama) dramaDom(R); if (R.playing) scoreTick(R);
+  if (!plan.route && !TOUR.studio && APP.frameN % 2 === 0) thudDom(R);
 }
 function tourApply(R, s, u, dt, cut) {
   if (R.plan.route) return routeApply(R, s, u, dt, cut);
-  const o = tourPose(s, u, R.pose), v = APP.veh, clr = s.raw?.clr ?? clamp(s.alt * 0.25, 4, 40); let need = -1e9;   // a drama shot may stand lower (eye height at a monument)
-  for (const k of [0, 0.015, 0.03, 0.05]) { const q = k ? tourPose(s, Math.min(1, u + k), R.tmp) : o; need = Math.max(need, tourTerr(q.x, q.z)); }
-  const want = Math.max(o.y + s.lift, need + clr); R.y = cut ? want : R.y + (want - R.y) * (1 - Math.exp(-dt * 4)); R.y = Math.max(R.y, tourTerr(o.x, o.z) + clr * 0.5);
+  const o = tourPose(s, u, R.pose), v = APP.veh, clr = s.raw?.clr ?? (s.raw?.cam ? 0.6 : clamp(s.alt * 0.25, 4, 40)); let need = -1e9;   // a drama shot may stand lower (eye height at a monument)
+  const terr = s.raw?.cam ? tourGnd : tourTerr;   // a camera inside a stadium follows the play: the stands' roofs from the map do not lift it
+  for (const k of [0, 0.015, 0.03, 0.05]) { const q = k ? tourPose(s, Math.min(1, u + k), R.tmp) : o; need = Math.max(need, terr(q.x, q.z)); }
+  const want = Math.max(o.y + s.lift, need + clr); R.y = cut ? want : R.y + (want - R.y) * (1 - Math.exp(-dt * (s.raw?.cam ? 12 : 4))); R.y = Math.max(R.y, terr(o.x, o.z) + clr * 0.5);
   let yaw = o.yaw, pitch = o.pitch;
-  if (o.look) { const hd = Math.hypot(o.tx - o.x, o.tz - o.z), g = Math.atan2(o.ty - R.y, Math.max(1, hd)) * deg; yaw = bearingTo(o.x, o.z, o.tx, o.tz); pitch = s.pitch != null ? clamp(g, s.pitch - 14, s.pitch + 14) : g; }
+  if (o.look) { const hd = Math.hypot(o.tx - o.x, o.tz - o.z), g = Math.atan2(o.ty - R.y, Math.max(1, hd)) * deg; yaw = bearingTo(o.x, o.z, o.tx, o.tz); pitch = s.pitch != null && !s.raw?.cam ? clamp(g, s.pitch - 14, s.pitch + 14) : g; }
   camera.position.set(o.x, R.y, o.z); camera.rotation.set(clamp(pitch, -89.5, 30) * rad, -yaw * rad, 0, 'YXZ');
   // the scene is centred on what the camera looks at: buildings, trees and elevation load there
   let fx = o.tx, fz = o.tz; if (!o.look) { const d = clamp((R.y - tourGnd(o.x, o.z)) / Math.tan(Math.max(8, -pitch) * rad), 0, 1500); fx = o.x + Math.sin(yaw * rad) * d; fz = o.z - Math.cos(yaw * rad) * d; }
@@ -3244,13 +3304,15 @@ function tourOverlay(show) {
   const te = I18N.lang !== 'en' && plan.titleEn && plan.titleEn !== tourTxt(plan.title) ? plan.titleEn : ''; $('#tourTitle em').textContent = te ? te + (plan.taglineEn ? ' · ' + plan.taglineEn : '') : '';
   $('#tourCred').innerHTML = `<b>${esc(cr.head)}</b>${cr.lines.map(l => `<span>${esc(l)}</span>`).join('')}<i>${esc(cr.air)}</i>`; $('#tourMark').textContent = t('tour.sim'); $('#tourEnd').hidden = true; R.lastCap = null; R.lastCap2 = null;
   $('#tourBar').innerHTML = `<button data-tb="play" title="Space"></button><button data-tb="prev" title="←">⏮</button><button data-tb="next" title="→">⏭</button><span id="tourTime"></span><input id="tourSeek" type="range" min="0" max="${plan.dur}" step="0.1" value="0" aria-label="${esc(t('tour.title'))}">
-    <button data-tb="cc" title="C"></button><button data-tb="voice" title="N"></button><button data-tb="music" title="M"></button><button data-tb="rec" title="R"></button><button data-tb="exit" title="Esc">✕</button>`;
+    <button data-tb="cc" title="C"></button><button data-tb="voice" title="N"></button><button data-tb="music" title="M"></button><button data-tb="hud" title="H"></button><button data-tb="take" title="W A S D ↑ ↓"></button><a data-tb="yt" class="tbyt" target="_blank" rel="noopener" hidden>▶ YouTube</a><button data-tb="rec" title="R"></button><button data-tb="exit" title="Esc">✕</button>`;
   $('#tourBar').onclick = e => { const a = e.target.closest('[data-tb]')?.dataset.tb; if (a) tourAct(a); }; $('#tourSeek').oninput = e => tourSeek(+e.target.value);
   tourBar();
 }
 function tourBar() {
   const R = TOUR.run, b = k => $(`#tourBar [data-tb="${k}"]`); if (!R || !b('play')) return;
-  b('play').innerHTML = svg(R.playing ? 'pause' : 'play'); b('cc').textContent = 'CC ' + tourCapLabel(); b('voice').textContent = (TOUR.voice ? '🔊 ' : '🔇 ') + t('tour.voice'); b('music').textContent = (TOUR.music ? '♪ ' : '♪✕ ') + t('tour.music');
+  b('play').innerHTML = svg(R.playing ? 'pause' : 'play'); b('cc').textContent = 'CC ' + tourCapLabel(); b('voice').textContent = (TOUR.voice ? '🔊 ' : '🔇 ') + t('tour.voice'); b('music').textContent = (TOUR.music ? '♪ ' : '♪✕ ') + t('tour.music'); if (b('hud')) b('hud').textContent = thudLabel();
+  if (b('yt')) { const m = R.plan.route ? tourMedia('route-' + R.plan.route.id, R.plan.view) : tourMedia(R.plan.place?.id, R.plan.id); b('yt').hidden = !m?.yt || !!TOUR.rec; if (m?.yt) { b('yt').href = 'https://www.youtube.com/watch?v=' + m.yt; b('yt').title = isZh() ? '在 YouTube 看這部影片' : 'Watch this film on YouTube'; } }
+  if (b('take')) { b('take').textContent = R.manual ? (isZh() ? '↩ 回到導覽' : '↩ Back to film') : (isZh() ? '🕹 接手飛行' : '🕹 Fly it'); b('take').hidden = !!R.plan.route || !!TOUR.rec; b('take').classList.toggle('on', !!R.manual); }
   b('rec').textContent = TOUR.rec ? '■ ' + t('tour.recording') : '⏺ ' + t('tour.record'); b('rec').classList.toggle('on', !!TOUR.rec); b('cc').hidden = !!R.plan.auto && false;
 }
 function tourAct(a) {
@@ -3259,13 +3321,16 @@ function tourAct(a) {
   else if (a === 'next') tourSeek(sh[Math.min(sh.length - 1, R.i + 1)].t0); else if (a === 'prev') tourSeek(R.t - sh[Math.max(0, R.i)].t0 > 2.5 ? sh[Math.max(0, R.i)].t0 : sh[Math.max(0, R.i - 1)].t0);
   else if (a === 'cc') { const o = I18N.lang === 'en' ? ['auto', 'off'] : R.plan.hasEn && tourOwnTrack(R.plan) !== 'en' ? ['auto', 'one', 'en', 'off'] : ['auto', 'off'], m = tourCapMode(); TOUR.cc = o[(o.indexOf(m) + 1) % o.length]; LS.set('aero7:cc', TOUR.cc); R.capK = ''; R.cap2K = ''; try { speechSynthesis?.cancel(); } catch { } }
   else if (a === 'voice') { TOUR.voice = !TOUR.voice; LS.set('aero7:voice', TOUR.voice ? '1' : '0'); if (!TOUR.voice) try { speechSynthesis?.cancel(); } catch { } }
+  else if (a === 'hud') thudToggle();
+  else if (a === 'take') { if (R.manual) tourGiveBack(R); else tourTake(R); }
+  else if (a === 'yt') { if (R.playing) tourPlay(false); }   // the film waits while the viewer watches it on YouTube
   else if (a === 'music') { TOUR.music = !TOUR.music; LS.set('aero7:music', TOUR.music ? '1' : '0'); scoreVolume(); }
   else if (a === 'rec') { if (TOUR.rec) tourRecStop(true); else startTour(R.plan.place, { set: R.plan.set, tour: R.plan.route ? { id: R.plan.id, route: true, view: R.plan.view } : R.plan.set.tours.find(x => x.id === R.plan.id) }, { record: true }); }
   tourBar();
 }
 function tourKey(e) {
-  const c = e.code; if (c === 'Space' || c === 'KeyK') tourAct('play'); else if (c === 'Escape') tourExit(); else if (c === 'ArrowRight') tourAct('next'); else if (c === 'ArrowLeft') tourAct('prev');
-  else if (c === 'KeyC') tourAct('cc'); else if (c === 'KeyN') tourAct('voice'); else if (c === 'KeyM') tourAct('music'); else if (c === 'KeyR') tourAct('rec'); else if (c === 'KeyF') toggleFullscreen();
+  const c = e.code, R = TOUR.run; if (R?.manual && TOUR_FLY.has(c)) return; if (R && !R.manual && TOUR_TAKE.has(c)) { tourTake(R); return; } if (c === 'Space' || c === 'KeyK') tourAct('play'); else if (c === 'Escape') tourExit(); else if (c === 'ArrowRight') tourAct('next'); else if (c === 'ArrowLeft') tourAct('prev');
+  else if (c === 'KeyC') tourAct('cc'); else if (c === 'KeyN') tourAct('voice'); else if (c === 'KeyM') tourAct('music'); else if (c === 'KeyH') tourAct('hud'); else if (c === 'KeyR') tourAct('rec'); else if (c === 'KeyF') toggleFullscreen();
 }
 function tourBind() {
   if (TOUR.bound) return; TOUR.bound = true; document.addEventListener('visibilitychange', () => { if (document.hidden && TOUR.run?.playing && !TOUR.rec) tourPlay(false); });
@@ -3334,6 +3399,7 @@ function tourPaint(R) {   // compose one frame of the recording on a 2D canvas
   g.globalAlpha = 1; g.drawImage(src, (sw - W / k) / 2, (sh - H / k) / 2, W / k, H / k, 0, 0, W, H);
   if (plan.route) routePaint(g, W, H, R);
   if (plan.drama) dramaPaint(g, W, H, R, F);
+  if (!plan.route) try { thudPaint(g, W, H, R, false); } catch (e) { APP.lastErr = 'hud: ' + (e?.stack || e); }   // the film goes on without the panels rather than stop   // continent and country, satellite inset, flight path, instruments (91_tourhud.js)
   const text = (s, x, y, a, font, align = 'center', col = '#fff') => { g.globalAlpha = a; g.font = font; g.textAlign = align; g.textBaseline = 'middle'; g.lineJoin = 'round'; g.lineWidth = Math.max(2, H / 240); g.strokeStyle = 'rgba(0,0,0,.72)'; g.strokeText(s, x, y); g.fillStyle = col; g.fillText(s, x, y); };
   g.shadowColor = 'rgba(0,0,0,.55)'; g.shadowBlur = H / 90;
   if (R.titleA > 0.01) { const a = R.titleA; text(tourKicker(plan), W / 2, H * 0.31, a, `600 ${H * 0.03}px ${F}`, 'center', '#f0c879'); g.font = `700 ${H * 0.066}px ${F}`; const ls = tourWrap(g, tourTxt(plan.title), W * 0.86); ls.forEach((l, j) => text(l, W / 2, H * 0.40 + j * H * 0.082, a, `700 ${H * 0.066}px ${F}`)); g.font = `400 ${H * 0.032}px ${F}`; tourWrap(g, tourTxt(plan.tagline), W * 0.8).forEach((l, j) => text(l, W / 2, H * 0.40 + ls.length * H * 0.082 + H * 0.012 + j * H * 0.045, a, `400 ${H * 0.032}px ${F}`)); }
@@ -3536,6 +3602,9 @@ async function tourStudioBoot() {
   addEventListener('error', e => post('/studio/log', { level: 'error', msg: 'error: ' + String(e.message) }));
   addEventListener('unhandledrejection', e => post('/studio/log', { level: 'error', msg: 'error: ' + String(e.reason?.message || e.reason) }));
   try { navigator.wakeLock?.request('screen').catch(() => { }); } catch { }
+  // a lost graphics context never comes back in this window: say so at once, and studio.py records the film again in a fresh window
+  const lost = () => { const j = TOUR.studio.jobs[TOUR.studio.k]; APP.lastErr = 'WebGL context lost'; post('/studio/lost', { name: j?.name || '' }); };
+  const hook = (n = 0) => { const c = typeof renderer !== 'undefined' && renderer?.domElement; if (c) c.addEventListener('webglcontextlost', lost); else if (n < 240) setTimeout(() => hook(n + 1), 500); }; hook();   // the 3D view is created after this runs
   tourStudioClock(); tourStudioNext(); return true;
 }
 /* A browser only draws animation frames for a window it believes is visible: a covered window or a sleeping display would stall a
@@ -3553,14 +3622,15 @@ function tourStudioClock() {
     m += ` · ${fps.toFixed(0)} fps` + (document.hidden ? ' · window hidden' : '') + (TOUR.rec ? ` · recorder ${TOUR.rec.mr.state}` : '');
     if (APP.lastErr && APP.lastErr !== shown) { shown = APP.lastErr; m += ' · error: ' + shown.split('\n').slice(0, 3).join(' | ').slice(0, 400); }
     if (still >= 2) m += ' · nothing is being drawn: bring the AERO window to the front and keep the display awake';
-    S.post('/studio/log', { msg: `[${S.k + 1}/${S.jobs.length}] ` + m });
+    S.post('/studio/log', { msg: `[${tourStudioPos(S)}] ` + m });
   }, 15000);
 }
+const tourStudioPos = S => `${(S.opts.pos || 1) + Math.max(0, S.k)}/${S.opts.of || S.jobs.length}`;   // studio.py hands the page one film per window: count over the whole run
 async function tourStudioNext() {
   const S = TOUR.studio; if (!S) return; S.k++; const job = S.jobs[S.k];
   if (!job) { await S.post('/studio/done', { all: true }); document.title = 'AERO Studio · done'; tourSay(''); toast('Studio: all tours recorded', 60000); return; }
   try {
-    await S.post('/studio/log', { level: 'info', msg: `start ${S.k + 1}/${S.jobs.length} ${job.place} ${job.tour} ${job.lang}` });
+    await S.post('/studio/log', { level: 'info', msg: `start ${tourStudioPos(S)} ${job.place} ${job.tour} ${job.lang}` });
     if (job.lang && job.lang !== I18N.lang) await setLang(job.lang); TOUR.cc = 'auto'; TOUR.voice = false;
     const ropts = { record: true, w: job.w || S.opts.w, h: job.h || S.opts.h, bps: job.bps || S.opts.bps, fps: S.opts.fps, from: S.opts.from, prewarm: S.opts.prewarm !== false, name: job.name, done: async res => { await S.post('/studio/done', { job, result: res }); if (TOUR.on) tourExit(true); setTimeout(tourStudioNext, 800); } };
     if (job.route) { await startRoute(job.route, job.view || job.tour, ropts); if (!TOUR.on) throw new Error('route did not start'); return; }
@@ -3884,7 +3954,10 @@ function routePaint(g, W, H, R, dom) {
   g.restore(); g.globalAlpha = 1;
   // instruments, log and map (they give way to the credits and the LINE code at the end)
   const ka = 1 - clamp(R.credA || 0, 0, 1);
-  if (ka > 0.01) { g.globalAlpha = ka; routeInstruments(g, W, H, set, Hd, F, win); routeLogPanel(g, W, H, set, Hd, F, win); routeMap(g, W, H, set, Hd, win); }
+  if (ka > 0.01 && !(dom && THUD.mode === 'off')) {   // 2026-11-25: the same layout as the place films — continent and country, satellite inset, red flight line, ground readings (91_tourhud.js)
+    g.globalAlpha = ka; const top = H * (win && set.mode === 'air' ? 0.13 : 0.03), x = W * (win && set.mode === 'air' ? 0.125 : 0.02);
+    routeInstruments.y0 = thudRouteChip(g, W, H, R, x, top) + H * 0.01; routeInstruments(g, W, H, set, Hd, F, win); routeInstruments.y0 = null;
+    routeLogPanel(g, W, H, set, Hd, F, win); thudRouteGround(g, W, H, R, x, routeLogPanel.bottom + H * 0.012); thudRouteRight(g, W, H, R, win); }
   g.restore();
 }
 /* cabin window (rounded opening in a light wall with a half-drawn shade), train and car windows, a ship's rail */
@@ -3911,7 +3984,7 @@ function routeFrame(g, W, H, set, Hd) {
 }
 function routePanel(g, x, y, w, h, r) { g.fillStyle = 'rgba(8,14,20,.58)'; g.beginPath(); g.roundRect(x, y, w, h, r); g.fill(); g.strokeStyle = 'rgba(240,200,121,.45)'; g.lineWidth = Math.max(1, h / 160); g.stroke(); }
 function routeInstruments(g, W, H, set, Hd, F, win) {
-  const mode = set.mode, x = W * (win && mode === 'air' ? 0.125 : 0.02), y = H * (win && mode === 'air' ? 0.13 : 0.03), fs = H * 0.0205, lh = fs * 1.42, rows = [];
+  const mode = set.mode, x = W * (win && mode === 'air' ? 0.125 : 0.02), y = routeInstruments.y0 ?? H * (win && mode === 'air' ? 0.13 : 0.03), fs = H * 0.0205, lh = fs * 1.42, rows = [];
   const kt = Hd.gs * 1.943844, kmh = Hd.gs * 3.6, ft = Hd.alt * 3.28084, utc = new Date(Hd.ms).toISOString().slice(11, 16), f = set.from, to = set.to;
   rows.push([`${ROUTE_ICON[mode]} ${routeName(f.city)} ${f.code} → ${routeName(to.city)} ${to.code}`, '#f0c879', 700]);
   const lt = routeClock(Hd.ms, f.tz), lt2 = routeClock(Hd.ms, to.tz); rows.push([`UTC ${utc} · ${routeName(f.city)} ${lt}` + (to.tz !== f.tz ? ` · ${routeName(to.city)} ${lt2}` : ''), '#fff', 500]);
@@ -3934,10 +4007,10 @@ function routeInstruments(g, W, H, set, Hd, F, win) {
   routeInstruments.bottom = y + rows.length * lh + fs * 0.8;
 }
 function routeLogPanel(g, W, H, set, Hd, F, win) {
-  const done = set.log.filter(e => e.t <= Hd.t + 0.01); if (!done.length) return; const list = done.slice(-3), fs = H * 0.0182, lh = fs * 1.45, x = W * (win && set.mode === 'air' ? 0.125 : 0.02), y = routeInstruments.bottom + H * 0.012;
+  routeLogPanel.bottom = routeInstruments.bottom; const done = set.log.filter(e => e.t <= Hd.t + 0.01); if (!done.length) return; const list = done.slice(-3), fs = H * 0.0182, lh = fs * 1.45, x = W * (win && set.mode === 'air' ? 0.125 : 0.02), y = routeInstruments.bottom + H * 0.012;
   const tz = set.mode === 'air' ? set.from.tz : set.from.tz, rows = list.map(e => `${routeClock(Date.parse(set.depart_utc) + e.tt * 1000, tz)}  ${routeName(e) || e.en}`);
   g.font = `500 ${fs}px ${F}`; const w = Math.max(...rows.map(r => g.measureText(r).width), g.measureText(t('route.log')).width) + fs * 1.4;
-  routePanel(g, x, y, w, (rows.length + 1) * lh + fs * 0.6, fs * 0.6); g.textAlign = 'left'; g.textBaseline = 'top';
+  routePanel(g, x, y, w, (rows.length + 1) * lh + fs * 0.6, fs * 0.6); g.textAlign = 'left'; g.textBaseline = 'top'; routeLogPanel.bottom = y + (rows.length + 1) * lh + fs * 0.6;
   g.font = `700 ${fs}px ${F}`; g.fillStyle = '#f0c879'; g.fillText(routeLab('route.log'), x + fs * 0.7, y + fs * 0.35);
   rows.forEach((r, i) => { const fresh = i === rows.length - 1 && Hd.t - list[i].t < 6; g.font = `${fresh ? 600 : 500} ${fs}px ${F}`; g.fillStyle = fresh ? '#fff' : 'rgba(230,236,240,.82)'; g.fillText(r, x + fs * 0.7, y + fs * 0.35 + (i + 1) * lh); });
 }
@@ -4604,12 +4677,35 @@ function dramaFpv(R, s, u, dt, cut) {
 /* ---------- a notice that stays on screen for the whole film (for example: this is a no-fly zone, the picture is simulated) ---------- */
 function dramaBannerOf(R) { const s = R.plan.shots?.[R.i]; return s?.raw?.banner ?? R.plan.drama?.banner; }
 function dramaBanner(R) { const b = dramaBannerOf(R); if (!b) return ''; return isZh() ? b.zh : b[I18N.lang] || b.en; }
+/* a match film's score bug (shot.board {l, r, s, t, lc, rc}) and a replay badge (shot.replay: true, or the speed, e.g. 0.25) */
+function dramaBoard(g, W, H, R, F) {
+  const sh = R.plan.shots?.[R.i]?.raw; if (!sh || (!sh.board && !sh.replay && !sh.slow)) return; g.save(); g.shadowBlur = 0; const y = H * 0.1, h = H * 0.052, fs = H * 0.028;
+  const tx = v => v && typeof v === 'object' ? (isZh() ? v.zh : v[I18N.lang] || v.en) : v;   // a name or a clock may be given per language
+  if (sh.board) { const b0 = sh.board, b = { ...b0, l: tx(b0.l), r: tx(b0.r), t: tx(b0.t) }, parts = [[b.l, b.lc || '#e9e9e9'], [b.s, null], [b.r, b.rc || '#e9e9e9']]; g.font = `700 ${fs}px ${F}`; let x = W * 0.03;
+    const ws = parts.map(([s]) => g.measureText(String(s)).width + h * 0.7), tw = ws.reduce((a, b2) => a + b2, 0) + (b.t ? g.measureText(b.t).width + h * 0.7 : 0);
+    g.globalAlpha = 0.88; g.fillStyle = '#15171c'; g.beginPath(); g.roundRect ? g.roundRect(x, y, tw, h, h * 0.18) : g.rect(x, y, tw, h); g.fill(); g.globalAlpha = 1; g.textBaseline = 'middle'; g.textAlign = 'center';
+    parts.forEach(([s, c], i) => { if (c) { g.fillStyle = c; g.fillRect(x + h * 0.12, y + h * 0.2, h * 0.08, h * 0.6); } else { g.fillStyle = '#f0c879'; g.fillRect(x, y, ws[i], h); } g.fillStyle = c ? '#ffffff' : '#15171c'; g.fillText(String(s), x + ws[i] / 2 + (c ? h * 0.06 : 0), y + h * 0.53); x += ws[i]; });
+    if (b.t) { g.fillStyle = '#d7dbe2'; g.font = `600 ${fs * 0.92}px ${F}`; g.fillText(b.t, x + (tw - (x - W * 0.03)) / 2, y + h * 0.53); } }
+  if (sh.replay || sh.slow) { const zh = isZh(), v = sh.replay || sh.slow, s1 = sh.replay ? (zh ? '重播' : 'REPLAY') : (zh ? '慢動作' : 'SLOW MOTION'), s2 = typeof v === 'number' ? (sh.replay ? (zh ? `慢動作 ×${v}` : `slow motion ×${v}`) : `×${v}`) : ''; g.font = `800 ${fs}px ${F}`;
+    const w1 = g.measureText(s1).width + h * 0.6; g.font = `600 ${fs * 0.85}px ${F}`; const w2 = s2 ? g.measureText(s2).width + h * 0.6 : 0, x = W * 0.97 - w1 - w2;
+    g.globalAlpha = 0.9; g.fillStyle = '#c8322b'; g.fillRect(x, y, w1, h); if (w2) { g.fillStyle = '#15171c'; g.fillRect(x + w1, y, w2, h); } g.globalAlpha = 1; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillStyle = '#fff'; g.font = `800 ${fs}px ${F}`; g.fillText(s1, x + w1 / 2, y + h * 0.53); if (w2) { g.font = `600 ${fs * 0.85}px ${F}`; g.fillStyle = '#f0c879'; g.fillText(s2, x + w1 + w2 / 2, y + h * 0.53); } }
+  g.restore();
+}
 function dramaPaint(g, W, H, R, F) {
+  dramaBoard(g, W, H, R, F);
   const s = dramaBanner(R); if (!s) return; g.save(); g.shadowBlur = 0; g.font = `700 ${H * 0.027}px ${F}`; const w = g.measureText(s).width + H * 0.05, x = W / 2 - w / 2, y = H * 0.035;
   g.globalAlpha = 0.86; g.fillStyle = dramaBannerOf(R)?.bg || '#b3261e'; g.beginPath(); g.roundRect ? g.roundRect(x, y, w, H * 0.05, H * 0.012) : g.rect(x, y, w, H * 0.05); g.fill();
   g.globalAlpha = 1; g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(s, W / 2, y + H * 0.026); g.restore();
 }
-function dramaDom(R) { let el = $('#dramaBanner'); const s = DRAMA.on ? dramaBanner(R) : ''; if (!s) { if (el) el.hidden = true; return; } if (!el) { el = document.createElement('div'); el.id = 'dramaBanner'; $('#stage').appendChild(el); } el.hidden = false; if (el.textContent !== s) el.textContent = s; const bg = dramaBannerOf(R)?.bg || ''; if (el.style.background !== bg) el.style.background = bg; }
+function dramaBoardDom(R) {   // the same score bug and replay badge on the live screen
+  const sh = DRAMA.on ? R.plan.shots?.[R.i]?.raw : null, want = !!(sh && (sh.board || sh.replay || sh.slow)); let cv = $('#dramaBoard');
+  if (!want) { if (cv) cv.hidden = true; return; } if (!cv) { cv = document.createElement('canvas'); cv.id = 'dramaBoard'; cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4'; $('#stage').appendChild(cv); }
+  cv.hidden = false; const W = Math.round(cv.clientWidth * (devicePixelRatio || 1)), H = Math.round(cv.clientHeight * (devicePixelRatio || 1)); if (!W || !H) return;
+  const key = R.i + ':' + W + 'x' + H + ':' + I18N.lang; if (cv.dataset.k === key) return; cv.dataset.k = key; cv.width = W; cv.height = H; const g = cv.getContext('2d'); g.clearRect(0, 0, W, H);
+  dramaBoard(g, W, H, R, '"Noto Sans TC","PingFang TC","Microsoft JhengHei","Noto Sans",system-ui,sans-serif');
+}
+function dramaDom(R) { dramaBoardDom(R); let el = $('#dramaBanner'); const s = DRAMA.on ? dramaBanner(R) : ''; if (!s) { if (el) el.hidden = true; return; } if (!el) { el = document.createElement('div'); el.id = 'dramaBanner'; $('#stage').appendChild(el); } el.hidden = false; if (el.textContent !== s) el.textContent = s; const bg = dramaBannerOf(R)?.bg || ''; if (el.style.background !== bg) el.style.background = bg; }
 
 /* ---------- the list of drama films (start screen) ---------- */
 async function showDrama() {
@@ -4675,11 +4771,48 @@ const SPORT_CROWD = (() => { let t = null; return () => { if (t) return t; const
   const pal = ['#d8d2c8', '#2b4b8c', '#c33b2f', '#f0c230', '#2e7d4f', '#ffffff', '#5a5a5a', '#e07a2e', '#8fb3d9'];
   for (let y = 0; y < 256; y += 8) { g.fillStyle = 'rgba(0,0,0,.35)'; g.fillRect(0, y + 6, 512, 2); for (let x = 0; x < 512; x += 4) { if ((x % 128) < 6) continue; if (r() < 0.12) continue; g.fillStyle = pal[Math.floor(r() * pal.length)]; g.fillRect(x, y + 1, 3, 5); } }
   t = sportTex(c, 4); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; }; })();
+/* the level of a field: the highest ground under it (the map's terrain can bump up inside a stadium; the field must not sink into it) */
+function sportBase(x, z, rotY, L, W) {
+  const c = Math.cos(rotY), s = Math.sin(rotY); let m = -1e9;
+  for (let i = -2; i <= 2; i++) for (let j = -2; j <= 2; j++) { const px = i / 2 * L / 2, py = j / 2 * W / 2, h = DEM.heightAt(x + px * c - py * s, z - px * s - py * c); if (Number.isFinite(h)) m = Math.max(m, h); }
+  return Math.max(m, 0);
+}
+const sportNight = () => clamp((2 - (APP.sunAlt ?? 30)) / 6, 0, 1);   // 0 by day … 1 from 4° below the horizon: the floodlights are on
 function sportRayRing(ring, a) {   // distance from (0, 0) to a closed outline along direction a (radians, from +x toward +y)
   const dx = Math.cos(a), dy = Math.sin(a); let best = 0;
   for (let i = 0; i < ring.length; i++) { const [x0, y0] = ring[i], [x1, y1] = ring[(i + 1) % ring.length], ex = x1 - x0, ey = y1 - y0, den = dx * ey - dy * ex; if (Math.abs(den) < 1e-9) continue;
     const t = (x0 * ey - y0 * ex) / den, u = (x0 * dy - y0 * dx) / den; if (t > 0 && u >= 0 && u <= 1) best = Math.max(best, t); }
   return best;
+}
+/* a camera that follows the play (shot.cam), placed in the play's own frame (x along the field, y to its left, z up):
+   tv: the main broadcast camera high on the side; tvlow: lower and closer; goal: behind one end; low: at the touchline; follow: behind the lead player;
+   side: level with the lead player; top: straight down; orbit: round a point while the play runs; fixed: from a given point; pov: from a player's eyes.
+   It aims at the ball (on: 'ball'), the lead player ('lead') or between them ('mid'), smoothed over the last `lag` seconds of play. */
+const _sc = [0, 0, 0], _sd = [0, 0, 0], _se = [0, 0, 0];
+function sportCam(o, A, at, ballAt, lead, t, c, u, out, W, gy) {
+  const on = c.on || (ballAt ? 'ball' : 'lead'), who = c.lead != null ? A[c.lead] : lead, lag = c.lag ?? (['tv', 'tvlow', 'top', 'goal'].includes(c.mode) ? 0.7 : 0.25);
+  const focus = (tt, o2) => { if (on === 'lead' || !ballAt) { at(who.k, tt, o2); o2[2] = 1.1; } else { const b = ballAt(tt); o2[0] = b[0]; o2[1] = b[1]; o2[2] = (b[2] || 0) + 0.4; if (on === 'mid') { at(who.k, tt, _sd); o2[0] = (o2[0] + _sd[0]) / 2; o2[1] = (o2[1] + _sd[1]) / 2; o2[2] = 1.0; }
+    if (c.sw) { const k = clamp((tt - c.sw[0]) / (c.sw[1] - c.sw[0]), 0, 1), e = k * k * (3 - 2 * k); if (e > 0) { at(who.k, tt, _se); o2[0] += (_se[0] - o2[0]) * e; o2[1] += (_se[1] - o2[1]) * e; o2[2] += (1.1 - o2[2]) * e; } } } return o2; };   // sw [t0, t1]: from the ball over to the lead player (a home run: the flight, then the trot)
+  let fx = 0, fy = 0, fz = 0; const NS = 8; for (let k = 0; k < NS; k++) { focus(t - lag * k / (NS - 1), _sc); fx += _sc[0]; fy += _sc[1]; fz += _sc[2]; } fx /= NS; fy /= NS; fz /= NS;
+  const L = o.L || 105, Wd = o.W || 68, side = c.side ?? 1, d = c.d, h = c.h; let px, py, pz, tx = fx + (c.ax || 0), ty = fy + (c.ay || 0), tz = fz + (c.az || 0);
+  if (c.mode === 'tv' || c.mode === 'tvlow') { const lo = c.mode === 'tvlow'; px = fx * (c.k ?? (lo ? 0.92 : 0.8)) + (c.dx || 0); py = -side * (Wd / 2 + (d ?? (lo ? 14 : 30))); pz = h ?? (lo ? 7 : 20); }
+  else if (c.mode === 'goal') { const e = c.end ?? 1; px = e * (L / 2 + (d ?? 12)); py = (c.y0 || 0) + fy * 0.25; pz = h ?? 4.5; }
+  else if (c.mode === 'low') { px = fx + (c.dx || 0); py = -side * (Wd / 2 + (d ?? 2.5)); pz = h ?? 1.3; }
+  else if (c.mode === 'top') { if (c.at) { fx = tx = c.at[0]; fy = ty = c.at[1]; tz = 0; } px = fx + (c.dx || 0); py = fy + (c.dy || 0) - 0.01; pz = h ?? 38; }   // looking straight down with the field's length across the picture
+  else if (c.mode === 'follow' || c.mode === 'side') {
+    at(who.k, t, _sc); let vx = 0, vy = 0; for (let k = 1; k <= 6; k++) { at(who.k, t - 0.15 * k, _sd); vx += _sc[0] - _sd[0]; vy += _sc[1] - _sd[1]; } let l = Math.hypot(vx, vy);
+    if (l < 0.05) { const a0 = (c.dir ?? 0) * rad; vx = Math.cos(a0); vy = Math.sin(a0); l = 1; } vx /= l; vy /= l;
+    if (c.mode === 'follow') { px = _sc[0] - vx * (d ?? 9) - vy * (c.off || 0) * -1; py = _sc[1] - vy * (d ?? 9) + vx * (c.off || 0); pz = h ?? 3.2; tx = _sc[0] + vx * (c.ahead ?? 6); ty = _sc[1] + vy * (c.ahead ?? 6); tz = c.az ?? 1.0; }
+    else { px = _sc[0] - vy * side * (d ?? 12) + vx * (c.lead0 || 0); py = _sc[1] + vx * side * (d ?? 12) + vy * (c.lead0 || 0); pz = h ?? 2.2; tx = _sc[0] + vx * (c.ahead ?? 1.5); ty = _sc[1] + vy * (c.ahead ?? 1.5); tz = c.az ?? 1.1; }
+  }
+  else if (c.mode === 'orbit') { const ctr = c.at || [fx, fy], a = ((c.a0 ?? 0) + (c.arc ?? 60) * u) * rad; px = ctr[0] + Math.cos(a) * (d ?? 14); py = ctr[1] + Math.sin(a) * (d ?? 14); pz = h ?? 4; if (c.at) { tx = ctr[0]; ty = ctr[1]; tz = c.az ?? 1.0; } }
+  else if (c.mode === 'fixed') { [px, py, pz] = c.p; if (c.look) [tx, ty, tz] = c.look; }
+  else if (c.mode === 'pov') { const me = A[c.from ?? 0]; at(me.k, t, _sd); px = _sd[0]; py = _sd[1]; pz = 1.7; }
+  else { px = fx - 20; py = fy - 20; pz = 12; }
+  if (c.fz != null && !(c.mode === 'fixed' && c.look)) tz = c.fz;   // fz: aim at this height above the ball's spot (a fly ball stays in the picture without the camera tilting to the roof)
+  if (c.p0 && c.mode !== 'fixed') { const k = tourEase(u); px = lerp(c.p0[0], px, k); py = lerp(c.p0[1], py, k); pz = lerp(c.p0[2], pz, k); }   // p0: ease in from a starting point
+  const ground = gy ? gy([px, py, 0]) : 0, P = W(px, py, pz + ground), T = W(tx, ty, tz + (gy ? gy([tx, ty, 0]) : 0));
+  out.x = P.x; out.y = P.y; out.z = P.z; out.tx = T.x; out.ty = T.y; out.tz = T.z; return out;
 }
 Object.assign(DRAMA_BUILD, {
   /* a venue: field, raked seats from just outside the field to an outer edge (an ellipse a × b, or an outline from the map), a roof ring and lights */
@@ -4707,6 +4840,9 @@ Object.assign(DRAMA_BUILD, {
       for (let k = 0; k < 48; k++) { const a = k / 48 * Math.PI * 2, ri = inner(a), ro = Math.max(outer(a), ri + 10), r = ro - (ro - ri) * (R.depth ?? 0.7) + 1.5; lamps.push([r * Math.cos(a), H + (R.lift ?? 2) + (R.rise ?? 0) - 0.8, -r * Math.sin(a)]); }
     }
     if (o.towers) for (const [tx, ty] of o.towers) { const p = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.9, o.towerH || 45, 8), dramaMat('#9aa0a6', 0.6, 0.4)); p.position.set(tx, (o.towerH || 45) / 2, -ty); g.add(p); for (let i = -2; i <= 2; i++) lamps.push([tx + i * 1.2, (o.towerH || 45) + 1, -ty]); }
+    // floodlights: four spotlights high on the far corners of the bowl, aimed at the centre (they light the field and the players, not the town)
+    const spots = o.lights === false ? [] : [45, 135, 225, 315].map(deg0 => { const a = deg0 * rad, ri = inner(a), ro = Math.max(outer(a), ri + 10), r = ri + (ro - ri) * 0.55, sp = new THREE.SpotLight('#fff3dd', 0, 0, 0.62, 0.45, 1);
+      sp.position.set(r * Math.cos(a), H + 18, -r * Math.sin(a)); sp.target.position.set(0, 0, 0); sp.castShadow = false; g.add(sp, sp.target); return sp; });
     const lampM = new THREE.MeshBasicMaterial({ color: '#fff6dc' }), lampI = new THREE.InstancedMesh(new THREE.BoxGeometry(1.6, 0.8, 1.6), lampM, Math.max(1, lamps.length)), m4 = new THREE.Matrix4();
     lamps.forEach(([lx, ly, lz], i) => { m4.makeTranslation(lx, ly, lz); lampI.setMatrixAt(i, m4); }); lampI.count = lamps.length; g.add(lampI);
     g.rotation.y = -((o.heading || 0) - 90) * rad; g.position.set(x, -1e4, z); let done = false;   // local +x points toward bearing `heading`
@@ -4714,8 +4850,9 @@ Object.assign(DRAMA_BUILD, {
       dramaShPatch(fmat); dramaShPatch(cmat); const c = Math.cos(g.rotation.y), sn = Math.sin(g.rotation.y), rmax = (B.ring ? Math.max(...B.ring.map(p => Math.hypot(p[0], p[1]))) : Math.max(B.a || 150, B.b || 130)) + 5;
       DRAMA.foot.push({ minX: x - rmax, maxX: x + rmax, minZ: z - rmax, maxZ: z + rmax, hf: (px, pz) => { if (g.position.y < -1e3) return -1e9; const dx = px - x, dz = pz - z, lx = dx * c - dz * sn, ly = dx * sn + dz * c, a = Math.atan2(-ly, lx), r = Math.hypot(lx, ly), ri = inner(a), ro = Math.max(outer(a), ri + 10);
         if (r < ri || r > ro) return -1e9; if (R && r > ro - (ro - ri) * (R.depth ?? 0.7)) return g.position.y + H + (R.lift ?? 2) + (R.rise ?? 0) * (ro - r) / Math.max(1, (ro - ri) * (R.depth ?? 0.7)); return g.position.y + h0 + (H - h0) * Math.pow((r - ri) / (ro - ri), B.curve ?? 1); } }); }
-    return { obj: g, tick() { const night = VEC.mat ? clamp(VEC.mat.emissiveIntensity / 0.9, 0, 1) : 0, on = o.lights === false ? 0 : night; fmat.emissiveIntensity = on * 0.62; cmat.emissiveIntensity = on * 0.3; lampI.visible = on > 0.05 || !!o.lampsDay;
-      if (done || APP.frameN % 20) return; const y = DEM.heightAt(x, z); if (Number.isFinite(y) && y !== 0) { g.position.y = Math.max(y, 0) + (o.dy || 0); done = true; } } };
+    return { obj: g, tick() { const on = o.lights === false ? 0 : sportNight(); fmat.emissiveIntensity = on * 0.18; cmat.emissiveIntensity = on * 0.3; lampI.visible = on > 0.05 || !!o.lampsDay;
+      for (const sp of spots) { const d = sp.position.length(); sp.intensity = on * (o.lux ?? 0.75) * d; sp.visible = on > 0.01; }
+      if (done || APP.frameN % 20) return; const y = DEM.heightAt(x, z); if (Number.isFinite(y) && y !== 0) { g.position.y = (o.flat === false ? Math.max(y, 0) : sportBase(x, z, g.rotation.y, FL, FW)) + (o.dy || 0); done = true; } } };
   },
   /* a motor-racing circuit: an asphalt ribbon along a closed loop (metres east, north of lat, lon) laid on the terrain, with white edge lines, the start line, pit buildings and stands */
   circuit(o) {
@@ -4770,7 +4907,8 @@ Object.assign(DRAMA_BUILD, {
     // markers in one instanced mesh per colour, lit a little from within so that they read under floodlights
     const bodyG = new THREE.CylinderGeometry(0.32, 0.36, 1.4, 10).translate(0, 0.7, 0), headG = new THREE.SphereGeometry(0.2, 10, 8).translate(0, 1.66, 0), teams = new Map(), glowMats = [];
     people.forEach(a => { const c = a.c || '#d33'; if (!teams.has(c)) teams.set(c, []); teams.get(c).push(a); });
-    const groups = [...teams].map(([c, list]) => { const m = dramaMat(c, 0.7, 0, { emissive: new THREE.Color(c), emissiveIntensity: 0 }); glowMats.push(m); const b = new THREE.InstancedMesh(bodyG, m, list.length), h = new THREE.InstancedMesh(headG, m, list.length); g.add(b, h); return { list, b, h }; });
+    const figs = o.figures !== false && people.length > 0;   // virtual athletes (89_athletes.js); figures:false keeps the plain markers
+    const groups = figs ? [] : [...teams].map(([c, list]) => { const m = dramaMat(c, 0.7, 0, { emissive: new THREE.Color(c), emissiveIntensity: 0 }); glowMats.push(m); const b = new THREE.InstancedMesh(bodyG, m, list.length), h = new THREE.InstancedMesh(headG, m, list.length); g.add(b, h); return { list, b, h }; });
     const col = new THREE.Color();
     // an open-wheel racing car in plain shapes, about 5.4 m long, nose toward +x: a coloured body, dark wings and cockpit, four wheels
     const T = (x, y, z) => new THREE.Matrix4().makeTranslation(x, y, z), B = (l, h, w) => new THREE.BoxGeometry(l, h, w);
@@ -4779,7 +4917,7 @@ Object.assign(DRAMA_BUILD, {
     const wheel = (r, w) => new THREE.CylinderGeometry(r, r, w, 14).rotateX(Math.PI / 2), wheelG = dramaMerge([[wheel(0.33, 0.36), T(1.6, 0.33, 0.86)], [wheel(0.33, 0.36), T(1.6, 0.33, -0.86)], [wheel(0.36, 0.44), T(-1.55, 0.36, 0.84)], [wheel(0.36, 0.44), T(-1.55, 0.36, -0.84)]]);
     const carM = dramaMat('#ffffff', 0.35, 0.4), carI = new THREE.InstancedMesh(carG, carM, Math.max(1, cars.length)), wingI = new THREE.InstancedMesh(wingG, dramaMat('#1d1f22', 0.5, 0.3), Math.max(1, cars.length)), wheelI = new THREE.InstancedMesh(wheelG, dramaMat('#141516', 0.8, 0.05), Math.max(1, cars.length));
     cars.forEach((a, i) => carI.setColorAt(i, col.set(a.c || '#d33'))); carI.count = wingI.count = wheelI.count = cars.length; g.add(carI, wingI, wheelI);
-    const hlM = new THREE.MeshBasicMaterial({ color: o.hl || '#ffd34d', transparent: true, opacity: 0.85, depthWrite: false }), hls = A.filter(a => a.hl), ring = new THREE.InstancedMesh(new THREE.RingGeometry(o.hlR ? o.hlR * 0.8 : 1.1, o.hlR || 1.45, 32).rotateX(-Math.PI / 2), hlM, Math.max(1, hls.length)); ring.count = hls.length; ring.renderOrder = 3; g.add(ring);
+    const hlR = o.hlR || (figs ? 0.85 : 1.45), hlM = new THREE.MeshBasicMaterial({ color: o.hl || '#ffd34d', transparent: true, opacity: figs ? 0.7 : 0.85, depthWrite: false }), hls = A.filter(a => a.hl), ring = new THREE.InstancedMesh(new THREE.RingGeometry(hlR * 0.78, hlR, 32).rotateX(-Math.PI / 2), hlM, Math.max(1, hls.length)); ring.count = hls.length; ring.renderOrder = 3; g.add(ring);
     const ball = o.ball ? new THREE.Mesh(new THREE.SphereGeometry(o.ball.r || 0.35, 14, 10), new THREE.MeshBasicMaterial({ color: o.ball.c || '#e6e6df' })) : null; if (ball) g.add(ball);
     const trailN = 240, trail = o.ball?.trail !== false && ball ? new THREE.Line(new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(trailN * 3), 3)), new THREE.LineBasicMaterial({ color: o.ball.tc || '#ffe066', transparent: true, opacity: 0.9 })) : null; if (trail) { trail.frustumCulled = false; g.add(trail); }
     const cr = (a, b, c, d, u) => 0.5 * ((2 * b) + (-a + c) * u + (2 * a - 5 * b + 4 * c - d) * u * u + (-a + 3 * b - 3 * c + d) * u * u * u);
@@ -4788,10 +4926,13 @@ Object.assign(DRAMA_BUILD, {
       let i = 0; while (i < n - 2 && K[i + 1][0] < t) i++; const u = (t - K[i][0]) / Math.max(1e-6, K[i + 1][0] - K[i][0]), a = K[Math.max(0, i - 1)], b = K[i], c = K[i + 1], d = K[Math.min(n - 1, i + 2)];
       if (o.linear) { out[0] = b[1] + (c[1] - b[1]) * u; out[1] = b[2] + (c[2] - b[2]) * u; out[2] = (b[3] || 0) + ((c[3] || 0) - (b[3] || 0)) * u; return out; }
       out[0] = cr(a[1], b[1], c[1], d[1], u); out[1] = cr(a[2], b[2], c[2], d[2], u); out[2] = (b.length > 3 || c.length > 3) ? Math.max(0, cr(a[3] || 0, b[3] || 0, c[3] || 0, d[3] || 0, u)) : 0; return out; };
-    const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), ps = new THREE.Vector3(), one = new THREE.Vector3(1, 1, 1), p1 = [0, 0, 0], p2 = [0, 0, 0];
+    const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), ps = new THREE.Vector3(), one = new THREE.Vector3(1, 1, 1), p1 = [0, 0, 0], p2 = [0, 0, 0], pb = [0, 0, 0];
+    const ballAt = o.ball ? (t) => at(o.ball.k, t, pb) : null;
     const cy0 = Math.cos(-((o.heading || 0) - 90) * rad), sy0 = Math.sin(-((o.heading || 0) - 90) * rad);
     const gy = (p) => { if (!o.ground) return 0; const h = DEM.heightAt(x + p[0] * cy0 - p[1] * sy0, z - p[0] * sy0 - p[1] * cy0); return Number.isFinite(h) ? Math.max(h, 0) - g.position.y : 0; };   // ground: each marker stands on the terrain under it (a circuit on a hillside)
+    let ath = null;
     const draw = (t) => {
+      if (figs) (ath ||= ATH.make(g, o, people, at, ballAt, gy)).draw(t);
       for (const G of groups) { G.list.forEach((a, i) => { at(a.k, t, p1); m4.makeTranslation(p1[0], 0.15 + gy(p1), -p1[1]); G.b.setMatrixAt(i, m4); G.h.setMatrixAt(i, m4); }); G.b.instanceMatrix.needsUpdate = G.h.instanceMatrix.needsUpdate = true; }
       cars.forEach((a, i) => { at(a.k, t, p1); at(a.k, t + 0.25, p2); const yaw = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]); q.setFromAxisAngle(up, Math.hypot(p2[0] - p1[0], p2[1] - p1[1]) > 0.05 ? yaw : (a.yaw0 || 0)); ps.set(p1[0], 0.26 + gy(p1), -p1[1]); m4.compose(ps, q, one); carI.setMatrixAt(i, m4); wingI.setMatrixAt(i, m4); wheelI.setMatrixAt(i, m4); });
       hls.forEach((a, i) => { at(a.k, t, p1); m4.makeTranslation(p1[0], (a.kind === 'car' ? 0.34 : 0.22) + gy(p1), -p1[1]); ring.setMatrixAt(i, m4); });
@@ -4804,10 +4945,11 @@ Object.assign(DRAMA_BUILD, {
     // a chase shot follows one marker (the one flagged chase, else the first highlighted): its place on the map at play time t
     const lead = A.find(a => a.chase) || hls[0] || A[0], pc = [0, 0, 0], cy = Math.cos(g.rotation.y), sy = Math.sin(g.rotation.y);
     if (lead) (DRAMA.chase ||= {})[o.id] = (t) => { at(lead.k, t, pc); return { x: x + pc[0] * cy - pc[1] * sy, z: z - pc[0] * sy - pc[1] * cy }; };
+    (DRAMA.cams ||= {})[o.id] = (t, c, u, out) => sportCam(o, A, at, ballAt, lead, t, c, u, out, (px, py, pz) => ({ x: x + px * cy - py * sy, y: g.position.y + pz, z: z - px * sy - py * cy }), gy);
     return { obj: g, tick() {
-      if (!done && APP.frameN % 20 === 0) { const y = DEM.heightAt(x, z); if (Number.isFinite(y) && y !== 0) { g.position.y = Math.max(y, 0) + (o.dy || 0); done = true; } }
+      if (!done && APP.frameN % 20 === 0) { const y = DEM.heightAt(x, z); if (Number.isFinite(y) && y !== 0) { g.position.y = (o.ground || !o.L ? Math.max(y, 0) : sportBase(x, z, g.rotation.y, (o.L || 105) + 2 * (o.margin ?? 6), (o.W || 68) + 2 * (o.margin ?? 6))) + (o.dy || 0); done = true; } }
       const P = DRAMA.play, mine = P && P.id === o.id, t = mine ? P.t : (o.still != null && !(P && o.group && P.group === o.group) ? o.still : null);
-      g.visible = t != null; const night = VEC.mat ? clamp(VEC.mat.emissiveIntensity / 0.9, 0, 1) : 0; for (const m of glowMats) m.emissiveIntensity = 0.12 + night * 0.45;
+      g.visible = t != null; const night = sportNight(); for (const m of glowMats) m.emissiveIntensity = 0.12 + night * 0.45; if (figs) ATH.glow.value = 0.04 + night * (o.glow ?? 0.1);
       if (t == null || (t === lastT && !(o.ground && APP.frameN % 30 === 0))) return; lastT = t; draw(t);
     } };
   },
@@ -4991,6 +5133,158 @@ Object.assign(DRAMA_BUILD, {
   worksWater() { return DRAMA_BUILD._ww ||= bindWater(makeWaterMaterial(false)); },
 });
 
+/* ---------- 虛擬球員 Virtual athletes for the match films: people built from simple shapes (no faces, names, numbers or club marks), in their
+   team's colours, that run, kick, swing, pitch, bowl, serve, dive and celebrate as the match records describe. One rig is posed per player per frame;
+   every body part of every player is one instance of an instanced mesh, so a full pitch costs about twenty draw calls.
+   Play time t drives everything (no state between frames): a film can be recorded, scrubbed or replayed in slow motion and always looks the same. ---------- */
+const ATH = (() => {
+  const SKIN = ['#c99a78', '#b07e5c', '#8a5a3c', '#dcb391', '#a46c4a', '#6f4630'], HAIR = ['#2a211c', '#3b2a20', '#151515', '#5a3b22', '#1e1a17'];
+  const glow = { value: 0.12 };
+  const mat = (rough = 0.75) => { const m = new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: rough, metalness: 0 });   // the instance colour is the part's colour; it also glows a little under floodlights
+    m.onBeforeCompile = sh => { sh.uniforms.uGlow = glow; sh.fragmentShader = 'uniform float uGlow;\n' + sh.fragmentShader.replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n  totalEmissiveRadiance += diffuseColor.rgb * uGlow;'); }; return m; };
+  const cyl = (r0, r1, h, y, n = 9) => new THREE.CylinderGeometry(r0, r1, h, n).translate(0, y, 0);
+  /* the rig: x forward, y up, z to the right; each joint is an Object3D whose own geometry hangs from it */
+  function rig() {
+    const J = {}, P = [], o = (name, parent, x, y, z) => { const j = new THREE.Object3D(); j.name = name; j.position.set(x, y, z); (parent || null)?.add(j); J[name] = j; return j; };
+    const part = (j, geo, slot) => P.push({ j, geo, slot });
+    const root = o('root', null, 0, 0, 0), hips = o('hips', root, 0, 0.955, 0), spine = o('spine', hips, 0, 0.06, 0), neck = o('neck', spine, 0, 0.55, 0);
+    part(hips, new THREE.BoxGeometry(0.21, 0.2, 0.33).translate(0, 0.01, 0), 'kit2');
+    part(spine, cyl(0.2, 0.165, 0.53, 0.27, 10).scale(0.66, 1, 1), 'kit');
+    part(neck, cyl(0.05, 0.055, 0.1, 0.03, 8), 'skin'); part(neck, new THREE.SphereGeometry(0.112, 12, 10).scale(0.95, 1.08, 0.9).translate(0.005, 0.16, 0), 'skin');
+    part(neck, new THREE.SphereGeometry(0.118, 12, 8, 0, Math.PI * 2, 0, Math.PI * 0.55).scale(1.0, 1.0, 0.96).translate(-0.012, 0.17, 0), 'hair');
+    for (const [s, z] of [['L', -0.215], ['R', 0.215]]) {
+      const sh = o('sh' + s, spine, 0, 0.48, z), el = o('el' + s, sh, 0, -0.285, 0), hd = o('hd' + s, el, 0, -0.275, 0);
+      part(sh, new THREE.SphereGeometry(0.068, 8, 6).scale(1, 0.9, 1), 'kit'); part(sh, cyl(0.05, 0.043, 0.28, -0.14), 'sleeve'); part(el, cyl(0.042, 0.034, 0.27, -0.135), 'skin'); part(hd, new THREE.SphereGeometry(0.044, 8, 6).scale(1, 1.25, 0.8).translate(0, -0.03, 0), 'skin');
+      const hp = o('hp' + s, hips, 0, -0.04, z * 0.47), kn = o('kn' + s, hp, 0, -0.43, 0), an = o('an' + s, kn, 0, -0.43, 0);
+      part(hp, cyl(0.082, 0.064, 0.44, -0.2), 'kit2'); part(kn, cyl(0.057, 0.043, 0.43, -0.215), 'sock'); part(an, new THREE.BoxGeometry(0.25, 0.075, 0.1).translate(0.065, -0.03, 0), 'shoe');
+    }
+    return { root, J, P };
+  }
+  /* props held in the right hand (the hand's own frame: −y continues the forearm) */
+  const PROPS = {
+    bat: () => [cyl(0.022, 0.034, 0.86, -0.36, 8).rotateZ(-1.15), '#c49a66'],
+    racquet: () => [dramaMerge([[cyl(0.014, 0.014, 0.32, -0.16, 6), new THREE.Matrix4()], [new THREE.TorusGeometry(0.13, 0.012, 6, 18).scale(0.8, 1.1, 1).rotateY(Math.PI / 2), new THREE.Matrix4().makeTranslation(0, -0.46, 0)]]).rotateZ(-1.0), '#202226'],
+    club: () => [dramaMerge([[cyl(0.008, 0.012, 1.0, -0.5, 6), new THREE.Matrix4()], [new THREE.BoxGeometry(0.11, 0.035, 0.05), new THREE.Matrix4().makeTranslation(0.04, -1.0, 0)]]), '#c9ccd0'],
+    cbat: () => [new THREE.BoxGeometry(0.035, 0.82, 0.11).translate(0, -0.48, 0).rotateZ(-0.35), '#e6d3a8'],
+    ball: () => [new THREE.SphereGeometry(0.11, 10, 8).scale(1.25, 0.85, 0.85).translate(0.12, -0.05, 0), '#e8e2d2'],
+  };
+  /* poses: angles in radians. hip/sh: swing forward (+); kn: bend (−); el: bend (+); shx: arm out to the side (+ left arm, − right arm);
+     lean: spine forward (−); twist: spine toward the left (+); side: spine toward the left (+); y: body up (m); roll: whole body toward its right (+); pitch: whole body forward (−) */
+  const KEYS = ['hipL', 'hipR', 'knL', 'knR', 'shL', 'shR', 'shxL', 'shxR', 'elL', 'elR', 'lean', 'twist', 'side', 'y', 'roll', 'pitch', 'head'];
+  /* actions: keyframes [u, {angles}] over the action's own time (u 0…1), blended in and out; d = seconds */
+  const ACT = {
+    kick: { d: 0.9, k: [[0, {}], [0.35, { hipR: -0.75, knR: -1.55, shxL: 0.75, shxR: -0.35, lean: 0.05, twist: 0.25 }], [0.55, { hipR: 1.15, knR: -0.15, shxL: 0.8, lean: 0.18, twist: -0.25 }], [0.8, { hipR: 0.8, knR: -0.35, shxL: 0.5, lean: 0.1 }], [1, {}]] },
+    kickL: { d: 0.9, k: [[0, {}], [0.35, { hipL: -0.75, knL: -1.55, shxR: -0.75, lean: 0.05, twist: -0.25 }], [0.55, { hipL: 1.15, knL: -0.15, shxR: -0.8, lean: 0.18, twist: 0.25 }], [0.8, { hipL: 0.8, knL: -0.35, shxR: -0.5, lean: 0.1 }], [1, {}]] },
+    volley: { d: 1.0, k: [[0, {}], [0.3, { hipL: -0.6, knL: -1.4, shxR: -1.1, shxL: 0.5, roll: 0.35, lean: 0.15 }], [0.55, { hipL: 1.55, knL: -0.1, shxR: -1.2, shxL: 0.9, roll: 0.55, lean: 0.35, twist: 0.4 }], [0.8, { hipL: 0.9, knL: -0.4, roll: 0.3, lean: 0.2 }], [1, {}]] },
+    chest: { d: 0.9, k: [[0, {}], [0.4, { lean: 0.42, shxL: 1.0, shxR: -1.0, elL: 0.4, elR: 0.4, knL: -0.35, knR: -0.35, head: -0.2 }], [0.75, { lean: 0.25, shxL: 0.6, shxR: -0.6 }], [1, {}]] },
+    header: { d: 1.0, k: [[0, {}], [0.3, { y: 0.15, knL: -0.9, knR: -0.9, shxL: 0.8, shxR: -0.8, lean: 0.25 }], [0.55, { y: 0.55, lean: -0.45, shxL: 1.1, shxR: -1.1, head: -0.3 }], [0.85, { y: 0.1, lean: -0.1 }], [1, {}]] },
+    dive: { d: 1.3, hold: true, k: [[0, {}], [0.2, { y: 0.15, knL: -0.6, knR: -0.6, shL: 1.2, shR: 1.2 }], [0.5, { y: 0.35, roll: 1.25, shL: 2.9, shR: 2.9, shxL: 0.3, shxR: -0.3, hipL: 0.2, hipR: -0.1 }], [1, { y: -0.62, roll: 1.45, shL: 2.9, shR: 2.6, shxL: 0.3, hipL: 0.15 }]] },
+    diveL: { d: 1.3, hold: true, k: [[0, {}], [0.2, { y: 0.15, knL: -0.6, knR: -0.6, shL: 1.2, shR: 1.2 }], [0.5, { y: 0.35, roll: -1.25, shL: 2.9, shR: 2.9, shxL: 0.3, shxR: -0.3, hipR: 0.2, hipL: -0.1 }], [1, { y: -0.62, roll: -1.45, shL: 2.6, shR: 2.9, shxR: -0.3, hipR: 0.15 }]] },
+    celebrate: { d: 3.0, k: [[0, {}], [0.12, { shL: 2.9, shR: 2.9, shxL: 0.45, shxR: -0.45, elL: 0.3, elR: 0.3, y: 0.25, knL: -0.4, knR: -0.4 }], [0.25, { shL: 3.0, shR: 3.0, shxL: 0.5, shxR: -0.5, y: 0.0, knL: -0.2, knR: -0.2 }], [0.38, { shL: 2.9, shR: 2.9, shxL: 0.45, shxR: -0.45, y: 0.28 }], [0.5, { shL: 3.0, shR: 3.0, shxL: 0.5, shxR: -0.5, y: 0 }], [0.62, { shL: 2.9, shR: 2.9, shxL: 0.45, shxR: -0.45, y: 0.25 }], [0.8, { shL: 2.8, shR: 2.8, shxL: 0.6, shxR: -0.6, y: 0 }], [1, {}]] },
+    arms: { d: 3.0, k: [[0, {}], [0.15, { shL: 2.75, shR: 2.75, shxL: 0.7, shxR: -0.7, elL: 0.2, elR: 0.2, lean: 0.2 }], [0.85, { shL: 2.8, shR: 2.8, shxL: 0.75, shxR: -0.75, lean: 0.25 }], [1, {}]] },
+    fist: { d: 1.4, k: [[0, {}], [0.3, { shR: 2.4, elR: 1.9, shxR: -0.3, lean: 0.1 }], [0.5, { shR: 1.4, elR: 2.2, knL: -0.4, knR: -0.4, lean: -0.2 }], [0.7, { shR: 2.5, elR: 1.8 }], [1, {}]] },
+    pitch: { d: 1.6, k: [[0, { shL: 0.6, shR: 0.6, elL: 1.4, elR: 1.4 }], [0.3, { hipL: 1.25, knL: -1.7, shL: 0.6, shR: 0.4, elL: 1.4, elR: 1.4, twist: -0.6, lean: 0.1 }], [0.52, { hipL: 0.55, knL: -0.4, hipR: -0.45, shR: -2.5, elR: 1.6, shL: 1.2, shxL: 0.4, twist: -0.4 }], [0.64, { hipL: 0.45, hipR: -0.6, shR: -3.7, elR: 0.6, shL: 0.3, twist: 0.5, lean: -0.45 }], [0.8, { hipL: 0.3, hipR: 0.4, knR: -0.8, shR: -4.7, elR: 0.3, twist: 0.8, lean: -0.6 }], [1, { lean: -0.2 }]] },
+    throw: { d: 1.0, k: [[0, {}], [0.35, { shR: -2.4, elR: 1.5, shL: 1.0, twist: -0.6, hipL: 0.4 }], [0.6, { shR: -3.8, elR: 0.5, twist: 0.4, lean: -0.3 }], [0.8, { shR: -4.6, elR: 0.3, twist: 0.6, lean: -0.4 }], [1, {}]] },
+    catch: { d: 0.9, k: [[0, {}], [0.4, { shL: 1.9, shR: 1.9, elL: 0.3, elR: 0.3, shxL: 0.15, shxR: -0.15 }], [0.75, { shL: 1.2, shR: 1.2, elL: 0.9, elR: 0.9 }], [1, {}]] },
+    swing: { d: 1.0, k: [[0, { shL: 0.7, shR: 0.9, elL: 1.2, elR: 1.4, twist: -0.5, knL: -0.3, knR: -0.3 }], [0.35, { shL: 0.9, shR: 1.0, elL: 1.4, elR: 1.6, twist: -0.95, hipL: 0.3, knL: -0.5, knR: -0.3 }], [0.55, { shL: 1.5, shR: 1.4, elL: 0.2, elR: 0.3, shxL: -0.3, shxR: 0.3, twist: 0.6, hipL: 0.1 }], [0.8, { shL: 2.4, shR: 2.2, elL: 0.9, elR: 1.0, twist: 1.35, hipR: -0.3, knR: -0.6 }], [1, { shL: 2.0, shR: 1.8, twist: 1.2 }]] },
+    serve: { d: 1.6, k: [[0, { shL: 0.4, shR: 0.4 }], [0.3, { shL: 3.0, shxL: 0.1, shR: -1.6, elR: 1.6, lean: 0.3, knL: -0.6, knR: -0.6 }], [0.5, { shL: 2.4, shR: -3.0, elR: 1.9, lean: 0.35, y: 0.0, knL: -0.9, knR: -0.9 }], [0.62, { shL: 1.2, shR: -3.6, elR: 0.2, lean: -0.15, y: 0.25, twist: 0.4 }], [0.85, { shL: 0.4, shR: -5.2, elR: 0.4, lean: -0.55, twist: 0.8, hipR: 0.5 }], [1, { lean: -0.2 }]] },
+    fore: { d: 0.9, k: [[0, {}], [0.35, { twist: -1.05, shR: 0.4, shxR: -1.0, elR: 0.5, shL: 0.6, shxL: 0.5, knL: -0.4, knR: -0.4 }], [0.6, { twist: 0.6, shR: 1.3, shxR: -0.7, elR: 0.3, shL: 0.3 }], [0.85, { twist: 1.0, shR: 2.0, shxR: 0.3, elR: 1.2 }], [1, {}]] },
+    back: { d: 0.9, k: [[0, {}], [0.35, { twist: 1.0, shR: 0.9, shxR: 0.5, elR: 0.4, shL: 0.9, shxL: -0.4, elL: 1.0, knL: -0.4, knR: -0.4 }], [0.6, { twist: -0.5, shR: 1.2, shxR: -0.8, elR: 0.1 }], [0.85, { twist: -0.9, shR: 1.7, shxR: -1.2 }], [1, {}]] },
+    bowl: { d: 1.4, k: [[0, {}], [0.3, { y: 0.28, shL: 2.9, shR: -0.6, hipL: 0.9, knL: -0.9, lean: 0.2 }], [0.5, { y: 0.05, shL: 2.2, shR: -2.6, hipL: 0.4, lean: 0.15, side: 0.2 }], [0.64, { shL: 0.4, shR: -3.9, lean: -0.3, twist: 0.4 }], [0.82, { shL: -0.3, shR: -5.6, lean: -0.6, twist: 0.7, hipR: 0.5, knR: -0.7 }], [1, { lean: -0.2 }]] },
+    cbat: { d: 1.2, k: [[0, { shL: 0.5, shR: 0.5, elL: 0.6, elR: 0.6, lean: -0.15, knL: -0.3, knR: -0.3 }], [0.35, { shL: -1.2, shR: -1.0, elL: 1.2, elR: 1.3, twist: -0.5, lean: -0.1, hipL: 0.3, knL: -0.5 }], [0.58, { shL: 0.9, shR: 0.8, elL: 0.1, elR: 0.2, twist: 0.3, lean: -0.3, hipL: 0.5, knL: -0.4 }], [0.82, { shL: 2.7, shR: 2.6, elL: 0.6, elR: 0.7, twist: 0.9, lean: 0.1 }], [1, { shL: 2.4, shR: 2.3, twist: 0.8 }]] },
+    drive: { d: 2.4, k: [[0, { shL: 0.35, shR: 0.35, elL: 0.1, elR: 0.1, lean: -0.55, knL: -0.25, knR: -0.25 }], [0.4, { shL: -1.9, shR: -1.6, elL: 0.2, elR: 1.4, twist: -1.45, lean: -0.45, knL: -0.4, knR: -0.2 }], [0.62, { shL: 0.35, shR: 0.35, elL: 0, elR: 0.1, twist: 0.15, lean: -0.55, knL: -0.3, knR: -0.4 }], [0.82, { shL: 2.5, shR: 2.3, elL: 1.2, elR: 0.6, twist: 1.6, lean: 0.05, hipR: -0.2, knR: -0.6 }], [1, { shL: 2.3, shR: 2.1, elL: 1.4, twist: 1.5, lean: 0.05 }]] },
+    putt: { d: 2.2, k: [[0, { shL: 0.45, shR: 0.45, elL: 0.15, elR: 0.15, lean: -0.75, knL: -0.2, knR: -0.2, head: 0.3 }], [0.4, { shL: 0.15, shR: 0.15, lean: -0.75, twist: -0.12, knL: -0.2, knR: -0.2, head: 0.3 }], [0.6, { shL: 0.75, shR: 0.75, lean: -0.75, twist: 0.12, knL: -0.2, knR: -0.2, head: 0.3 }], [0.85, { shL: 0.8, shR: 0.8, lean: -0.6, twist: 0.1, head: 0.1 }], [1, {}]] },
+    crouch: { d: 1.0, hold: 'in', k: [[0, { y: -0.5, lean: -1.25, hipL: 1.5, knL: -1.85, hipR: 0.9, knR: -2.05, shL: 1.35, shR: 1.35, shxL: 0.15, shxR: -0.15, head: -0.2 }], [1, { y: -0.5, lean: -1.25, hipL: 1.5, knL: -1.85, hipR: 0.9, knR: -2.05, shL: 1.35, shR: 1.35, shxL: 0.15, shxR: -0.15, head: -0.2 }]] },
+    dip: { d: 0.9, k: [[0, {}], [0.45, { lean: -0.75, shL: -0.9, shR: -0.9, head: 0.4 }], [1, {}]] },
+    carry: { d: 1, hold: 'all', k: [[0, { shL: 0.7, shR: 0.7, elL: 1.5, elR: 1.5, shxL: -0.2, shxR: 0.2 }], [1, { shL: 0.7, shR: 0.7, elL: 1.5, elR: 1.5, shxL: -0.2, shxR: 0.2 }]] },
+    pass: { d: 0.8, k: [[0, { shL: 0.8, shR: 0.8, elL: 1.2, elR: 1.2, twist: -0.7 }], [0.5, { shL: 1.3, shR: 1.3, elL: 0.3, elR: 0.3, twist: 0.6 }], [1, {}]] },
+    tackle: { d: 1.1, hold: true, k: [[0, {}], [0.35, { lean: -0.8, shL: 1.4, shR: 1.4, elL: 0.7, elR: 0.7, y: -0.15, knL: -0.6, knR: -0.6 }], [1, { pitch: -1.2, y: -0.55, lean: -0.3, shL: 1.8, shR: 1.8, elL: 0.6, elR: 0.6 }]] },
+    tryd: { d: 1.0, hold: true, k: [[0, { shL: 0.7, shR: 0.7, elL: 1.5, elR: 1.5 }], [0.45, { pitch: -0.7, y: 0.05, shL: 2.2, shR: 2.2, elL: 0.6, elR: 0.6, lean: -0.3 }], [1, { pitch: -1.45, y: -0.66, shL: 3.0, shR: 3.0, elL: 0.2, elR: 0.2 }]] },
+    fall: { d: 1.0, hold: true, k: [[0, {}], [1, { roll: -1.4, y: -0.6, shL: 1.5, shR: 0.5, knL: -0.6 }]] },
+    wave: { d: 2.0, k: [[0, {}], [0.2, { shR: 2.9, shxR: -0.4, elR: 0.3 }], [0.4, { shR: 2.9, shxR: -0.7, elR: 0.6 }], [0.6, { shR: 2.9, shxR: -0.3, elR: 0.3 }], [0.8, { shR: 2.9, shxR: -0.7, elR: 0.6 }], [1, {}]] },
+    point: { d: 1.6, k: [[0, {}], [0.25, { shR: 1.6, shxR: -0.2 }], [0.8, { shR: 1.6, shxR: -0.2 }], [1, {}]] },
+    stand: { d: 1, hold: 'all', k: [[0, { shL: 0.05, shR: 0.05 }], [1, { shL: 0.05, shR: 0.05 }]] },
+    ready: { d: 1, hold: 'all', k: [[0, { knL: -0.5, knR: -0.5, lean: -0.35, y: -0.08, shL: 0.6, shR: 0.6, elL: 1.0, elR: 1.0, shxL: 0.2, shxR: -0.2 }], [1, { knL: -0.5, knR: -0.5, lean: -0.35, y: -0.08, shL: 0.6, shR: 0.6, elL: 1.0, elR: 1.0, shxL: 0.2, shxR: -0.2 }]] },
+    crouchC: { d: 1, hold: 'all', k: [[0, { y: -0.45, knL: -2.2, knR: -2.2, hipL: 1.4, hipR: 1.4, lean: -0.2, shL: 0.8, shR: 0.6, elL: 1.4, elR: 1.0, shxL: 0.3, shxR: -0.3 }], [1, { y: -0.45, knL: -2.2, knR: -2.2, hipL: 1.4, hipR: 1.4, lean: -0.2, shL: 0.8, shR: 0.6, elL: 1.4, elR: 1.0, shxL: 0.3, shxR: -0.3 }]] },
+  };
+  const smooth = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+  function actPose(name, u, out, w) {
+    const a = ACT[name]; if (!a) return; const K = a.k; let i = 0; while (i < K.length - 2 && K[i + 1][0] < u) i++;
+    const k0 = K[i], k1 = K[i + 1], f = smooth(clamp((u - k0[0]) / Math.max(1e-6, k1[0] - k0[0]), 0, 1));
+    for (const key of KEYS) { const v0 = k0[1][key], v1 = k1[1][key]; if (v0 == null && v1 == null) continue; const v = (v0 ?? out[key]) + ((v1 ?? out[key]) - (v0 ?? out[key])) * f; out[key] += (v - out[key]) * w; }
+  }
+  /* the running / walking cycle from speed (m/s) and distance travelled (m) */
+  function gait(s, dist, out) {
+    for (const k of KEYS) out[k] = 0;
+    const run = clamp((s - 2.2) / 6.5, 0, 1), walk = clamp(s / 1.2, 0, 1), still = 1 - walk;
+    const stride = s < 2.2 ? 1.45 : 1.6 + 3.0 * run, ph = dist / stride * Math.PI * 2, A0 = s < 2.2 ? 0.34 * walk : 0.42 + 0.6 * run;
+    out.hipL = A0 * Math.sin(ph); out.hipR = -A0 * Math.sin(ph);
+    const kb = s < 2.2 ? 0.55 * walk : 0.4 + 1.3 * run, k0 = s < 2.2 ? 0.08 : 0.15;
+    out.knL = -(k0 + kb * Math.pow(Math.max(0, Math.cos(ph)), 1.4)); out.knR = -(k0 + kb * Math.pow(Math.max(0, Math.cos(ph + Math.PI)), 1.4));
+    out.shL = 0.9 * out.hipR; out.shR = 0.9 * out.hipL; const el = s < 2.2 ? 0.25 * walk : 0.85 + 0.65 * run; out.elL = el + 0.12 * still; out.elR = el + 0.12 * still;
+    out.shxL = 0.08 + 0.04 * still; out.shxR = -0.08 - 0.04 * still; out.lean = -(0.03 + 0.24 * run); out.y = s < 2.2 ? 0.015 * walk * Math.abs(Math.sin(ph)) : (0.03 + 0.05 * run) * Math.abs(Math.sin(ph));
+    if (still > 0.01) { out.knL -= 0.06 * still; out.knR -= 0.06 * still; }
+    return ph;
+  }
+  const _zero = new THREE.Matrix4().makeScale(0, 0, 0), _m2 = new THREE.Matrix4(), _flip = new THREE.Matrix4().makeScale(1, 1, -1), _q = new THREE.Quaternion(), _e = new THREE.Euler(), _m = new THREE.Matrix4(), _v = new THREE.Vector3(), _s = new THREE.Vector3(1, 1, 1);
+  /* make(group, o, people, at, ballAt): adds the athletes of one play to group → { draw(t), pos(i, t, out) } */
+  function make(g, o, people, at, ballAt, gy) {
+    const R = rig(), parts = R.P, n = people.length, rnd = (i, k) => { const x = Math.sin((i + 1) * 12.9898 + k * 78.233) * 43758.5453; return x - Math.floor(x); };
+    const style = people.map((a, i) => { const T = (o.teams || {})[a.c] || {}, S = { ...T, ...(a.s || {}) }, kit = new THREE.Color(a.c || '#d33');
+      const dark = kit.clone().multiplyScalar(0.55);
+      return { kit, sleeve: new THREE.Color(S.sleeve || a.c || '#d33'), kit2: new THREE.Color(S.kit2 || ('#' + dark.getHexString())), sock: new THREE.Color(S.sock || a.c || '#d33'),
+        shoe: new THREE.Color(S.shoe || '#1c1c1e'), skin: new THREE.Color(S.skin || SKIN[Math.floor(rnd(i, 1) * SKIN.length)]), hair: new THREE.Color(S.hair || HAIR[Math.floor(rnd(i, 2) * HAIR.length)]), prop: S.prop || a.prop || null, scale: S.scale || a.scale || (0.96 + 0.08 * rnd(i, 3)) }; });
+    const M = parts.map(p => { const m = new THREE.InstancedMesh(p.geo, mat(p.slot === 'shoe' ? 0.5 : 0.78), n); people.forEach((a, i) => m.setColorAt(i, style[i][p.slot])); m.frustumCulled = false; m.castShadow = false; g.add(m); return m; });
+    const propKinds = [...new Set(style.map(s => s.prop).filter(Boolean))], PM = {};
+    for (const k of propKinds) { if (!PROPS[k]) continue; const [geo, col] = PROPS[k](), list = people.map((a, i) => i).filter(i => style[i].prop === k), m = new THREE.InstancedMesh(geo, mat(0.5), list.length); m.material.color.set(col); for (let j = 0; j < list.length; j++) m.setColorAt(j, new THREE.Color('#ffffff')); m.frustumCulled = false; g.add(m); PM[k] = { m, list }; }
+    // a soft shadow under each player, so that they stand on the grass
+    const [sc, sg] = sportCanvas(64, 64), gr = sg.createRadialGradient(32, 32, 2, 32, 32, 31); gr.addColorStop(0, 'rgba(0,0,0,.55)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); sg.fillStyle = gr; sg.fillRect(0, 0, 64, 64);
+    const shM = new THREE.MeshBasicMaterial({ map: sportTex(sc, 1), transparent: true, depthWrite: false }), shI = new THREE.InstancedMesh(new THREE.PlaneGeometry(1.1, 0.8).rotateX(-Math.PI / 2), shM, n); shI.frustumCulled = false; shI.renderOrder = 2; g.add(shI);
+    // distance travelled along each path (for the stride), sampled every 0.04 s of play time
+    const DT = 0.04, p0 = [0, 0, 0], p1 = [0, 0, 0], p2 = [0, 0, 0], tracks = people.map(a => { const K = a.k, t0 = K[0][0] - 0.5, t1 = K[K.length - 1][0] + 0.5, N = Math.max(2, Math.ceil((t1 - t0) / DT) + 1), cum = new Float32Array(N); at(K, t0, p0);
+      for (let i = 1; i < N; i++) { at(K, t0 + i * DT, p1); cum[i] = cum[i - 1] + Math.hypot(p1[0] - p0[0], p1[1] - p0[1]); p0[0] = p1[0]; p0[1] = p1[1]; } return { t0, N, cum }; });
+    const distAt = (i, t) => { const T = tracks[i], f = clamp((t - T.t0) / DT, 0, T.N - 1), k = Math.floor(f), u = f - k; return T.cum[k] + (k + 1 < T.N ? (T.cum[k + 1] - T.cum[k]) * u : 0); };
+    const P = {}, yawOf = (i, a, t) => {   // which way a player faces: along its run, else the way the script says, else toward the ball
+      at(a.k, t - 0.12, p1); at(a.k, t + 0.12, p2); const vx = (p2[0] - p1[0]) / 0.24, vy = (p2[1] - p1[1]) / 0.24, s = Math.hypot(vx, vy);
+      let idle = a.yaw != null ? a.yaw * rad : null; if (idle == null) { const b = ballAt ? ballAt(t) : null; at(a.k, t, p0); idle = b ? Math.atan2(b[1] - p0[1], b[0] - p0[0]) : Math.atan2(-p0[1], -p0[0]); }
+      if (a.face === 'run' || s < 0.25) return [a.face === 'run' && s >= 0.05 ? Math.atan2(vy, vx) : idle, s];
+      if (a.back && s < 4) return [idle, s];   // back: a player stepping backward (a keeper, a fielder under a high ball) keeps facing the play
+      const mv = Math.atan2(vy, vx), w = smooth((s - 0.25) / 0.8), d = ((idle - mv + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
+      return [mv + d * (1 - w), s]; };
+    function pose(i, t) {
+      const a = people[i]; for (const k of KEYS) P[k] = 0; const [yaw, s] = yawOf(i, a, t); gait(s, distAt(i, t), P);
+      for (const [t0, name, opt] of a.acts || []) { const A0 = ACT[name]; if (!A0) continue; const d = (opt && opt.d) || A0.d, u = (t - t0) / d; let w;
+        if (A0.hold === 'all') { const t1 = opt && opt.until != null ? opt.until : 1e9; if (t < t0 || t > t1 + 0.4) continue; w = smooth((t - t0 + 0.3) / 0.3) * smooth((t1 + 0.4 - t) / 0.4); actPose(name, 0.5, P, w); continue; }
+        if (A0.hold === 'in') { const t1 = opt && opt.until != null ? opt.until : t0 + d; if (t > t1 + 0.35) continue; w = t <= t1 ? 1 : 1 - smooth((t - t1) / 0.35); actPose(name, 0.5, P, w); continue; }
+        if (u < -0.05 || (u > 1.05 && !A0.hold)) continue; w = A0.hold ? smooth((u + 0.05) / 0.15) : smooth((u + 0.05) / 0.15) * smooth((1.05 - u) / 0.15); actPose(name, clamp(u, 0, 1), P, w); }
+      if (a.left) { const sw = (l, r, neg) => { const v = P[l]; P[l] = neg ? -P[r] : P[r]; P[r] = neg ? -v : v; };   // a left-hander: the whole pose mirrored
+        sw('hipL', 'hipR'); sw('knL', 'knR'); sw('shL', 'shR'); sw('shxL', 'shxR', true); sw('elL', 'elR'); P.twist = -P.twist; P.side = -P.side; P.roll = -P.roll; }
+      return yaw;
+    }
+    const J = R.J, setRig = (i, t, x, y, z) => {
+      const yaw = pose(i, t), sc = style[i].scale;
+      J.root.position.set(x, z + Math.max(-0.7, P.y) * sc, -y); J.root.rotation.set(0, 0, 0); J.root.quaternion.setFromEuler(_e.set(P.roll, yaw, P.pitch, 'YXZ')); J.root.scale.setScalar(sc);
+      J.spine.rotation.set(P.side, P.twist, P.lean); J.neck.rotation.set(0, -P.twist * 0.4, P.head - P.lean * 0.35);
+      J.shL.rotation.set(P.shxL, 0, P.shL); J.shR.rotation.set(P.shxR, 0, P.shR); J.elL.rotation.set(0, 0, P.elL); J.elR.rotation.set(0, 0, P.elR);
+      J.hpL.rotation.set(0, 0, P.hipL); J.hpR.rotation.set(0, 0, P.hipR); J.knL.rotation.set(0, 0, P.knL); J.knR.rotation.set(0, 0, P.knR); J.anL.rotation.set(0, 0, -P.knL * 0.25 - P.hipL * 0.15); J.anR.rotation.set(0, 0, -P.knR * 0.25 - P.hipR * 0.15);
+      J.root.updateMatrixWorld(true); return yaw; };
+    return {
+      draw(t) {
+        for (let i = 0; i < n; i++) {
+          const a = people[i]; at(a.k, t, p0); const base = 0.15 + gy(p0);
+          setRig(i, t, p0[0], p0[1], base);
+          parts.forEach((p, k) => M[k].setMatrixAt(i, p.j.matrixWorld));
+          const pr = style[i].prop && PM[style[i].prop]; if (pr) { const j = pr.list.indexOf(i); pr.m.setMatrixAt(j, a.propUntil != null && t > a.propUntil ? _zero : a.left ? (_m2.copy(J.hdL.matrixWorld).multiply(_flip), _m2) : J.hdR.matrixWorld); }   // propUntil: the bat is dropped
+          _m.makeTranslation(p0[0], base + 0.02, -p0[1]); shI.setMatrixAt(i, _m);
+        }
+        for (const m of M) m.instanceMatrix.needsUpdate = true; for (const k in PM) PM[k].m.instanceMatrix.needsUpdate = true; shI.instanceMatrix.needsUpdate = true;
+      },
+      glow(v) { glow.value = v; },
+    };
+  }
+  return { make, ACT, glow };
+})();
+
 /* ======================= v7 · destinations sheet for a catalogue of 20,000+ places ======================= */
 const _regName = new Map();
 function regCached(p) { const k = I18N.lang + '|' + p.cc + '|' + (p.cc === 'TW' ? p.region : ''); let v = _regName.get(k); if (v === undefined) { v = placeRegion(p).toLowerCase(); _regName.set(k, v); } return v; }
@@ -5006,5 +5300,267 @@ function renderResults() {
   $('#results').innerHTML = list.slice(0, 150).map(p => `<button class="res" data-id="${esc(p.id)}"><b>${esc(placeName(p))}</b><span>${esc(placeLine(p))}${o ? ' · ' + esc(fmtDist(haversine(o.lat, o.lon, p.lat, p.lon))) : ''}</span></button>`).join('') || `<p class="mut">${esc(t('menu.none'))}</p>`;
 }
 
-window.__AERO = { get camera() { return camera; }, get scene() { return scene; }, get TERRAIN_U() { return TERRAIN_U; }, THREE, DRAMA, dramaWhen, ROUTE, startRoute, routeSetOf, routeIndex, routeTrk, routeAt, routePlan, TOUR, CATX, SCORE, startTour, tourExit, tourPlay, tourSeek, tourAutoSet, tourSetOf, tourPlan, tourPose, tourChunks, loadCatalogueX, catxAdd, PLACES, PLACE_BY_ID, APP, SET, TERRAIN, VEC, DEM, ENV, MIS, AM, WX, WAVES, GEO, POST, TREES, BUOYS, I18N, MISSIONS, TUT, loadPlace, spawn, setTimePreset, applyWeather, startAeroAt, t, camSmooth, refineSunTime, updateAeroMission, aeroMissionAction, updateCamera, readInput, loadMissions, CREW, startCrew, crewScore, amP };
+/* ---------- tour HUD: where on Earth, satellite locator, flight path, drone instruments ----------
+   Drawn on every recorded tour film (tourPaint) and over a tour on the screen (thudDom): the continent and country, a satellite inset
+   centred on the drone with its latitude and longitude, a map of the whole flight with the part flown so far in red, and an instrument
+   panel. Height, speed, heading, the simulated date, time and sun come from the simulator; temperature, humidity, UV index and air
+   quality come from Open-Meteo for the day the film is recorded, at the hour the film is set (the panel says so); the magnetic
+   declination and inclination come from the World Magnetic Model WMM2025 (table written by the build from tools/magdec.json; a place
+   missing from it is asked of the British Geological Survey's model service, or shows a dash). */
+/* three ways to show it on the screen (tour bar button and H): 'mini' (two columns, half the height; also what recordings show),
+   'full' (one row per reading, with English labels) and 'off' */
+const THUD_MODES = ['mini', 'full', 'off'], thudLS = LS.get('aero7:thud');
+const THUD = { mode: THUD_MODES.includes(thudLS) ? thudLS : thudLS === '0' ? 'off' : 'mini', get on() { return this.mode !== 'off'; }, hideL: LS.get('aero7:thudL') === '1', hideR: LS.get('aero7:thudR') === '1', rect: {}, tiles: new Map(), env: new Map(), mag: new Map(), pa: {}, pb: {} };
+const THUD_RED = '#ff3b30', THUD_F = '"Noto Sans TC","PingFang TC","Microsoft JhengHei","Noto Sans",system-ui,sans-serif';
+const thudMX = (lon, z) => (lon + 180) / 360 * 256 * 2 ** z;
+const thudMY = (lat, z) => (1 - Math.log(Math.tan(Math.PI / 4 + clamp(lat, -85, 85) * rad / 2)) / Math.PI) / 2 * 256 * 2 ** z;
+function thudTile(z, x, y) {
+  const n = 2 ** z; if (y < 0 || y >= n) return null; x = ((x % n) + n) % n; const k = z + '/' + x + '/' + y; let im = THUD.tiles.get(k);
+  if (!im) { im = new Image(); im.crossOrigin = 'anonymous'; im.src = IMG_URL(z, x, y); THUD.tiles.set(k, im); if (THUD.tiles.size > 600) THUD.tiles.delete(THUD.tiles.keys().next().value); }
+  return im.complete && im.naturalWidth ? im : null;
+}
+// the place's continent and country (from data/tours/index.json, written by the build from the ISO country of the place)
+function thudGeo(plan) { const e = TOUR.idx?.places?.[plan.place?.id]; return e?.geo || null; }
+
+/* once per tour: the planned flight as latitude/longitude per shot, the map of the whole flight, the weather of the recording day */
+function thudPrep(R) {
+  const plan = R.plan, H = R.hud = { segs: [], ready: false, map: null, spd: 0, last: null }, o = {}, all = [];
+  for (const s of plan.shots) {
+    const n = Math.max(3, Math.ceil(s.dur / 1.5)), pts = [];
+    for (let k = 0; k <= n; k++) { try { tourPose(s, k / n, o); } catch { continue; } if (!Number.isFinite(o.x) || !Number.isFinite(o.z)) continue; const [la, lo] = toLatLon(o.x, o.z); pts.push([la, lo, s.t0 + s.dur * k / n]); all.push([la, lo]); }
+    if (pts.length) H.segs.push(pts);
+  }
+  if (!all.length) return H;
+  let a = 90, b = 180, c = -90, d = -180; for (const [la, lo] of all) { a = Math.min(a, la); b = Math.min(b, lo); c = Math.max(c, la); d = Math.max(d, lo); }
+  // the whole flight fills about three quarters of the inset: longitude span (latitude converted at this latitude), tiles of the next zoom drawn smaller
+  const cLat = (a + c) / 2, cLon = (b + d) / 2, S = 512, spanLon = Math.max(d - b, (c - a) / Math.cos(cLat * rad), 0.004) * 1.35;
+  const zf = clamp(Math.log2(360 / spanLon * S / 256), 3, 17), z = Math.min(17, Math.ceil(zf)), k = 2 ** (zf - z), cx = thudMX(cLon, z), cy = thudMY(cLat, z), half = S / 2 / k;
+  const cv = document.createElement('canvas'); cv.width = cv.height = S; const g = cv.getContext('2d'); g.fillStyle = '#16324a'; g.fillRect(0, 0, S, S);
+  H.map = { z, img: cv, px: (la, lo) => [((thudMX(lo, z) - cx) * k + S / 2) / S, ((thudMY(la, z) - cy) * k + S / 2) / S], left: 0 };
+  for (let ty = Math.floor((cy - half) / 256); ty <= Math.floor((cy + half) / 256); ty++) for (let tx = Math.floor((cx - half) / 256); tx <= Math.floor((cx + half) / 256); tx++) {
+    if (ty < 0 || ty >= 2 ** z) continue; H.map.left++; const im = new Image(), n = 2 ** z; im.crossOrigin = 'anonymous';
+    im.onload = () => { try { g.drawImage(im, (tx * 256 - cx) * k + S / 2, (ty * 256 - cy) * k + S / 2, 256 * k + 0.5, 256 * k + 0.5); } catch { } H.map.left--; }; im.onerror = () => { H.map.left--; }; im.src = IMG_URL(z, ((tx % n) + n) % n, ty);
+  }
+  thudEnv(plan.place); H.ready = true; return H;
+}
+
+/* Open-Meteo for the place, today (its own time zone): hourly temperature, humidity, UV index; US AQI from the air-quality model */
+function thudEnv(p) {
+  if (!p) return null; const key = p.id || p.lat + ',' + p.lon; let e = THUD.env.get(key); if (e) return e;
+  e = { ok: false, date: '', h: null, aqi: null }; THUD.env.set(key, e); const q = `latitude=${(+p.lat).toFixed(4)}&longitude=${(+p.lon).toFixed(4)}&forecast_days=1&timezone=auto`;
+  fetchJSON(`https://api.open-meteo.com/v1/forecast?${q}&hourly=temperature_2m,relative_humidity_2m,uv_index`, { timeout: 12000 })
+    .then(j => { const h = j.hourly; if (!h?.time?.length) return; e.h = h; e.date = h.time[0].slice(0, 10); e.ok = true; }).catch(() => { });
+  fetchJSON(`https://air-quality-api.open-meteo.com/v1/air-quality?${q}&hourly=us_aqi`, { timeout: 12000 }).then(j => { if (j.hourly?.us_aqi) e.aqi = j.hourly.us_aqi; }).catch(() => { });
+  return e;
+}
+const thudAt = (arr, hr) => { const v = arr?.[hr]; return v == null || !Number.isFinite(+v) ? null : +v; };
+/* magnetic declination (east +) and inclination (down +): the build's WMM2025 table, else the BGS model service for today, once per place */
+function thudMag(plan) {
+  const g = thudGeo(plan)?.mag; if (g) return g; const p = plan.place; if (!p) return null; const key = p.id || p.lat + ',' + p.lon; let m = THUD.mag.get(key); if (m !== undefined) return m;
+  THUD.mag.set(key, null); const d = new Date(), day = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  fetchJSON(`https://geomag.bgs.ac.uk/web_service/GMModels/wmm/2025?latitude=${(+p.lat).toFixed(4)}&longitude=${(+p.lon).toFixed(4)}&altitude=0&date=${day}&format=json`, { timeout: 12000 })
+    .then(j => { const f = j?.['geomagnetic-field-model-result']?.['field-value']; if (f && Number.isFinite(+f.declination?.value)) THUD.mag.set(key, { dec: +f.declination.value, inc: +f.inclination.value, date: day, model: 'WMM2025' }); }).catch(() => { });
+  return null;
+}
+/* the drone's speed along the planned flight at this moment (from the shot's own path, so it does not depend on the frame rate) */
+function thudSpeed(R) {
+  const s = R.plan.shots[R.i]; if (!s || !(s.dur > 0)) return 0; const u = clamp((R.t - s.t0) / s.dur, 0, 1), du = Math.min(0.4 / s.dur, 0.05), u0 = Math.max(0, u - du), u1 = Math.min(1, u + du); if (u1 - u0 < 1e-6) return 0;
+  try { const a = tourPose(s, u0, THUD.pa), ax = a.x, ay = a.y, az = a.z, b = tourPose(s, u1, THUD.pb); const v = Math.hypot(b.x - ax, b.y - ay, b.z - az) / ((u1 - u0) * s.dur); return Number.isFinite(v) && v < 5000 ? v : 0; } catch { return 0; }
+}
+
+/* one frame: g a 2D context of W×H pixels; dom = drawn over the live 3D view (the screen), else on the recording */
+function thudPaint(g, W, H, R, dom) {
+  const plan = R.plan; if (plan.route || !plan.place) return; if (dom && !THUD.on) return; const mini = !dom || THUD.mode === 'mini';
+  const Hd = R.hud || thudPrep(R); if (!Hd.ready) return;
+  const a = clamp(1 - Math.max(R.titleA || 0, R.credA || 0) * 1.15, 0, 1) * (1 - (R.fade || 0) * 0.6); if (a < 0.02) return;
+  const U = dom ? Math.min(H, W * 0.5625) : H, pad = U * 0.022, zh = isZh() || !dom, en = I18N.lang !== 'en';   // the recording is Chinese with English below
+  const cam = camera.position, [lat, lon] = toLatLon(cam.x, cam.z), gnd = Math.max(DEM.heightAt(cam.x, cam.z), 0), agl = Math.max(0, cam.y - gnd), hdg = ((-camera.rotation.y * deg) % 360 + 360) % 360;
+  const now = R.t; Hd.spd = R.manual ? (APP.veh?.vel?.length() || 0) : thudSpeed(R);   // flown by the viewer: the drone's own speed
+  let depth = 0; const sv = () => { g.save(); depth++; }, rs = () => { if (depth > 0) { g.restore(); depth--; } };
+  sv(); try {
+  g.globalAlpha = a; g.shadowBlur = 0; g.textBaseline = 'middle'; g.lineJoin = 'round';
+  const panel = (x, y, w, h, r) => { g.fillStyle = 'rgba(9,14,18,.62)'; g.strokeStyle = 'rgba(255,255,255,.28)'; g.lineWidth = Math.max(1, U / 600); g.beginPath(); g.roundRect ? g.roundRect(x, y, w, h, r) : g.rect(x, y, w, h); g.fill(); g.stroke(); };
+  const txt = (s, x, y, font, col = '#fff', align = 'left') => { g.font = font; g.textAlign = align; g.lineWidth = U / 300; g.strokeStyle = 'rgba(0,0,0,.65)'; g.strokeText(s, x, y); g.fillStyle = col; g.fillText(s, x, y); };
+
+  const e = thudEnv(plan.place), mg = thudMag(plan), hr = Math.floor((((APP.sun.min % 1440) + 1440) % 1440) / 60), na = '—';
+  // on the screen each side folds into a small tab when tapped (thudDom places the tap areas over THUD.rect)
+  const hideL = dom && THUD.hideL, hideR = dom && THUD.hideR, q = mini ? 0.8 : 1; if (dom) THUD.rect = {};
+  const tab = (label, right) => { g.font = `700 ${U * 0.019}px ${THUD_F}`; const w = g.measureText(label).width + U * 0.03, h = U * 0.042, x = right ? W - pad - w : pad; panel(x, pad, w, h, U * 0.012); txt(label, x + w / 2, pad + h / 2, g.font, '#e8eef3', 'center'); return [x, pad, w, h]; };
+  if (hideL) THUD.rect.L = tab(zh ? '▸ 儀表' : '▸ Gauges'); else {
+  // 1. continent and country, top left
+  const geo = thudGeo(plan); let y = pad;
+  if (geo?.country) {
+    const l1 = [geo.cont?.[0], geo.country[0]].filter(Boolean).join(' · '), l2 = [geo.cont?.[1], geo.country[1]].filter(Boolean).join(' · '), f1 = U * 0.03 * q, f2 = U * 0.021 * q;
+    g.font = `700 ${f1}px ${THUD_F}`; const w1 = g.measureText(zh ? l1 : l2).width; g.font = `500 ${f2}px ${THUD_F}`; const w2 = en && zh ? g.measureText(l2).width : 0;
+    const w = Math.max(w1, w2) + U * 0.04 * q, h = U * (w2 ? 0.075 : 0.05) * q; panel(pad, y, w, h, U * 0.012);
+    txt(zh ? l1 : l2, pad + U * 0.02 * q, y + U * 0.027 * q, `700 ${f1}px ${THUD_F}`, '#f0c879'); if (w2) txt(l2, pad + U * 0.02 * q, y + U * 0.057 * q, `500 ${f2}px ${THUD_F}`, '#e8eef3');
+    y += h + U * 0.012;
+  }
+
+  // 2. the drone's instruments, left
+  const temp = thudAt(e?.h?.temperature_2m, hr), rh = thudAt(e?.h?.relative_humidity_2m, hr), uv = thudAt(e?.h?.uv_index, hr), aqi = thudAt(e?.aqi, hr);
+  const rows = [
+    ['高度', 'ALT', `${Math.round(agl).toLocaleString()} m AGL`], ['', '', `${Math.round(cam.y).toLocaleString()} m MSL`],
+    // a film covers in seconds what a real drone (about 20 m/s at most) would fly for minutes: faster than that, the panel says how much faster
+    ['速度', 'SPD', Hd.spd <= 25 ? `${Hd.spd.toFixed(1)} m/s` : `${Math.round(Hd.spd)} m/s · ${zh ? '縮時' : 'time-lapse'} ×${Math.round(Hd.spd / 20)}`], ['航向', 'HDG', `${String(Math.round(hdg) % 360).padStart(3, '0')}° ${compassWord(hdg)}`],
+    ['時間', 'TIME', `${hhmm(APP.sun.min)} ${zh ? '當地' : 'local'}`], ['太陽', 'SUN', `${Math.round(APP.sunAlt ?? 0)}°`],
+    ['氣溫', 'TEMP', temp == null ? na : `${temp.toFixed(1)} °C`], ['濕度', 'RH', rh == null ? na : `${Math.round(rh)} %`],
+    ['紫外線', 'UV', uv == null ? na : uv.toFixed(1)], ['空氣品質', 'AQI', aqi == null ? na : `${Math.round(aqi)} (US)`],
+    ['磁偏角', 'DEC', mg ? `${Math.abs(mg.dec).toFixed(1)}° ${mg.dec < 0 ? (zh ? '西' : 'W') : (zh ? '東' : 'E')}` : na], ['磁傾角', 'INC', mg ? `${mg.inc.toFixed(1)}°` : na]];
+  if (mini) {   // two readings per line: about half the height of the full panel
+    const spd = Hd.spd <= 25 ? `${Hd.spd.toFixed(1)} m/s` : `${Math.round(Hd.spd)} m/s ×${Math.round(Hd.spd / 20)}`;
+    const cells = [['高度', 'ALT', `${Math.round(agl).toLocaleString()} m`], ['海拔', 'MSL', `${Math.round(cam.y).toLocaleString()} m`], ['速度', 'SPD', spd], ['航向', 'HDG', `${String(Math.round(hdg) % 360).padStart(3, '0')}° ${compassWord(hdg)}`],
+      ['時間', 'TIME', hhmm(APP.sun.min)], ['太陽', 'SUN', `${Math.round(APP.sunAlt ?? 0)}°`], ['氣溫', 'TEMP', temp == null ? na : `${temp.toFixed(1)}°C`], ['濕度', 'RH', rh == null ? na : `${Math.round(rh)}%`],
+      ['紫外線', 'UV', uv == null ? na : uv.toFixed(1)], ['空品', 'AQI', aqi == null ? na : `${Math.round(aqi)}`], ['磁偏', 'DEC', mg ? `${Math.abs(mg.dec).toFixed(1)}°${mg.dec < 0 ? (zh ? '西' : 'W') : (zh ? '東' : 'E')}` : na], ['磁傾', 'INC', mg ? `${mg.inc.toFixed(1)}°` : na]];
+    const rh2 = U * 0.03, pw = U * 0.36, cw = (pw - U * 0.03) / 2, ph = Math.ceil(cells.length / 2) * rh2 + U * 0.062; panel(pad, y, pw, ph, U * 0.012); if (dom) THUD.rect.L = [pad, pad, pw, y + ph - pad];
+    cells.forEach(([lz, le, v], i) => {
+      const x0 = pad + U * 0.012 + (i % 2) * (cw + U * 0.008), yy = y + U * 0.02 + Math.floor(i / 2) * rh2 + rh2 / 2;
+      g.font = `600 ${U * 0.0175}px ${THUD_F}`; const lw = g.measureText(zh ? lz : le).width; txt(zh ? lz : le, x0, yy, g.font, '#9fb6c5');
+      if (zh && en) { g.font = `500 ${U * 0.012}px ${THUD_F}`; txt(le, x0 + lw + U * 0.004, yy + U * 0.002, g.font, '#7f96a5'); }
+      let fs = U * 0.019; g.font = `700 ${fs}px ${THUD_F}`; const room = cw - lw - U * (zh && en ? 0.034 : 0.012), vw = g.measureText(v).width; if (vw > room) fs *= room / vw;
+      txt(v, x0 + cw - U * 0.004, yy, `700 ${fs}px ${THUD_F}`, '#fff', 'right');
+    });
+    const f1 = (e?.ok ? `Open-Meteo ${e.date.slice(5)} ${String(hr).padStart(2, '0')}:00` : 'Open-Meteo —') + ' · ' + (mg ? mg.model : 'WMM2025') + (Hd.spd > 25 ? (zh ? ' · ×倍數＝縮時' : ' · ×n = time-lapse') : '');
+    txt(f1, pad + U * 0.012, y + ph - U * 0.018, `400 ${U * 0.0125}px ${THUD_F}`, '#9fb6c5');
+  } else {
+  const rh_ = U * 0.034, pw = U * 0.3, ph = rows.length * rh_ + U * 0.078; panel(pad, y, pw, ph, U * 0.012); if (dom) THUD.rect.L = [pad, pad, pw, y + ph - pad];
+  rows.forEach(([lz, le, v], i) => {
+    const yy = y + U * 0.022 + i * rh_ + rh_ / 2; if (lz) { txt(zh ? lz : le, pad + U * 0.016, yy, `600 ${U * 0.021}px ${THUD_F}`, '#9fb6c5'); if (zh && en) txt(le, pad + U * 0.016 + U * (lz.length * 0.022 + 0.008), yy, `500 ${U * 0.015}px ${THUD_F}`, '#7f96a5'); }
+    let fs = U * 0.022, lw = 0; if (lz) { g.font = `500 ${U * 0.015}px ${THUD_F}`; lw = zh ? U * (lz.length * 0.022 + 0.008) + (en ? g.measureText(le).width : 0) : U * 0.06; }
+    g.font = `700 ${fs}px ${THUD_F}`; const room = pw - U * 0.044 - lw, vw = g.measureText(v).width; if (vw > room) fs *= room / vw;   // a long value gets smaller instead of running into its label
+    txt(v, pad + pw - U * 0.016, yy, `700 ${fs}px ${THUD_F}`, '#fff', 'right');
+  });
+  const src = (zh ? '氣象 ' : 'Weather ') + (e?.ok ? `Open-Meteo ${e.date} ${String(hr).padStart(2, '0')}:00` : 'Open-Meteo —'), src2 = (zh ? '地磁 ' : 'Magnetic ') + (mg ? `${mg.model} · ${mg.date}` : 'WMM2025 —');
+  txt(src, pad + U * 0.016, y + ph - U * 0.038, `400 ${U * 0.014}px ${THUD_F}`, '#9fb6c5'); txt(src2, pad + U * 0.016, y + ph - U * 0.016, `400 ${U * 0.014}px ${THUD_F}`, '#9fb6c5');
+  }
+
+  }
+  if (hideR) THUD.rect.R = tab(zh ? '地圖 ◂' : 'Maps ◂', true); else {
+  // 3. satellite locator, top right: north up, the drone in the middle, its heading as a wedge
+  const S = U * (mini ? 0.18 : 0.24), ex2 = U * (mini ? 0.042 : 0.05), x1 = W - pad - S, y1 = pad, span = clamp(Math.max(600, agl * 4), 400, 30000);
+  panel(x1 - U * 0.006, y1 - U * 0.006, S + U * 0.012, S + ex2, U * 0.012);
+  thudSat(g, x1, y1, S, U, q, a, lat, lon, hdg, span, mg, zh, txt);
+  txt(`${Math.abs(lat).toFixed(4)}°${lat >= 0 ? 'N' : 'S'}  ${Math.abs(lon).toFixed(4)}°${lon >= 0 ? 'E' : 'W'}`, x1 + S / 2, y1 + S + ex2 * 0.44, `700 ${U * 0.02 * q}px ${THUD_F}`, '#fff', 'center');
+
+  // 4. the whole flight, below: the planned path faint, the part flown so far in red
+  const M = Hd.map, y2 = y1 + S + ex2 + U * 0.015; if (dom) THUD.rect.R = [x1 - U * 0.006, y1 - U * 0.006, S + U * 0.012, (M ? y2 + S + ex2 : y1 + S + ex2) - y1];
+  if (M) {
+    panel(x1 - U * 0.006, y2 - U * 0.006, S + U * 0.012, S + ex2, U * 0.012); g.drawImage(M.img, x1, y2, S, S);
+    const P = (la, lo) => { const [u, v] = M.px(la, lo); return [x1 + u * S, y2 + v * S]; };
+    sv(); g.beginPath(); g.rect(x1, y2, S, S); g.clip(); g.lineCap = 'round';
+    const path = seg => { g.beginPath(); seg.forEach(([la, lo], i) => { const [px, py] = P(la, lo); i ? g.lineTo(px, py) : g.moveTo(px, py); }); g.stroke(); };
+    g.strokeStyle = 'rgba(0,0,0,.45)'; g.lineWidth = Math.max(2, U / 300); for (const seg of Hd.segs) path(seg);
+    g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = Math.max(1, U / 480); g.setLineDash([U * 0.006, U * 0.005]); for (const seg of Hd.segs) path(seg);
+    g.setLineDash([]); g.strokeStyle = THUD_RED; g.lineWidth = Math.max(2, U / 240);
+    for (const seg of Hd.segs) { if (seg[0][2] > now) break; g.beginPath(); let n = 0; for (const [la, lo, t] of seg) { if (t > now) break; const [px, py] = P(la, lo); n++ ? g.lineTo(px, py) : g.moveTo(px, py); } if (n > 1) { const [px, py] = P(lat, lon); g.lineTo(px, py); } g.stroke(); }
+    const s0 = Hd.segs[0]?.[0]; if (s0) { const [px, py] = P(s0[0], s0[1]); g.fillStyle = '#34c759'; g.beginPath(); g.arc(px, py, U * 0.008, 0, Math.PI * 2); g.fill(); }
+    const [qx, qy] = P(lat, lon); g.fillStyle = THUD_RED; g.strokeStyle = '#fff'; g.lineWidth = Math.max(1.5, U / 400); g.beginPath(); g.arc(qx, qy, U * 0.01, 0, Math.PI * 2); g.fill(); g.stroke();
+    rs(); g.globalAlpha = a;
+    txt(zh && en ? '航線 Flight path' : zh ? '航線' : 'Flight path', x1 + S / 2, y2 + S + ex2 * 0.44, `700 ${U * 0.02 * q}px ${THUD_F}`, '#fff', 'center');
+  }
+  }
+  } finally { while (depth > 0) rs(); }
+}
+
+/* the satellite inset: north up, the camera in the middle with its heading as a red wedge, magnetic north, a scale bar (on place and route films) */
+function thudSat(g, x1, y1, S, U, q, a, lat, lon, hdg, span, mg, zh, txt) {
+  const mpp = 156543.03 * Math.cos(lat * rad), zf = clamp(Math.log2(mpp * S / span), 3, 17.4), z = Math.round(zf), k = 2 ** (zf - z);
+  g.save(); try {
+    g.beginPath(); g.rect(x1, y1, S, S); g.clip(); g.fillStyle = '#16324a'; g.fillRect(x1, y1, S, S);
+    const cx = thudMX(lon, z), cy = thudMY(lat, z), half = S / 2 / k;
+    for (let ty = Math.floor((cy - half) / 256); ty <= Math.floor((cy + half) / 256); ty++) for (let tx = Math.floor((cx - half) / 256); tx <= Math.floor((cx + half) / 256); tx++) {
+      const im = thudTile(z, tx, ty); if (im) g.drawImage(im, x1 + S / 2 + (tx * 256 - cx) * k, y1 + S / 2 + (ty * 256 - cy) * k, 256 * k + 0.6, 256 * k + 0.6);
+    }
+    const mx = x1 + S / 2, my = y1 + S / 2, r = S * 0.11; g.globalAlpha = a * 0.9; g.fillStyle = 'rgba(255,59,48,.35)'; g.beginPath(); g.moveTo(mx, my);
+    g.arc(mx, my, S * 0.42, (hdg - 90 - 32) * rad, (hdg - 90 + 32) * rad); g.closePath(); g.fill(); g.globalAlpha = a;
+    g.fillStyle = THUD_RED; g.strokeStyle = '#fff'; g.lineWidth = Math.max(1.5, U / 400); g.beginPath(); g.arc(mx, my, r * 0.35, 0, Math.PI * 2); g.fill(); g.stroke();
+    txt('N', x1 + S - U * 0.02 * q, y1 + U * 0.022 * q, `700 ${U * 0.022 * q}px ${THUD_F}`, '#fff', 'center');
+    if (mg) {   // magnetic north: the way a compass needle points here (declination from true north, which is straight up)
+      const ang = mg.dec * rad, L2 = S * 0.4, ex = mx + Math.sin(ang) * L2, ey = my - Math.cos(ang) * L2; g.strokeStyle = '#5ac8fa'; g.lineWidth = Math.max(1.5, U / 420); g.setLineDash([U * 0.007, U * 0.005]);
+      g.beginPath(); g.moveTo(mx, my); g.lineTo(ex, ey); g.stroke(); g.setLineDash([]); g.fillStyle = '#5ac8fa'; g.beginPath(); g.moveTo(ex, ey - U * 0.008); g.lineTo(ex - U * 0.006, ey + U * 0.004); g.lineTo(ex + U * 0.006, ey + U * 0.004); g.closePath(); g.fill();
+      txt(zh ? '磁北' : 'MN', ex + (mg.dec < 0 ? -1 : 1) * U * 0.024 * q, ey + U * 0.004, `700 ${U * 0.016 * q}px ${THUD_F}`, '#5ac8fa', 'center');
+    }
+    const bar = [50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000].find(m => m / (span / S) > S * 0.22) || 50000, bw = bar / (span / S);
+    g.fillStyle = '#fff'; g.fillRect(x1 + U * 0.012, y1 + S - U * 0.018, bw, Math.max(2, U / 300)); txt(bar >= 1000 ? bar / 1000 + ' km' : bar + ' m', x1 + U * 0.012 + bw + U * 0.008, y1 + S - U * 0.017, `600 ${U * 0.016 * q}px ${THUD_F}`);
+  } finally { g.restore(); g.globalAlpha = a; }
+}
+
+/* ---------- route films (84_routes.js): the same chip, satellite inset and red flight line as the place films, and ground readings
+   along the way (Open-Meteo at six points of the route for the recording day, at the film's hour in UTC; WMM2025 from the BGS service) ---------- */
+function thudRouteEnv(set) {
+  const key = 'route:' + set.id; let E = THUD.env.get(key); if (E) return E;
+  const P = set.path, n = P.length / 2, pts = []; for (let i = 0; i < 6; i++) { const j = Math.round(i * (n - 1) / 5); pts.push([P[2 * j], P[2 * j + 1]]); }
+  E = { pts, h: null, aqi: null, mag: pts.map(() => null), date: '', ok: false }; THUD.env.set(key, E);
+  const la = pts.map(p => p[0].toFixed(3)).join(','), lo = pts.map(p => p[1].toFixed(3)).join(','), q = `latitude=${la}&longitude=${lo}&forecast_days=1&timezone=GMT`;
+  fetchJSON(`https://api.open-meteo.com/v1/forecast?${q}&hourly=temperature_2m,relative_humidity_2m,uv_index`, { timeout: 12000 }).then(j => { const a = Array.isArray(j) ? j : [j]; if (a[0]?.hourly?.time) { E.h = a.map(x => x.hourly); E.date = a[0].hourly.time[0].slice(0, 10); E.ok = true; } }).catch(() => { });
+  fetchJSON(`https://air-quality-api.open-meteo.com/v1/air-quality?${q}&hourly=us_aqi`, { timeout: 12000 }).then(j => { const a = Array.isArray(j) ? j : [j]; E.aqi = a.map(x => x.hourly?.us_aqi || null); }).catch(() => { });
+  const d = new Date(), day = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  pts.forEach(([a, b], i) => fetchJSON(`https://geomag.bgs.ac.uk/web_service/GMModels/wmm/2025?latitude=${a.toFixed(3)}&longitude=${b.toFixed(3)}&altitude=0&date=${day}&format=json`, { timeout: 12000 })
+    .then(j => { const f = j?.['geomagnetic-field-model-result']?.['field-value']; if (f && Number.isFinite(+f.declination?.value)) E.mag[i] = { dec: +f.declination.value, inc: +f.inclination.value, date: day, model: 'WMM2025' }; }).catch(() => { }));
+  return E;
+}
+function thudKit(g, U) {   // the panel and outlined text of the place films
+  return { panel: (x, y, w, h, r) => { g.fillStyle = 'rgba(9,14,18,.62)'; g.strokeStyle = 'rgba(255,255,255,.28)'; g.lineWidth = Math.max(1, U / 600); g.beginPath(); g.roundRect ? g.roundRect(x, y, w, h, r) : g.rect(x, y, w, h); g.fill(); g.stroke(); },
+    txt: (s, x, y, font, col = '#fff', align = 'left') => { g.font = font; g.textAlign = align; g.textBaseline = 'middle'; g.lineWidth = U / 300; g.strokeStyle = 'rgba(0,0,0,.65)'; g.strokeText(s, x, y); g.fillStyle = col; g.fillText(s, x, y); } };
+}
+function thudRouteChip(g, W, H, R, x, y) {   // returns the bottom edge
+  const geo = ROUTE.idx?.routes?.[R.plan.route.id]?.geo; if (!geo?.country?.length) return y; const U = H, q = 0.8, { panel, txt } = thudKit(g, U), en = I18N.lang !== 'en';
+  const l1 = [geo.cont?.[0], geo.country.map(c => c[0]).join(' → ')].filter(Boolean).join('・'), l2 = [geo.cont?.[1], geo.country.map(c => c[1]).join(' → ')].filter(Boolean).join(' · ');
+  const f1 = U * 0.03 * q, f2 = U * 0.021 * q; g.font = `700 ${f1}px ${THUD_F}`; const w1 = g.measureText(en ? l1 : l2).width; g.font = `500 ${f2}px ${THUD_F}`; const w2 = en ? g.measureText(l2).width : 0;
+  const w = Math.max(w1, w2) + U * 0.032, h = U * (w2 ? 0.075 : 0.05) * q; g.save(); panel(x, y, w, h, U * 0.012);
+  txt(en ? l1 : l2, x + U * 0.016, y + U * 0.027 * q, `700 ${f1}px ${THUD_F}`, '#f0c879'); if (w2) txt(l2, x + U * 0.016, y + U * 0.057 * q, `500 ${f2}px ${THUD_F}`, '#e8eef3'); g.restore();
+  return y + h;
+}
+function thudRouteNear(E, lat, lon) { let k = 0, b = Infinity; E.pts.forEach(([a, c], i) => { const d = haversine(lat, lon, a, c); if (d < b) { b = d; k = i; } }); return k; }
+function thudRouteGround(g, W, H, R, x, y) {   // ground weather and the magnetic field below the route, nearest of six points along it
+  const set = R.plan.route, Hd = R.plan.hud, E = thudRouteEnv(set), k = thudRouteNear(E, Hd.lat, Hd.lon), hr = new Date(Hd.ms).getUTCHours(), mg = E.mag[k], na = '—', U = H, { panel, txt } = thudKit(g, U), zh = I18N.lang !== 'en', en = zh;
+  const temp = thudAt(E.h?.[k]?.temperature_2m, hr), rh = thudAt(E.h?.[k]?.relative_humidity_2m, hr), uv = thudAt(E.h?.[k]?.uv_index, hr), aqi = thudAt(E.aqi?.[k], hr);
+  const cells = [['地面氣溫', 'TEMP', temp == null ? na : `${temp.toFixed(1)}°C`], ['濕度', 'RH', rh == null ? na : `${Math.round(rh)}%`], ['紫外線', 'UV', uv == null ? na : uv.toFixed(1)], ['空品', 'AQI', aqi == null ? na : `${Math.round(aqi)}`],
+    ['磁偏', 'DEC', mg ? `${Math.abs(mg.dec).toFixed(1)}°${mg.dec < 0 ? (zh ? '西' : 'W') : (zh ? '東' : 'E')}` : na], ['磁傾', 'INC', mg ? `${mg.inc.toFixed(1)}°` : na]];
+  const rh2 = U * 0.03, pw = U * 0.36, cw = (pw - U * 0.03) / 2, ph = Math.ceil(cells.length / 2) * rh2 + U * 0.062; g.save(); panel(x, y, pw, ph, U * 0.012);
+  cells.forEach(([lz, le, v], i) => {
+    const x0 = x + U * 0.012 + (i % 2) * (cw + U * 0.008), yy = y + U * 0.02 + Math.floor(i / 2) * rh2 + rh2 / 2;
+    g.font = `600 ${U * 0.0175}px ${THUD_F}`; const lw = g.measureText(zh ? lz : le).width; txt(zh ? lz : le, x0, yy, g.font, '#9fb6c5');
+    if (zh && en) { g.font = `500 ${U * 0.012}px ${THUD_F}`; txt(le, x0 + lw + U * 0.004, yy + U * 0.002, g.font, '#7f96a5'); }
+    let fs = U * 0.019; g.font = `700 ${fs}px ${THUD_F}`; const room = cw - lw - U * (zh && en ? 0.034 : 0.012), vw = g.measureText(v).width; if (vw > room) fs *= room / vw;
+    txt(v, x0 + cw - U * 0.004, yy, `700 ${fs}px ${THUD_F}`, '#fff', 'right');
+  });
+  txt((E.ok ? `Open-Meteo ${E.date.slice(5)} ${String(hr).padStart(2, '0')}:00 UTC` : 'Open-Meteo —') + ' · ' + (mg ? mg.model : 'WMM2025') + (zh ? ' · 航線下方地面' : ' · ground below'), x + U * 0.012, y + ph - U * 0.018, `400 ${U * 0.0125}px ${THUD_F}`, '#9fb6c5'); g.restore();
+}
+function thudRouteRight(g, W, H, R, win) {   // the satellite inset with latitude and longitude, and the whole way on its map with the part travelled in red
+  const set = R.plan.route, Hd = R.plan.hud, U = H, q = 0.8, a = g.globalAlpha, air = win && set.mode === 'air', S = H * 0.18, ex2 = H * 0.042, x1 = W - S - W * (air ? 0.115 : 0.02), y1 = H * (air ? 0.13 : 0.03), { panel, txt } = thudKit(g, U), zh = I18N.lang !== 'en';
+  const E = thudRouteEnv(set), mg = E.mag[thudRouteNear(E, Hd.lat, Hd.lon)];
+  g.save(); panel(x1 - U * 0.006, y1 - U * 0.006, S + U * 0.012, S + ex2, U * 0.012);
+  thudSat(g, x1, y1, S, U, q, a, Hd.lat, Hd.lon, Hd.hd, clamp(Math.max(2000, Hd.alt * 3), 400, 80000), mg, zh, txt);
+  txt(`${Math.abs(Hd.lat).toFixed(4)}°${Hd.lat >= 0 ? 'N' : 'S'}  ${Math.abs(Hd.lon).toFixed(4)}°${Hd.lon >= 0 ? 'E' : 'W'}`, x1 + S / 2, y1 + S + ex2 * 0.44, `700 ${U * 0.02 * q}px ${THUD_F}`, '#fff', 'center');
+  const M = ROUTE.mini, y2 = y1 + S + ex2 + U * 0.015;
+  if (M?.img) {
+    panel(x1 - U * 0.006, y2 - U * 0.006, S + U * 0.012, S + ex2, U * 0.012); g.drawImage(M.img, x1, y2, S, S);
+    g.save(); g.beginPath(); g.rect(x1, y2, S, S); g.clip(); g.lineJoin = g.lineCap = 'round'; const P = M.pts, n = P.length, X = ([u, v]) => [x1 + u * S, y2 + v * S];
+    const line = upto => { g.beginPath(); let last = -1; for (let i = 0; i < n; i++) { if (upto != null && set.pd[i] > upto) break; const [px, py] = X(P[i]); i ? g.lineTo(px, py) : g.moveTo(px, py); last = i; } return last; };
+    g.strokeStyle = 'rgba(0,0,0,.45)'; g.lineWidth = Math.max(2, U / 300); line(); g.stroke();
+    g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = Math.max(1, U / 480); g.setLineDash([U * 0.006, U * 0.005]); line(); g.stroke(); g.setLineDash([]);
+    g.strokeStyle = THUD_RED; g.lineWidth = Math.max(2, U / 240); const last = line(Hd.d); const [cx, cy] = X(M.px(Hd.lat, Hd.lon)); if (last >= 0) g.lineTo(cx, cy); g.stroke();
+    const [sx, sy] = X(P[0]); g.fillStyle = '#34c759'; g.beginPath(); g.arc(sx, sy, U * 0.008, 0, Math.PI * 2); g.fill();
+    g.fillStyle = THUD_RED; g.strokeStyle = '#fff'; g.lineWidth = Math.max(1.5, U / 400); g.beginPath(); g.arc(cx, cy, U * 0.01, 0, Math.PI * 2); g.fill(); g.stroke(); g.restore();
+    txt(zh ? '航線 Flight path' : 'Route', x1 + S / 2, y2 + S + ex2 * 0.44, `700 ${U * 0.02 * q}px ${THUD_F}`, '#fff', 'center');
+  }
+  g.restore();
+}
+
+/* over the live 3D view (the website): the same picture on a canvas of its own; H toggles it */
+function thudDom(R) {
+  const tour = $('#tour'); if (!tour) return; let c = $('#thudCv');
+  if (!c) { c = document.createElement('canvas'); c.id = 'thudCv'; c.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none'; tour.insertBefore(c, $('#tourTitle')); }
+  const w = tour.clientWidth, h = tour.clientHeight, k = Math.min(2, devicePixelRatio || 1); if (c.width !== Math.round(w * k) || c.height !== Math.round(h * k)) { c.width = Math.round(w * k); c.height = Math.round(h * k); }
+  const g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, c.width, c.height); const show = THUD.on && !R.plan.route; if (show) try { thudPaint(g, c.width, c.height, R, true); } catch (e) { APP.lastErr = 'hud: ' + (e?.stack || e); }
+  for (const side of ['L', 'R']) {   // tap a side to fold it into a tab, tap the tab to open it again
+    let b = $('#thud' + side); if (!b) { b = document.createElement('button'); b.id = 'thud' + side; b.type = 'button'; b.style.cssText = 'position:absolute;background:transparent;border:0;padding:0;margin:0;pointer-events:auto;cursor:pointer;z-index:3'; b.onclick = e => { e.stopPropagation(); THUD['hide' + side] = !THUD['hide' + side]; LS.set('aero7:thud' + side, THUD['hide' + side] ? '1' : '0'); thudDom(TOUR.run); }; tour.insertBefore(b, $('#tourTitle')); }
+    const r = show && THUD.rect[side]; b.hidden = !r; if (r) { const s = `left:${r[0] / k}px;top:${r[1] / k}px;width:${r[2] / k}px;height:${r[3] / k}px`; if (b.dataset.at !== s) { b.dataset.at = s; b.style.left = r[0] / k + 'px'; b.style.top = r[1] / k + 'px'; b.style.width = r[2] / k + 'px'; b.style.height = r[3] / k + 'px'; } b.title = side === 'L' ? (THUD.hideL ? '展開儀表 Show gauges' : '收起儀表 Hide gauges') : (THUD.hideR ? '展開地圖 Show maps' : '收起地圖 Hide maps'); }
+  }
+}
+function thudToggle() { THUD.mode = THUD_MODES[(THUD_MODES.indexOf(THUD.mode) + 1) % THUD_MODES.length]; LS.set('aero7:thud', THUD.mode); const R = TOUR.run; if (R) thudDom(R); }
+const thudLabel = () => (THUD.mode === 'off' ? '○ ' : '◉ ') + (isZh() ? '儀表：' + { mini: '精簡', full: '完整', off: '關' }[THUD.mode] : 'Gauges: ' + { mini: 'compact', full: 'full', off: 'off' }[THUD.mode]);
+
+window.__AERO = { get camera() { return camera; }, get scene() { return scene; }, get TERRAIN_U() { return TERRAIN_U; }, THREE, DRAMA, dramaWhen, ROUTE, startRoute, routeSetOf, routeIndex, routeTrk, routeAt, routePlan, TOUR, CATX, SCORE, THUD, thudPaint, tourPaint, startTour, tourExit, tourPlay, tourSeek, tourAutoSet, tourSetOf, tourPlan, tourPose, tourChunks, loadCatalogueX, catxAdd, PLACES, PLACE_BY_ID, APP, SET, TERRAIN, VEC, DEM, ENV, MIS, AM, WX, WAVES, GEO, POST, TREES, BUOYS, I18N, MISSIONS, TUT, loadPlace, spawn, setTimePreset, applyWeather, startAeroAt, t, camSmooth, refineSunTime, updateAeroMission, aeroMissionAction, updateCamera, readInput, loadMissions, CREW, startCrew, crewScore, amP };
 boot();

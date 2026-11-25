@@ -20,7 +20,14 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 HERE = os.path.dirname(os.path.abspath(__file__)); V7 = os.path.dirname(HERE)
 OUT = os.path.join(V7, 'tours_out'); WORK = os.path.join(HERE, 'work')
-STATE = {'jobs': [], 'opts': {}, 'done': threading.Event(), 'results': [], 'last': time.time(), 'log': None, 'skip': set(), 'total': 0}
+STATE = {'jobs': [], 'opts': {}, 'done': threading.Event(), 'results': [], 'last': time.time(), 'log': None, 'skip': set(), 'total': 0, 'attempted': set(), 'lost': None}
+
+
+def next_jobs():
+    """The films the page should record now. Normally one: every film gets a browser window of its own, so a graphics failure in one
+    film (a lost WebGL context, which Chrome does not give back to that window) cannot freeze the films after it (--same-window: all)."""
+    left = [j for j in STATE['jobs'] if j['name'] not in STATE['attempted'] and j['name'] not in STATE['skip']]
+    return left if STATE['opts'].get('same_window') else left[:1]
 HANG = int(os.environ.get('AERO_STUDIO_HANG') or 300)   # seconds of silence from the page before the browser is restarted
 
 
@@ -46,7 +53,7 @@ class Handler(SimpleHTTPRequestHandler):
         b = json.dumps(obj, ensure_ascii=False).encode('utf-8'); self.send_response(code); self.send_header('Content-Type', 'application/json; charset=utf-8'); self.send_header('Content-Length', str(len(b))); self.end_headers(); self.wfile.write(b)
     def do_GET(self):
         path = urllib.parse.urlparse(self.path).path
-        if path == '/studio/jobs': return self._json({'jobs': STATE['jobs'], **STATE['opts']})
+        if path == '/studio/jobs': return self._json({'jobs': next_jobs(), 'pos': len(STATE['attempted'] & {j['name'] for j in STATE['jobs']}) + 1, 'of': len(STATE['jobs']), **STATE['opts']})
         if path == '/studio/status': return self._json({'results': STATE['results'], 'jobs': len(STATE['jobs'])})
         rng = self.headers.get('Range'); fs = self.translate_path(self.path)
         if rng and os.path.isfile(fs):                       # byte ranges, so recorded videos can be scrubbed when played from this server
@@ -77,14 +84,21 @@ class Handler(SimpleHTTPRequestHandler):
                     if not chunk: break
                     f.write(chunk); left -= len(chunk)
             if left: return self._json({'ok': False, 'error': 'incomplete upload'}, 400)
-            os.replace(tmp, os.path.join(OUT, name)); return self._json({'ok': True, 'name': name, 'bytes': n})
+            os.replace(tmp, os.path.join(OUT, name)); bad = picture_stops(os.path.join(OUT, name))
+            if bad:                               # checked at once: a film whose picture stopped early is set aside and recorded again at the end
+                set_aside(os.path.join(OUT, name), f'the picture stops at {bad[0]:.0f} s of {bad[1]:.0f} s' if bad[2] == 'stops' else 'the picture is frozen (the 3D view stopped updating)'); STATE.setdefault('retry', []).append(os.path.splitext(name)[0])
+                return self._json({'ok': False, 'error': 'the picture ' + (f'stopped at {bad[0]:.0f} s of {bad[1]:.0f} s' if bad[2] == 'stops' else 'froze') + ' (it will be recorded again)'}, 500)
+            return self._json({'ok': True, 'name': name, 'bytes': n})
         body = self.rfile.read(n) if n else b'{}'
         try: data = json.loads(body.decode('utf-8') or '{}')
         except ValueError: data = {}
         if u.path == '/studio/log': say('  ·', data.get('msg', '')); return self._json({'ok': True})
+        if u.path == '/studio/lost':          # the page lost its graphics (WebGL) context: this film is spoiled; start a fresh browser window on it at once
+            say(f"  ✗ {data.get('name') or '?'}: the graphics context was lost; recording this film again in a fresh browser window"); STATE['lost'] = data.get('name') or '?'; return self._json({'ok': True})
         if u.path == '/studio/done':
             if data.get('all'): STATE['done'].set(); return self._json({'ok': True})
             job, res = data.get('job') or {}, data.get('result') or {}; STATE['results'].append({'job': job, 'result': res})
+            if job.get('name'): STATE['attempted'].add(job['name'])
             if res.get('error') or not res.get('name'): say(f"  ✗ {job.get('name')}: {res.get('error') or 'nothing recorded'}")
             else: say(f"  ✓ {res['name']}  {res.get('bytes', 0) / 1e6:.0f} MB   ({sum(1 for r in STATE['results'] if r['result'].get('name') and not r['result'].get('error'))}/{STATE['total']})")
             json.dump(STATE['results'], open(os.path.join(OUT, 'studio-status.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
@@ -105,8 +119,16 @@ def find_chrome():
     return next((p for p in c if p and os.path.exists(p)), None)
 
 
+def no_record():
+    """Kinds of film left out of the recording for now: "no_record" in the film package's _tools/upload_hold.json (for example films whose
+    scenes the simulator on this computer cannot draw yet). A kind named with --tour is recorded all the same."""
+    try: return {str(x) for x in (json.load(open(os.path.join(os.path.dirname(V7), 'AERO導覽影片_20景點80部', '_tools', 'upload_hold.json'), encoding='utf-8')).get('no_record') or [])}
+    except Exception: return set()
+
+
 def make_jobs(args):
     idx = json.load(open(os.path.join(V7, 'data', 'tours', 'index.json'), encoding='utf-8')); jobs = []; langs = [l.strip() for l in args.langs.split(',') if l.strip()]
+    off = no_record(); left_out = {}
     for k, (pid, e) in enumerate(idx.get('places', {}).items(), 1):
         try: d = json.load(open(os.path.join(V7, 'data', 'tours', e['file']), encoding='utf-8')); name = d.get('name', {})
         except Exception: name = {}
@@ -114,9 +136,12 @@ def make_jobs(args):
         if args.only and args.only.lower() not in label.lower() and args.only != str(k): continue
         for t in e['tours']:
             if args.tour and args.tour != t['id']: continue
+            kind = t.get('theme') or t['id']
+            if kind in off and args.tour != t['id']: left_out[kind] = left_out.get(kind, 0) + len(langs); continue
             for lang in langs:
                 base = f"{k:02d}_{slug(name.get('en') or pid)}__{t['id']}__{lang}"
                 jobs.append({'place': pid, 'tour': t['id'], 'lang': lang, 'name': base, 'title': (t['title'].get('zh-Hant') or t['title'].get('en') or ''), 'k': k})
+    if left_out: say('(not recorded for now, _tools/upload_hold.json "no_record": ' + ', '.join(f'{n} {k}' for k, n in sorted(left_out.items())) + ' film(s))')
     # route films (data/routes): two views each, R01_<name>__window__zh-Hant …
     ridx = os.path.join(V7, 'data', 'routes', 'index.json')
     if not args.no_routes and os.path.exists(ridx):
@@ -131,10 +156,69 @@ def make_jobs(args):
     return jobs
 
 
+PROBE = shutil.which('ffprobe') or next((p for p in ('/opt/homebrew/bin/ffprobe', '/usr/local/bin/ffprobe') if os.path.exists(p)), None)
+_CK = {}
+
+
+def picture_stops(p):
+    """(seconds of picture, seconds in all) when the recording's picture stops early — the browser stopped delivering frames while the sound
+    went on (it has happened on long sessions with a hidden window); None when the file is whole or cannot be checked (no ffprobe).
+    Each file version is checked once (tours_out/video_check.json)."""
+    if not PROBE or STATE.get('min', 2_000_000) < 2_000_000: return None
+    ck = os.path.join(OUT, 'video_check.json')
+    if not _CK:
+        try: _CK.update(json.load(open(ck, encoding='utf-8')))
+        except (OSError, ValueError): _CK['_'] = 1
+    st = os.stat(p); sig = f'{st.st_size}:{int(st.st_mtime)}'; e = _CK.get(os.path.basename(p))
+    if not (e and e.get('sig') == sig):
+        try:
+            j = json.loads(subprocess.run([PROBE, '-v', 'error', '-show_entries', 'stream=codec_type,duration:format=duration', '-of', 'json', p], capture_output=True, text=True, timeout=90).stdout or '{}')
+            fd = float((j.get('format') or {}).get('duration') or 0); vd = max([float(x.get('duration') or 0) for x in j.get('streams', []) if x.get('codec_type') == 'video'] or [0])
+        except Exception: return None
+        e = _CK[os.path.basename(p)] = {'sig': sig, 'video': round(vd, 1), 'all': round(fd, 1)}
+        try: t = ck + '.tmp'; json.dump(_CK, open(t, 'w', encoding='utf-8')); os.replace(t, ck)
+        except OSError: pass
+    if e['all'] > 30 and e['video'] < 0.95 * e['all']: return (e['video'], e['all'], 'stops')
+    if 'still' not in e:                     # the picture runs to the end but never changes: the 3D view froze (lost graphics context) while captions went on
+        e['still'] = frozen(p, e['video']); _CK[os.path.basename(p)] = e
+        try: t = ck + '.tmp'; json.dump(_CK, open(t, 'w', encoding='utf-8')); os.replace(t, ck)
+        except OSError: pass
+    return (e['video'], e['all'], 'frozen') if e.get('still') else None
+
+
+def frozen(p, dur):
+    """True when five frames spread over the film are practically the same picture in the middle of the frame (captions and badges excluded)"""
+    ff = shutil.which('ffmpeg') or next((x for x in ('/opt/homebrew/bin/ffmpeg', '/usr/local/bin/ffmpeg') if os.path.exists(x)), None)
+    if not ff or dur < 60: return False
+    W, H = 64, 36; frames = []
+    for k in (0.15, 0.35, 0.55, 0.75, 0.92):
+        try: b = subprocess.run([ff, '-v', 'error', '-ss', f'{dur * k:.1f}', '-i', p, '-frames:v', '1', '-vf', f'scale={W}:{H},format=gray', '-f', 'rawvideo', '-'], capture_output=True, timeout=60).stdout
+        except Exception: return False
+        if len(b) < W * H: return False
+        frames.append(b)
+    def diff(a, b):
+        n = 0; s = 0
+        for y in range(8, 26):
+            for x in range(6, 58): s += abs(a[y * W + x] - b[y * W + x]); n += 1
+        return s / n
+    return max(diff(frames[i], frames[i + 1]) for i in range(len(frames) - 1)) < 2.0
+
+
+def set_aside(p, why):
+    """move a broken recording to tours_out/_bad/ (kept, not deleted), so the film is recorded again"""
+    d = os.path.join(OUT, '_bad'); os.makedirs(d, exist_ok=True); b, x = os.path.splitext(os.path.basename(p))
+    q = os.path.join(d, f"{b}.{time.strftime('%Y%m%d-%H%M%S')}{x}")
+    try: os.replace(p, q); say(f'  ！{os.path.basename(p)}: {why}; moved to tours_out/_bad/ and it will be recorded again')
+    except OSError as e: say(f'  ！{os.path.basename(p)}: {why}; could not move it aside ({e})')
+
+
 def recorded(base):
     for ext in ('.mp4', '.webm'):
         p = os.path.join(OUT, base + ext)
-        if os.path.exists(p) and os.path.getsize(p) > STATE.get('min', 2_000_000): return p
+        if os.path.exists(p) and os.path.getsize(p) > STATE.get('min', 2_000_000):
+            bad = picture_stops(p)
+            if bad: set_aside(p, f'the picture stops at {bad[0]:.0f} s of {bad[1]:.0f} s' if bad[2] == 'stops' else 'the picture is frozen (the 3D view stopped updating)'); return None
+            return p
     return None
 
 
@@ -175,6 +259,7 @@ def main():
     ap.add_argument('--chrome', default=''); ap.add_argument('--no-browser', action='store_true'); ap.add_argument('--no-prewarm', action='store_true', help=argparse.SUPPRESS)
     ap.add_argument('--limit', type=int, default=0, help='record at most this many tours in this run (0 = all that are left)')
     ap.add_argument('--no-routes', action='store_true', help='leave out the route films (data/routes)')
+    ap.add_argument('--same-window', action='store_true', help='record every film in one browser window (by default each film gets a fresh window)')
     args = ap.parse_args()
     if not os.path.exists(os.path.join(V7, 'index.html')): sys.exit('✗ run this from the studio/ folder inside the AERO Explorer v7 package')
     os.makedirs(OUT, exist_ok=True); os.makedirs(WORK, exist_ok=True); STATE['log'] = open(os.path.join(OUT, 'studio-log.txt'), 'a', encoding='utf-8')
@@ -188,7 +273,7 @@ def main():
         say(f'{len(allj)} tour(s), {len(todo)} to record (about {len(todo) * 6.5 / 60:.1f} h)');
         if not args.list and allj: finish(args, allj)
         return
-    STATE['jobs'] = todo; STATE['total'] = len(todo); STATE['opts'] = {'w': w, 'h': h, 'bps': int(args.mbps * 1e6), 'fps': args.fps, 'quality': args.quality, 'from': args.start, 'prewarm': not args.no_prewarm}
+    STATE['jobs'] = todo; STATE['all_jobs'] = list(todo); STATE['total'] = len(todo); STATE['opts'] = {'w': w, 'h': h, 'bps': int(args.mbps * 1e6), 'fps': args.fps, 'quality': args.quality, 'from': args.start, 'prewarm': not args.no_prewarm, 'same_window': bool(args.same_window)}
     try: srv = ThreadingHTTPServer(('127.0.0.1', args.port), Handler)
     except OSError as e: sys.exit(f'✗ port {args.port} is busy ({e}); try --port 8778')
     threading.Thread(target=srv.serve_forever, daemon=True).start()
@@ -201,6 +286,7 @@ def main():
     say(f'AERO Studio: {len(todo)} tour(s) to record, {w}x{h} at {args.mbps:g} Mbit/s — about {len(todo) * 6.5 / 60:.1f} hours. Output: {OUT}')
     if len(todo) < left: say(f'(--limit {args.limit}: {left - len(todo)} more tour(s) are left for the next run)')
     url += '?studio=1&lang='; chrome = args.chrome or find_chrome(); proc = None
+    if not chrome or args.no_browser: STATE['opts']['same_window'] = True     # a window opened by hand records the whole list
     prof = os.path.join(WORK, 'chrome-profile')
     def launch(lang):
         os.makedirs(prof, exist_ok=True)
@@ -227,18 +313,32 @@ def main():
     else: say(f'Chrome was not found. Open this address in Chrome or Edge and click once inside the page:\n  {url}{urllib.parse.quote(todo[0]["lang"])}')
     tries = {}
     try:
+      while True:
         while not STATE['done'].wait(5):
-            if proc and proc.poll() is not None: say('The browser window was closed; stopping.'); break
-            quiet = time.time() - STATE['last']
-            if proc and quiet > HANG:   # the page reports every 15 s: this long a silence means it has stopped (crashed tab, stuck graphics); start the browser again
-                left = [j for j in STATE['jobs'] if not recorded(j['name']) and j['name'] not in STATE['skip']]
-                if left:
-                    n = left[0]['name']; tries[n] = tries.get(n, 0) + 1
-                    if tries[n] >= 2: STATE['skip'].add(n); say(f'  ✗ {n}: the page stopped twice on this film; it is left for the next run'); left = left[1:]
-                if not left: break
-                say(f'The page has said nothing for {quiet / 60:.0f} minutes; restarting the browser and going on with {left[0]["name"]}')
-                close(proc); STATE['jobs'] = left; STATE['last'] = time.time(); proc = launch(left[0]['lang']); continue
-            if quiet > 600: say('No sign of life from the page for 10 minutes; stopping. Run the same command again to continue.'); break
+              if proc and proc.poll() is not None: say('The browser window was closed; stopping.'); STATE['stopped'] = True; break
+              if STATE['lost'] and proc:          # graphics lost in the page: the same film again, in a fresh window (twice at most)
+                  n = STATE['lost']; STATE['lost'] = None; tries[n] = tries.get(n, 0) + 1
+                  if tries[n] >= 2: STATE['skip'].add(n); STATE['attempted'].add(n); say(f'  ✗ {n}: the graphics were lost twice on this film; it is left for the next run')
+                  if not next_jobs(): break
+                  close(proc); STATE['last'] = time.time(); proc = launch(next_jobs()[0]['lang']); continue
+              quiet = time.time() - STATE['last']
+              if proc and quiet > HANG:   # the page reports every 15 s: this long a silence means it has stopped (crashed tab, stuck graphics); start the browser again
+                  left = [j for j in STATE['jobs'] if not recorded(j['name']) and j['name'] not in STATE['skip']]
+                  if left:
+                      n = left[0]['name']; tries[n] = tries.get(n, 0) + 1
+                      if tries[n] >= 2: STATE['skip'].add(n); say(f'  ✗ {n}: the page stopped twice on this film; it is left for the next run'); left = left[1:]
+                  if not left: break
+                  say(f'The page has said nothing for {quiet / 60:.0f} minutes; restarting the browser and going on with {left[0]["name"]}')
+                  close(proc); STATE['jobs'] = left; STATE['attempted'] -= {j['name'] for j in left}; STATE['last'] = time.time(); proc = launch(left[0]['lang']); continue
+              if quiet > 600: say('No sign of life from the page for 10 minutes; stopping. Run the same command again to continue.'); STATE['stopped'] = True; break
+        # one film per window: the page has finished its film; the next one starts in a fresh window
+        if proc and not STATE.get('stopped') and next_jobs() and not STATE['opts'].get('same_window'):
+            STATE['done'].clear(); close(proc); STATE['last'] = time.time(); proc = launch(next_jobs()[0]['lang']); continue
+        # films whose picture stopped early were set aside: record them once more, in a fresh browser window
+        again = [j for j in STATE.get('all_jobs', []) if j['name'] in set(STATE.get('retry', []))] if not STATE.get('retried') else []
+        if not again or not proc or STATE.get('stopped'): break
+        STATE['retried'] = True; STATE['retry'] = []; say(f'Recording {len(again)} film(s) again whose picture stopped early: ' + ', '.join(j['name'] for j in again))
+        close(proc); STATE['jobs'] = again; STATE['attempted'] -= {j['name'] for j in again}; STATE['total'] += len(again); STATE['done'].clear(); STATE['last'] = time.time(); proc = launch(again[0]['lang'])
     except KeyboardInterrupt: say('\nStopped. Run the same command again to continue with the remaining tours.')
     close(proc)
     srv.shutdown(); finish(args, allj)

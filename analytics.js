@@ -3,7 +3,8 @@
    (local preview, recording). Until the visitor answers the notice, Google Analytics runs without cookies (consent mode).
    What is counted: pages, and inside the single-page apps a "virtual page" for each place, film, route, mission or section,
    so that each one gets its own views and engagement time; film progress (25/50/75/100 %); buttons marked data-nav, data-mission,
-   data-action, data-embed or data-game. No names, e-mail addresses or other personal details are sent. */
+   data-action, data-embed or data-game (a data-action button counts once per page, however often it is pressed); on the other sites,
+   the game started (a virtual page 'game/<name>') and the main buttons, by the HOOKS below. No names, e-mail addresses or other personal details are sent. */
 (function () {
   var ID = String(window.AERO_GA_ID || '').trim(), host = location.hostname, noop = function () { };
   window.aeroPage = window.aeroTrack = noop;
@@ -19,19 +20,51 @@
   function clean(v) { return String(v || '').replace(/[^\w\-.~%/]/g, '_').slice(0, 90); }
   /* a virtual page under <site>/v/: 'tour/<place>/<film>', 'place/<id>', 'route/<id>/<view>', 'mission/<id>', '<section>' (a path, so that reports list each one) */
   function vurl(path) { return base + 'v/' + clean(String(path || '').replace(/^#/, '')); }
-  window.aeroPage = function (path, title) { cur = vurl(path); gtag('event', 'page_view', { page_location: cur, page_title: String(title || document.title).slice(0, 100) }); };
+  var seen = {};   // act_<name> already sent on this page
+  window.aeroPage = function (path, title) { cur = vurl(path); seen = {}; gtag('event', 'page_view', { page_location: cur, page_title: String(title || document.title).slice(0, 100) }); };
   /* an event on the current (or a given) virtual page: tour_25 … tour_100, flight_start, act_<button> */
   window.aeroTrack = function (name, path) { var n = String(name || '').toLowerCase().replace(/[^a-z0-9_]/g, '_').slice(0, 40); if (!n) return; gtag('event', n, { page_location: path ? vurl(path) : cur }); };
   gtag('event', 'page_view', { page_location: location.href, page_title: document.title });
-  addEventListener('hashchange', function () { cur = location.href; gtag('event', 'page_view', { page_location: cur, page_title: document.title }); });
+  addEventListener('hashchange', function () { cur = location.href; seen = {}; gtag('event', 'page_view', { page_location: cur, page_title: document.title }); });
+  function act(name) { var k = clean(name); if (!k || seen[k]) return; seen[k] = 1; window.aeroTrack('act_' + k); }
+  function val(id) { var e = document.getElementById(id); return e && e.value ? String(e.value) : ''; }
+  function opt(id) { var e = document.getElementById(id), o = e && e.options && e.options[e.selectedIndex]; return o ? o.text.trim() : ''; }
+  /* games and main buttons of the other sites, without changing their pages: [site, selector, what] — what returns ['game', name, title] (a virtual
+     page game/<name>: one per game started, with its own engagement time; once: not again while that game is the current page) or ['act', name] */
+  var HOOKS = [
+    [/^3x3Basketball$/, '#start,#playAgain', function () { var s = ''; try { s = window.SASportsUI.getContext().sport; } catch (e) { } s = s || val('sport') || 'unknown'; return ['game', s, opt('sport') || s]; }],
+    [/^(taichi|SmartAction)$/, '#startBtn,#combatStartBtn,#partnerStartBtn', function () { return ['game', (val('mode') || 'practice') + '/' + (val('course') || 'default'), [opt('course'), opt('mode')].filter(Boolean).join(' · '), 'once']; }],
+    [/^(taichi|SmartAction)$/, '#modelBtn', function () { return ['act', 'ai_coach']; }], [/^(taichi|SmartAction)$/, '#bodyCameraBtn', function () { return ['act', 'body_camera']; }],
+    [/^(taichi|SmartAction)$/, '#walkBtn', function () { return ['act', 'walk']; }],
+    [/^HoloArtisan_PortraitMuseum$/, '#sendMessage,#suggestPrompt', function () { return ['act', 'ask']; }], [/^HoloArtisan_PortraitMuseum$/, '#prevArtwork,#nextArtwork', function () { return ['act', 'change_artwork']; }],
+    [/^HoloArtisan_PortraitMuseum$/, '#loadModel', function () { return ['act', 'load_model']; }], [/^HoloArtisan_PortraitMuseum$/, '#openCollection', function () { return ['act', 'collection']; }],
+    [/^Frame_to_Video$/, '#demoBtn', function () { return ['act', 'demo']; }], [/^Frame_to_Video$/, '#addBtn', function () { return ['act', 'add_photos']; }],
+    [/^Frame_to_Video$/, '#playBtn', function () { return ['act', 'preview']; }], [/^Frame_to_Video$/, '#exportBtn', function () { return ['act', 'export']; }],
+    [/^Frame_to_Video$/, '#storyBtn', function () { return ['act', 'story']; }], [/^Frame_to_Video$/, '#voiceBtn,#recordBtn', function () { return ['act', 'voice']; }],
+    [/^HoloArtisan_Classroom$/, '#tabClassroom,#tabMedical,#tabTwin', function (el) { return ['game', el.id.replace(/^tab/, '').toLowerCase(), el.textContent.trim(), 'once']; }],
+    [/^HoloArtisan_Classroom$/, '#startM', function () { return ['act', 'start']; }], [/^HoloArtisan_Classroom$/, '#demoBtn', function () { return ['act', 'demo']; }],
+    [/^HoloArtisan_Classroom$/, '#btnAI', function () { return ['act', 'ai']; }]
+  ].filter(function (h) { return h[0].test(site); });
+  function hook(el) {
+    for (var i = 0; i < HOOKS.length; i++) { var b = el.closest ? el.closest(HOOKS[i][1]) : null; if (!b) continue; var r = HOOKS[i][2](b) || [];
+      if (r[0] === 'game') { var u = vurl('#game/' + r[1]); if (!(r[3] === 'once' && cur === u)) window.aeroPage('#game/' + r[1], r[2] || r[1]); }
+      else if (r[0] === 'act') act(r[1]);
+      return; }
+  }
+  function ended() {   // 3x3: a match played to the end
+    var end = document.getElementById('endOverlay'); if (end && window.MutationObserver) new MutationObserver(function () { if (!end.hidden) window.aeroTrack('game_complete'); }).observe(end, { attributes: true, attributeFilter: ['hidden'] });
+  }
+  if (site === '3x3Basketball') { if (document.readyState === 'loading') addEventListener('DOMContentLoaded', ended); else ended(); }
+  if (HOOKS.length) document.addEventListener('submit', function (e) { if (e.target && e.target.id === 'conversationForm') act('ask'); }, true);
   document.addEventListener('click', function (e) {
-    var el = e.target && e.target.closest ? e.target.closest('[data-nav],[data-mission],[data-action],[data-embed],[data-game]') : null; if (!el) return;
+    var el = e.target && e.target.closest ? e.target.closest('[data-nav],[data-mission],[data-action],[data-embed],[data-game]') : null;
+    if (!el) { if (HOOKS.length && e.target && e.target.closest) hook(e.target); return; }
     var d = el.dataset;
     if (d.nav) window.aeroPage('#' + d.nav, el.textContent.trim());
     else if (d.mission) window.aeroPage('#mission/' + d.mission, el.textContent.trim());
     else if (d.game) window.aeroPage('#game/' + d.game, el.textContent.trim());
     else if (d.embed) window.aeroTrack('open_' + d.embed);
-    else if (d.action) window.aeroTrack('act_' + d.action);
+    else if (d.action) act(d.action);
   }, true);
   if (choice !== null) return;
   /* the notice, in the viewer's language */
