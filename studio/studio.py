@@ -140,7 +140,7 @@ def make_jobs(args):
             if kind in off and args.tour != t['id']: left_out[kind] = left_out.get(kind, 0) + len(langs); continue
             for lang in langs:
                 base = f"{k:02d}_{slug(name.get('en') or pid)}__{t['id']}__{lang}"
-                jobs.append({'place': pid, 'tour': t['id'], 'lang': lang, 'name': base, 'title': (t['title'].get('zh-Hant') or t['title'].get('en') or ''), 'k': k})
+                jobs.append({'place': pid, 'tour': t['id'], 'lang': lang, 'name': base, 'title': (t['title'].get('zh-Hant') or t['title'].get('en') or ''), 'k': k, 'kind': kind})
     if left_out: say('(not recorded for now, _tools/upload_hold.json "no_record": ' + ', '.join(f'{n} {k}' for k, n in sorted(left_out.items())) + ' film(s))')
     # route films (data/routes): two views each, R01_<name>__window__zh-Hant …
     ridx = os.path.join(V7, 'data', 'routes', 'index.json')
@@ -152,8 +152,40 @@ def make_jobs(args):
                 if args.tour and args.tour != view: continue
                 for lang in langs:
                     base = f"R{e['num']:02d}_{slug(name.get('en') or rid)}__{view}__{lang}"
-                    jobs.append({'route': rid, 'view': view, 'place': 'route-' + rid, 'tour': view, 'lang': lang, 'name': base, 'title': name.get('zh-Hant') or name.get('en') or '', 'k': 100 + e['num']})
+                    jobs.append({'route': rid, 'view': view, 'place': 'route-' + rid, 'tour': view, 'lang': lang, 'name': base, 'title': name.get('zh-Hant') or name.get('en') or '', 'k': 100 + e['num'], 'kind': 'route'})
     return jobs
+
+
+SCENIC = ('history', 'culture', 'nature', 'geography')
+PER_EVENING = {'scenic': int(os.environ.get('AERO_SCENIC_PER_EVENING') or 5), 'other': int(os.environ.get('AERO_OTHER_PER_EVENING') or 1)}
+
+
+def daily_order(todo):
+    """Order the films to record like the evenings they will go public in (youtube_upload.py --schedule evening): each evening
+    5 scenic places (their four films together) and 1 other film. Films that are already on YouTube (new recordings of them) come last.
+    With --limit 21 a run then records just one evening's worth, so a change to the films' look reaches the next films soon."""
+    try: up = json.load(open(os.path.join(os.path.dirname(V7), 'AERO導覽影片_20景點80部', '_tools', 'youtube_uploaded.json'), encoding='utf-8'))
+    except Exception: up = {}
+    fresh = [j for j in todo if not (up.get(j['name']) or {}).get('id')]; again = [j for j in todo if (up.get(j['name']) or {}).get('id')]
+    groups, other = [], []
+    for j in fresh:
+        if str(j.get('kind')) in SCENIC:
+            if groups and groups[-1][0]['place'] == j['place']: groups[-1].append(j)
+            else: groups.append([j])
+        else: other.append(j)
+    out = []
+    while groups or other:
+        ev = [j for g in groups[:PER_EVENING['scenic']] for j in g] + other[:PER_EVENING['other']]
+        groups = groups[PER_EVENING['scenic']:]; other = other[PER_EVENING['other']:]; out.append(ev)
+    return out, again
+
+
+def one_run(todo, limit):
+    """One evening's films (5 scenic places + 1 other film), topped up to `limit` with new recordings of films already on YouTube:
+    about what one day can upload, so the look of the films can keep changing without a long backlog of old-look recordings."""
+    evs, again = daily_order(todo)
+    out = (evs[0] if evs else [])[:limit]
+    return out + again[:limit - len(out)]
 
 
 PROBE = shutil.which('ffprobe') or next((p for p in ('/opt/homebrew/bin/ffprobe', '/usr/local/bin/ffprobe') if os.path.exists(p)), None)
@@ -267,7 +299,7 @@ def main():
     if args.start: STATE['min'] = 50_000                      # partial test recordings are small
     allj = [] if args.serve else make_jobs(args); todo = [j for j in allj if args.force or not recorded(j['name'])]
     left = len(todo)
-    if args.limit > 0: todo = todo[:args.limit]
+    if args.limit > 0: todo = one_run(todo, args.limit)             # whole evenings only: 5 scenic places + 1 other film each
     if args.list or (not args.serve and not todo):
         for j in allj: say(('  done ' if recorded(j['name']) else '  todo '), j['name'], '·', j['title'])
         say(f'{len(allj)} tour(s), {len(todo)} to record (about {len(todo) * 6.5 / 60:.1f} h)');

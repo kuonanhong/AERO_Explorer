@@ -3002,7 +3002,7 @@ const TOUR_ICON = { history: '◷', culture: '❖', nature: '❦', geography: '�
 const tourEase = u => u * u * (3 - 2 * u);
 /* The researched scripts are written in Traditional Chinese and English. Readers of Simplified Chinese get the Chinese text converted
    with a table that covers every character the scripts use (tools/t2s_map.json; the build reports a character it does not know). */
-const TOUR_T2S = {"p":"並并乾干亙亘亞亚佈布佔占併并來来侶侣係系倉仓個个們们倫伦偉伟側侧偵侦偽伪傑杰傘伞備备傳传債债傷伤傾倾僅仅僑侨價价儀仪億亿兒儿內内兩两凍冻凱凯別别則则剛刚創创劃划劇剧劍剑勁劲動动務务勝胜勞劳勢势匯汇區区協协卻却厲厉參参叢丛呂吕員员問问啟启單单嘗尝嘯啸噴喷噸吨嚮向嚴严國国圍围園园圓圆圖图團团埡垭執执堅坚報报場场塊块塗涂塚冢墾垦壇坛壓压壞坏壩坝壯壮壺壶壽寿夢梦夾夹奧奥奪夺婦妇媽妈學学宮宫實实寧宁寫写寬宽寶宝將将專专尋寻對对導导層层屬属岡冈島岛峽峡崗岗崙仑嶺岭嶼屿嶽岳巒峦巔巅巖岩師师帳帐帶带幣币幹干幾几庫库廂厢廟庙廠厂廢废廣广廳厅張张強强彎弯彥彦後后徑径從从復复徵征愛爱態态慶庆憶忆應应懸悬戰战戲戏戶户捨舍掃扫掛挂採采揚扬換换損损搗捣撈捞撐撑撿捡擁拥擇择擊击擋挡據据擠挤擬拟擴扩擺摆擾扰攔拦攜携攝摄攤摊敘叙敵敌數数斷断於于昇升時时暫暂曆历曠旷曬晒書书會会東东條条棄弃棗枣棧栈棲栖楊杨楨桢業业極极榮荣構构樁桩樂乐樑梁樓楼標标樞枢樣样樹树樺桦橋桥機机橢椭橫横檜桧檢检櫚榈櫟栎櫸榉櫻樱欄栏權权欒栾欖榄歐欧歡欢歲岁歷历歸归殘残殼壳毀毁氈毡氣气氫氢汙污決决沒没沖冲況况涼凉淨净淺浅減减測测湧涌湯汤準准溝沟溫温滅灭滲渗滿满漁渔漢汉漲涨漸渐漿浆潛潜澤泽澱淀濁浊濃浓濕湿濟济濤涛濱滨濺溅濾滤瀕濒灘滩灣湾為为烏乌無无煉炼煙烟熱热燈灯燒烧營营燭烛爭争爾尔牆墙牠它狀状狹狭獅狮獎奖獨独獲获獵猎獸兽獻献獼猕現现瑪玛環环產产畢毕畫画異异當当疊叠發发盞盏盡尽監监盤盘盪荡眾众矽硅砲炮確确碼码磚砖磧碛磯矶礦矿礫砾祿禄禍祸禎祯禦御禮礼稜棱種种稱称積积窪洼筆笔節节範范築筑簡简簽签籃篮籌筹籠笼紀纪約约紅红紋纹納纳紐纽紗纱紙纸級级紛纷紡纺紮扎細细紹绍終终組组結结絕绝給给絨绒統统絲丝經经綠绿綬绶維维網网綿绵緊紧緋绯緒绪線线緣缘編编緩缓緻致縣县縫缝縮缩總总織织繞绕繡绣繩绳繪绘繫系繳缴繼继續续纜缆罰罚羅罗義义翬翚翹翘聖圣聞闻聯联聲声聳耸職职聽听脅胁脈脉腳脚膠胶膽胆臉脸臥卧臨临臺台與与興兴舉举舊旧荊荆莊庄莖茎華华菸烟萊莱萬万葉叶著着葦苇蒐搜蓋盖蓮莲蓴莼蔣蒋蔭荫蕭萧薊蓟薑姜薦荐薩萨薰熏藍蓝藝艺藥药蘆芦蘇苏蘚藓蘭兰處处虛虚號号蝕蚀蝦虾螢萤蟲虫術术衛卫衝冲補补裝装裡里製制複复襲袭見见規规覓觅視视親亲覽览觀观觸触訂订計计訊讯討讨託托記记訝讶訪访設设許许訴诉詞词詢询試试詩诗話话該该認认誕诞語语誦诵說说誰谁課课調调談谈請请論论諮咨諾诺謀谋講讲證证識识議议護护讀读變变讓让豎竖豐丰貓猫貝贝貞贞負负貧贫貨货貫贯責责貴贵買买費费貼贴資资賈贾賓宾賞赏賢贤賣卖質质賴赖賽赛贈赠趕赶跡迹蹟迹蹤踪躍跃車车軌轨軍军軟软軸轴較较載载輕轻輛辆輩辈輪轮輸输轉转轎轿轟轰辦办農农迴回這这連连週周進进遊游運运過过達达違违遙遥遜逊遠远適适遶绕遷迁選选遺遗還还邊边郵邮鄉乡鄰邻釋释釐厘針针釣钓鈔钞鈣钙鉤钩銀银銅铜銳锐銷销鋪铺鋸锯鋼钢錄录錐锥錦锦錫锡錯错鍬锹鍰锾鎮镇鏈链鏡镜鏢镖鏽锈鐘钟鐵铁鑽钻鑿凿長长門门閉闭開开閒闲間间閣阁閩闽閱阅闊阔關关闢辟陰阴陳陈陸陆陽阳隊队階阶際际隨随險险隸隶隻只雙双雜杂雞鸡離离難难雲云電电霧雾靈灵靜静韋韦響响頁页頂顶頃顷項项順顺須须預预領领頭头頸颈顆颗題题額额顏颜類类顧顾顯显風风颱台飄飘飛飞飯饭飲饮飾饰養养餘余館馆餵喂饑饥馬马駁驳駐驻駕驾駛驶駝驼駱骆駿骏騎骑騰腾騾骡驗验驚惊驛驿體体髮发鬆松鬚须鬥斗鬧闹魚鱼魯鲁鮊鲌鮑鲍鮪鲔鮭鲑鯉鲤鯖鲭鯨鲸鯽鲫鰱鲢鰹鲣鰻鳗鱗鳞鳥鸟鳳凤鳴鸣鳶鸢鴕鸵鴝鸲鴨鸭鴴鸻鵑鹃鵰雕鵲鹊鶇鸫鶲鹟鶴鹤鷗鸥鷚鹨鷥鸶鷲鹫鷴鹇鷸鹬鷹鹰鷺鹭鹹咸鹼碱鹽盐麗丽麥麦麼么黃黄點点齊齐齋斋齒齿齡龄龍龙龜龟僕仆喬乔墊垫墜坠墻墙嬰婴寵宠嶇岖拋抛棟栋潰溃爺爷犛牦瓊琼盜盗盧卢禱祷穩稳筍笋糞粪綁绑習习艦舰豔艳貿贸踐践釀酿鈴铃錢钱韓韩願愿馱驮鮮鲜鵝鹅拏拿儲储勵励喚唤嚇吓囓啮婭娅屆届幫帮彌弥惡恶憂忧憑凭災灾犧牺甦苏茲兹蒼苍蟻蚁評评誤误譯译邁迈陣阵隱隐頓顿丟丢亂乱俠侠優优囪囱堊垩嬌娇廁厕廚厨彈弹慮虑憐怜懷怀懺忏戀恋敗败暢畅滾滚獄狱獰狞獺獭禿秃窩窝窯窑篤笃籬篱籲吁綻绽脫脱腦脑臘腊莢荚蘋苹蝸蜗訥讷誌志謝谢豬猪貢贡輝辉邏逻鄧邓釘钉銘铭錨锚鍋锅閃闪閘闸馳驰驅驱驢驴鯊鲨鯰鲶鯷鳀鰩鳐鱷鳄鴉鸦鴞鸮鴿鸽鵡鹉鶯莺鷀鹚鸌鹱鸕鸬鸚鹦龐庞緬缅桿杆緯纬縱纵覺觉艙舱幟帜欽钦吳吴塵尘奮奋捲卷臟脏辭辞醫医鸝鹂廈厦燼烬鐸铎鯡鲱搖摇鉛铅塢坞婁娄灑洒獷犷碩硕競竞購购遞递鑄铸壘垒憲宪搶抢槍枪殺杀盃杯績绩贏赢鋒锋揮挥擲掷綜综擔担礎础頻频夠够檔档檳槟洩泄澆浇箏筝粵粤緞缎艱艰釬钎鍵键鎬镐韌韧鱘鲟撲扑劉刘吶呐嵐岚恆恒揹背撫抚朧胧櫃柜溼湿獁犸籤签菓果蔥葱藪薮財财轄辖鄒邹鄭郑鋤锄鋰锂錠锭鑲镶鑾銮颳刮髏髅龕龛","w":{"瓩":"千瓦","呎":"英尺"},"ph":{"著名":"著名","著稱":"著称","著作":"著作","著書":"著书","著述":"著述","著錄":"著录","著者":"著者","原著":"原著","名著":"名著","巨著":"巨著","專著":"专著","論著":"论著","編著":"编著","合著":"合著","譯著":"譯著","顯著":"显著","卓著":"卓著","昭著":"昭著","土著":"土著","所著":"所著","乾隆":"乾隆","乾坤":"乾坤"}}; let tourHansMap = null, tourHansRe = null;
+const TOUR_T2S = {"p":"並并乾干亙亘亞亚佈布佔占併并來来侶侣係系倉仓個个們们倫伦偉伟側侧偵侦偽伪傑杰傘伞備备傳传債债傷伤傾倾僅仅僑侨價价儀仪億亿兒儿內内兩两凍冻凱凯別别則则剛刚創创劃划劇剧劍剑勁劲動动務务勝胜勞劳勢势匯汇區区協协卻却厲厉參参叢丛呂吕員员問问啟启單单嘗尝嘯啸噴喷噸吨嚮向嚴严國国圍围園园圓圆圖图團团埡垭執执堅坚報报場场塊块塗涂塚冢墾垦壇坛壓压壞坏壩坝壯壮壺壶壽寿夢梦夾夹奧奥奪夺婦妇媽妈學学宮宫實实寧宁寫写寬宽寶宝將将專专尋寻對对導导層层屬属岡冈島岛峽峡崗岗崙仑嶺岭嶼屿嶽岳巒峦巔巅巖岩師师帳帐帶带幣币幹干幾几庫库廂厢廟庙廠厂廢废廣广廳厅張张強强彎弯彥彦後后徑径從从復复徵征愛爱態态慶庆憶忆應应懸悬戰战戲戏戶户捨舍掃扫掛挂採采揚扬換换損损搗捣撈捞撐撑撿捡擁拥擇择擊击擋挡據据擠挤擬拟擴扩擺摆擾扰攔拦攜携攝摄攤摊敘叙敵敌數数斷断於于昇升時时暫暂曆历曠旷曬晒書书會会東东條条棄弃棗枣棧栈棲栖楊杨楨桢業业極极榮荣構构樁桩樂乐樑梁樓楼標标樞枢樣样樹树樺桦橋桥機机橢椭橫横檜桧檢检櫚榈櫟栎櫸榉櫻樱欄栏權权欒栾欖榄歐欧歡欢歲岁歷历歸归殘残殼壳毀毁氈毡氣气氫氢汙污決决沒没沖冲況况涼凉淨净淺浅減减測测湧涌湯汤準准溝沟溫温滅灭滲渗滿满漁渔漢汉漲涨漸渐漿浆潛潜澤泽澱淀濁浊濃浓濕湿濟济濤涛濱滨濺溅濾滤瀕濒灘滩灣湾為为烏乌無无煉炼煙烟熱热燈灯燒烧營营燭烛爭争爾尔牆墙牠它狀状狹狭獅狮獎奖獨独獲获獵猎獸兽獻献獼猕現现瑪玛環环產产畢毕畫画異异當当疊叠發发盞盏盡尽監监盤盘盪荡眾众矽硅砲炮確确碼码磚砖磧碛磯矶礦矿礫砾祿禄禍祸禎祯禦御禮礼稜棱種种稱称積积窪洼筆笔節节範范築筑簡简簽签籃篮籌筹籠笼紀纪約约紅红紋纹納纳紐纽紗纱紙纸級级紛纷紡纺紮扎細细紹绍終终組组結结絕绝給给絨绒統统絲丝經经綠绿綬绶維维網网綿绵緊紧緋绯緒绪線线緣缘編编緩缓緻致縣县縫缝縮缩總总織织繞绕繡绣繩绳繪绘繫系繳缴繼继續续纜缆罰罚羅罗義义翬翚翹翘聖圣聞闻聯联聲声聳耸職职聽听脅胁脈脉腳脚膠胶膽胆臉脸臥卧臨临臺台與与興兴舉举舊旧荊荆莊庄莖茎華华菸烟萊莱萬万葉叶著着葦苇蒐搜蓋盖蓮莲蓴莼蔣蒋蔭荫蕭萧薊蓟薑姜薦荐薩萨薰熏藍蓝藝艺藥药蘆芦蘇苏蘚藓蘭兰處处虛虚號号蝕蚀蝦虾螢萤蟲虫術术衛卫衝冲補补裝装裡里製制複复襲袭見见規规覓觅視视親亲覽览觀观觸触訂订計计訊讯討讨託托記记訝讶訪访設设許许訴诉詞词詢询試试詩诗話话該该認认誕诞語语誦诵說说誰谁課课調调談谈請请論论諮咨諾诺謀谋講讲證证識识議议護护讀读變变讓让豎竖豐丰貓猫貝贝貞贞負负貧贫貨货貫贯責责貴贵買买費费貼贴資资賈贾賓宾賞赏賢贤賣卖質质賴赖賽赛贈赠趕赶跡迹蹟迹蹤踪躍跃車车軌轨軍军軟软軸轴較较載载輕轻輛辆輩辈輪轮輸输轉转轎轿轟轰辦办農农迴回這这連连週周進进遊游運运過过達达違违遙遥遜逊遠远適适遶绕遷迁選选遺遗還还邊边郵邮鄉乡鄰邻釋释釐厘針针釣钓鈔钞鈣钙鉤钩銀银銅铜銳锐銷销鋪铺鋸锯鋼钢錄录錐锥錦锦錫锡錯错鍬锹鍰锾鎮镇鏈链鏡镜鏢镖鏽锈鐘钟鐵铁鑽钻鑿凿長长門门閉闭開开閒闲間间閣阁閩闽閱阅闊阔關关闢辟陰阴陳陈陸陆陽阳隊队階阶際际隨随險险隸隶隻只雙双雜杂雞鸡離离難难雲云電电霧雾靈灵靜静韋韦響响頁页頂顶頃顷項项順顺須须預预領领頭头頸颈顆颗題题額额顏颜類类顧顾顯显風风颱台飄飘飛飞飯饭飲饮飾饰養养餘余館馆餵喂饑饥馬马駁驳駐驻駕驾駛驶駝驼駱骆駿骏騎骑騰腾騾骡驗验驚惊驛驿體体髮发鬆松鬚须鬥斗鬧闹魚鱼魯鲁鮊鲌鮑鲍鮪鲔鮭鲑鯉鲤鯖鲭鯨鲸鯽鲫鰱鲢鰹鲣鰻鳗鱗鳞鳥鸟鳳凤鳴鸣鳶鸢鴕鸵鴝鸲鴨鸭鴴鸻鵑鹃鵰雕鵲鹊鶇鸫鶲鹟鶴鹤鷗鸥鷚鹨鷥鸶鷲鹫鷴鹇鷸鹬鷹鹰鷺鹭鹹咸鹼碱鹽盐麗丽麥麦麼么黃黄點点齊齐齋斋齒齿齡龄龍龙龜龟僕仆喬乔墊垫墜坠墻墙嬰婴寵宠嶇岖拋抛棟栋潰溃爺爷犛牦瓊琼盜盗盧卢禱祷穩稳筍笋糞粪綁绑習习艦舰豔艳貿贸踐践釀酿鈴铃錢钱韓韩願愿馱驮鮮鲜鵝鹅拏拿儲储勵励喚唤嚇吓囓啮婭娅屆届幫帮彌弥惡恶憂忧憑凭災灾犧牺甦苏茲兹蒼苍蟻蚁評评誤误譯译邁迈陣阵隱隐頓顿丟丢亂乱俠侠優优囪囱堊垩嬌娇廁厕廚厨彈弹慮虑憐怜懷怀懺忏戀恋敗败暢畅滾滚獄狱獰狞獺獭禿秃窩窝窯窑篤笃籬篱籲吁綻绽脫脱腦脑臘腊莢荚蘋苹蝸蜗訥讷誌志謝谢豬猪貢贡輝辉邏逻鄧邓釘钉銘铭錨锚鍋锅閃闪閘闸馳驰驅驱驢驴鯊鲨鯰鲶鯷鳀鰩鳐鱷鳄鴉鸦鴞鸮鴿鸽鵡鹉鶯莺鷀鹚鸌鹱鸕鸬鸚鹦龐庞緬缅桿杆緯纬縱纵覺觉艙舱幟帜欽钦吳吴塵尘奮奋捲卷臟脏辭辞醫医鸝鹂廈厦燼烬鐸铎鯡鲱搖摇鉛铅塢坞婁娄灑洒獷犷碩硕競竞購购遞递鑄铸壘垒憲宪搶抢槍枪殺杀盃杯績绩贏赢鋒锋揮挥擲掷綜综擔担礎础頻频夠够檔档檳槟洩泄澆浇箏筝粵粤緞缎艱艰釬钎鍵键鎬镐韌韧鱘鲟撲扑劉刘吶呐嵐岚恆恒揹背撫抚朧胧櫃柜溼湿獁犸籤签菓果蔥葱藪薮財财轄辖鄒邹鄭郑鋤锄鋰锂錠锭鑲镶鑾銮颳刮髏髅龕龛償偿審审摺折樸朴潑泼猶犹稅税穀谷糧粮膚肤襯衬訶诃諸诸譜谱賺赚鱉鳖","w":{"瓩":"千瓦","呎":"英尺"},"ph":{"著名":"著名","著稱":"著称","著作":"著作","著書":"著书","著述":"著述","著錄":"著录","著者":"著者","原著":"原著","名著":"名著","巨著":"巨著","專著":"专著","論著":"论著","編著":"编著","合著":"合著","譯著":"譯著","顯著":"显著","卓著":"卓著","昭著":"昭著","土著":"土著","所著":"所著","乾隆":"乾隆","乾坤":"乾坤"}}; let tourHansMap = null, tourHansRe = null;
 function tourHans(s) {
   if (!s) return s;
   if (!tourHansMap) { const M = tourHansMap = new Map(), P = TOUR_T2S.p; for (let i = 0; i < P.length; i += 2) M.set(P[i], P[i + 1]); for (const o of [TOUR_T2S.w, TOUR_T2S.ph]) for (const [k, v] of Object.entries(o)) M.set(k, v); tourHansRe = new RegExp([...Object.keys(TOUR_T2S.ph), '[\\u3400-\\u9fff]'].join('|'), 'g'); }
@@ -3193,7 +3193,7 @@ function tourTake(R) {
   document.body.dataset.tourManual = '1'; tourFade(0); tourBar(); toast(isZh() ? '你在駕駛：放手 3 秒，自動駕駛從這裡接回導覽（或按 ↩）' : 'You are flying: hands off for 3 s and the autopilot takes it from here (or press ↩)', 3500); return true;
 }
 function tourGiveBack(R) {
-  if (!R?.manual) return; const m = R.manual; R.manual = null; for (const k of TOUR_FLY) KEYS.delete(k);
+  if (!R?.manual) return; const m = R.manual; R.manual = null; for (const k of TOUR_FLY) KEYS.delete(k); try { droneView(R); } catch { }
   const p0 = camera.position.clone(), v = APP.veh, v0 = v?.vel ? v.vel.clone() : new THREE.Vector3(), t1 = tourResumeAt(R, p0), s1 = tourShotAt(R, t1);
   const q = tourPose(s1, clamp((t1 - s1.t0) / s1.dur, 0, 1), {}), d = Math.hypot(q.x - p0.x, q.y + (s1.lift || 0) - p0.y, q.z - p0.z), fv = tourVel(R, t1, {});
   const T = Math.min(clamp(d / Math.max(12, Math.hypot(fv.x, fv.y, fv.z), Math.hypot(v0.x, v0.y, v0.z)) * 1.6, 2.5, 12), Math.max(1.5, s1.t0 + s1.dur - t1 - 0.3));   // a few seconds (longer when the drone is far off), done before the shot's cut
@@ -3207,7 +3207,7 @@ function tourManualFrame(R) {   // returns true while the viewer still flies
   const idle = m.moved ? TOUR_IDLE : TOUR_FIRST;   // before the first touch of a stick (or key) the viewer gets longer: a thumb has to travel from the button to a stick
   if (now - m.last > idle) { tourGiveBack(R); return false; }
   const left = Math.ceil((idle - (now - m.last)) / 1000), b = $('#tourBar [data-tb="take"]'); if (b) { const tx = now - m.last > 600 ? (isZh() ? `↩ 自動駕駛 ${left}…` : `↩ Autopilot in ${left}…`) : (isZh() ? '↩ 回到導覽' : '↩ Back to film'); if (b.textContent !== tx) b.textContent = tx; }
-  R.cap = ''; R.cap2 = ''; R.titleA = 0; R.credA = 0; tourDom(R); if (!TOUR.studio && APP.frameN % 2 === 0) thudDom(R); return true;
+  R.cap = ''; R.cap2 = ''; R.titleA = 0; R.credA = 0; tourDom(R); if (!TOUR.studio && APP.frameN % 2 === 0) thudDom(R); try { droneView(R); } catch (e) { APP.lastErr = 'drone view: ' + (e?.message || e); } return true;
 }
 function tourJoinBlend(R) {   // the drone's position and speed at hand-back flow into the film's moving camera (cubic Hermite), its view turns with it
   const J = R.join, s = clamp((performance.now() - J.t0) / (J.T * 1000), 0, 1);
@@ -3250,7 +3250,7 @@ function tourFrame(dt, dtr) {
   if (n2) { const seg = s.dur / n2, j = Math.min(n2 - 1, Math.floor(since / seg)), a = since - j * seg; cap2 = list2[j]; k2 = i + ':' + j; ca2 = clamp(Math.min(a / 0.3, (seg - a - 0.15) / 0.3), 0, 1); if (!n && k2 !== R.cap2K && R.playing && a < 1.2) tourSpeak(cap2, lang2, seg); }   // nothing in the viewer's language for this view: the narrator reads the English line
   R.cap2K = k2; R.cap2 = cap2; R.cap2A = ca2;
   R.capK = k; R.cap = cap; R.capA = ca; R.titleA = clamp(Math.min((tt - 0.9) / 0.7, (7.2 - tt) / 0.7), 0, 1); R.credA = clamp(Math.min((tt - (plan.dur - 9)) / 0.8, (plan.dur - 0.5 - tt) / 0.8), 0, 1);
-  tourDom(R); if (plan.drama) dramaDom(R); if (R.playing) scoreTick(R);
+  tourDom(R); if (APP.frameN % 6 === 3 || (R.t > 4.8 && R.t < 14.5)) tourTakeHint(R);   // every frame while the hint may show, so it moves off a subtitle at once if (plan.drama) dramaDom(R); if (R.playing) scoreTick(R);
   if (!plan.route && !TOUR.studio && APP.frameN % 2 === 0) thudDom(R);
 }
 function tourApply(R, s, u, dt, cut) {
@@ -3339,6 +3339,30 @@ function tourBind() {
   const wake = () => { if (TOUR.run) { TOUR.run.uiT = 0; $('#tour')?.classList.remove('idle'); } }; $('#stage').addEventListener('pointermove', wake); $('#stage').addEventListener('pointerdown', wake);
 }
 function tourFade(a) { const el = $('#tourFade'); if (el) el.style.opacity = a.toFixed(3); }
+function tourTakeHint(R) {   // the first few tours of a visit point at 🕹 for a few seconds: this film can be flown by hand (never over the subtitles)
+  const tour = $('#tour'), b = $('#tourBar [data-tb="take"]'); if (!tour || !b) return; let h = $('#takeHint');
+  if (TOUR.hints == null) TOUR.hints = +(LS.get('aero7:takeHint') || 0);
+  const ok = !b.hidden && R.playing && !R.manual && !TOUR.studio && !TOUR.rec && (R.hinted || TOUR.hints < 4), want = ok && R.t > 5 && R.t < 9.5;
+  b.classList.toggle('pulse', ok && R.t > 5 && R.t < 14);   // the button itself keeps pulsing a little longer: that covers nothing
+  if (!want) { if (h && !h.hidden) h.hidden = true; return; }
+  if (!h) { h = document.createElement('div'); h.id = 'takeHint'; h.className = 'takeHint'; tour.appendChild(h); }
+  if (!R.hinted) { R.hinted = true; TOUR.hints++; LS.set('aero7:takeHint', String(TOUR.hints)); }
+  const tx = isZh() ? '🕹 點「接手飛行」就能自己飛（W A S D／方向鍵，手機用搖桿）；放手 3 秒自動接回'
+    : '🕹 Tap "Take control" to fly it yourself (W A S D / arrows, or the sticks); let go for 3 s and the tour takes over';
+  if (h.textContent !== tx) h.textContent = tx;
+  const r = b.getBoundingClientRect(), tr = tour.getBoundingClientRect();
+  h.hidden = false; const c0 = r.left + r.width / 2 - tr.left, hw = h.offsetWidth, hh = h.offsetHeight, x = clamp(c0, hw / 2 + 8, Math.max(hw / 2 + 8, tr.width - hw / 2 - 8));
+  const b0 = tr.bottom - r.top + 10; let bot = b0;
+  // the subtitles: when the bubble would lie over a line of them, it goes above them instead
+  const lines = [...($('#tourCap')?.children || [])].filter(el => el.textContent && +getComputedStyle(el).opacity >= 0.05).map(el => el.getBoundingClientRect()).sort((a, b) => b.top - a.top);
+  for (const q of lines) {   // from the lowest line up: lifted over one line, the bubble may meet the line above it
+    const top = tr.bottom - bot - hh, l = tr.left + x - hw / 2;
+    if (q.height && q.top < tr.bottom - bot && q.bottom > top && q.left < l + hw && q.right > l) bot = Math.max(bot, tr.bottom - q.top + 8);
+  }
+  h.style.left = x + 'px'; h.style.bottom = bot + 'px'; h.style.setProperty('--ax', (c0 - x + hw / 2) + 'px'); h.classList.toggle('up', bot > b0 + 1);   // the arrow points at the button (none when lifted over the subtitles)
+  h.style.opacity = clamp(Math.min((R.t - 5) / 0.3, (9.5 - R.t) / 0.5), 0, 1).toFixed(2);   // in, about four seconds, out
+  tour.classList.remove('idle'); R.uiT = 0;   // the bar stays up while the hint points at it
+}
 function tourDom(R) {
   const cap = $('#tourCap'), c1 = cap.firstChild, c2 = cap.lastChild; if (R.cap !== R.lastCap) { c1.textContent = R.cap; R.lastCap = R.cap; } if (R.cap2 !== R.lastCap2) { c2.textContent = R.cap2 || ''; R.lastCap2 = R.cap2; }
   c1.style.opacity = (R.cap ? R.capA : 0).toFixed(2); c2.style.opacity = (R.cap2 ? R.cap2A : 0).toFixed(2); cap.style.opacity = R.cap || R.cap2 ? 1 : 0;
@@ -5414,7 +5438,7 @@ function thudPaint(g, W, H, R, dom) {
     const cells = [['高度', 'ALT', `${Math.round(agl).toLocaleString()} m`], ['海拔', 'MSL', `${Math.round(cam.y).toLocaleString()} m`], ['速度', 'SPD', spd], ['航向', 'HDG', `${String(Math.round(hdg) % 360).padStart(3, '0')}° ${compassWord(hdg)}`],
       ['時間', 'TIME', hhmm(APP.sun.min)], ['太陽', 'SUN', `${Math.round(APP.sunAlt ?? 0)}°`], ['氣溫', 'TEMP', temp == null ? na : `${temp.toFixed(1)}°C`], ['濕度', 'RH', rh == null ? na : `${Math.round(rh)}%`],
       ['紫外線', 'UV', uv == null ? na : uv.toFixed(1)], ['空品', 'AQI', aqi == null ? na : `${Math.round(aqi)}`], ['磁偏', 'DEC', mg ? `${Math.abs(mg.dec).toFixed(1)}°${mg.dec < 0 ? (zh ? '西' : 'W') : (zh ? '東' : 'E')}` : na], ['磁傾', 'INC', mg ? `${mg.inc.toFixed(1)}°` : na]];
-    const rh2 = U * 0.03, pw = U * 0.36, cw = (pw - U * 0.03) / 2, ph = Math.ceil(cells.length / 2) * rh2 + U * 0.062; panel(pad, y, pw, ph, U * 0.012); if (dom) THUD.rect.L = [pad, pad, pw, y + ph - pad];
+    const rh2 = U * 0.03, pw = U * 0.36, cw = (pw - U * 0.03) / 2, ph = Math.ceil(cells.length / 2) * rh2 + U * 0.062; panel(pad, y, pw, ph, U * 0.012); if (dom) { THUD.rect.L = [pad, pad, pw, y + ph - pad]; THUD.mkL = [pad + pw, y]; }
     cells.forEach(([lz, le, v], i) => {
       const x0 = pad + U * 0.012 + (i % 2) * (cw + U * 0.008), yy = y + U * 0.02 + Math.floor(i / 2) * rh2 + rh2 / 2;
       g.font = `600 ${U * 0.0175}px ${THUD_F}`; const lw = g.measureText(zh ? lz : le).width; txt(zh ? lz : le, x0, yy, g.font, '#9fb6c5');
@@ -5425,7 +5449,7 @@ function thudPaint(g, W, H, R, dom) {
     const f1 = (e?.ok ? `Open-Meteo ${e.date.slice(5)} ${String(hr).padStart(2, '0')}:00` : 'Open-Meteo —') + ' · ' + (mg ? mg.model : 'WMM2025') + (Hd.spd > 25 ? (zh ? ' · ×倍數＝縮時' : ' · ×n = time-lapse') : '');
     txt(f1, pad + U * 0.012, y + ph - U * 0.018, `400 ${U * 0.0125}px ${THUD_F}`, '#9fb6c5');
   } else {
-  const rh_ = U * 0.034, pw = U * 0.3, ph = rows.length * rh_ + U * 0.078; panel(pad, y, pw, ph, U * 0.012); if (dom) THUD.rect.L = [pad, pad, pw, y + ph - pad];
+  const rh_ = U * 0.034, pw = U * 0.3, ph = rows.length * rh_ + U * 0.078; panel(pad, y, pw, ph, U * 0.012); if (dom) { THUD.rect.L = [pad, pad, pw, y + ph - pad]; THUD.mkL = [pad + pw, y]; }
   rows.forEach(([lz, le, v], i) => {
     const yy = y + U * 0.022 + i * rh_ + rh_ / 2; if (lz) { txt(zh ? lz : le, pad + U * 0.016, yy, `600 ${U * 0.021}px ${THUD_F}`, '#9fb6c5'); if (zh && en) txt(le, pad + U * 0.016 + U * (lz.length * 0.022 + 0.008), yy, `500 ${U * 0.015}px ${THUD_F}`, '#7f96a5'); }
     let fs = U * 0.022, lw = 0; if (lz) { g.font = `500 ${U * 0.015}px ${THUD_F}`; lw = zh ? U * (lz.length * 0.022 + 0.008) + (en ? g.measureText(le).width : 0) : U * 0.06; }
@@ -5444,22 +5468,33 @@ function thudPaint(g, W, H, R, dom) {
   thudSat(g, x1, y1, S, U, q, a, lat, lon, hdg, span, mg, zh, txt);
   txt(`${Math.abs(lat).toFixed(4)}°${lat >= 0 ? 'N' : 'S'}  ${Math.abs(lon).toFixed(4)}°${lon >= 0 ? 'E' : 'W'}`, x1 + S / 2, y1 + S + ex2 * 0.44, `700 ${U * 0.02 * q}px ${THUD_F}`, '#fff', 'center');
 
-  // 4. the whole flight, below: the planned path faint, the part flown so far in red
+  // 4. the flight, below: the shot being flown in red, the shots already flown as a thin dashed line; the rest is not drawn, so passes that
+  //    cross each other stay readable
   const M = Hd.map, y2 = y1 + S + ex2 + U * 0.015; if (dom) THUD.rect.R = [x1 - U * 0.006, y1 - U * 0.006, S + U * 0.012, (M ? y2 + S + ex2 : y1 + S + ex2) - y1];
   if (M) {
     panel(x1 - U * 0.006, y2 - U * 0.006, S + U * 0.012, S + ex2, U * 0.012); g.drawImage(M.img, x1, y2, S, S);
     const P = (la, lo) => { const [u, v] = M.px(la, lo); return [x1 + u * S, y2 + v * S]; };
     sv(); g.beginPath(); g.rect(x1, y2, S, S); g.clip(); g.lineCap = 'round';
     const path = seg => { g.beginPath(); seg.forEach(([la, lo], i) => { const [px, py] = P(la, lo); i ? g.lineTo(px, py) : g.moveTo(px, py); }); g.stroke(); };
-    g.strokeStyle = 'rgba(0,0,0,.45)'; g.lineWidth = Math.max(2, U / 300); for (const seg of Hd.segs) path(seg);
-    g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = Math.max(1, U / 480); g.setLineDash([U * 0.006, U * 0.005]); for (const seg of Hd.segs) path(seg);
-    g.setLineDash([]); g.strokeStyle = THUD_RED; g.lineWidth = Math.max(2, U / 240);
-    for (const seg of Hd.segs) { if (seg[0][2] > now) break; g.beginPath(); let n = 0; for (const [la, lo, t] of seg) { if (t > now) break; const [px, py] = P(la, lo); n++ ? g.lineTo(px, py) : g.moveTo(px, py); } if (n > 1) { const [px, py] = P(lat, lon); g.lineTo(px, py); } g.stroke(); }
+    const flown = Hd.segs.filter(seg => seg[seg.length - 1][2] <= now), cur = Hd.segs.find(seg => seg[0][2] <= now && seg[seg.length - 1][2] > now);
+    g.strokeStyle = 'rgba(0,0,0,.35)'; g.lineWidth = Math.max(1.5, U / 420); for (const seg of flown) path(seg);
+    g.strokeStyle = 'rgba(255,255,255,.8)'; g.lineWidth = Math.max(0.8, U / 720); g.setLineDash([U * 0.004, U * 0.004]); for (const seg of flown) path(seg);
+    g.setLineDash([]); g.strokeStyle = THUD_RED; g.lineWidth = Math.max(2, U / 220);
+    if (cur) { g.beginPath(); let n = 0; for (const [la, lo, t] of cur) { if (t > now) break; const [px, py] = P(la, lo); n++ ? g.lineTo(px, py) : g.moveTo(px, py); } const [px, py] = P(lat, lon); n ? g.lineTo(px, py) : g.moveTo(px, py); g.stroke(); }
     const s0 = Hd.segs[0]?.[0]; if (s0) { const [px, py] = P(s0[0], s0[1]); g.fillStyle = '#34c759'; g.beginPath(); g.arc(px, py, U * 0.008, 0, Math.PI * 2); g.fill(); }
     const [qx, qy] = P(lat, lon); g.fillStyle = THUD_RED; g.strokeStyle = '#fff'; g.lineWidth = Math.max(1.5, U / 400); g.beginPath(); g.arc(qx, qy, U * 0.01, 0, Math.PI * 2); g.fill(); g.stroke();
     rs(); g.globalAlpha = a;
     txt(zh && en ? '航線 Flight path' : zh ? '航線' : 'Flight path', x1 + S / 2, y2 + S + ex2 * 0.44, `700 ${U * 0.02 * q}px ${THUD_F}`, '#fff', 'center');
   }
+  }
+  // on the website only: a small fold mark on each open side, so viewers know a tap folds it away (and the tab opens it again)
+  if (dom) for (const [s, open, ch] of [['L', !hideL, '◂'], ['R', !hideR, '▸']]) {
+    const r = THUD.rect[s]; if (!open || !r) continue;
+    const d = Math.max(U * 0.03, 18 * W / Math.max(1, $('#tour')?.clientWidth || W)), m = s === 'L' && THUD.mkL,   // at least 18 CSS pixels, so a finger finds it
+      cx = s === 'L' ? (m ? m[0] : r[0] + r[2]) + d * 0.7 : r[0] - d * 0.7, cy = (m ? m[1] : r[1]) + d * 0.6;   // just outside each panel's top corner, over nothing it would hide
+    if (s === 'L') r[2] = Math.max(r[2], cx + d * 0.7 - r[0]); else { const x0 = cx - d * 0.7; r[2] += r[0] - x0; r[0] = x0; }   // the mark is part of the tap area
+    g.fillStyle = 'rgba(0,0,0,.5)'; g.beginPath(); g.arc(cx, cy, d * 0.55, 0, Math.PI * 2); g.fill();
+    txt(ch, cx, cy + d * 0.03, `700 ${d * 0.62}px ${THUD_F}`, '#fff', 'center');
   }
   } finally { while (depth > 0) rs(); }
 }
@@ -5529,7 +5564,7 @@ function thudRouteGround(g, W, H, R, x, y) {   // ground weather and the magneti
   });
   txt((E.ok ? `Open-Meteo ${E.date.slice(5)} ${String(hr).padStart(2, '0')}:00 UTC` : 'Open-Meteo —') + ' · ' + (mg ? mg.model : 'WMM2025') + (zh ? ' · 航線下方地面' : ' · ground below'), x + U * 0.012, y + ph - U * 0.018, `400 ${U * 0.0125}px ${THUD_F}`, '#9fb6c5'); g.restore();
 }
-function thudRouteRight(g, W, H, R, win) {   // the satellite inset with latitude and longitude, and the whole way on its map with the part travelled in red
+function thudRouteRight(g, W, H, R, win) {   // the satellite inset with latitude and longitude, and the way on its map: this shot's stretch in red, the way travelled thin dashed, the way ahead faint
   const set = R.plan.route, Hd = R.plan.hud, U = H, q = 0.8, a = g.globalAlpha, air = win && set.mode === 'air', S = H * 0.18, ex2 = H * 0.042, x1 = W - S - W * (air ? 0.115 : 0.02), y1 = H * (air ? 0.13 : 0.03), { panel, txt } = thudKit(g, U), zh = I18N.lang !== 'en';
   const E = thudRouteEnv(set), mg = E.mag[thudRouteNear(E, Hd.lat, Hd.lon)];
   g.save(); panel(x1 - U * 0.006, y1 - U * 0.006, S + U * 0.012, S + ex2, U * 0.012);
@@ -5540,9 +5575,13 @@ function thudRouteRight(g, W, H, R, win) {   // the satellite inset with latitud
     panel(x1 - U * 0.006, y2 - U * 0.006, S + U * 0.012, S + ex2, U * 0.012); g.drawImage(M.img, x1, y2, S, S);
     g.save(); g.beginPath(); g.rect(x1, y2, S, S); g.clip(); g.lineJoin = g.lineCap = 'round'; const P = M.pts, n = P.length, X = ([u, v]) => [x1 + u * S, y2 + v * S];
     const line = upto => { g.beginPath(); let last = -1; for (let i = 0; i < n; i++) { if (upto != null && set.pd[i] > upto) break; const [px, py] = X(P[i]); i ? g.lineTo(px, py) : g.moveTo(px, py); last = i; } return last; };
-    g.strokeStyle = 'rgba(0,0,0,.45)'; g.lineWidth = Math.max(2, U / 300); line(); g.stroke();
-    g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = Math.max(1, U / 480); g.setLineDash([U * 0.006, U * 0.005]); line(); g.stroke(); g.setLineDash([]);
-    g.strokeStyle = THUD_RED; g.lineWidth = Math.max(2, U / 240); const last = line(Hd.d); const [cx, cy] = X(M.px(Hd.lat, Hd.lon)); if (last >= 0) g.lineTo(cx, cy); g.stroke();
+    const span = (from, to) => { g.beginPath(); let k = 0; for (let i = 0; i < n; i++) { if (set.pd[i] < from) continue; if (set.pd[i] > to) break; const [px, py] = X(P[i]); k++ ? g.lineTo(px, py) : g.moveTo(px, py); } return k; };
+    const sh = R.plan.shots.find(s => R.t >= s.t0 && R.t < s.t0 + s.dur); let d0 = sh ? routeTrk(set, sh.t0).d : 0; if (!(d0 <= Hd.d)) d0 = Hd.d;   // where this shot began
+    const [cx, cy] = X(M.px(Hd.lat, Hd.lon));
+    g.strokeStyle = 'rgba(255,255,255,.35)'; g.lineWidth = Math.max(0.8, U / 720); g.setLineDash([U * 0.002, U * 0.006]); span(Hd.d, Infinity); g.stroke();
+    g.strokeStyle = 'rgba(0,0,0,.35)'; g.lineWidth = Math.max(1.5, U / 420); g.setLineDash([]); span(-Infinity, d0); g.stroke();
+    g.strokeStyle = 'rgba(255,255,255,.8)'; g.lineWidth = Math.max(0.8, U / 720); g.setLineDash([U * 0.004, U * 0.004]); span(-Infinity, d0); g.stroke(); g.setLineDash([]);
+    g.strokeStyle = THUD_RED; g.lineWidth = Math.max(2, U / 220); const k = span(d0, Hd.d); k ? g.lineTo(cx, cy) : g.moveTo(cx, cy); g.stroke();
     const [sx, sy] = X(P[0]); g.fillStyle = '#34c759'; g.beginPath(); g.arc(sx, sy, U * 0.008, 0, Math.PI * 2); g.fill();
     g.fillStyle = THUD_RED; g.strokeStyle = '#fff'; g.lineWidth = Math.max(1.5, U / 400); g.beginPath(); g.arc(cx, cy, U * 0.01, 0, Math.PI * 2); g.fill(); g.stroke(); g.restore();
     txt(zh ? '航線 Flight path' : 'Route', x1 + S / 2, y2 + S + ex2 * 0.44, `700 ${U * 0.02 * q}px ${THUD_F}`, '#fff', 'center');
@@ -5564,6 +5603,82 @@ function thudDom(R) {
 function thudToggle() { THUD.mode = THUD_MODES[(THUD_MODES.indexOf(THUD.mode) + 1) % THUD_MODES.length]; LS.set('aero7:thud', THUD.mode); const R = TOUR.run; if (R) thudDom(R); }
 const thudLabel = () => (THUD.mode === 'off' ? '○ ' : '◉ ') + thudWord();
 const thudWord = () => isZh() ? '儀表：' + { mini: '精簡', full: '完整', off: '關' }[THUD.mode] : 'Gauges: ' + { mini: 'compact', full: 'full', off: 'off' }[THUD.mode];
+
+
+/* manual flight: the drone itself at the bottom of the view, seen from behind and a little above. Its four propellers turn the way and as fast
+   as the motor mix of the sticks says (quad X, as on most camera drones: front-left and rear-right clockwise, front-right and rear-left
+   anticlockwise, seen from above), and the frame leans with roll and pitch and turns a little with yaw. Shown only while the viewer flies;
+   never in a recording, gone again when the autopilot takes over. */
+const DV = { a: [0, 0, 0, 0], u: 0, y: 0, f: 0, r: 0, t: 0, t0: 0 };
+const DV_MOT = [[-0.5, 0.5, 1], [0.5, 0.5, -1], [-0.5, -0.5, -1], [0.5, -0.5, 1]];   // x (right), z (forward), turn seen from above (1 clockwise)
+function droneMix(I) {   // motor commands 0..1 from climb, yaw (+ = left), forward, right, as a flight controller mixes them
+  return DV_MOT.map(([x, z, d]) => clamp(0.55 + 0.32 * I.u - 0.22 * I.f * Math.sign(z) - 0.22 * I.r * Math.sign(x) + 0.18 * I.y * d, 0.08, 1));
+}
+function droneView(R) {
+  const tour = $('#tour'); if (!tour) return; let c = $('#droneCv'); const on = !!R?.manual && !TOUR.studio && !TOUR.rec;
+  if (!on) { if (c && !c.hidden) c.hidden = true; DV.t = 0; return; }
+  if (!c) { c = document.createElement('canvas'); c.id = 'droneCv'; c.style.cssText = 'position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none'; tour.insertBefore(c, $('#tourBar')); }
+  c.hidden = false;
+  const w = tour.clientWidth, h = tour.clientHeight, k = Math.min(2, devicePixelRatio || 1); if (c.width !== Math.round(w * k) || c.height !== Math.round(h * k)) { c.width = Math.round(w * k); c.height = Math.round(h * k); }
+  const g = c.getContext('2d'); g.setTransform(k, 0, 0, k, 0, 0); g.clearRect(0, 0, w, h);
+  const now = performance.now() / 1000, dt = DV.t ? clamp(now - DV.t, 0, 0.1) : 0; if (!DV.t) DV.t0 = now; DV.t = now;
+  const I = APP.lastIn || {}, lp = (o, v, tau) => o + (clamp(+v || 0, -1, 1) - o) * (dt ? 1 - Math.exp(-dt / tau) : 1);
+  DV.u = lp(DV.u, I.up, 0.12); DV.y = lp(DV.y, I.yaw, 0.12); DV.f = lp(DV.f, I.fwd, 0.15); DV.r = lp(DV.r, I.right, 0.15);
+  const mix = droneMix(DV);
+  // where: centred, its feet just above the control bar (or the bottom edge)
+  const bar = $('#tourBar'), tr = tour.getBoundingClientRect(), br = bar ? bar.getBoundingClientRect() : null;
+  const bottom = br && br.height && getComputedStyle(bar).opacity !== '0' ? br.top - tr.top - 6 : h - 8, sz = Math.min(w * 0.4, h * 0.3, 320);
+  const cx = w / 2, cy = bottom - sz * 0.42, D = 3.2, Fz = D * sz * 0.62, al = 0.5, ca = Math.cos(al), sa = Math.sin(al);
+  const ps = DV.y * 0.14, th = DV.f * 0.21, ph = DV.r * 0.26, cps = Math.cos(ps), sps = Math.sin(ps), cth = Math.cos(th), sth = Math.sin(th), cph = Math.cos(ph), sph = Math.sin(ph);
+  const P = (x, y, z) => {   // body (x right, y up, z forward) → leaned and turned → seen by a camera behind and above
+    let X = x * cps - z * sps, Z = x * sps + z * cps, Y = y;
+    const Y1 = Y * cth - Z * sth, Z1 = Y * sth + Z * cth; Y = Y1; Z = Z1;
+    const X2 = X * cph + Y * sph, Y2 = -X * sph + Y * cph; X = X2; Y = Y2;
+    const d = D + Z * ca - Y * sa; return [cx + Fz * X / d, cy - Fz * (Y * ca + Z * sa) / d, d];
+  };
+  const poly = (pts, fill, stroke, lw) => { g.beginPath(); pts.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.closePath(); if (fill) { g.fillStyle = fill; g.fill(); } if (stroke) { g.strokeStyle = stroke; g.lineWidth = lw || 1; g.stroke(); } };
+  // shadow
+  g.fillStyle = 'rgba(0,0,0,.22)'; g.beginPath(); g.ellipse(cx, bottom - sz * 0.06, sz * 0.62, sz * 0.07, 0, 0, Math.PI * 2); g.fill();
+  const order = [0, 1, 2, 3].sort((i, j) => P(DV_MOT[j][0], 0, DV_MOT[j][1])[2] - P(DV_MOT[i][0], 0, DV_MOT[i][1])[2]);   // far first
+  const prop = i => {
+    const [mx, mz, dir] = DV_MOT[i], m = mix[i], R0 = 0.3, y0 = 0.07, [ox, oy] = P(mx, y0, mz);
+    DV.a[i] -= dir * (5 + 32 * m) * dt;   // clockwise seen from above = the angle (x towards z) going down
+    const ring = []; for (let k2 = 0; k2 <= 28; k2++) { const q = k2 / 28 * Math.PI * 2; ring.push(P(mx + R0 * Math.cos(q), y0, mz + R0 * Math.sin(q))); }
+    poly(ring, `rgba(215,228,240,${(0.07 + 0.16 * m).toFixed(3)})`, 'rgba(255,255,255,.18)', 1);
+    for (let j = 3; j >= 0; j--) {   // the blade and its blur behind it
+      const q = DV.a[i] + dir * j * 0.22, e1 = P(mx + R0 * Math.cos(q), y0, mz + R0 * Math.sin(q)), e2 = P(mx - R0 * Math.cos(q), y0, mz - R0 * Math.sin(q));
+      g.strokeStyle = j ? `rgba(40,44,52,${(0.28 / j * (1.15 - m)).toFixed(3)})` : `rgba(28,30,36,${(0.95 - 0.45 * m).toFixed(3)})`; g.lineWidth = sz * 0.03; g.lineCap = 'round'; g.beginPath(); g.moveTo(e1[0], e1[1]); g.lineTo(e2[0], e2[1]); g.stroke();
+    }
+    // which way it turns: an arc with an arrowhead around the disc
+    const arc = []; for (let k2 = 0; k2 <= 14; k2++) { const q = (0.15 + k2 / 14 * 1.4) * Math.PI * (dir > 0 ? -1 : 1) + (dir > 0 ? Math.PI : 0); arc.push(P(mx + 0.37 * Math.cos(q), y0, mz + 0.37 * Math.sin(q))); }
+    g.strokeStyle = `rgba(255,209,102,${(0.45 + 0.45 * m).toFixed(3)})`; g.lineWidth = Math.max(1.5, sz * 0.012); g.beginPath(); arc.forEach(([x, y], k2) => k2 ? g.lineTo(x, y) : g.moveTo(x, y)); g.stroke();
+    const [ax, ay] = arc[arc.length - 1], [bx, by] = arc[arc.length - 3], an = Math.atan2(ay - by, ax - bx), hs = sz * 0.045;
+    g.fillStyle = g.strokeStyle; g.beginPath(); g.moveTo(ax, ay); g.lineTo(ax - hs * Math.cos(an - 0.45), ay - hs * Math.sin(an - 0.45)); g.lineTo(ax - hs * Math.cos(an + 0.45), ay - hs * Math.sin(an + 0.45)); g.closePath(); g.fill();
+    // motor and its speed
+    g.fillStyle = '#15171c'; g.beginPath(); g.arc(ox, oy, sz * 0.035, 0, Math.PI * 2); g.fill();
+    const lab = `${dir > 0 ? '↻' : '↺'} ${Math.round(m * 100)}%`, [ex] = P(mx + Math.sign(mx) * 0.4, y0, mz), lx = ex + Math.sign(mx) * sz * 0.02;   // outside the disc, level with the motor
+    g.font = `700 ${Math.max(10, sz * 0.058)}px ${THUD_F}`; g.textAlign = mx < 0 ? 'right' : 'left'; g.textBaseline = 'middle';
+    g.fillStyle = 'rgba(0,0,0,.6)'; g.fillText(lab, lx + 1, oy + 1); g.fillStyle = '#fff'; g.fillText(lab, lx, oy);
+  };
+  const arm = i => { const [mx, mz] = DV_MOT[i], a1 = P(Math.sign(mx) * 0.14, 0.03, Math.sign(mz) * 0.2), a2 = P(mx, 0.02, mz); g.strokeStyle = '#30343c'; g.lineWidth = sz * 0.06; g.lineCap = 'round'; g.beginPath(); g.moveTo(a1[0], a1[1]); g.lineTo(a2[0], a2[1]); g.stroke(); };
+  const body = () => {
+    const tb = [[-0.19, 0.12, 0.3], [0.19, 0.12, 0.3], [0.19, 0.12, -0.3], [-0.19, 0.12, -0.3]], bb = tb.map(([x, , z]) => [x * 1.05, -0.04, z * 1.05]);
+    poly([P(...bb[3]), P(...bb[2]), P(...tb[2]), P(...tb[3])], '#1c1f25');   // back face
+    poly([P(...bb[0]), P(...bb[3]), P(...tb[3]), P(...tb[0])], '#23272e'); poly([P(...bb[1]), P(...bb[2]), P(...tb[2]), P(...tb[1])], '#23272e');
+    const top = tb.map(v => P(...v)), gr = g.createLinearGradient(top[3][0], top[3][1], top[0][0], top[0][1]); gr.addColorStop(0, '#4a505b'); gr.addColorStop(1, '#2e333b');
+    poly(top, gr, 'rgba(255,255,255,.22)', 1);
+    const [lx, ly] = P(0, 0.125, -0.16), [fx, fy] = P(0, 0.125, 0.2); g.strokeStyle = '#c4302b'; g.lineWidth = sz * 0.018; g.beginPath(); g.moveTo(lx, ly); g.lineTo(fx, fy); g.stroke();   // a red stripe pointing forward
+    const blink = Math.floor(now * 2) % 2 === 0, led = (x, y, z, col) => { const [px, py] = P(x, y, z); g.fillStyle = col; g.beginPath(); g.arc(px, py, sz * 0.022, 0, Math.PI * 2); g.fill(); };
+    led(-0.5, -0.02, 0.5, '#ff3b30'); led(0.5, -0.02, 0.5, '#34c759'); if (blink) { led(-0.5, -0.02, -0.5, '#fff'); led(0.5, -0.02, -0.5, '#fff'); }
+  };
+  // far propellers and arms, then the body, then the near ones
+  const far = order.slice(0, 2), near = order.slice(2);
+  for (const i of far) arm(i); for (const i of far) prop(i); body(); for (const i of near) arm(i); for (const i of near) prop(i);
+  // a label above: who is flying, only for the first moments after taking over (then the view is left to the scenery)
+  const la = clamp(1 - (now - DV.t0 - 2.2) / 0.6, 0, 1); if (la <= 0) return; g.globalAlpha = la;
+  const tx = isZh() ? '🕹 你正在操控 · 手動飛行' : '🕹 You are flying', ty = cy - sz * 0.62; g.font = `700 ${Math.max(11, sz * 0.06)}px ${THUD_F}`; g.textAlign = 'center'; g.textBaseline = 'middle';
+  const tw = g.measureText(tx).width + sz * 0.08; g.fillStyle = 'rgba(196,48,43,.92)'; g.beginPath(); if (g.roundRect) g.roundRect(cx - tw / 2, ty - sz * 0.05, tw, sz * 0.1, sz * 0.05); else g.rect(cx - tw / 2, ty - sz * 0.05, tw, sz * 0.1); g.fill(); g.fillStyle = '#fff'; g.fillText(tx, cx, ty); g.globalAlpha = 1;
+}
 
 window.__AERO = { get camera() { return camera; }, get scene() { return scene; }, get TERRAIN_U() { return TERRAIN_U; }, THREE, DRAMA, dramaWhen, ROUTE, startRoute, routeSetOf, routeIndex, routeTrk, routeAt, routePlan, TOUR, CATX, SCORE, THUD, thudPaint, tourPaint, startTour, tourExit, tourPlay, tourSeek, tourAutoSet, tourSetOf, tourPlan, tourPose, tourChunks, loadCatalogueX, catxAdd, PLACES, PLACE_BY_ID, APP, SET, TERRAIN, VEC, DEM, ENV, MIS, AM, WX, WAVES, GEO, POST, TREES, BUOYS, I18N, MISSIONS, TUT, loadPlace, spawn, setTimePreset, applyWeather, startAeroAt, t, camSmooth, refineSunTime, updateAeroMission, aeroMissionAction, updateCamera, readInput, loadMissions, CREW, startCrew, crewScore, amP };
 boot();

@@ -191,6 +191,7 @@ body[data-tour] #dock,body[data-tour] #hudPlace,body[data-tour] #tape,body[data-
 @media (max-height:560px) and (orientation:landscape){body[data-tour-manual] #tourBar{width:calc(100% - 270px)}body[data-tour-manual] #tourBar .tbw,body[data-tour-manual] #tourBar [data-tb=rec]{display:none}}
 @media (orientation:portrait) and (max-width:760px){body[data-tour][data-tour-manual] #dock{--dock:140px}}
 body[data-tour-manual] #tourMark{display:none}
+.takeHint{position:absolute;z-index:3;width:max-content;max-width:min(calc(100vw - 24px),420px);transform:translateX(-50%);background:#c4302b;color:#fff;font:600 13px/1.45 system-ui,-apple-system,'PingFang TC','Noto Sans TC',sans-serif;padding:8px 12px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.35);pointer-events:none}.takeHint[hidden]{display:none}.takeHint.up::after{display:none}.takeHint::after{content:'';position:absolute;left:var(--ax,50%);bottom:-6px;margin-left:-6px;border:6px solid transparent;border-top-color:#c4302b;border-bottom:0}#tourBar button.pulse{animation:tbpulse 1.2s ease-in-out infinite}@keyframes tbpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,209,102,0)}50%{box-shadow:0 0 0 4px rgba(255,209,102,.75)}}#droneCv[hidden]{display:none}
 body[data-studio] #tourBar,body[data-studio] #tourEnd{display:none!important}
 #stTours h4 small{font-weight:400;margin-inline-start:6px}
 .trow{display:flex;align-items:center;gap:8px;padding:7px 8px;border:1px solid var(--line);border-radius:10px;margin:5px 0;background:rgba(255,255,255,.04)}

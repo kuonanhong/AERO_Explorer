@@ -329,6 +329,7 @@ data/tours/unesco-1.json
 data/tours/unesco-1007.json
 data/tours/unesco-1012.json
 data/tours/unesco-1037.json
+data/tours/unesco-1066.json
 data/tours/unesco-1152.json
 data/tours/unesco-1195.json
 data/tours/unesco-120.json
@@ -336,9 +337,11 @@ data/tours/unesco-1237.json
 data/tours/unesco-1258.json
 data/tours/unesco-1264.json
 data/tours/unesco-1377.json
+data/tours/unesco-1386.json
 data/tours/unesco-1418.json
 data/tours/unesco-1430.json
 data/tours/unesco-145.json
+data/tours/unesco-202.json
 data/tours/unesco-252.json
 data/tours/unesco-274.json
 data/tours/unesco-304.json
@@ -347,12 +350,14 @@ data/tours/unesco-357.json
 data/tours/unesco-369.json
 data/tours/unesco-403.json
 data/tours/unesco-421.json
+data/tours/unesco-444.json
 data/tours/unesco-447.json
 data/tours/unesco-455.json
 data/tours/unesco-483.json
 data/tours/unesco-509.json
 data/tours/unesco-609.json
 data/tours/unesco-637.json
+data/tours/unesco-64.json
 data/tours/unesco-672.json
 data/tours/unesco-715.json
 data/tours/unesco-75.json
@@ -421,6 +426,7 @@ manifest.webmanifest
 models/README.md
 og.jpg
 places/canadian-rockies.html
+places/chichen-itza.html
 places/g-reme-and-the-rock-sites-of-cappadocia.html
 places/gal-pagos-islands.html
 places/geirangerfjord.html
@@ -428,6 +434,7 @@ places/giant-s-causeway-and-causeway-coast.html
 places/grand-canyon-national-park.html
 places/guishan-island.html
 places/ha-long-bay.html
+places/hallstatt-dachstein-salzkammergut.html
 places/hehuanshan.html
 places/historic-sanctuary-of-machu-picchu.html
 places/igua-u-national-park.html
@@ -446,11 +453,14 @@ places/mount-kilimanjaro.html
 places/namib-sand-sea.html
 places/national-chiang-kai-shek-memorial-hall.html
 places/plitvice-lakes-national-park.html
+places/pyramids-of-giza.html
 places/qingshui-cliff.html
+places/rapa-nui-national-park.html
 places/sagarmatha-national-park.html
 places/sanxiantai.html
 places/suantou-ecological-park.html
 places/sun-moon-lake.html
+places/taj-mahal.html
 places/taroko-national-park.html
 places/teide-national-park.html
 places/the-dolomites.html
@@ -460,6 +470,7 @@ places/uluru-kata-tjuta-national-park.html
 places/victoria-falls.html
 places/wadi-rum-protected-area.html
 places/yehliu.html
+s/0j5TrQUJq88/index.html
 s/4s6OoULQtmA/index.html
 s/6G-PPGTWOgc/index.html
 s/6b1fQ9HHSFQ/index.html
@@ -471,9 +482,13 @@ s/CwB9H_-DaGk/index.html
 s/DXVJ-LA5RHQ/index.html
 s/F-Ri0EYuQnA/index.html
 s/FT23EYvRIrE/index.html
+s/Fx39juQfs-w/index.html
+s/GDrzAi808RA/index.html
 s/Ivd9urBu_Ug/index.html
 s/J0O7kjZljHQ/index.html
 s/JaHTci5_dpE/index.html
+s/KhH7I1Pyu-g/index.html
+s/Krpi3jRcHmM/index.html
 s/M_GY6TYvgKc/index.html
 s/O5n-ta-kTqk/index.html
 s/OvQ_e6Poo6k/index.html
