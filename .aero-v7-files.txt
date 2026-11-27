@@ -310,6 +310,7 @@ data/tours/i18n/ko/unesco-672.json
 data/tours/i18n/ko/unesco-75.json
 data/tours/index.json
 data/tours/media.json
+data/tours/tw-345040000g_000001.json
 data/tours/tw-345040000g_000010.json
 data/tours/tw-345040000g_000012.json
 data/tours/tw-376420000a_000348.json
@@ -321,9 +322,13 @@ data/tours/tw-379000000a_000189.json
 data/tours/tw-382000000a_109751.json
 data/tours/tw-382000000a_109990.json
 data/tours/tw-a15010100h_000041.json
+data/tours/tw-x-green-island.json
 data/tours/tw-x-kenting-national-park.json
+data/tours/tw-x-kinmen.json
+data/tours/tw-x-orchid-island.json
 data/tours/tw-x-penghu-basalt.json
 data/tours/tw-x-suantou-eco-park.json
+data/tours/tw-x-xiaoliuqiu.json
 data/tours/tw-x-yushan-national-park.json
 data/tours/unesco-1.json
 data/tours/unesco-1007.json
@@ -363,6 +368,7 @@ data/tours/unesco-715.json
 data/tours/unesco-75.json
 data/tours/unesco-80.json
 data/tours/unesco-806.json
+data/tours/unesco-818.json
 data/tours/unesco-86.json
 data/tours/unesco-98.json
 data/tours/works-danjiang.json
@@ -375,6 +381,9 @@ data/tours/works-penang.json
 data/tours/works-sanxia.json
 data/tours/works-taoyuan.json
 data/tours/works-taroko.json
+data/tours_long/index.json
+data/tours_long/tw-376550000a_003128.json
+data/tours_long/unesco-252.json
 i18n/ar.json
 i18n/bn.json
 i18n/cs.json

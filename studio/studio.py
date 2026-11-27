@@ -156,36 +156,112 @@ def make_jobs(args):
     return jobs
 
 
+def long_jobs(args):
+    """the long editions (data/tours_long, YouTube only; 93_long.js): --long <place id, its name, its number, "all" or "daily">.
+    They are recorded into tours_out/long/. "daily" (the daily run, the user's plan of 2026-11-27): the next long film in Taiwan and the next
+    one abroad that are not recorded yet, in the order of data/tours_long/index.json."""
+    try: lidx = json.load(open(os.path.join(V7, 'data', 'tours_long', 'index.json'), encoding='utf-8')).get('places', {})
+    except Exception: return []
+    idx = json.load(open(os.path.join(V7, 'data', 'tours', 'index.json'), encoding='utf-8')).get('places', {}); num = {pid: k for k, pid in enumerate(idx, 1)}
+    langs = [l.strip() for l in args.langs.split(',') if l.strip()]; jobs = []
+    for pid, e in lidx.items():
+        try: name = json.load(open(os.path.join(V7, 'data', 'tours_long', e['file']), encoding='utf-8')).get('name', {})
+        except Exception: name = {}
+        label = f"{name.get('zh-Hant', '')} {name.get('en', '')} {pid} {num.get(pid, '')}"
+        if args.long not in ('all', 'daily') and args.long.lower() not in label.lower() and args.long != str(num.get(pid)): continue
+        for t in e['tours']:
+            for lang in langs:
+                base = f"{num.get(pid, 0):02d}_{slug(name.get('en') or pid)}__{t['id']}__{lang}"
+                jobs.append({'place': pid, 'tour': t['id'], 'lang': lang, 'name': base, 'title': t['title'].get('zh-Hant') or t['title'].get('en') or '', 'k': num.get(pid, 0), 'kind': 'long', 'long': e['file'], 'dur': t.get('dur')})
+    return jobs
+
+
 SCENIC = ('history', 'culture', 'nature', 'geography')
-PER_EVENING = {'scenic': int(os.environ.get('AERO_SCENIC_PER_EVENING') or 5), 'other': int(os.environ.get('AERO_OTHER_PER_EVENING') or 1)}
+# each evening (the user, 2026-11-27): one place in Taiwan and one abroad (their four films each), one other film, and two long films (one each)
+PER_EVENING = {'tw': int(os.environ.get('AERO_TW_PER_EVENING') or 1), 'world': int(os.environ.get('AERO_WORLD_PER_EVENING') or 1), 'other': int(os.environ.get('AERO_OTHER_PER_EVENING') or 1)}
+LONG_PER_EVENING = {'tw': int(os.environ.get('AERO_LONG_TW_PER_EVENING') or 1), 'world': int(os.environ.get('AERO_LONG_WORLD_PER_EVENING') or 1)}
+def is_tw(place): return str(place).startswith('tw-')
+PKG = os.path.join(os.path.dirname(V7), 'AERO導覽影片_20景點80部')
 
 
-def daily_order(todo):
-    """Order the films to record like the evenings they will go public in (youtube_upload.py --schedule evening): each evening
-    5 scenic places (their four films together) and 1 other film. Films that are already on YouTube (new recordings of them) come last.
-    With --limit 21 a run then records just one evening's worth, so a change to the films' look reaches the next films soon."""
-    try: up = json.load(open(os.path.join(os.path.dirname(V7), 'AERO導覽影片_20景點80部', '_tools', 'youtube_uploaded.json'), encoding='utf-8'))
+def look():
+    """The film look in force: the film package's _tools/look.json, {"since": "<UTC time the look last changed>", "redo_per_day": 5}.
+    Films recorded before `since` have the old look: they are not uploaded any more, and those already on YouTube are recorded again,
+    a few a day, and replaced there (youtube_upload.py --replace new-look)."""
+    try: d = json.load(open(os.path.join(PKG, '_tools', 'look.json'), encoding='utf-8'))
+    except Exception: d = {}
+    try:
+        import datetime
+        since = datetime.datetime.fromisoformat(str(d.get('since')).replace('Z', '+00:00')).timestamp()
+    except Exception: since = 0
+    return since, int(os.environ.get('AERO_REDO_PER_DAY') or d.get('redo_per_day') or 5)
+
+
+def on_youtube():
+    try: up = json.load(open(os.path.join(PKG, '_tools', 'youtube_uploaded.json'), encoding='utf-8'))
     except Exception: up = {}
-    fresh = [j for j in todo if not (up.get(j['name']) or {}).get('id')]; again = [j for j in todo if (up.get(j['name']) or {}).get('id')]
-    groups, other = [], []
-    for j in fresh:
+    return {f for f, e in up.items() if e.get('id') and not e.get('gone')}
+
+
+def rec_time(name):
+    p = os.path.join(OUT, name + '.mp4')
+    return os.path.getmtime(p) if os.path.exists(p) else None
+
+
+def short_sources():
+    """Films that a YouTube Short is cut from (the package's _tools/promo/spec.json) and whose Short is up (youtube_shorts.json): recorded
+    again first, so each Short is remade with the new look and its 「相關影片」 points at the new film (2026-11-26)"""
+    try:
+        spec = json.load(open(os.path.join(PKG, '_tools', 'promo', 'spec.json'), encoding='utf-8')).get('shorts', [])
+        up = json.load(open(os.path.join(PKG, '_tools', 'youtube_shorts.json'), encoding='utf-8'))
+    except Exception: return set()
+    return {s['source'] for s in spec if (up.get(s['file']) or {}).get('id')}
+
+
+def one_run(allj, todo, limit):
+    """What one daily run records: one evening's new films (a place in Taiwan and one abroad, their four films together, + 1 other film; in the order
+    youtube_upload.py --schedule evening publishes them), then up to redo_per_day films that are on YouTube but have the old look
+    (or are missing here), to be replaced, those a Short is cut from first. Films recorded with an old look that never went up are new
+    films again."""
+    since, redo = look(); yt = on_youtube(); want = {j['name'] for j in todo}
+    old = {j['name'] for j in allj if j['name'] not in want and since and (rec_time(j['name']) or since) < since}
+    groups, other, again = [], [], []
+    for j in allj:
+        if j['name'] not in want and j['name'] not in old: continue
+        if j['name'] in yt: again.append(j); continue
         if str(j.get('kind')) in SCENIC:
             if groups and groups[-1][0]['place'] == j['place']: groups[-1].append(j)
             else: groups.append([j])
         else: other.append(j)
-    out = []
-    while groups or other:
-        ev = [j for g in groups[:PER_EVENING['scenic']] for j in g] + other[:PER_EVENING['other']]
-        groups = groups[PER_EVENING['scenic']:]; other = other[PER_EVENING['other']:]; out.append(ev)
-    return out, again
+    pick = [g for g in groups if is_tw(g[0]['place'])][:PER_EVENING['tw']] + [g for g in groups if not is_tw(g[0]['place'])][:PER_EVENING['world']]
+    ev = [j for g in sorted(pick, key=groups.index) for j in g] + other[:PER_EVENING['other']]
+    src = short_sources()                     # films a Short is cut from first (the user, 2026-11-26), then the ones already set aside here
+    again.sort(key=lambda j: (j['name'] not in src, j['name'] in old))
+    run = ev[:limit] + again[:redo]
+    for j in run:
+        if j['name'] in old: set_aside_old(j['name'], since)
+    return run
 
 
-def one_run(todo, limit):
-    """One evening's films (5 scenic places + 1 other film), topped up to `limit` with new recordings of films already on YouTube:
-    about what one day can upload, so the look of the films can keep changing without a long backlog of old-look recordings."""
-    evs, again = daily_order(todo)
-    out = (evs[0] if evs else [])[:limit]
-    return out + again[:limit - len(out)]
+def set_aside_old(name, since):
+    """Move an old-look recording (and its subtitled and web copies, and the package's copy) to _old_look/<date>/, so it is recorded
+    again; nothing is deleted."""
+    stamp = time.strftime('%Y%m%d', time.localtime(since)); moved = []
+    for sub in ('', 'web', 'bilingual'):
+        p = os.path.join(OUT, sub, name + '.mp4')
+        if os.path.exists(p):
+            d = os.path.join(OUT, '_old_look', stamp, sub or 'raw'); os.makedirs(d, exist_ok=True); t = os.path.join(d, name + '.mp4')
+            if os.path.exists(t): t = os.path.join(d, name + time.strftime('.%H%M%S', time.localtime()) + '.mp4')
+            os.replace(p, t); moved.append(sub or 'raw')
+    try:
+        folder = next((m['folder'] for m in json.load(open(os.path.join(PKG, 'youtube_metadata.json'), encoding='utf-8'))['videos'] if m['file'] == name), None)
+        p = folder and os.path.join(PKG, folder, name + '.mp4')
+        if p and os.path.exists(p):
+            d = os.path.join(PKG, '_old_look', stamp, folder); os.makedirs(d, exist_ok=True); t = os.path.join(d, name + '.mp4')
+            if os.path.exists(t): t = os.path.join(d, name + time.strftime('.%H%M%S', time.localtime()) + '.mp4')
+            os.replace(p, t); moved.append('package')
+    except Exception as e: say(f'  (package copy of {name} not moved: {e})')
+    say(f'  old look, recorded again: {name} (earlier version kept in _old_look/{stamp}: {", ".join(moved)})')
 
 
 PROBE = shutil.which('ffprobe') or next((p for p in ('/opt/homebrew/bin/ffprobe', '/usr/local/bin/ffprobe') if os.path.exists(p)), None)
@@ -283,6 +359,7 @@ def finish(args, all_jobs):
 
 
 def main():
+    global OUT
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--langs', default='zh-Hant'); ap.add_argument('--only', default=''); ap.add_argument('--tour', default=''); ap.add_argument('--list', action='store_true')
     ap.add_argument('--serve', action='store_true'); ap.add_argument('--force', action='store_true'); ap.add_argument('--port', type=int, default=8777)
@@ -292,18 +369,28 @@ def main():
     ap.add_argument('--limit', type=int, default=0, help='record at most this many tours in this run (0 = all that are left)')
     ap.add_argument('--no-routes', action='store_true', help='leave out the route films (data/routes)')
     ap.add_argument('--same-window', action='store_true', help='record every film in one browser window (by default each film gets a fresh window)')
+    ap.add_argument('--long', default='', help='record a long edition (data/tours_long, YouTube only) into tours_out/long/: a place id, name or number, or "all"')
     args = ap.parse_args()
     if not os.path.exists(os.path.join(V7, 'index.html')): sys.exit('✗ run this from the studio/ folder inside the AERO Explorer v7 package')
     os.makedirs(OUT, exist_ok=True); os.makedirs(WORK, exist_ok=True); STATE['log'] = open(os.path.join(OUT, 'studio-log.txt'), 'a', encoding='utf-8')
     w, h = (int(x) for x in args.size.lower().split('x'))
     if args.start: STATE['min'] = 50_000                      # partial test recordings are small
-    allj = [] if args.serve else make_jobs(args); todo = [j for j in allj if args.force or not recorded(j['name'])]
+    if args.long:                                             # long editions: their own folder, never mixed with the daily films
+        OUT = os.path.join(V7, 'tours_out', 'long'); os.makedirs(OUT, exist_ok=True); allj = long_jobs(args)
+        if not allj:
+            if args.long == 'daily': say('no long edition to record (data/tours_long/index.json)'); return
+            sys.exit(f'✗ no long edition matches "{args.long}" (data/tours_long/index.json)')
+    else: allj = [] if args.serve else make_jobs(args)
+    todo = [j for j in allj if args.force or not recorded(j['name'])]
     left = len(todo)
-    if args.limit > 0: todo = one_run(todo, args.limit)             # whole evenings only: 5 scenic places + 1 other film each
+    if args.long == 'daily':                                  # one long film in Taiwan and one abroad each evening
+        todo = [j for j in todo if is_tw(j['place'])][:LONG_PER_EVENING['tw']] + [j for j in todo if not is_tw(j['place'])][:LONG_PER_EVENING['world']]
+        if not todo: say('every long edition is recorded (tours_out/long)'); return
+    if args.limit > 0: todo = one_run(allj, todo, args.limit)       # one evening's new films + a few old-look films to replace
     if args.list or (not args.serve and not todo):
         for j in allj: say(('  done ' if recorded(j['name']) else '  todo '), j['name'], '·', j['title'])
         say(f'{len(allj)} tour(s), {len(todo)} to record (about {len(todo) * 6.5 / 60:.1f} h)');
-        if not args.list and allj: finish(args, allj)
+        if not args.list and allj and not args.long: finish(args, allj)
         return
     STATE['jobs'] = todo; STATE['all_jobs'] = list(todo); STATE['total'] = len(todo); STATE['opts'] = {'w': w, 'h': h, 'bps': int(args.mbps * 1e6), 'fps': args.fps, 'quality': args.quality, 'from': args.start, 'prewarm': not args.no_prewarm, 'same_window': bool(args.same_window)}
     try: srv = ThreadingHTTPServer(('127.0.0.1', args.port), Handler)
@@ -315,7 +402,8 @@ def main():
         try:
             while True: time.sleep(3600)
         except KeyboardInterrupt: return
-    say(f'AERO Studio: {len(todo)} tour(s) to record, {w}x{h} at {args.mbps:g} Mbit/s — about {len(todo) * 6.5 / 60:.1f} hours. Output: {OUT}')
+    hours = sum((j.get('dur') or 300) * 1.3 + 90 for j in todo) / 3600
+    say(f'AERO Studio: {len(todo)} tour(s) to record, {w}x{h} at {args.mbps:g} Mbit/s — about {hours:.1f} hours. Output: {OUT}')
     if len(todo) < left: say(f'(--limit {args.limit}: {left - len(todo)} more tour(s) are left for the next run)')
     url += '?studio=1&lang='; chrome = args.chrome or find_chrome(); proc = None
     if not chrome or args.no_browser: STATE['opts']['same_window'] = True     # a window opened by hand records the whole list
@@ -373,7 +461,8 @@ def main():
         close(proc); STATE['jobs'] = again; STATE['attempted'] -= {j['name'] for j in again}; STATE['total'] += len(again); STATE['done'].clear(); STATE['last'] = time.time(); proc = launch(again[0]['lang'])
     except KeyboardInterrupt: say('\nStopped. Run the same command again to continue with the remaining tours.')
     close(proc)
-    srv.shutdown(); finish(args, allj)
+    srv.shutdown()
+    if not args.long: finish(args, allj)
     bad = [r for r in STATE['results'] if r['result'].get('error') or not r['result'].get('name')]
     if bad: say(f'{len(bad)} tour(s) failed; run the command again to retry them.')
     if STATE['skip']: say(f"{len(STATE['skip'])} film(s) were left out after the page stopped twice on them; run the command again to retry them.")

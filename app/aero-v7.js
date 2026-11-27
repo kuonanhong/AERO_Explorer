@@ -2996,13 +2996,13 @@ async function wikiTitleFor(p, lang = I18N.lang) {   // lang: the interface lang
    satellite imagery, OpenStreetMap buildings, sun, moon, season and weather as free flight, so every destination can
    have tours: curated scripts (researched, with sources) for featured places, and automatic ones everywhere else.
    Any tour can be recorded to a video file in the browser; the Studio script records them in a batch. */
-const TOUR = { on: false, run: null, idx: null, idxP: null, sets: new Map(), cc: LS.get('aero7:cc') || 'auto', voice: LS.get('aero7:voice') !== '0', music: LS.get('aero7:music') !== '0', rec: null, studio: null, bound: false };
+const TOUR = { on: false, run: null, idx: null, idxP: null, sets: new Map(), cc: tourSess('aero7:cc') || 'auto', voice: LS.get('aero7:voice') !== '0', music: LS.get('aero7:music') !== '0', rec: null, studio: null, bound: false };
 const TOUR_FOV = 74, TOUR_STEP = 0.5;
 const TOUR_ICON = { history: '◷', culture: '❖', nature: '❦', geography: '▲', overview: '◎', nearby: '✦', flight: '✈' };
 const tourEase = u => u * u * (3 - 2 * u);
 /* The researched scripts are written in Traditional Chinese and English. Readers of Simplified Chinese get the Chinese text converted
    with a table that covers every character the scripts use (tools/t2s_map.json; the build reports a character it does not know). */
-const TOUR_T2S = {"p":"並并乾干亙亘亞亚佈布佔占併并來来侶侣係系倉仓個个們们倫伦偉伟側侧偵侦偽伪傑杰傘伞備备傳传債债傷伤傾倾僅仅僑侨價价儀仪億亿兒儿內内兩两凍冻凱凯別别則则剛刚創创劃划劇剧劍剑勁劲動动務务勝胜勞劳勢势匯汇區区協协卻却厲厉參参叢丛呂吕員员問问啟启單单嘗尝嘯啸噴喷噸吨嚮向嚴严國国圍围園园圓圆圖图團团埡垭執执堅坚報报場场塊块塗涂塚冢墾垦壇坛壓压壞坏壩坝壯壮壺壶壽寿夢梦夾夹奧奥奪夺婦妇媽妈學学宮宫實实寧宁寫写寬宽寶宝將将專专尋寻對对導导層层屬属岡冈島岛峽峡崗岗崙仑嶺岭嶼屿嶽岳巒峦巔巅巖岩師师帳帐帶带幣币幹干幾几庫库廂厢廟庙廠厂廢废廣广廳厅張张強强彎弯彥彦後后徑径從从復复徵征愛爱態态慶庆憶忆應应懸悬戰战戲戏戶户捨舍掃扫掛挂採采揚扬換换損损搗捣撈捞撐撑撿捡擁拥擇择擊击擋挡據据擠挤擬拟擴扩擺摆擾扰攔拦攜携攝摄攤摊敘叙敵敌數数斷断於于昇升時时暫暂曆历曠旷曬晒書书會会東东條条棄弃棗枣棧栈棲栖楊杨楨桢業业極极榮荣構构樁桩樂乐樑梁樓楼標标樞枢樣样樹树樺桦橋桥機机橢椭橫横檜桧檢检櫚榈櫟栎櫸榉櫻樱欄栏權权欒栾欖榄歐欧歡欢歲岁歷历歸归殘残殼壳毀毁氈毡氣气氫氢汙污決决沒没沖冲況况涼凉淨净淺浅減减測测湧涌湯汤準准溝沟溫温滅灭滲渗滿满漁渔漢汉漲涨漸渐漿浆潛潜澤泽澱淀濁浊濃浓濕湿濟济濤涛濱滨濺溅濾滤瀕濒灘滩灣湾為为烏乌無无煉炼煙烟熱热燈灯燒烧營营燭烛爭争爾尔牆墙牠它狀状狹狭獅狮獎奖獨独獲获獵猎獸兽獻献獼猕現现瑪玛環环產产畢毕畫画異异當当疊叠發发盞盏盡尽監监盤盘盪荡眾众矽硅砲炮確确碼码磚砖磧碛磯矶礦矿礫砾祿禄禍祸禎祯禦御禮礼稜棱種种稱称積积窪洼筆笔節节範范築筑簡简簽签籃篮籌筹籠笼紀纪約约紅红紋纹納纳紐纽紗纱紙纸級级紛纷紡纺紮扎細细紹绍終终組组結结絕绝給给絨绒統统絲丝經经綠绿綬绶維维網网綿绵緊紧緋绯緒绪線线緣缘編编緩缓緻致縣县縫缝縮缩總总織织繞绕繡绣繩绳繪绘繫系繳缴繼继續续纜缆罰罚羅罗義义翬翚翹翘聖圣聞闻聯联聲声聳耸職职聽听脅胁脈脉腳脚膠胶膽胆臉脸臥卧臨临臺台與与興兴舉举舊旧荊荆莊庄莖茎華华菸烟萊莱萬万葉叶著着葦苇蒐搜蓋盖蓮莲蓴莼蔣蒋蔭荫蕭萧薊蓟薑姜薦荐薩萨薰熏藍蓝藝艺藥药蘆芦蘇苏蘚藓蘭兰處处虛虚號号蝕蚀蝦虾螢萤蟲虫術术衛卫衝冲補补裝装裡里製制複复襲袭見见規规覓觅視视親亲覽览觀观觸触訂订計计訊讯討讨託托記记訝讶訪访設设許许訴诉詞词詢询試试詩诗話话該该認认誕诞語语誦诵說说誰谁課课調调談谈請请論论諮咨諾诺謀谋講讲證证識识議议護护讀读變变讓让豎竖豐丰貓猫貝贝貞贞負负貧贫貨货貫贯責责貴贵買买費费貼贴資资賈贾賓宾賞赏賢贤賣卖質质賴赖賽赛贈赠趕赶跡迹蹟迹蹤踪躍跃車车軌轨軍军軟软軸轴較较載载輕轻輛辆輩辈輪轮輸输轉转轎轿轟轰辦办農农迴回這这連连週周進进遊游運运過过達达違违遙遥遜逊遠远適适遶绕遷迁選选遺遗還还邊边郵邮鄉乡鄰邻釋释釐厘針针釣钓鈔钞鈣钙鉤钩銀银銅铜銳锐銷销鋪铺鋸锯鋼钢錄录錐锥錦锦錫锡錯错鍬锹鍰锾鎮镇鏈链鏡镜鏢镖鏽锈鐘钟鐵铁鑽钻鑿凿長长門门閉闭開开閒闲間间閣阁閩闽閱阅闊阔關关闢辟陰阴陳陈陸陆陽阳隊队階阶際际隨随險险隸隶隻只雙双雜杂雞鸡離离難难雲云電电霧雾靈灵靜静韋韦響响頁页頂顶頃顷項项順顺須须預预領领頭头頸颈顆颗題题額额顏颜類类顧顾顯显風风颱台飄飘飛飞飯饭飲饮飾饰養养餘余館馆餵喂饑饥馬马駁驳駐驻駕驾駛驶駝驼駱骆駿骏騎骑騰腾騾骡驗验驚惊驛驿體体髮发鬆松鬚须鬥斗鬧闹魚鱼魯鲁鮊鲌鮑鲍鮪鲔鮭鲑鯉鲤鯖鲭鯨鲸鯽鲫鰱鲢鰹鲣鰻鳗鱗鳞鳥鸟鳳凤鳴鸣鳶鸢鴕鸵鴝鸲鴨鸭鴴鸻鵑鹃鵰雕鵲鹊鶇鸫鶲鹟鶴鹤鷗鸥鷚鹨鷥鸶鷲鹫鷴鹇鷸鹬鷹鹰鷺鹭鹹咸鹼碱鹽盐麗丽麥麦麼么黃黄點点齊齐齋斋齒齿齡龄龍龙龜龟僕仆喬乔墊垫墜坠墻墙嬰婴寵宠嶇岖拋抛棟栋潰溃爺爷犛牦瓊琼盜盗盧卢禱祷穩稳筍笋糞粪綁绑習习艦舰豔艳貿贸踐践釀酿鈴铃錢钱韓韩願愿馱驮鮮鲜鵝鹅拏拿儲储勵励喚唤嚇吓囓啮婭娅屆届幫帮彌弥惡恶憂忧憑凭災灾犧牺甦苏茲兹蒼苍蟻蚁評评誤误譯译邁迈陣阵隱隐頓顿丟丢亂乱俠侠優优囪囱堊垩嬌娇廁厕廚厨彈弹慮虑憐怜懷怀懺忏戀恋敗败暢畅滾滚獄狱獰狞獺獭禿秃窩窝窯窑篤笃籬篱籲吁綻绽脫脱腦脑臘腊莢荚蘋苹蝸蜗訥讷誌志謝谢豬猪貢贡輝辉邏逻鄧邓釘钉銘铭錨锚鍋锅閃闪閘闸馳驰驅驱驢驴鯊鲨鯰鲶鯷鳀鰩鳐鱷鳄鴉鸦鴞鸮鴿鸽鵡鹉鶯莺鷀鹚鸌鹱鸕鸬鸚鹦龐庞緬缅桿杆緯纬縱纵覺觉艙舱幟帜欽钦吳吴塵尘奮奋捲卷臟脏辭辞醫医鸝鹂廈厦燼烬鐸铎鯡鲱搖摇鉛铅塢坞婁娄灑洒獷犷碩硕競竞購购遞递鑄铸壘垒憲宪搶抢槍枪殺杀盃杯績绩贏赢鋒锋揮挥擲掷綜综擔担礎础頻频夠够檔档檳槟洩泄澆浇箏筝粵粤緞缎艱艰釬钎鍵键鎬镐韌韧鱘鲟撲扑劉刘吶呐嵐岚恆恒揹背撫抚朧胧櫃柜溼湿獁犸籤签菓果蔥葱藪薮財财轄辖鄒邹鄭郑鋤锄鋰锂錠锭鑲镶鑾銮颳刮髏髅龕龛償偿審审摺折樸朴潑泼猶犹稅税穀谷糧粮膚肤襯衬訶诃諸诸譜谱賺赚鱉鳖","w":{"瓩":"千瓦","呎":"英尺"},"ph":{"著名":"著名","著稱":"著称","著作":"著作","著書":"著书","著述":"著述","著錄":"著录","著者":"著者","原著":"原著","名著":"名著","巨著":"巨著","專著":"专著","論著":"论著","編著":"编著","合著":"合著","譯著":"譯著","顯著":"显著","卓著":"卓著","昭著":"昭著","土著":"土著","所著":"所著","乾隆":"乾隆","乾坤":"乾坤"}}; let tourHansMap = null, tourHansRe = null;
+const TOUR_T2S = {"p":"並并乾干亙亘亞亚佈布佔占併并來来侶侣係系倉仓個个們们倫伦偉伟側侧偵侦偽伪傑杰傘伞備备傳传債债傷伤傾倾僅仅僑侨價价儀仪億亿兒儿內内兩两凍冻凱凯別别則则剛刚創创劃划劇剧劍剑勁劲動动務务勝胜勞劳勢势匯汇區区協协卻却厲厉參参叢丛呂吕員员問问啟启單单嘗尝嘯啸噴喷噸吨嚮向嚴严國国圍围園园圓圆圖图團团埡垭執执堅坚報报場场塊块塗涂塚冢墾垦壇坛壓压壞坏壩坝壯壮壺壶壽寿夢梦夾夹奧奥奪夺婦妇媽妈學学宮宫實实寧宁寫写寬宽寶宝將将專专尋寻對对導导層层屬属岡冈島岛峽峡崗岗崙仑嶺岭嶼屿嶽岳巒峦巔巅巖岩師师帳帐帶带幣币幹干幾几庫库廂厢廟庙廠厂廢废廣广廳厅張张強强彎弯彥彦後后徑径從从復复徵征愛爱態态慶庆憶忆應应懸悬戰战戲戏戶户捨舍掃扫掛挂採采揚扬換换損损搗捣撈捞撐撑撿捡擁拥擇择擊击擋挡據据擠挤擬拟擴扩擺摆擾扰攔拦攜携攝摄攤摊敘叙敵敌數数斷断於于昇升時时暫暂曆历曠旷曬晒書书會会東东條条棄弃棗枣棧栈棲栖楊杨楨桢業业極极榮荣構构樁桩樂乐樑梁樓楼標标樞枢樣样樹树樺桦橋桥機机橢椭橫横檜桧檢检櫚榈櫟栎櫸榉櫻樱欄栏權权欒栾欖榄歐欧歡欢歲岁歷历歸归殘残殼壳毀毁氈毡氣气氫氢汙污決决沒没沖冲況况涼凉淨净淺浅減减測测湧涌湯汤準准溝沟溫温滅灭滲渗滿满漁渔漢汉漲涨漸渐漿浆潛潜澤泽澱淀濁浊濃浓濕湿濟济濤涛濱滨濺溅濾滤瀕濒灘滩灣湾為为烏乌無无煉炼煙烟熱热燈灯燒烧營营燭烛爭争爾尔牆墙牠它狀状狹狭獅狮獎奖獨独獲获獵猎獸兽獻献獼猕現现瑪玛環环產产畢毕畫画異异當当疊叠發发盞盏盡尽監监盤盘盪荡眾众矽硅砲炮確确碼码磚砖磧碛磯矶礦矿礫砾祿禄禍祸禎祯禦御禮礼稜棱種种稱称積积窪洼筆笔節节範范築筑簡简簽签籃篮籌筹籠笼紀纪約约紅红紋纹納纳紐纽紗纱紙纸級级紛纷紡纺紮扎細细紹绍終终組组結结絕绝給给絨绒統统絲丝經经綠绿綬绶維维網网綿绵緊紧緋绯緒绪線线緣缘編编緩缓緻致縣县縫缝縮缩總总織织繞绕繡绣繩绳繪绘繫系繳缴繼继續续纜缆罰罚羅罗義义翬翚翹翘聖圣聞闻聯联聲声聳耸職职聽听脅胁脈脉腳脚膠胶膽胆臉脸臥卧臨临臺台與与興兴舉举舊旧荊荆莊庄莖茎華华菸烟萊莱萬万葉叶著着葦苇蒐搜蓋盖蓮莲蓴莼蔣蒋蔭荫蕭萧薊蓟薑姜薦荐薩萨薰熏藍蓝藝艺藥药蘆芦蘇苏蘚藓蘭兰處处虛虚號号蝕蚀蝦虾螢萤蟲虫術术衛卫衝冲補补裝装裡里製制複复襲袭見见規规覓觅視视親亲覽览觀观觸触訂订計计訊讯討讨託托記记訝讶訪访設设許许訴诉詞词詢询試试詩诗話话該该認认誕诞語语誦诵說说誰谁課课調调談谈請请論论諮咨諾诺謀谋講讲證证識识議议護护讀读變变讓让豎竖豐丰貓猫貝贝貞贞負负貧贫貨货貫贯責责貴贵買买費费貼贴資资賈贾賓宾賞赏賢贤賣卖質质賴赖賽赛贈赠趕赶跡迹蹟迹蹤踪躍跃車车軌轨軍军軟软軸轴較较載载輕轻輛辆輩辈輪轮輸输轉转轎轿轟轰辦办農农迴回這这連连週周進进遊游運运過过達达違违遙遥遜逊遠远適适遶绕遷迁選选遺遗還还邊边郵邮鄉乡鄰邻釋释釐厘針针釣钓鈔钞鈣钙鉤钩銀银銅铜銳锐銷销鋪铺鋸锯鋼钢錄录錐锥錦锦錫锡錯错鍬锹鍰锾鎮镇鏈链鏡镜鏢镖鏽锈鐘钟鐵铁鑽钻鑿凿長长門门閉闭開开閒闲間间閣阁閩闽閱阅闊阔關关闢辟陰阴陳陈陸陆陽阳隊队階阶際际隨随險险隸隶隻只雙双雜杂雞鸡離离難难雲云電电霧雾靈灵靜静韋韦響响頁页頂顶頃顷項项順顺須须預预領领頭头頸颈顆颗題题額额顏颜類类顧顾顯显風风颱台飄飘飛飞飯饭飲饮飾饰養养餘余館馆餵喂饑饥馬马駁驳駐驻駕驾駛驶駝驼駱骆駿骏騎骑騰腾騾骡驗验驚惊驛驿體体髮发鬆松鬚须鬥斗鬧闹魚鱼魯鲁鮊鲌鮑鲍鮪鲔鮭鲑鯉鲤鯖鲭鯨鲸鯽鲫鰱鲢鰹鲣鰻鳗鱗鳞鳥鸟鳳凤鳴鸣鳶鸢鴕鸵鴝鸲鴨鸭鴴鸻鵑鹃鵰雕鵲鹊鶇鸫鶲鹟鶴鹤鷗鸥鷚鹨鷥鸶鷲鹫鷴鹇鷸鹬鷹鹰鷺鹭鹹咸鹼碱鹽盐麗丽麥麦麼么黃黄點点齊齐齋斋齒齿齡龄龍龙龜龟僕仆喬乔墊垫墜坠墻墙嬰婴寵宠嶇岖拋抛棟栋潰溃爺爷犛牦瓊琼盜盗盧卢禱祷穩稳筍笋糞粪綁绑習习艦舰豔艳貿贸踐践釀酿鈴铃錢钱韓韩願愿馱驮鮮鲜鵝鹅拏拿儲储勵励喚唤嚇吓囓啮婭娅屆届幫帮彌弥惡恶憂忧憑凭災灾犧牺甦苏茲兹蒼苍蟻蚁評评誤误譯译邁迈陣阵隱隐頓顿丟丢亂乱俠侠優优囪囱堊垩嬌娇廁厕廚厨彈弹慮虑憐怜懷怀懺忏戀恋敗败暢畅滾滚獄狱獰狞獺獭禿秃窩窝窯窑篤笃籬篱籲吁綻绽脫脱腦脑臘腊莢荚蘋苹蝸蜗訥讷誌志謝谢豬猪貢贡輝辉邏逻鄧邓釘钉銘铭錨锚鍋锅閃闪閘闸馳驰驅驱驢驴鯊鲨鯰鲶鯷鳀鰩鳐鱷鳄鴉鸦鴞鸮鴿鸽鵡鹉鶯莺鷀鹚鸌鹱鸕鸬鸚鹦龐庞緬缅桿杆緯纬縱纵覺觉艙舱幟帜欽钦吳吴塵尘奮奋捲卷臟脏辭辞醫医鸝鹂廈厦燼烬鐸铎鯡鲱搖摇鉛铅塢坞婁娄灑洒獷犷碩硕競竞購购遞递鑄铸壘垒憲宪搶抢槍枪殺杀盃杯績绩贏赢鋒锋揮挥擲掷綜综擔担礎础頻频夠够檔档檳槟洩泄澆浇箏筝粵粤緞缎艱艰釬钎鍵键鎬镐韌韧鱘鲟撲扑劉刘吶呐嵐岚恆恒揹背撫抚朧胧櫃柜溼湿獁犸籤签菓果蔥葱藪薮財财轄辖鄒邹鄭郑鋤锄鋰锂錠锭鑲镶鑾銮颳刮髏髅龕龛償偿審审摺折樸朴潑泼猶犹稅税穀谷糧粮膚肤襯衬訶诃諸诸譜谱賺赚鱉鳖喪丧孃娘崢峥嶸嵘憤愤擄掳擱搁柵栅楓枫渾浑潔洁燻熏訓训貯贮賜赐軼轶鬱郁鰓鳃鳩鸠鴻鸿鵬鹏濫滥絡络","w":{"瓩":"千瓦","呎":"英尺"},"ph":{"著名":"著名","著稱":"著称","著作":"著作","著書":"著书","著述":"著述","著錄":"著录","著者":"著者","原著":"原著","名著":"名著","巨著":"巨著","專著":"专著","論著":"论著","編著":"编著","合著":"合著","譯著":"譯著","顯著":"显著","卓著":"卓著","昭著":"昭著","土著":"土著","所著":"所著","乾隆":"乾隆","乾坤":"乾坤"}}; let tourHansMap = null, tourHansRe = null;
 function tourHans(s) {
   if (!s) return s;
   if (!tourHansMap) { const M = tourHansMap = new Map(), P = TOUR_T2S.p; for (let i = 0; i < P.length; i += 2) M.set(P[i], P[i + 1]); for (const o of [TOUR_T2S.w, TOUR_T2S.ph]) for (const [k, v] of Object.entries(o)) M.set(k, v); tourHansRe = new RegExp([...Object.keys(TOUR_T2S.ph), '[\\u3400-\\u9fff]'].join('|'), 'g'); }
@@ -3069,10 +3069,10 @@ function tourPlan(set, tour, p) {
     if ((o.move === 'flyover' && !B) || (o.move === 'follow' && !(path?.length > 1))) o.move = 'orbit', o.arc ??= 60;
     shots.push(o); t0 += o.dur;
   }
-  const drama = (['drama', 'estate', 'sports'].includes(tour.theme) || /^works-/.test(tour.theme || '')) && set.drama ? set.drama : null;   // the residence, match and public-works series run on the drama engine
+  const drama = (['drama', 'estate', 'sports', 'long'].includes(tour.theme) || /^works-/.test(tour.theme || '')) && set.drama ? set.drama : null;   // the residence, match and public-works series and the long editions run on the drama engine
   shots.forEach((s, i) => { const q = shots[i - 1]; s.envCut = drama ? !!s.raw.dip : !!q && (q.time !== s.time || q.weather !== s.weather); if (drama && s.raw.fpv) s.move = 'orbit'; });
   return { place: p, set, id: tour.id, theme: tour.theme || 'overview', title: tour.title, tagline: tour.tagline, titleEn: tour.titleEn || tourTxtEn(tour.title), taglineEn: tour.taglineEn || tourTxtEn(tour.tagline), season: tour.season || 'today', shots, dur: t0, auto: !!set.auto,
-    hasEn: shots.some(s => s.caps.en?.length), credit: set.credit || null, langs: set.langs || ['zh', 'en'], drama };
+    hasEn: shots.some(s => s.caps.en?.length), credit: set.credit || null, langs: set.langs || ['zh', 'en'], drama, long: tour.theme === 'long' };
 }
 const tourGnd = (x, z) => Math.max(DEM.heightAt(x, z), 0);
 function tourTerr(x, z) { const r = SET.buildings ? VEC.roofAt(x, z) : null; return Math.max(DEM.heightAt(x, z), 0.3, r ? r.top : -1e9); }
@@ -3137,7 +3137,7 @@ async function startTour(p, ref, opts = {}) {
   else { const id = String(ref || ''); if (!id.startsWith('auto-')) { set = await tourSetOf(p); tour = set?.tours.find(x => x.id === id) || (id ? null : set?.tours[0]); } if (!tour) { tourOverlayMsg(t('tour.autoWait')); set = await tourAutoSet(p).catch(() => null); tour = set?.tours.find(x => x.id === id) || set?.tours[0]; tourOverlayMsg(''); } }
   if (!tour) { toast(t('tour.none')); return; }
   AUDIO.start(); tourBind();
-  const plan = tourPlan(set, tour, p), v = APP.veh; if (plan.route) routeStart(plan); if (plan.drama) dramaStart(plan);
+  const plan = tourPlan(set, tour, p), v = APP.veh; if (plan.route) routeStart(plan); if (plan.drama) dramaStart(plan); if (plan.long) longStart(plan);
   const R = TOUR.run = { plan, t: 0, playing: false, i: -1, cap: '', capK: '', y: 0, cut: true, ended: false, uiT: 0, ready: false, rec: !!opts.record, from: clamp(+opts.from || 0, 0, plan.dur - 5), pose: {}, tmp: {},
     saved: { time: SET.timeMode, season: SET.season, wx: SET.wxMode, fish: SET.fisheye, zoom: APP.zoom, cam: APP.cam, pos: v.pos.clone(), heading: v.heading, paused: APP.paused, started: APP.started, sunMin: APP.sun.min, sunDate: APP.sun.date, live: APP.live } };
   TOUR.on = true; document.body.dataset.tour = plan.theme; APP.paused = true; SET.fisheye = false; APP.cam = 'chase'; APP.zoom = SET.fov / (plan.route ? ROUTE_FOV[plan.view][plan.route.mode] : TOUR_FOV); applyFov(); $('#startOverlay').hidden = true;
@@ -3185,12 +3185,14 @@ function tourResumeAt(R, p) {   // the film time whose camera is nearest the dro
   return best;
 }
 function tourTake(R) {
-  if (!R || R.manual || !R.ready || R.warm || TOUR.studio || TOUR.rec || R.plan.route) return false; const v = APP.veh; if (!v || v.kind !== 'drone') return false;
+  if (!R || R.manual || !R.ready || R.warm || TOUR.studio || TOUR.rec || R.plan.route) return false; const v = APP.veh;
+  // the place's own vehicle may be a boat (a lake) or a car: a tour is a drone's flight, so a quadcopter is made first (2026-11-27: on Sun Moon Lake 「接手飛行」 did nothing)
+  if (!v || v.kind !== 'drone') { if (R.taking) return true; R.taking = true; Promise.resolve(spawn('drone')).then(() => { R.taking = false; if (APP.model) APP.model.visible = false; if (TOUR.run === R) tourTake(R); }, () => { R.taking = false; }); return true; }
   R.manual = { last: performance.now(), play: R.playing && !R.ended, cam: APP.cam }; R.join = null; R.playing = false; try { speechSynthesis?.cancel(); } catch { }
   const fv = tourVel(R, R.t, {}), P = DRONE_MODES[v.mode] || DRONE_MODES.N, hs = Math.hypot(fv.x, fv.z), kh = hs > P.vmax ? P.vmax / hs : 1;
   v.pos.copy(camera.position); v.vel.set(fv.x * kh, clamp(fv.y, -P.vdn, P.vup), fv.z * kh); v.heading = camera.rotation.y; v.gimbal = clamp(camera.rotation.x, -1.5, 0.3); v.landed = false; v.crashed = false; v.battery = Math.max(v.battery || 0, 0.6); v.pitch = v.roll = 0;
   APP.look.yaw = APP.look.pitch = 0; APP.cam = 'fpv'; APP.paused = false; APP.autoTakeoff = false; camSmooth.init = false;
-  document.body.dataset.tourManual = '1'; tourFade(0); tourBar(); toast(isZh() ? '你在駕駛：放手 3 秒，自動駕駛從這裡接回導覽（或按 ↩）' : 'You are flying: hands off for 3 s and the autopilot takes it from here (or press ↩)', 3500); return true;
+  document.body.dataset.tourManual = '1'; tourFade(0); const te = $('#tourEnd'); if (te) te.hidden = true; tourBar(); toast(isZh() ? '你在駕駛：放手 3 秒，自動駕駛從這裡接回導覽（或按 ↩）' : 'You are flying: hands off for 3 s and the autopilot takes it from here (or press ↩)', 3500); return true;
 }
 function tourGiveBack(R) {
   if (!R?.manual) return; const m = R.manual; R.manual = null; for (const k of TOUR_FLY) KEYS.delete(k); try { droneView(R); } catch { }
@@ -3312,7 +3314,7 @@ function tourOverlay(show) {
 function tourBar() {
   const R = TOUR.run, b = k => $(`#tourBar [data-tb="${k}"]`); if (!R || !b('play')) return;
   b('play').innerHTML = svg(R.playing ? 'pause' : 'play'); const lab = (k, ic, w) => { const h = esc(ic) + '<span class="tbw">' + esc(w) + '</span>'; if (b(k).innerHTML !== h) b(k).innerHTML = h; };   // the word folds away on a narrow screen
-  lab('cc', 'CC', ' ' + tourCapLabel()); lab('voice', TOUR.voice ? '🔊' : '🔇', ' ' + t('tour.voice')); lab('music', TOUR.music ? '♪' : '♪✕', ' ' + t('tour.music')); if (b('hud')) lab('hud', THUD.mode === 'off' ? '○' : '◉', ' ' + thudWord());
+  lab('cc', 'CC ' + tourCapLabel(), '');   // the caption languages stay readable on a phone, where the words fold away lab('voice', TOUR.voice ? '🔊' : '🔇', ' ' + t('tour.voice')); lab('music', TOUR.music ? '♪' : '♪✕', ' ' + t('tour.music')); if (b('hud')) lab('hud', THUD.mode === 'off' ? '○' : '◉', ' ' + thudWord());
   if (b('yt')) { const m = R.plan.route ? tourMedia('route-' + R.plan.route.id, R.plan.view) : tourMedia(R.plan.place?.id, R.plan.id); b('yt').hidden = !m?.yt || !!TOUR.rec; if (m?.yt) { b('yt').href = 'https://www.youtube.com/watch?v=' + m.yt; b('yt').title = isZh() ? '在 YouTube 看這部影片' : 'Watch this film on YouTube'; } }
   if (b('take')) { b('take').textContent = R.manual ? (isZh() ? '↩ 回到導覽' : '↩ Back to film') : (isZh() ? '🕹 接手飛行' : '🕹 Fly it'); b('take').hidden = !!R.plan.route || !!TOUR.rec; b('take').classList.toggle('on', !!R.manual); }
   lab('rec', TOUR.rec ? '■' : '⏺', ' ' + (TOUR.rec ? t('tour.recording') : t('tour.record'))); b('rec').classList.toggle('on', !!TOUR.rec); b('cc').hidden = !!R.plan.auto && false;
@@ -3321,7 +3323,7 @@ function tourAct(a) {
   const R = TOUR.run; if (!R) return; const sh = R.plan.shots;
   if (a === 'play') tourPlay(!R.playing); else if (a === 'exit') tourExit();
   else if (a === 'next') tourSeek(sh[Math.min(sh.length - 1, R.i + 1)].t0); else if (a === 'prev') tourSeek(R.t - sh[Math.max(0, R.i)].t0 > 2.5 ? sh[Math.max(0, R.i)].t0 : sh[Math.max(0, R.i - 1)].t0);
-  else if (a === 'cc') { const o = I18N.lang === 'en' ? ['auto', 'off'] : R.plan.hasEn && tourOwnTrack(R.plan) !== 'en' ? ['auto', 'one', 'en', 'off'] : ['auto', 'off'], m = tourCapMode(); TOUR.cc = o[(o.indexOf(m) + 1) % o.length]; LS.set('aero7:cc', TOUR.cc); R.capK = ''; R.cap2K = ''; try { speechSynthesis?.cancel(); } catch { } }
+  else if (a === 'cc') { const o = I18N.lang === 'en' ? ['auto', 'off'] : R.plan.hasEn && tourOwnTrack(R.plan) !== 'en' ? ['auto', 'one', 'en', 'off'] : ['auto', 'off'], m = tourCapMode(); TOUR.cc = o[(o.indexOf(m) + 1) % o.length]; tourSess('aero7:cc', TOUR.cc); R.capK = ''; R.cap2K = ''; try { speechSynthesis?.cancel(); } catch { } }
   else if (a === 'voice') { TOUR.voice = !TOUR.voice; LS.set('aero7:voice', TOUR.voice ? '1' : '0'); if (!TOUR.voice) try { speechSynthesis?.cancel(); } catch { } }
   else if (a === 'hud') thudToggle();
   else if (a === 'take') { if (R.manual) tourGiveBack(R); else tourTake(R); }
@@ -3372,10 +3374,20 @@ function tourDom(R) {
 
 /* ---------- narration in the viewer's own speech engine (never part of a recording) ---------- */
 function tourSpeak(text, lang, slot) {
-  const S = globalThis.speechSynthesis; if (!TOUR.voice || TOUR.rec || !S || !globalThis.SpeechSynthesisUtterance || !text) return;
-  try { S.cancel(); const u = new SpeechSynthesisUtterance(text), tag = lang === 'zh' ? 'zh-TW' : lang === 'zh-Hans' ? 'zh-CN' : lang === 'en' ? 'en-US' : (SPEECH_TAG[lang] || SPEECH_TAG[I18N.lang] || I18N.lang); u.lang = tag; const zh = /^(zh|ja|ko)/.test(tag);
-    u.rate = clamp((zh ? text.length / 4.6 : text.length / 15) / Math.max(2, slot - 0.6), 0.95, 1.35); u.volume = 1; const vs = S.getVoices().filter(x => x.lang?.replace('_', '-').toLowerCase().startsWith(tag.toLowerCase())); if (vs.length) u.voice = vs.find(x => x.localService) || vs[0]; S.speak(u); } catch { }
+  const S = globalThis.speechSynthesis; if (!TOUR.voice || TOUR.rec || !text) return;
+  if (!S || !globalThis.SpeechSynthesisUtterance) { if (!TOUR.noVoiceTold && !TOUR.studio) { TOUR.noVoiceTold = true; toast(isZh() ? '這個瀏覽器不能朗讀旁白（例如 LINE 在 Android 手機裡的瀏覽器）；要聽語音，請用 Chrome 或 Safari 開啟' : 'This browser cannot read the narration aloud; open the page in Chrome or Safari to hear it', 6000); } return; }
+  try { const busy = S.speaking || S.pending; if (busy) S.cancel(); const u = new SpeechSynthesisUtterance(text), tag = lang === 'zh' ? 'zh-TW' : lang === 'zh-Hans' ? 'zh-CN' : lang === 'en' ? 'en-US' : (SPEECH_TAG[lang] || SPEECH_TAG[I18N.lang] || I18N.lang); u.lang = tag; const zh = /^(zh|ja|ko)/.test(tag);
+    u.rate = clamp((zh ? text.length / 4.6 : text.length / 15) / Math.max(2, slot - 0.6), 0.95, 1.35); u.volume = 1; const vs = S.getVoices().filter(x => x.lang?.replace('_', '-').toLowerCase().startsWith(tag.toLowerCase())); if (vs.length) u.voice = vs.find(x => x.localService) || vs[0];
+    if (busy) setTimeout(() => { try { S.speak(u); } catch { } }, 60); else S.speak(u); } catch { }   // WebKit drops an utterance spoken right after cancel()
 }
+/* iPhone and iPad browsers (Safari, and LINE's own browser) read aloud only after a first utterance started by a tap: one silent word, at the first tap */
+function tourVoiceUnlock() {
+  const S = globalThis.speechSynthesis; if (TOUR.voiceOk || !S || !globalThis.SpeechSynthesisUtterance) return; TOUR.voiceOk = true;
+  try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; S.speak(u); S.getVoices(); } catch { }
+}
+for (const ev of ['pointerdown', 'touchend', 'keydown']) addEventListener(ev, tourVoiceUnlock, { capture: true, passive: true });
+/* the caption choice lasts for this visit only: every new visit starts in the viewer's own language (2026-11-27: a phone kept an old "English only") */
+function tourSess(k, v) { try { if (v === undefined) return sessionStorage.getItem(k); sessionStorage.setItem(k, v); } catch { } return null; }
 
 /* ---------- generated score: slow pads, a bass note and sparse bells in a mode chosen by the theme ---------- */
 const SCORE = { out: null, bus: null, k: 0, rec: null };
@@ -3425,7 +3437,8 @@ function tourPaint(R) {   // compose one frame of the recording on a 2D canvas
   g.globalAlpha = 1; g.drawImage(src, (sw - W / k) / 2, (sh - H / k) / 2, W / k, H / k, 0, 0, W, H);
   if (plan.route) routePaint(g, W, H, R);
   if (plan.drama) dramaPaint(g, W, H, R, F);
-  if (!plan.route) try { thudPaint(g, W, H, R, false); } catch (e) { APP.lastErr = 'hud: ' + (e?.stack || e); }   // the film goes on without the panels rather than stop   // continent and country, satellite inset, flight path, instruments (91_tourhud.js)
+  if (!plan.route) try { thudPaint(g, W, H, R, false); } catch (e) { APP.lastErr = 'hud: ' + (e?.stack || e); }
+  if (plan.long) try { longPaint(g, W, H, R, F); } catch (e) { APP.lastErr = 'long: ' + (e?.stack || e); }   // chapter and photo cards (93_long.js)   // the film goes on without the panels rather than stop   // continent and country, satellite inset, flight path, instruments (91_tourhud.js)
   const text = (s, x, y, a, font, align = 'center', col = '#fff') => { g.globalAlpha = a; g.font = font; g.textAlign = align; g.textBaseline = 'middle'; g.lineJoin = 'round'; g.lineWidth = Math.max(2, H / 240); g.strokeStyle = 'rgba(0,0,0,.72)'; g.strokeText(s, x, y); g.fillStyle = col; g.fillText(s, x, y); };
   g.shadowColor = 'rgba(0,0,0,.55)'; g.shadowBlur = H / 90;
   if (R.titleA > 0.01) { const a = R.titleA; text(tourKicker(plan), W / 2, H * 0.31, a, `600 ${H * 0.03}px ${F}`, 'center', '#f0c879'); g.font = `700 ${H * 0.066}px ${F}`; const ls = tourWrap(g, tourTxt(plan.title), W * 0.86); ls.forEach((l, j) => text(l, W / 2, H * 0.40 + j * H * 0.082, a, `700 ${H * 0.066}px ${F}`)); g.font = `400 ${H * 0.032}px ${F}`; tourWrap(g, tourTxt(plan.tagline), W * 0.8).forEach((l, j) => text(l, W / 2, H * 0.40 + ls.length * H * 0.082 + H * 0.012 + j * H * 0.045, a, `400 ${H * 0.032}px ${F}`)); }
@@ -3662,6 +3675,10 @@ async function tourStudioNext() {
     if (job.route) { await startRoute(job.route, job.view || job.tour, ropts); if (!TOUR.on) throw new Error('route did not start'); return; }
     if (!PLACE_BY_ID.get(job.place) && job.place.startsWith('wd-')) await loadCatalogueX();
     const p = PLACE_BY_ID.get(job.place); if (!p) throw new Error('unknown place ' + job.place);
+    if (job.long) {   // a long edition (YouTube only): its own script file, not listed on the site (93_long.js)
+      const set = await fetchJSON('data/tours_long/' + job.long, { timeout: 30000 }), tour = set.tours.find(x => x.id === job.tour) || set.tours[0];
+      await longPhotosReady(set); await startTour(p, { set, tour }, ropts); if (!TOUR.on) throw new Error('long tour did not start'); return;
+    }
     await startTour(p, job.tour, { record: true, w: job.w || S.opts.w, h: job.h || S.opts.h, bps: job.bps || S.opts.bps, fps: S.opts.fps, from: S.opts.from, prewarm: S.opts.prewarm !== false, name: job.name, done: async res => { await S.post('/studio/done', { job, result: res }); if (TOUR.on) tourExit(true); setTimeout(tourStudioNext, 800); } });
     if (!TOUR.on) throw new Error('tour did not start');
   } catch (e) { await S.post('/studio/done', { job, result: { error: String(e.message || e) } }); if (TOUR.on) tourExit(true); setTimeout(tourStudioNext, 800); }
@@ -5330,7 +5347,8 @@ function renderResults() {
    Drawn on every recorded tour film (tourPaint) and over a tour on the screen (thudDom): the continent and country, a satellite inset
    centred on the drone with its latitude and longitude, a map of the whole flight with the part flown so far in red, and an instrument
    panel. Height, speed, heading, the simulated date, time and sun come from the simulator; temperature, humidity, UV index and air
-   quality come from Open-Meteo for the day the film is recorded, at the hour the film is set (the panel says so); the magnetic
+   quality come from Open-Meteo for the day the film is recorded, at the hour the film is set (the panel says so; a shot set at an exact
+   date reads that day where it is flown, thudDayEnv); the magnetic
    declination and inclination come from the World Magnetic Model WMM2025 (table written by the build from tools/magdec.json; a place
    missing from it is asked of the British Geological Survey's model service, or shows a dash). */
 /* three ways to show it on the screen (tour bar button and H): 'mini' (two columns, half the height; also what recordings show),
@@ -5350,12 +5368,13 @@ function thudGeo(plan) { const e = TOUR.idx?.places?.[plan.place?.id]; return e?
 
 /* once per tour: the planned flight as latitude/longitude per shot, the map of the whole flight, the weather of the recording day */
 function thudPrep(R) {
-  const plan = R.plan, H = R.hud = { segs: [], ready: false, map: null, spd: 0, last: null }, o = {}, all = [];
+  const plan = R.plan, H = R.hud = { segs: [], ready: false, map: null, spd: 0, last: null, wx: [] }, o = {}, all = [], mid = [];
   for (const s of plan.shots) {
     const n = Math.max(3, Math.ceil(s.dur / 1.5)), pts = [];
     for (let k = 0; k <= n; k++) { try { tourPose(s, k / n, o); } catch { continue; } if (!Number.isFinite(o.x) || !Number.isFinite(o.z)) continue; const [la, lo] = toLatLon(o.x, o.z); pts.push([la, lo, s.t0 + s.dur * k / n]); all.push([la, lo]); }
-    if (pts.length) H.segs.push(pts);
+    if (pts.length) H.segs.push(pts); mid.push(pts[pts.length >> 1] || null);
   }
+  thudDayEnv(H, plan, mid);
   if (!all.length) return H;
   let a = 90, b = 180, c = -90, d = -180; for (const [la, lo] of all) { a = Math.min(a, la); b = Math.min(b, lo); c = Math.max(c, la); d = Math.max(d, lo); }
   // the whole flight fills about three quarters of the inset: longitude span (latitude converted at this latitude), tiles of the next zoom drawn smaller
@@ -5379,6 +5398,29 @@ function thudEnv(p) {
   fetchJSON(`https://air-quality-api.open-meteo.com/v1/air-quality?${q}&hourly=us_aqi`, { timeout: 12000 }).then(j => { if (j.hourly?.us_aqi) e.aqi = j.hourly.us_aqi; }).catch(() => { });
   return e;
 }
+/* a shot set at an exact date and time (drama and long films: 'YYYY-MM-DD HH:MM') reads the weather of that day where the shot is flown, not of
+   the recording day, so a snowy January shot is not labelled with a warm November afternoon. Open-Meteo forecast (about 90 days back to 14 ahead),
+   its historical forecast (2022 on), else the ERA5 archive (temperature and humidity only); air quality from 2022-08 to 4 days ahead; a day further
+   ahead shows dashes. One request per day, for every place flown that day (two decimals, about 1 km). */
+function thudDayEnv(H, plan, mid) {
+  const byDay = new Map(), now = Date.parse(new Date().toISOString().slice(0, 10));
+  plan.shots.forEach((s, i) => {
+    const w = typeof dramaWhen === 'function' ? dramaWhen(s.time) : null, m = mid[i]; if (!w || !m) return;
+    const la = +m[0].toFixed(2), lo = +m[1].toFixed(2), k = la + ',' + lo; let D = byDay.get(w.date);
+    if (!D) byDay.set(w.date, D = { date: w.date, ok: false, h: null, aqi: null, pts: [], idx: new Map() });
+    if (!D.idx.has(k)) { D.idx.set(k, D.pts.length); D.pts.push([la, lo]); } H.wx[i] = { D, j: D.idx.get(k), e: null };
+  });
+  for (const [day, D] of byDay) {
+    const dd = (Date.parse(day) - now) / 864e5; if (!(dd <= 14)) continue;
+    const q = `latitude=${D.pts.map(p => p[0]).join(',')}&longitude=${D.pts.map(p => p[1]).join(',')}&start_date=${day}&end_date=${day}&timezone=auto`;
+    const url = dd >= -90 ? 'https://api.open-meteo.com/v1/forecast' : day >= '2022-01-01' ? 'https://historical-forecast-api.open-meteo.com/v1/forecast' : 'https://archive-api.open-meteo.com/v1/archive';
+    fetchJSON(`${url}?${q}&hourly=temperature_2m,relative_humidity_2m${url.includes('archive') ? '' : ',uv_index'}`, { timeout: 15000 })
+      .then(j => { const a = Array.isArray(j) ? j : [j]; if (a[0]?.hourly?.time) { D.h = a.map(x => x.hourly); D.ok = true; } }).catch(() => { });
+    if (dd <= 4 && day >= '2022-08-01') fetchJSON(`https://air-quality-api.open-meteo.com/v1/air-quality?${q}&hourly=us_aqi`, { timeout: 15000 })
+      .then(j => { const a = Array.isArray(j) ? j : [j]; D.aqi = a.map(x => x.hourly?.us_aqi || null); }).catch(() => { });
+  }
+}
+const thudShotEnv = (Hd, i) => { const w = Hd.wx?.[i]; if (!w) return null; const D = w.D; return { ok: D.ok, date: D.date, h: D.h?.[w.j] || null, aqi: D.aqi?.[w.j] || null }; };
 const thudAt = (arr, hr) => { const v = arr?.[hr]; return v == null || !Number.isFinite(+v) ? null : +v; };
 /* magnetic declination (east +) and inclination (down +): the build's WMM2025 table, else the BGS model service for today, once per place */
 function thudMag(plan) {
@@ -5408,7 +5450,7 @@ function thudPaint(g, W, H, R, dom) {
   const panel = (x, y, w, h, r) => { g.fillStyle = 'rgba(9,14,18,.62)'; g.strokeStyle = 'rgba(255,255,255,.28)'; g.lineWidth = Math.max(1, U / 600); g.beginPath(); g.roundRect ? g.roundRect(x, y, w, h, r) : g.rect(x, y, w, h); g.fill(); g.stroke(); };
   const txt = (s, x, y, font, col = '#fff', align = 'left') => { g.font = font; g.textAlign = align; g.lineWidth = U / 300; g.strokeStyle = 'rgba(0,0,0,.65)'; g.strokeText(s, x, y); g.fillStyle = col; g.fillText(s, x, y); };
 
-  const e = thudEnv(plan.place), mg = thudMag(plan), hr = Math.floor((((APP.sun.min % 1440) + 1440) % 1440) / 60), na = '—';
+  const e = thudShotEnv(Hd, R.i) || thudEnv(plan.place), mg = thudMag(plan), hr = Math.floor((((APP.sun.min % 1440) + 1440) % 1440) / 60), na = '—';
   // on the screen each side folds into a small tab when tapped (thudDom places the tap areas over THUD.rect)
   const hideL = dom && THUD.hideL, hideR = dom && THUD.hideR, q = mini ? 0.8 : 1; if (dom) THUD.rect = {};
   const tab = (label, right) => { g.font = `700 ${U * 0.019}px ${THUD_F}`; const w = g.measureText(label).width + U * 0.03, h = U * 0.042, x = right ? W - pad - w : pad; panel(x, pad, w, h, U * 0.012); txt(label, x + w / 2, pad + h / 2, g.font, '#e8eef3', 'center'); return [x, pad, w, h]; };
@@ -5680,5 +5722,59 @@ function droneView(R) {
   const tw = g.measureText(tx).width + sz * 0.08; g.fillStyle = 'rgba(196,48,43,.92)'; g.beginPath(); if (g.roundRect) g.roundRect(cx - tw / 2, ty - sz * 0.05, tw, sz * 0.1, sz * 0.05); else g.rect(cx - tw / 2, ty - sz * 0.05, tw, sz * 0.1); g.fill(); g.fillStyle = '#fff'; g.fillText(tx, cx, ty); g.globalAlpha = 1;
 }
 
-window.__AERO = { get camera() { return camera; }, get scene() { return scene; }, get TERRAIN_U() { return TERRAIN_U; }, THREE, DRAMA, dramaWhen, ROUTE, startRoute, routeSetOf, routeIndex, routeTrk, routeAt, routePlan, TOUR, CATX, SCORE, THUD, thudPaint, tourPaint, startTour, tourExit, tourPlay, tourSeek, tourAutoSet, tourSetOf, tourPlan, tourPose, tourChunks, loadCatalogueX, catxAdd, PLACES, PLACE_BY_ID, APP, SET, TERRAIN, VEC, DEM, ENV, MIS, AM, WX, WAVES, GEO, POST, TREES, BUOYS, I18N, MISSIONS, TUT, loadPlace, spawn, setTimePreset, applyWeather, startAeroAt, t, camSmooth, refineSunTime, updateAeroMission, aeroMissionAction, updateCamera, readInput, loadMissions, CREW, startCrew, crewScore, amP };
+/* ---------- 深度長片 Long editions (YouTube only): a place in depth, 5 minutes or more (30+ for rich places) ----------
+   A long edition is a researched script of its own (tours_long/NN_<place>_long.json → data/tours_long/<place>.json) that the site
+   does not list: the GitHub site keeps the five-minute films, the long ones are recorded by the Studio (studio.py --long) for YouTube.
+   It runs on the light & drama engine, so every shot may carry an exact date and time (seasons: foliage, snow and the sun follow the
+   real date), time1 (the sun moves through the shot: a time-lapse), fx (sea of clouds, cloud deck, snow…) and fov (a long lens or a
+   slow zoom, for slow-motion close views). Two things are its own:
+     chapter {zh, en}  a chapter card over the first seconds of the shot (the same chapters are listed in the YouTube description)
+     photo  <index>    a real photo from Wikimedia Commons (photos[i]: species or feature confirmed on its file page), shown as a card
+                       with its name and the photographer, licence and source on the picture, as the licences require */
+TOUR_ICON.long = '◈';
+SCORE_SET.long = SCORE_SET.nature || SCORE_SET.overview;
+const LONG = { img: new Map() };
+function longImg(ph) {
+  const src = ph && (ph.img || ph.orig); if (!src) return null; let im = LONG.img.get(src);
+  if (!im) { im = new Image(); im.crossOrigin = 'anonymous'; im.decoding = 'async'; im.onerror = () => { if (ph.orig && im.src !== ph.orig) im.src = ph.orig; }; im.src = src; LONG.img.set(src, im); }   // a missing thumbnail size: the original file
+  return im.complete && im.naturalWidth ? im : null;
+}
+function longStart(plan) { for (const ph of plan.set.photos || []) longImg(ph); let n = 0; for (const s of plan.shots) if (s.raw?.chapter) s.chapterN = ++n; plan.chapters = n; }
+async function longPhotosReady(set, ms = 25000) {   // the Studio waits (a little) for the photo cards before it starts, so none is missing in the film
+  for (const ph of set.photos || []) longImg(ph);
+  const t0 = performance.now(); while (performance.now() - t0 < ms) { if ((set.photos || []).every(ph => { const im = LONG.img.get(ph.img || ph.orig); return !im || (im.complete && (im.naturalWidth || im.src === ph.orig || !ph.orig)); })) return; await sleep(250); }
+}
+function longCard(g, x, y, w, h, r, a) { g.globalAlpha = a; g.fillStyle = 'rgba(8,12,16,.72)'; g.beginPath(); g.roundRect ? g.roundRect(x, y, w, h, r) : g.rect(x, y, w, h); g.fill(); }
+function longPaint(g, W, H, R, F) {
+  const plan = R.plan, s = plan.shots[R.i]; if (!plan.long || !s) return;
+  const raw = s.raw || {}, since = R.t - s.t0, left = s.t0 + s.dur - R.t; g.save(); g.shadowBlur = 0; g.textBaseline = 'middle';
+  if (raw.chapter && R.i > 0) {   // chapter card: centre, the first seconds of the shot
+    const a = clamp(Math.min((since - 0.5) / 0.6, (6.5 - since) / 0.7), 0, 1);
+    if (a > 0.01) {
+      const kick = `第 ${s.chapterN} 章 · Chapter ${s.chapterN}`, zh = raw.chapter.zh || '', en = raw.chapter.en || '';
+      g.font = `700 ${H * 0.058}px ${F}`; const w = Math.max(g.measureText(zh).width, (g.font = `500 ${H * 0.03}px ${F}`, g.measureText(en).width)) + H * 0.12, h = H * 0.2, x = W / 2 - w / 2, y = H * 0.3;
+      longCard(g, x, y, w, h, H * 0.02, a * 0.9); g.globalAlpha = a; g.textAlign = 'center';
+      g.fillStyle = '#f0c879'; g.font = `600 ${H * 0.026}px ${F}`; g.fillText(kick, W / 2, y + h * 0.2);
+      g.fillStyle = '#fff'; g.font = `700 ${H * 0.058}px ${F}`; g.fillText(zh, W / 2, y + h * 0.52);
+      g.fillStyle = 'rgba(255,255,255,.88)'; g.font = `500 ${H * 0.03}px ${F}`; g.fillText(en, W / 2, y + h * 0.82);
+    }
+  }
+  const ph = raw.photo != null ? plan.set.photos?.[raw.photo] : null, im = ph && longImg(ph);
+  if (im) {   // photo card: left, under the instruments, clear of the captions
+    const a = clamp(Math.min((since - 1.0) / 0.6, (left - 0.4) / 0.6), 0, 1);
+    if (a > 0.01) {
+      const x = W * 0.03, w = W * 0.3, pad = H * 0.012, iw = w - 2 * pad, ih = Math.min(iw * im.naturalHeight / im.naturalWidth, H * 0.3), y = H * 0.355;
+      const lines = [[ph.zh || '', `700 ${H * 0.027}px ${F}`, '#fff'], [ph.sci ? `${ph.sci} · ${ph.en || ''}` : ph.en || '', `${ph.sci ? 'italic ' : ''}400 ${H * 0.02}px ${F}`, 'rgba(255,255,255,.9)'],
+        [`${ph.kind === 'map' ? '圖' : '攝影'} Photo: ${ph.author} · ${ph.license} · Wikimedia Commons`, `400 ${H * 0.0165}px ${F}`, 'rgba(255,255,255,.78)']].filter(l => l[0]);
+      const lh = H * 0.034, h = ih + 2 * pad + lines.length * lh + pad * 0.5; longCard(g, x, y, w, h, H * 0.014, a * 0.92);
+      g.globalAlpha = a; const sw = im.naturalWidth, sh = im.naturalHeight, k = Math.max(iw / sw, ih / sh), cw = iw / k, chh = ih / k;   // cover the frame, centred
+      g.drawImage(im, (sw - cw) / 2, (sh - chh) / 2, cw, chh, x + pad, y + pad, iw, ih);
+      g.textAlign = 'left'; let ty = y + pad + ih + pad * 0.5 + lh / 2;
+      for (const [txt, font, col] of lines) { g.font = font; g.fillStyle = col; let t = txt; while (g.measureText(t).width > iw && t.length > 4) t = t.slice(0, -2) + '…'; g.fillText(t, x + pad, ty); ty += lh; }
+    }
+  }
+  g.restore();
+}
+
+window.__AERO = { get camera() { return camera; }, get scene() { return scene; }, get TERRAIN_U() { return TERRAIN_U; }, THREE, DRAMA, dramaWhen, ROUTE, startRoute, routeSetOf, routeIndex, routeTrk, routeAt, routePlan, TOUR, CATX, SCORE, THUD, thudPaint, tourPaint, LONG, longPhotosReady, longPaint, tourKicker, fetchJSON, sleep, startTour, tourExit, tourPlay, tourSeek, tourAutoSet, tourSetOf, tourPlan, tourPose, tourChunks, loadCatalogueX, catxAdd, PLACES, PLACE_BY_ID, APP, SET, TERRAIN, VEC, DEM, ENV, MIS, AM, WX, WAVES, GEO, POST, TREES, BUOYS, I18N, MISSIONS, TUT, loadPlace, spawn, setTimePreset, applyWeather, startAeroAt, t, camSmooth, refineSunTime, updateAeroMission, aeroMissionAction, updateCamera, readInput, loadMissions, CREW, startCrew, crewScore, amP };
 boot();
