@@ -3252,7 +3252,7 @@ function tourFrame(dt, dtr) {
   if (n2) { const seg = s.dur / n2, j = Math.min(n2 - 1, Math.floor(since / seg)), a = since - j * seg; cap2 = list2[j]; k2 = i + ':' + j; ca2 = clamp(Math.min(a / 0.3, (seg - a - 0.15) / 0.3), 0, 1); if (!n && k2 !== R.cap2K && R.playing && a < 1.2) tourSpeak(cap2, lang2, seg); }   // nothing in the viewer's language for this view: the narrator reads the English line
   R.cap2K = k2; R.cap2 = cap2; R.cap2A = ca2;
   R.capK = k; R.cap = cap; R.capA = ca; R.titleA = clamp(Math.min((tt - 0.9) / 0.7, (7.2 - tt) / 0.7), 0, 1); R.credA = clamp(Math.min((tt - (plan.dur - 9)) / 0.8, (plan.dur - 0.5 - tt) / 0.8), 0, 1);
-  tourDom(R); if (APP.frameN % 6 === 3 || (R.t > 4.8 && R.t < 14.5)) tourTakeHint(R);   // every frame while the hint may show, so it moves off a subtitle at once if (plan.drama) dramaDom(R); if (R.playing) scoreTick(R);
+  tourDom(R); if (APP.frameN % 6 === 3 || (R.t > 4.8 && R.t < 14.5)) tourTakeHint(R); if (plan.drama) dramaDom(R); if (R.playing) scoreTick(R);   // the take-over hint every frame while it may show, so it moves off a subtitle at once; the music (scoreTick) every frame while the film plays
   if (!plan.route && !TOUR.studio && APP.frameN % 2 === 0) thudDom(R);
 }
 function tourApply(R, s, u, dt, cut) {
@@ -3314,7 +3314,7 @@ function tourOverlay(show) {
 function tourBar() {
   const R = TOUR.run, b = k => $(`#tourBar [data-tb="${k}"]`); if (!R || !b('play')) return;
   b('play').innerHTML = svg(R.playing ? 'pause' : 'play'); const lab = (k, ic, w) => { const h = esc(ic) + '<span class="tbw">' + esc(w) + '</span>'; if (b(k).innerHTML !== h) b(k).innerHTML = h; };   // the word folds away on a narrow screen
-  lab('cc', 'CC ' + tourCapLabel(), '');   // the caption languages stay readable on a phone, where the words fold away lab('voice', TOUR.voice ? '🔊' : '🔇', ' ' + t('tour.voice')); lab('music', TOUR.music ? '♪' : '♪✕', ' ' + t('tour.music')); if (b('hud')) lab('hud', THUD.mode === 'off' ? '○' : '◉', ' ' + thudWord());
+  lab('cc', 'CC ' + tourCapLabel(), ''); lab('voice', TOUR.voice ? '🔊' : '🔇', ' ' + t('tour.voice')); lab('music', TOUR.music ? '♪' : '♪✕', ' ' + t('tour.music')); if (b('hud')) lab('hud', THUD.mode === 'off' ? '○' : '◉', ' ' + thudWord());   // the caption languages stay readable on a phone, where the words fold away
   if (b('yt')) { const m = R.plan.route ? tourMedia('route-' + R.plan.route.id, R.plan.view) : tourMedia(R.plan.place?.id, R.plan.id); b('yt').hidden = !m?.yt || !!TOUR.rec; if (m?.yt) { b('yt').href = 'https://www.youtube.com/watch?v=' + m.yt; b('yt').title = isZh() ? '在 YouTube 看這部影片' : 'Watch this film on YouTube'; } }
   if (b('take')) { b('take').textContent = R.manual ? (isZh() ? '↩ 回到導覽' : '↩ Back to film') : (isZh() ? '🕹 接手飛行' : '🕹 Fly it'); b('take').hidden = !!R.plan.route || !!TOUR.rec; b('take').classList.toggle('on', !!R.manual); }
   lab('rec', TOUR.rec ? '■' : '⏺', ' ' + (TOUR.rec ? t('tour.recording') : t('tour.record'))); b('rec').classList.toggle('on', !!TOUR.rec); b('cc').hidden = !!R.plan.auto && false;
@@ -5764,8 +5764,9 @@ function longPaint(g, W, H, R, F) {
     const a = clamp(Math.min((since - 1.0) / 0.6, (left - 0.4) / 0.6), 0, 1);
     if (a > 0.01) {
       const x = W * 0.03, w = W * 0.3, pad = H * 0.012, iw = w - 2 * pad, ih = Math.min(iw * im.naturalHeight / im.naturalWidth, H * 0.3), y = H * 0.355;
-      const lines = [[ph.zh || '', `700 ${H * 0.027}px ${F}`, '#fff'], [ph.sci ? `${ph.sci} · ${ph.en || ''}` : ph.en || '', `${ph.sci ? 'italic ' : ''}400 ${H * 0.02}px ${F}`, 'rgba(255,255,255,.9)'],
-        [`${ph.kind === 'map' ? '圖' : '攝影'} Photo: ${ph.author} · ${ph.license} · Wikimedia Commons`, `400 ${H * 0.0165}px ${F}`, 'rgba(255,255,255,.78)']].filter(l => l[0]);
+      const cf = `400 ${H * 0.0165}px ${F}`, cc = 'rgba(255,255,255,.78)', by = `${ph.kind === 'map' ? '圖' : '攝影'} Photo: ${ph.author}`, lic = `${ph.license} · Wikimedia Commons`;
+      g.font = cf; const credit = g.measureText(`${by} · ${lic}`).width <= iw ? [[`${by} · ${lic}`, cf, cc]] : [[by, cf, cc], [lic, cf, cc]];   // the credit in full: on two lines when it does not fit
+      const lines = [[ph.zh || '', `700 ${H * 0.027}px ${F}`, '#fff'], [ph.sci ? `${ph.sci} · ${ph.en || ''}` : ph.en || '', `${ph.sci ? 'italic ' : ''}400 ${H * 0.02}px ${F}`, 'rgba(255,255,255,.9)'], ...credit].filter(l => l[0]);
       const lh = H * 0.034, h = ih + 2 * pad + lines.length * lh + pad * 0.5; longCard(g, x, y, w, h, H * 0.014, a * 0.92);
       g.globalAlpha = a; const sw = im.naturalWidth, sh = im.naturalHeight, k = Math.max(iw / sw, ih / sh), cw = iw / k, chh = ih / k;   // cover the frame, centred
       g.drawImage(im, (sw - cw) / 2, (sh - chh) / 2, cw, chh, x + pad, y + pad, iw, ih);

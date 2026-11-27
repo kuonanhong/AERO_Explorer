@@ -218,10 +218,24 @@ def short_sources():
     return {s['source'] for s in spec if (up.get(s['file']) or {}).get('id')}
 
 
+def bare_on_youtube():
+    """Films whose version on YouTube has no dashboard and no satellite and flight-path insets (recorded before 2026-11-25, the package's
+    _tools/film_look.py): recorded again before the films that already have them; their description changes with the film (the user, 2026-11-27)"""
+    try:
+        sys.path.insert(0, os.path.join(PKG, '_tools')); import film_look
+        up = json.load(open(os.path.join(PKG, '_tools', 'youtube_uploaded.json'), encoding='utf-8'))
+        try: folders = {m['file']: m.get('folder') for m in json.load(open(os.path.join(PKG, 'youtube_metadata.json'), encoding='utf-8')).get('videos', [])}
+        except Exception: folders = {}
+        since = film_look.hud_since(PKG)
+        return {f for f, e in up.items() if e.get('id') and not e.get('gone') and film_look.bare_on_youtube(f, e, OUT, PKG, folders.get(f), since)}
+    except Exception: return set()
+
+
 def one_run(allj, todo, limit):
     """What one daily run records: one evening's new films (a place in Taiwan and one abroad, their four films together, + 1 other film; in the order
     youtube_upload.py --schedule evening publishes them), then up to redo_per_day films that are on YouTube but have the old look
-    (or are missing here), to be replaced, those a Short is cut from first. Films recorded with an old look that never went up are new
+    (or are missing here), to be replaced: those without the dashboard on YouTube (recorded before 2026-11-25) first, among them those a
+    Short is cut from first. Films recorded with an old look that never went up are new
     films again."""
     since, redo = look(); yt = on_youtube(); want = {j['name'] for j in todo}
     old = {j['name'] for j in allj if j['name'] not in want and since and (rec_time(j['name']) or since) < since}
@@ -236,7 +250,8 @@ def one_run(allj, todo, limit):
     pick = [g for g in groups if is_tw(g[0]['place'])][:PER_EVENING['tw']] + [g for g in groups if not is_tw(g[0]['place'])][:PER_EVENING['world']]
     ev = [j for g in sorted(pick, key=groups.index) for j in g] + other[:PER_EVENING['other']]
     src = short_sources()                     # films a Short is cut from first (the user, 2026-11-26), then the ones already set aside here
-    again.sort(key=lambda j: (j['name'] not in src, j['name'] in old))
+    bare = bare_on_youtube()                  # but films without the dashboard on YouTube before all others (the user, 2026-11-27)
+    again.sort(key=lambda j: (j['name'] not in bare, j['name'] not in src, j['name'] in old))
     run = ev[:limit] + again[:redo]
     for j in run:
         if j['name'] in old: set_aside_old(j['name'], since)
